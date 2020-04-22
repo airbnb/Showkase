@@ -2,7 +2,9 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+//    id "org.jetbrains.kotlin.kapt"
 }
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -45,6 +47,9 @@ dependencies {
     // Kotlin
     implementation deps.kotlinStdLib
 
+    implementation project(':annotation')
+    kapt project(':codegen')
+
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
@@ -79,7 +84,11 @@ dependencies {
     // Moshi
     implementation deps.moshi.core
     implementation deps.moshi.adapters
-
+    
+    // Annotation Processing
+//    implementation deps.autoService
+//    kapt deps.autoService
+    
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
 }

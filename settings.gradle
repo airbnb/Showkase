@@ -1,2 +1,4 @@
+include ':codegen'
+include ':annotation'
 include ':app'
 rootProject.name = "Showcase"

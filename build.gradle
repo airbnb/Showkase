@@ -18,8 +18,10 @@ buildscript {
             'rxandroid': '2.1.1',
             'supportLibrary': '1.1.0',
             'testRunner': '1.2.0',
+            'autoService': '1.0-rc4'
     ]
     ext.deps = [
+            'autoService': "com.google.auto.service:auto-service:${versions.autoService}",
             'cardView': "androidx.cardview:cardview:${versions.cardView}",
             'compose': [
                     'composeComplier': "androidx.compose:compose-compiler:${versions.compose}",

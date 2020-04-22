@@ -1,0 +1,42 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    generateStubs = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
+        }
+    }
+}
+
+dependencies {
+    implementation deps.kotlinStdLib
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    kapt project(":annotation")
+    compileOnly project(':annotation')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    
+    implementation deps.kotlinStdLib
+    implementation deps.autoService
+    kapt deps.autoService
+}
