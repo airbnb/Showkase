@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
 }
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -30,14 +31,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerVersion "1.3.61-dev-withExperimentalGoogleExtensions-20200129"
-        kotlinCompilerExtensionVersion "${versions.compose}"
-
-    }
+//    buildFeatures {
+//        compose true
+//    }
+//    composeOptions {
+//        kotlinCompilerVersion "1.3.61-dev-withExperimentalGoogleExtensions-20200129"
+//        kotlinCompilerExtensionVersion "${versions.compose}"
+//
+//    }
 }
 
 dependencies {
@@ -46,7 +47,7 @@ dependencies {
     implementation deps.kotlinStdLib
 
     implementation project(':annotation')
-//    kapt project(':codegen')
+    kapt project(':codegen')
 
     // Support Libraries
     implementation deps.support.appCompat
