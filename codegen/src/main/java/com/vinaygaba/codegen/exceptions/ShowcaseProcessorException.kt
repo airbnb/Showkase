@@ -1,4 +1,4 @@
-package com.vinaygaba.annotation.exceptions
+package com.vinaygaba.codegen.exceptions
 
 import java.lang.Exception
 

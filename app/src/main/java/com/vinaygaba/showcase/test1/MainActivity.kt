@@ -1,4 +1,4 @@
-package com.vinaygaba.showcase
+package com.vinaygaba.showcase.test1
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,8 @@ import androidx.ui.foundation.Text
 import androidx.ui.layout.Column
 import androidx.ui.material.MaterialTheme
 import androidx.ui.tooling.preview.Preview
+import com.vinaygaba.annotation.Showcase
+
 //import com.vinaygaba.annotation.Showcase
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +19,10 @@ class MainActivity : AppCompatActivity() {
             MaterialTheme {
 //                Greeting("Android")
                 Column {
-                    val list: List<Unit> = listOf( DefaultPreview() , DefaultPreview() )
+                    val list: List<Unit> = listOf(
+                        DefaultPreview(),
+                        DefaultPreview()
+                    )
                     list.forEach {
                         it
                     }
@@ -33,7 +38,7 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-//@Showcase(name = "Test Name", apiLevel = 24, group = "Text", fontScale = 1f)
+@Showcase(name = "Test Name", apiLevel = 24, group = "Text", fontScale = 1f)
 @Preview
 @Composable
 fun DefaultPreview() {

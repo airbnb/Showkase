@@ -1,4 +1,4 @@
-package com.vinaygaba.annotation.logging
+package com.vinaygaba.codegen.logging
 
 import javax.annotation.processing.Messager
 import javax.tools.Diagnostic
@@ -15,7 +15,7 @@ class Logger {
         loggedExceptions += e
     }
     
-    fun publishMessages(messager: Messager) {
-        loggedExceptions.forEach { messager.printMessage(Diagnostic.Kind.ERROR, "${it.message}") }
+    fun publishMessages(messager: Messager?) {
+        loggedExceptions.forEach { messager?.printMessage(Diagnostic.Kind.ERROR, "${it.message}") }
     }
 }

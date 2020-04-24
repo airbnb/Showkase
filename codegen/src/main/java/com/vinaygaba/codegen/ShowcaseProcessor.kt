@@ -2,18 +2,17 @@ package com.vinaygaba.codegen
 
 import com.google.auto.service.AutoService
 import com.vinaygaba.annotation.Showcase
-import com.vinaygaba.annotation.exceptions.ShowcaseProcessorException
-import com.vinaygaba.annotation.logging.Logger
+import com.vinaygaba.codegen.exceptions.ShowcaseProcessorException
+import com.vinaygaba.codegen.logging.Logger
 import com.vinaygaba.annotation.models.ShowcaseMetadata
+import java.lang.Exception
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import javax.tools.Diagnostic
 
 
 @AutoService(Processor::class) // For registering the service
@@ -38,24 +37,31 @@ class ShowcaseProcessor: AbstractProcessor() {
         return mutableSetOf(Showcase::class.java.name)
     }
     
-    override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
-        
-        val map = mapOf<TypeMirror, ShowcaseMetadata>()
-        roundEnvironment?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
+    
+    override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
+        val map = mutableMapOf<Element, ShowcaseMetadata>()
+        p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
             // TODO(vinaygaba) Also add check to ensure that it's a @Composable method with no 
             //  parameters passed to it
             // Throw error if this annotation is added to something that is not a method.
             if (element.kind != ElementKind.METHOD) {
                 logger.logMessage("Only composable methods can be annotated with ${Showcase::class.java.simpleName}")
             }
-            
+
+            val showcaseMetadata: ShowcaseMetadata
             try {
-                val showcaseMetadata = ShowcaseMetadata.getShowcaseMetadata(element = element)
-            } catch (exception: ShowcaseProcessorException) {
+                showcaseMetadata = ShowcaseMetadata.getShowcaseMetadata(element = element, elementUtil = elementUtils)
+                map[showcaseMetadata.methodElement] = showcaseMetadata
+            } catch (exception: Exception) {
                 logger.logMessage("Only composable methods can be annotated with ${Showcase::class.java.simpleName}")
             }
             
             
+            
+            if (p1.processingOver()) {
+                logger.publishMessages(messager)
+            }
+            return false
         }
         return true
     }
