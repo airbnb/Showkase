@@ -37,6 +37,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     
     implementation deps.kotlinStdLib
+    implementation deps.kotlinPoet
     implementation deps.autoService
     kapt deps.autoService
 }
