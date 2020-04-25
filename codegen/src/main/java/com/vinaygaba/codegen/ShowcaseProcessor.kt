@@ -5,6 +5,7 @@ import com.vinaygaba.annotation.Showcase
 import com.vinaygaba.codegen.exceptions.ShowcaseProcessorException
 import com.vinaygaba.codegen.logging.Logger
 import com.vinaygaba.annotation.models.ShowcaseMetadata
+import com.vinaygaba.codegen.writer.KotlinComposableWriter
 import java.lang.Exception
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -24,6 +25,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     private var filter: Filer? = null
     private var messager: Messager? = null
     private val logger = Logger()
+    private val kotlinComposableWriter = KotlinComposableWriter()
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
@@ -36,7 +38,6 @@ class ShowcaseProcessor: AbstractProcessor() {
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(Showcase::class.java.name)
     }
-    
     
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val map = mutableMapOf<Element, ShowcaseMetadata>()
