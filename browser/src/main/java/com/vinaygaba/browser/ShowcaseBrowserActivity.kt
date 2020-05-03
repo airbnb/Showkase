@@ -23,14 +23,15 @@ class ShowcaseBrowserActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val map = componentsMap
-            ShowcaseBrowserApp(map)
+//            val map = componentsMap
+//            ShowcaseBrowserApp(map)
+//            componentMap
         }
     }
 }
 
 @Composable
-fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<@Composable() () -> Unit>>) {
+fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<@Composable()() -> Unit>>) {
     val screenMetadata = remember { ShowcaseScreenMetadata() }
     when (screenMetadata.currentScreen) {
         ShowcaseCurrentScreen.GROUPS -> {

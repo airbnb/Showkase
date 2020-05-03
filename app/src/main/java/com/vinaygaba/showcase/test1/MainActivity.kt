@@ -10,24 +10,12 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.tooling.preview.Preview
 import com.vinaygaba.annotation.Showcase
 
-//import com.vinaygaba.annotation.Showcase
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-//                Greeting("Android")
-                Column {
-                    val list: List<Unit> = listOf(
-                        DefaultPreview(),
-                        DefaultPreview()
-                    )
-                    list.forEach {
-                        it
-                    }
-                }
-                
             }
         }
     }
@@ -46,3 +34,5 @@ fun DefaultPreview() {
         Greeting("Android")
     }
 }
+
+
