@@ -5,7 +5,7 @@ import androidx.ui.foundation.Text
 import androidx.ui.tooling.preview.Preview
 import com.vinaygaba.annotation.Showcase
 
-val componentsMap: Map<String, List<@Composable() () -> Unit>> = mapOf<String, List<@Composable() () -> Unit>>(
+val componentsMap: Map<String, List<@Composable() () -> Unit>> = mutableMapOf<String, List<@Composable() () -> Unit>>(
     "Plus" to listOf<@Composable() () -> Unit>(@Composable { TextPreview1() }),
     "Payments" to listOf<@Composable() () -> Unit>(@Composable { TextPreview1() }, @Composable { TextPreview2() }, @Composable { TextPreview3() }, @Composable { TextPreview4() }),
     "Lux" to listOf<@Composable() () -> Unit>(@Composable { TextPreview3() }, @Composable { TextPreview4() })
