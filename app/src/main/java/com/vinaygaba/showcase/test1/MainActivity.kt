@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
+                Greeting("Vinay")
             }
         }
     }
@@ -26,12 +27,21 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Showcase(name = "Test Name", apiLevel = 24, group = "Text", fontScale = 1f)
+@Showcase(name = "Test Name1", apiLevel = 24, group = "Group1", fontScale = 1f)
 @Preview
 @Composable
 fun DefaultPreview() {
     MaterialTheme {
-        Greeting("Android")
+        Greeting("Android1")
+    }
+}
+
+@Showcase(name = "Test Name2", apiLevel = 24, group = "Group1", fontScale = 1f)
+@Preview
+@Composable
+fun Preview2() {
+    MaterialTheme {
+        Greeting("Android2")
     }
 }
 
