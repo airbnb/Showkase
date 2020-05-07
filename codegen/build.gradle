@@ -11,7 +11,7 @@ kapt {
 sourceSets {
     main {
         java {
-            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
+            srcDir "${project(':browser').path}/tmp/kapt/main/kotlinGenerated/"
         }
     }
 }
@@ -31,9 +31,16 @@ compileKotlin {
     }
 }
 
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-XXLanguage:+NonParenthesizedAnnotationsOnFunctionalTypes"
+    }
+}
+
 dependencies {
     kapt project(":annotation")
     compileOnly project(':annotation')
+    
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     
     implementation deps.kotlinStdLib
