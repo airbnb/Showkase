@@ -58,7 +58,8 @@ class ShowcaseProcessor: AbstractProcessor() {
             }
         }
         
-        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(map)
+        val groupedMap = map.values.groupBy { it.group }
+        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(groupedMap)
 
         if (p1?.processingOver() == true) {
             logger.publishMessages(messager)

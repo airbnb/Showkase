@@ -5,48 +5,73 @@ import com.vinaygaba.annotation.models.ShowcaseMetadata
 import com.vinaygaba.codegen.exceptions.ShowcaseProcessorException
 import java.io.File
 import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.type.TypeMirror
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
     
-    fun generateShowcaseBrowserComponents(showcaseMetadataMap: MutableMap<ExecutableElement, ShowcaseMetadata>) {
+    fun generateShowcaseBrowserComponents(showcaseMetadataMap: Map<String, List<ShowcaseMetadata>>) {
+        if (showcaseMetadataMap.isEmpty()) return
         val kaptKotlinDirPath = processingEnv.options[KAPT_KOTLIN_DIR_PATH] ?: throw ShowcaseProcessorException("Exception encountered")
         val fileBuilder = FileSpec.builder("", FILE_NAME)
+
+        // @Composable
+        val composableAnnotation = AnnotationSpec.builder(COMPOSE_CLASS_NAME).build()
         
-        val composableClassName = ClassName("androidx.compose", "Composable")
-        val composableAnnotation = AnnotationSpec.builder(composableClassName).build()
-        
+        // @Composable () -> Unit
         val composablePredicate = LambdaTypeName.get(returnType = UNIT)
-//            .copy(annotations = arrayListOf(composableAnnotation))
+            .copy(annotations = arrayListOf(composableAnnotation))
+
+        // List<@Composable () -> Unit>
+        val composableParameterizedList = List::class.asClassName().parameterizedBy(composablePredicate)
         
-//        val composableList = List::class.asClassName().parameterizedBy(composablePredicate)
-//        val mapType = Map::class.asClassName().parameterizedBy(String::class.asTypeName(), composableList)
-//        val componentMapProperty = PropertySpec.builder("componentMap", composablePredicate)
-////            .build()
+        // Map<String, List<@Composable () -> Unit>>
+        val mapType = Map::class.asClassName().parameterizedBy(String::class.asTypeName(), composableParameterizedList)
+
+        // val componentsMap: Map<String, List<@Composable () -> Unit>>
+        val componentMapProperty = PropertySpec.builder("componentsMap", mapType)
         
-        if (showcaseMetadataMap.isEmpty()) return
-        val first = showcaseMetadataMap.takeIf { true }?.values?.first() ?: return
-        val composeMember = MemberName(first.packageName, first.methodName)
-        val codeBlock = CodeBlock.Builder()
-            .add("@%T{%M()}", composableClassName, composeMember)
-            .build()
-        
-        val property = PropertySpec.builder("componentMap", composablePredicate)
-            .initializer(
-                codeBlock
+        val mapInitializerCodeBlock = CodeBlock.Builder()
+            .add(
+                "mutableMapOf<%T, %T>(\n", String::class.asTypeName(), composableParameterizedList
             )
-            .build()
-//        val method = FunSpec.builder("preview")
-//            .addAnnotation(composableAnnotation)
-//            .addStatement("%M()", composeMember)
-//            .build()
+            .indent()
+
+        showcaseMetadataMap.toList().forEachIndexed { mapIndex, (group, componentsList) ->
+            mapInitializerCodeBlock
+                .add(
+                    "%S to listOf<%T>(", group, composablePredicate
+                )
+            componentsList.forEachIndexed { index, listItem ->
+                val composableLambdaCodeBlock = composePreviewFunctionLambda(listItem.packageName, listItem.methodName)
+                mapInitializerCodeBlock.add(composableLambdaCodeBlock)
+                if (index == componentsList.lastIndex) {
+                    mapInitializerCodeBlock.addStatement(")")
+                } else {
+                    mapInitializerCodeBlock.add(",")
+                }
+            }
+            if (mapIndex != showcaseMetadataMap.size - 1) {
+                mapInitializerCodeBlock.add(",")
+            }
+        }
+
+        mapInitializerCodeBlock.addStatement(")")
+        
+        componentMapProperty.initializer(
+            mapInitializerCodeBlock.build()
+        )
         
         fileBuilder
-            .addProperty(property)
-//            .addFunction(method)
+            .addProperty(componentMapProperty.build())
         
         fileBuilder.build().writeTo(File(kaptKotlinDirPath))
+    }
+    
+    fun composePreviewFunctionLambda(functionPackageName: String, composeFunctionName: String): CodeBlock {
+        val composeMember = MemberName(functionPackageName, composeFunctionName)
+        return CodeBlock.Builder()
+            .add("@%T { %M() }", COMPOSE_CLASS_NAME, composeMember)
+            .build()
     }
     
     companion object {
@@ -54,5 +79,7 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
         const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
+        
+        val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
     }
 }
