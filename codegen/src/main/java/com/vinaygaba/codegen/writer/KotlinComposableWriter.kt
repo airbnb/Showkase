@@ -30,6 +30,7 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
         // val componentsMap: Map<String, List<@Composable () -> Unit>>
         val componentMapProperty = PropertySpec.builder("componentsMap", mapType)
         
+        // mutableMapOf<String, List<@Composable @Composable () -> Unit>>(
         val mapInitializerCodeBlock = CodeBlock.Builder()
             .add(
                 "mutableMapOf<%T, %T>(\n", String::class.asTypeName(), composableParameterizedList
@@ -37,12 +38,14 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
             .indent()
 
         showcaseMetadataMap.toList().forEachIndexed { mapIndex, (group, componentsList) ->
+            // "String" to listOf<@Composable () -> Unit>(
             mapInitializerCodeBlock
                 .add(
                     "%S to listOf<%T>(", group, composablePredicate
                 )
             componentsList.forEachIndexed { index, listItem ->
                 val composableLambdaCodeBlock = composePreviewFunctionLambda(listItem.packageName, listItem.methodName)
+                // @Composable { MethodName() }
                 mapInitializerCodeBlock.add(composableLambdaCodeBlock)
                 if (index == componentsList.lastIndex) {
                     mapInitializerCodeBlock.addStatement(")")
