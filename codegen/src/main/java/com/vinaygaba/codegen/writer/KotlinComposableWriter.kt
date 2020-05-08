@@ -28,7 +28,7 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
         val mapType = Map::class.asClassName().parameterizedBy(String::class.asTypeName(), composableParameterizedList)
 
         // val componentsMap: Map<String, List<@Composable () -> Unit>>
-        val componentMapProperty = PropertySpec.builder("componentsMap", mapType)
+        val componentMapProperty = PropertySpec.builder("composableMap", mapType)
         
         // mutableMapOf<String, List<@Composable @Composable () -> Unit>>(
         val mapInitializerCodeBlock = CodeBlock.Builder()

@@ -85,6 +85,12 @@ allprojects {
         jcenter()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            freeCompilerArgs += '-XXLanguage:+NonParenthesizedAnnotationsOnFunctionalTypes'
+        }
+    }
 }
 
 task clean(type: Delete) {
