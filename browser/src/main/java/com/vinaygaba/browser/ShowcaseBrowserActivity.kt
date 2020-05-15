@@ -1,7 +1,6 @@
 package com.vinaygaba.browser
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.remember
