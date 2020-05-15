@@ -19,6 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.vinaygaba.browser.ShowcaseBrowserActivity"
+            android:label="ShowcaseBrowserActivity"
+            android:theme="@style/Theme.App.NoActionBar"
+            />
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
     fun generateShowcaseBrowserComponents(showcaseMetadataMap: Map<String, List<ShowcaseMetadata>>) {
         if (showcaseMetadataMap.isEmpty()) return
         val kaptKotlinDirPath = processingEnv.options[KAPT_KOTLIN_DIR_PATH] ?: throw ShowcaseProcessorException("Exception encountered")
-        val fileBuilder = FileSpec.builder("", FILE_NAME)
+        val fileBuilder = FileSpec.builder("com.vinaygaba.showcase", FILE_NAME)
             .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
         // @Composable
@@ -66,7 +66,9 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
         )
         
         fileBuilder
-            .addProperty(componentMapProperty.build())
+            .addType(TypeSpec.classBuilder("ShowcaseComponents")
+                .addProperty(componentMapProperty.build())
+                .build())
         
         fileBuilder.build().writeTo(File(kaptKotlinDirPath))
     }

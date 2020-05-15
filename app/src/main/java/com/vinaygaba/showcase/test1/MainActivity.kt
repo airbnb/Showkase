@@ -1,5 +1,6 @@
 package com.vinaygaba.showcase.test1
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
@@ -8,16 +9,14 @@ import androidx.ui.foundation.Text
 import androidx.ui.material.MaterialTheme
 import androidx.ui.tooling.preview.Preview
 import com.vinaygaba.annotation.Showcase
-import com.vinaygaba.browser.ShowcaseBrowserApp
-import composableMap
+import com.vinaygaba.browser.ShowcaseBrowserActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                ShowcaseBrowserApp(groupedComponentMap = composableMap)
-            }
+            val intent = Intent(this, ShowcaseBrowserActivity::class.java)
+            startActivity(intent)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.vinaygaba.browser
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.remember
@@ -23,6 +24,11 @@ class ShowcaseBrowserActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val showcaseComponentsClass = Class.forName("com.vinaygaba.showcase.ShowcaseComponents")
+            val map = showcaseComponentsClass.getDeclaredField("composableMap")
+            map.isAccessible = true
+            val result = map.get(showcaseComponentsClass.newInstance()) as Map<String, List<@androidx.compose.Composable()() -> Unit>>
+            ShowcaseBrowserApp(groupedComponentMap = result)
         }
     }
 }
