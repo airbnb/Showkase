@@ -46,7 +46,9 @@ dependencies {
     // Kotlin
     implementation deps.kotlinStdLib
 
+    // Showcase dependencies
     implementation project(':annotation')
+    implementation project(':browser')
     kapt project(':codegen')
 
     // Support Libraries

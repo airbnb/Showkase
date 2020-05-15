@@ -37,6 +37,10 @@ class ShowcaseProcessor: AbstractProcessor() {
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(Showcase::class.java.name)
     }
+
+    override fun getSupportedOptions(): MutableSet<String> {
+        return mutableSetOf(KotlinComposableWriter.KAPT_KOTLIN_DIR_PATH)
+    }
     
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val map = mutableMapOf<ExecutableElement, ShowcaseMetadata>()

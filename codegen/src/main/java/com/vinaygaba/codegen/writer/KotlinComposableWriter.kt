@@ -13,6 +13,7 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
         if (showcaseMetadataMap.isEmpty()) return
         val kaptKotlinDirPath = processingEnv.options[KAPT_KOTLIN_DIR_PATH] ?: throw ShowcaseProcessorException("Exception encountered")
         val fileBuilder = FileSpec.builder("", FILE_NAME)
+            .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
         // @Composable
         val composableAnnotation = AnnotationSpec.builder(COMPOSE_CLASS_NAME).build()
@@ -78,7 +79,7 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
     }
     
     companion object {
-        const val FILE_NAME = "ShowcaseBrowserComponents"
+        const val FILE_NAME = "ShowcaseComposables"
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
         const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"

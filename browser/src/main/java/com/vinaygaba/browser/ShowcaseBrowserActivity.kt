@@ -23,8 +23,6 @@ class ShowcaseBrowserActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val map = composableMap
-            ShowcaseBrowserApp(map)
         }
     }
 }

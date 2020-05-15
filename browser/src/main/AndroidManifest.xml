@@ -3,7 +3,6 @@
 
     <application
         android:allowBackup="true"
-        android:label="Browser"
         android:supportsRtl="true"
         >
         <activity
