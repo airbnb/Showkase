@@ -3,12 +3,16 @@
 
     <application
         android:allowBackup="true"
-        android:supportsRtl="true"
-        >
+        android:supportsRtl="true">
         <activity
             android:name=".ShowcaseBrowserActivity"
             android:label="ShowcaseBrowserActivity"
-            android:theme="@style/Theme.App.NoActionBar"
-            />
+            android:theme="@style/Theme.App.NoActionBar">
+            <!-- TODO(vinaygaba): Figure out product flavor stuff -->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
     </application>
 </manifest>

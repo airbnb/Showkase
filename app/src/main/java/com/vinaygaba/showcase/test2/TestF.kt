@@ -1,9 +1,9 @@
 package com.vinaygaba.showcase.test2
 
 import androidx.compose.Composable
-import com.vinaygaba.showcase.test1.DefaultPreview
+import com.vinaygaba.showcase.DefaultPreview
 
 @Composable
 fun TestComposable() {
-    com.vinaygaba.showcase.test1.DefaultPreview()
+    DefaultPreview()
 }

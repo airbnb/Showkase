@@ -1,4 +1,4 @@
-package com.vinaygaba.showcase.test1
+package com.vinaygaba.showcase
 
 import android.content.Intent
 import android.os.Bundle
@@ -27,7 +27,7 @@ fun Greeting(name: String) {
 }
 
 @Showcase(name = "Test Name1", apiLevel = 24, group = "Group1", fontScale = 1f)
-@Preview
+@Preview()
 @Composable
 fun DefaultPreview() {
     MaterialTheme {

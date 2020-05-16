@@ -24,6 +24,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    // Seeing two apps being installed simultaneously so commenting this until then
+    // TODO(vinaygaba): Figure out product flavor stuff
+//    flavorDimensions "browser"
+//    productFlavors {
+//        browser {
+//        }
+//    }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -48,8 +55,10 @@ dependencies {
 
     // Showcase dependencies
     implementation project(':annotation')
-    implementation project(':browser')
+    debugImplementation(project(':browser'))
     kapt project(':codegen')
+    // TODO(vinaygaba): Figure out product flavor stuff
+//    browserApi(project(':browser'))
 
     // Support Libraries
     implementation deps.support.appCompat
@@ -85,7 +94,7 @@ dependencies {
     // Moshi
     implementation deps.moshi.core
     implementation deps.moshi.adapters
-    
+
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
 }
