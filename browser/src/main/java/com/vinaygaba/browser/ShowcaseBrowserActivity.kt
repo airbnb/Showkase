@@ -23,7 +23,7 @@ class ShowcaseBrowserActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val showcaseComponentsClass = Class.forName("com.vinaygaba.showcase.ShowcaseComponents")
+            val showcaseComponentsClass = Class.forName("$CODEGEN_PACKAGE_NAME.ShowcaseComponents")
             val map = showcaseComponentsClass.getDeclaredField("composableMap")
             map.isAccessible = true
             val result = map.get(showcaseComponentsClass.newInstance()) as Map<String, List<@androidx.compose.Composable()() -> Unit>>
@@ -70,9 +70,9 @@ fun ShowcaseGroupComponentsScreen(
     screenMetadata: ShowcaseScreenMetadata
 ) {
     val component = groupedComponentMap[screenMetadata.currentGroup] ?: return
-    AdapterList(data = component) { 
-         Box(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
-             it()
-         }
+    AdapterList(data = component) {
+        Box(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
+            it()
+        }
     }
 }
