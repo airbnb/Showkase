@@ -7,23 +7,26 @@ import androidx.animation.transitionDefinition
 import androidx.compose.Composable
 import androidx.ui.animation.Transition
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.Canvas
-import androidx.ui.foundation.ContentGravity
-import androidx.ui.foundation.Text
+import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.Paint
 import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.preferredSize
+import androidx.ui.material.Card
 import androidx.ui.material.MaterialTheme
+import androidx.ui.material.darkColorPalette
+import androidx.ui.material.lightColorPalette
+import androidx.ui.text.TextStyle
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
+import androidx.ui.unit.sp
 import androidx.ui.unit.toRect
 import com.vinaygaba.annotation.Showcase
 
+
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    Text(text = "Hello $name!", style = TextStyle(fontSize = 15.sp))
 }
 
 @Showcase(name = "Component Name", group = "Group1")
@@ -39,8 +42,14 @@ fun GreetingPreview1() {
 @Preview
 @Composable
 fun GreetingPreview2() {
-    MaterialTheme {
-        Greeting("Second")
+    val light = lightColorPalette()
+    val dark = darkColorPalette()
+    val colors = if (isSystemInDarkTheme()) { dark } else { light }
+    
+    MaterialTheme(colors = colors) {
+        Card {
+            Text(text = "Text")
+        }
     }
 }
 
