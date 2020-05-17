@@ -2,22 +2,17 @@ package com.vinaygaba.browser
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.Providers
 import androidx.compose.remember
-import androidx.ui.core.ConfigurationAmbient
-import androidx.ui.core.DensityAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.core.setContent
+import androidx.ui.core.*
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.Text
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
-import androidx.ui.layout.rtl
 import androidx.ui.material.Card
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -25,6 +20,7 @@ import androidx.ui.text.font.FontWeight
 import androidx.ui.unit.Density
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
+import java.util.*
 
 class ShowcaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +83,7 @@ fun ShowcaseGroupComponentsScreen(
             when (it) {
                 ShowcaseComponentCardType.BASIC -> BasicComponentCard(component, "Title")
                 ShowcaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(component, "Title")
+                ShowcaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(component, "Title")
                 ShowcaseComponentCardType.RTL -> RTLComponentCard(component, "Title")
                 ShowcaseComponentCardType.DARK_MODE -> DarkModeComponentCard(
                     component = component,
@@ -110,8 +107,8 @@ fun ComponentCardTitle(componentName: String) {
 
 @Composable
 fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modifier) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Box(modifier = Modifier.padding(16.dp) + modifier) {
+    Card {
+        Box(modifier = Modifier.padding(8.dp) + Modifier.fillMaxWidth() + modifier) {
             component()
         }
     }
@@ -135,20 +132,36 @@ fun FontScaledComponentCard(component: @Composable() () -> Unit, title: String) 
 }
 
 @Composable
+fun DisplayScaledComponentCard(component: @Composable() () -> Unit, title: String) {
+    val density = DensityAmbient.current
+    val customDensity = Density(density = density.density * 2f)
+
+    ComponentCardTitle("$title [Display Scaled x 2]")
+    Providers(DensityAmbient provides customDensity) {
+        ComponentCard(component)
+    }
+}
+
+@Composable
 fun RTLComponentCard(component: @Composable() () -> Unit, title: String) {
+    val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
+        val locale = Locale("ar")
+        setLocale(locale)
+        setLayoutDirection(locale)
+    }
+    val customContext = ContextAmbient.current.createConfigurationContext(customConfiguration)
     ComponentCardTitle("$title [RTL]")
-    ComponentCard(component, Modifier.rtl)
+    Providers(ContextAmbient provides customContext) {
+        ComponentCard(component)
+    }
 }
 
 @Composable
 fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
-    val existingConfiguration = ConfigurationAmbient.current
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
-    val result = (customConfiguration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration
-        .UI_MODE_NIGHT_YES
-    Log.e("Boolean value", "$result")
+    
     ComponentCardTitle("$title [Dark Mode]")
     Providers(ConfigurationAmbient provides customConfiguration) {
         ComponentCard(component)
@@ -157,7 +170,8 @@ fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
 
 enum class ShowcaseComponentCardType {
     BASIC,
-    FONT_SCALE,
+    DARK_MODE,
     RTL,
-    DARK_MODE
+    FONT_SCALE,
+    DISPLAY_SCALED,
 }

@@ -6,11 +6,13 @@ import androidx.animation.Infinite
 import androidx.animation.transitionDefinition
 import androidx.compose.Composable
 import androidx.ui.animation.Transition
+import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.Paint
 import androidx.ui.layout.fillMaxSize
+import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.preferredSize
 import androidx.ui.material.Card
 import androidx.ui.material.MaterialTheme
@@ -45,10 +47,12 @@ fun GreetingPreview2() {
     val light = lightColorPalette()
     val dark = darkColorPalette()
     val colors = if (isSystemInDarkTheme()) { dark } else { light }
+    val context = ContextAmbient.current
+    val string = context.getString(R.string.app_name)
     
     MaterialTheme(colors = colors) {
         Card {
-            Text(text = "Text")
+            Text(text = string, modifier = Modifier.fillMaxWidth())
         }
     }
 }
