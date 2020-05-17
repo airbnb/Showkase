@@ -71,8 +71,13 @@ fun ShowcaseGroupComponentsScreen(
 ) {
     val component = groupedComponentMap[screenMetadata.currentGroup] ?: return
     AdapterList(data = component) {
-        Box(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
-            it()
+        Text(text = "Component Name", modifier = Modifier.padding(16.dp), 
+            style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily.Serif,
+            fontWeight = FontWeight.Bold))
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.padding(16.dp)) {
+                it()
+            }
         }
     }
 }
