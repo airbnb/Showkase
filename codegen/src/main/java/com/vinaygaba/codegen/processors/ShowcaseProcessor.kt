@@ -43,7 +43,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
     
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
-        val map = mutableMapOf<ExecutableElement, ShowcaseMetadata>()
+        val list = mutableListOf<ShowcaseMetadata>()
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
             // TODO(vinaygaba) Also add check to ensure that it's a @Composable method with no 
             //  parameters passed to it
@@ -56,14 +56,13 @@ class ShowcaseProcessor: AbstractProcessor() {
                 val showcaseMetadata = ShowcaseMetadata.getShowcaseMetadata(element = element, elementUtil = elementUtils!!,
                     typeUtils = typeUtils!!
                 )
-                map[showcaseMetadata.methodElement] = showcaseMetadata
+                list += showcaseMetadata
             } catch (exception: Exception) {
                 logger.logMessage("Only composable methods can be annotated with ${Showcase::class.java.simpleName}")
             }
         }
         
-        val groupedMap = map.values.groupBy { it.group }
-        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(groupedMap)
+        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(list)
 
         if (p1?.processingOver() == true) {
             logger.publishMessages(messager)

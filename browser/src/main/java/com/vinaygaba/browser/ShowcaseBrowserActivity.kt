@@ -27,17 +27,18 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val showcaseComponentsClass = Class.forName("$CODEGEN_PACKAGE_NAME.ShowcaseComponents")
-            val map = showcaseComponentsClass.getDeclaredField("composableMap")
-            map.isAccessible = true
+            val componentList = showcaseComponentsClass.getDeclaredField("componentList")
+            componentList.isAccessible = true
             val result =
-                map.get(showcaseComponentsClass.newInstance()) as Map<String, List<@androidx.compose.Composable() () -> Unit>>
-            ShowcaseBrowserApp(groupedComponentMap = result)
+                componentList.get(showcaseComponentsClass.newInstance()) as List<ShowcaseCodegenMetadata>
+            val groupedComponentsMap = result.groupBy { it.group }
+            ShowcaseBrowserApp(groupedComponentMap = groupedComponentsMap)
         }
     }
 }
 
 @Composable
-fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<@Composable() () -> Unit>>) {
+fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
     val screenMetadata = remember { ShowcaseScreenMetadata() }
     when (screenMetadata.currentScreen) {
         ShowcaseCurrentScreen.GROUPS -> {
@@ -51,7 +52,7 @@ fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<@Composable() () ->
 
 @Composable
 fun ShowcaseGroupsScreen(
-    groupedComponentMap: Map<String, List<@Composable() () -> Unit>>,
+    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>,
     screenMetadata: ShowcaseScreenMetadata
 ) {
     AdapterList(data = groupedComponentMap.keys.toList()) { group ->
@@ -74,20 +75,32 @@ fun ShowcaseGroupsScreen(
 
 @Composable
 fun ShowcaseGroupComponentsScreen(
-    groupedComponentMap: Map<String, List<@Composable() () -> Unit>>,
+    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>,
     screenMetadata: ShowcaseScreenMetadata
 ) {
-    val component = groupedComponentMap[screenMetadata.currentGroup] ?: return
-    AdapterList(data = component) { component ->
+    val componentMetadataList = groupedComponentMap[screenMetadata.currentGroup] ?: return
+    AdapterList(data = componentMetadataList) { componentMetadata ->
         ShowcaseComponentCardType.values().forEach {
             when (it) {
-                ShowcaseComponentCardType.BASIC -> BasicComponentCard(component, "Title")
-                ShowcaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(component, "Title")
-                ShowcaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(component, "Title")
-                ShowcaseComponentCardType.RTL -> RTLComponentCard(component, "Title")
+                ShowcaseComponentCardType.BASIC -> BasicComponentCard(
+                    componentMetadata.component,
+                    componentMetadata.componentName
+                )
+                ShowcaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(
+                    componentMetadata.component,
+                    componentMetadata.componentName
+                )
+                ShowcaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(
+                    componentMetadata.component,
+                    componentMetadata.componentName
+                )
+                ShowcaseComponentCardType.RTL -> RTLComponentCard(
+                    componentMetadata.component,
+                    componentMetadata.componentName
+                )
                 ShowcaseComponentCardType.DARK_MODE -> DarkModeComponentCard(
-                    component = component,
-                    title = "Title"
+                    componentMetadata.component,
+                    componentMetadata.componentName
                 )
             }
         }
@@ -161,7 +174,7 @@ fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
-    
+
     ComponentCardTitle("$title [Dark Mode]")
     Providers(ConfigurationAmbient provides customConfiguration) {
         ComponentCard(component)

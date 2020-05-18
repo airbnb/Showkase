@@ -6,87 +6,116 @@ import com.vinaygaba.codegen.exceptions.ShowcaseProcessorException
 import java.io.File
 import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import java.lang.reflect.Modifier
 
 class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
-    
-    fun generateShowcaseBrowserComponents(showcaseMetadataMap: Map<String, List<ShowcaseMetadata>>) {
-        if (showcaseMetadataMap.isEmpty()) return
-        val kaptKotlinDirPath = processingEnv.options[KAPT_KOTLIN_DIR_PATH] ?: throw ShowcaseProcessorException("Exception encountered")
+
+    fun generateShowcaseBrowserComponents(showcaseMetadataList: List<ShowcaseMetadata>) {
+        if (showcaseMetadataList.isEmpty()) return
+        val kaptKotlinDirPath = processingEnv.options[KAPT_KOTLIN_DIR_PATH]
+            ?: throw ShowcaseProcessorException("Exception encountered")
         val fileBuilder = FileSpec.builder(CODEGEN_PACKAGE_NAME, FILE_NAME)
             .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
-        // @Composable
-        val composableAnnotation = AnnotationSpec.builder(COMPOSE_CLASS_NAME).build()
-        
-        // @Composable () -> Unit
-        val composablePredicate = LambdaTypeName.get(returnType = UNIT)
-            .copy(annotations = arrayListOf(composableAnnotation))
+        // List<ShowcaseCodegenMetadata>
+        val showcaseCodegenMetadataParameterizedList =
+            List::class.asClassName().parameterizedBy(SHOWCASE_CODEGEN_METADATA_CLASS_NAME)
 
-        // List<@Composable () -> Unit>
-        val composableParameterizedList = List::class.asClassName().parameterizedBy(composablePredicate)
-        
-        // Map<String, List<@Composable () -> Unit>>
-        val mapType = Map::class.asClassName().parameterizedBy(String::class.asTypeName(), composableParameterizedList)
+        // val componentList: List<ShowcaseCodegenMetadata>
+        val componentListProperty = PropertySpec.builder(
+            "componentList",
+            showcaseCodegenMetadataParameterizedList
+        )
 
-        // val componentsMap: Map<String, List<@Composable () -> Unit>>
-        val componentMapProperty = PropertySpec.builder("composableMap", mapType)
-        
-        // mutableMapOf<String, List<@Composable @Composable () -> Unit>>(
-        val mapInitializerCodeBlock = CodeBlock.Builder()
+        val componentListInitializerCodeBlock = CodeBlock.Builder()
             .add(
-                "mutableMapOf<%T, %T>(\n", String::class.asTypeName(), composableParameterizedList
+                "listOf<%T>(\n", SHOWCASE_CODEGEN_METADATA_CLASS_NAME
             )
             .indent()
 
-        showcaseMetadataMap.toList().forEachIndexed { mapIndex, (group, componentsList) ->
-            // "String" to listOf<@Composable () -> Unit>(
-            mapInitializerCodeBlock
-                .add(
-                    "%S to listOf<%T>(", group, composablePredicate
-                )
-            componentsList.forEachIndexed { index, listItem ->
-                val composableLambdaCodeBlock = composePreviewFunctionLambda(listItem.packageName, listItem.methodName)
-                // @Composable { MethodName() }
-                mapInitializerCodeBlock.add(composableLambdaCodeBlock)
-                if (index == componentsList.lastIndex) {
-                    mapInitializerCodeBlock.addStatement(")")
-                } else {
-                    mapInitializerCodeBlock.add(",")
-                }
-            }
-            if (mapIndex != showcaseMetadataMap.size - 1) {
-                mapInitializerCodeBlock.add(",")
+        showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
+            componentListInitializerCodeBlock.addStatement(
+                "%T(%S, %S, ",
+                SHOWCASE_CODEGEN_METADATA_CLASS_NAME,
+                showcaseMetadata.group,
+                showcaseMetadata.name
+            )
+
+            val composableLambdaCodeBlock = composePreviewFunctionLambda(
+                showcaseMetadata.packageName,
+                showcaseMetadata.methodName
+            )
+            componentListInitializerCodeBlock.add(composableLambdaCodeBlock)
+
+            if (index == showcaseMetadataList.lastIndex) {
+                componentListInitializerCodeBlock.add(")")
+            } else {
+                componentListInitializerCodeBlock.add("),")
             }
         }
+        componentListInitializerCodeBlock.add(")")
 
-        mapInitializerCodeBlock.addStatement(")")
-        
-        componentMapProperty.initializer(
-            mapInitializerCodeBlock.build()
-        )
-        
+
+        componentListProperty.initializer(componentListInitializerCodeBlock.build())
+
+
         fileBuilder
-            .addType(TypeSpec.classBuilder("ShowcaseComponents")
-                .addProperty(componentMapProperty.build())
-                .build())
-        
+            .addType(
+                TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
+                    .addProperty(componentListProperty.build())
+                    .build()
+            )
+
         fileBuilder.build().writeTo(File(kaptKotlinDirPath))
     }
-    
-    fun composePreviewFunctionLambda(functionPackageName: String, composeFunctionName: String): CodeBlock {
+
+    fun composePreviewFunctionLambda(
+        functionPackageName: String,
+        composeFunctionName: String
+    ): CodeBlock {
         val composeMember = MemberName(functionPackageName, composeFunctionName)
         return CodeBlock.Builder()
             .add("@%T { %M() }", COMPOSE_CLASS_NAME, composeMember)
             .build()
     }
-    
+
+    fun generateShowcaseCodegenMetadataClass(composablePredicate: TypeName) =
+        TypeSpec.classBuilder("ShowcaseCodegenMetadata")
+            .addModifiers(KModifier.DATA)
+            .primaryConstructor(
+                FunSpec.constructorBuilder()
+                    .addParameter(ParameterSpec.builder("group", String::class).build())
+                    .addParameter(ParameterSpec.builder("componentName", String::class).build())
+                    .addParameter(ParameterSpec.builder("component", composablePredicate).build())
+                    .build()
+            )
+            .addProperty(
+                PropertySpec.builder("group", String::class)
+                    .initializer("group")
+                    .build()
+            )
+            .addProperty(
+                PropertySpec.builder("componentName", String::class)
+                    .initializer("componentName")
+                    .build()
+            )
+            .addProperty(
+                PropertySpec.builder("component", composablePredicate)
+                    .initializer("component")
+                    .build()
+            )
+            .build()
+
     companion object {
         const val FILE_NAME = "ShowcaseComposables"
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
         const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
         const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcasecodegen"
-        
+        const val AUTOGEN_CLASS_NAME = "ShowcaseComponents"
+
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
+        val SHOWCASE_CODEGEN_METADATA_CLASS_NAME =
+            ClassName("com.vinaygaba.browser", "ShowcaseCodegenMetadata")
     }
 }

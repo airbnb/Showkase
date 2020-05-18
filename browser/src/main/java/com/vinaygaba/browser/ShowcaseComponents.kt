@@ -11,15 +11,12 @@ val componentsMap: Map<String, List<@Composable() () -> Unit>> = mutableMapOf<St
     "Lux" to listOf<@Composable() () -> Unit>(@Composable { TextPreview3() }, @Composable { TextPreview4() })
 )
 
-//val componentList = listOf<ShowcaseCodegenMetadata>(
-//    ShowcaseCodegenMetadata("Plus", "Component1", )
-//)
-
-//data class ShowcaseCodegenMetadata(
-//    val group: String,
-//    val componentName: String,
-//    val component: @Composable () -> Unit
-//)
+val componentList = listOf<ShowcaseCodegenMetadata>(
+    ShowcaseCodegenMetadata("Plus", "Component1", @Composable { TextPreview1() }),
+    ShowcaseCodegenMetadata("Payments", "Component2", @Composable { TextPreview1() }),
+    ShowcaseCodegenMetadata("Payments", "Component3", @Composable { TextPreview2() }),
+    ShowcaseCodegenMetadata("Payments", "Component4", @Composable { TextPreview3() })
+)
 
 @Composable
 fun Preview() {

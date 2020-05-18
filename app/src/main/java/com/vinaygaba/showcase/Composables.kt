@@ -31,7 +31,7 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!", style = TextStyle(fontSize = 15.sp))
 }
 
-@Showcase(name = "Component Name", group = "Group1")
+@Showcase(name = "Greeting 1", group = "Group1")
 @Preview()
 @Composable
 fun GreetingPreview1() {
@@ -40,7 +40,7 @@ fun GreetingPreview1() {
     }
 }
 
-@Showcase(name = "Component Name", group = "Group2")
+@Showcase(name = "Greeting 2", group = "Group2")
 @Preview
 @Composable
 fun GreetingPreview2() {
