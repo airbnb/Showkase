@@ -4,11 +4,13 @@ import androidx.compose.Model
 
 enum class ShowcaseCurrentScreen {
     GROUPS,
-    GROUP_COMPONENTS
+    GROUP_COMPONENTS,
+    COMPONENT_DETAIL,
 }
 
 @Model
-data class ShowcaseScreenMetadata(
+data class ShowcaseBrowserScreenMetadata(
     var currentScreen: ShowcaseCurrentScreen = ShowcaseCurrentScreen.GROUPS,
-    var currentGroup: String? = null
+    var currentGroup: String? = null,
+    var currentComponent: String? = null
 )
