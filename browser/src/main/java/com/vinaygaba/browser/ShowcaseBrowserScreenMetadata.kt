@@ -9,8 +9,8 @@ enum class ShowcaseCurrentScreen {
 }
 
 @Model
-data class ShowcaseBrowserScreenMetadata(
-    var currentScreen: ShowcaseCurrentScreen = ShowcaseCurrentScreen.GROUPS,
-    var currentGroup: String? = null,
+object ShowcaseBrowserScreenMetadata {
+    var currentScreen: ShowcaseCurrentScreen = ShowcaseCurrentScreen.GROUPS
+    var currentGroup: String? = null
     var currentComponent: String? = null
-)
+}

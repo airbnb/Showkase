@@ -5,15 +5,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.Providers
-import androidx.compose.remember
 import androidx.ui.core.*
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.Text
-import androidx.ui.layout.Column
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
+import androidx.ui.layout.rtl
 import androidx.ui.material.Card
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -33,36 +32,52 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
             val result =
                 componentList.get(showcaseComponentsClass.newInstance()) as List<ShowcaseCodegenMetadata>
             val groupedComponentsMap = result.groupBy { it.group }
-            ShowcaseBrowserApp(groupedComponentMap = groupedComponentsMap)
+            
+            ShowcaseBrowserApp(groupedComponentsMap)
+        }
+    }
+
+    override fun onBackPressed() {
+        when(ShowcaseBrowserScreenMetadata.currentScreen) {
+            ShowcaseCurrentScreen.GROUPS -> {
+                finish()
+            }
+            ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
+                ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUPS
+                ShowcaseBrowserScreenMetadata.currentGroup = null
+                ShowcaseBrowserScreenMetadata.currentComponent = null
+            }
+            ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
+                ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
+                ShowcaseBrowserScreenMetadata.currentComponent = null
+            }
         }
     }
 }
 
 @Composable
 fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
-    val screenMetadata = remember { ShowcaseBrowserScreenMetadata() }
-    when (screenMetadata.currentScreen) {
+    when (ShowcaseBrowserScreenMetadata.currentScreen) {
         ShowcaseCurrentScreen.GROUPS -> {
-            ShowcaseAllGroupsScreen(groupedComponentMap, screenMetadata)
+            ShowcaseAllGroupsScreen(groupedComponentMap)
         }
         ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
-            ShowcaseGroupComponentsScreen(groupedComponentMap, screenMetadata)
+            ShowcaseGroupComponentsScreen(groupedComponentMap)
         }
         ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
-            ShowcaseComponentDetailScreen(groupedComponentMap, screenMetadata)
+            ShowcaseComponentDetailScreen(groupedComponentMap)
         }
     }
 }
 
 @Composable
 fun ShowcaseAllGroupsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>,
-    browserScreenMetadata: ShowcaseBrowserScreenMetadata
+    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
     AdapterList(data = groupedComponentMap.keys.toList()) { group ->
         Clickable(onClick = {
-            browserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
-            browserScreenMetadata.currentGroup = group
+            ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
+            ShowcaseBrowserScreenMetadata.currentGroup = group
         }) {
             Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
                 Text(
@@ -79,15 +94,14 @@ fun ShowcaseAllGroupsScreen(
 
 @Composable
 fun ShowcaseGroupComponentsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>,
-    browserScreenMetadata: ShowcaseBrowserScreenMetadata
+    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
-    val groupComponentsList = groupedComponentMap[browserScreenMetadata.currentGroup] ?: return
+    val groupComponentsList = groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
     AdapterList(data = groupComponentsList) { groupComponent ->
         ComponentCardTitle(groupComponent.componentName)
         Clickable(onClick = {
-            browserScreenMetadata.currentScreen = ShowcaseCurrentScreen.COMPONENT_DETAIL
-            browserScreenMetadata.currentComponent = groupComponent.componentName
+            ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.COMPONENT_DETAIL
+            ShowcaseBrowserScreenMetadata.currentComponent = groupComponent.componentName
         }) {
             ComponentCard(groupComponent.component)
         }
@@ -96,12 +110,11 @@ fun ShowcaseGroupComponentsScreen(
 
 @Composable
 fun ShowcaseComponentDetailScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>,
-    browserScreenMetadata: ShowcaseBrowserScreenMetadata
+    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
-    val componentMetadataList = groupedComponentMap[browserScreenMetadata.currentGroup] ?: return
+    val componentMetadataList = groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find { 
-        it.componentName == browserScreenMetadata.currentComponent
+        it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
     } ?: return
     
     AdapterList(data = listOf(componentMetadata)) { componentMetadata ->
@@ -191,7 +204,7 @@ fun RTLComponentCard(component: @Composable() () -> Unit, title: String) {
     val customContext = ContextAmbient.current.createConfigurationContext(customConfiguration)
     ComponentCardTitle("$title [RTL]")
     Providers(ContextAmbient provides customContext) {
-        ComponentCard(component)
+        ComponentCard(component, Modifier.rtl)
     }
 }
 
