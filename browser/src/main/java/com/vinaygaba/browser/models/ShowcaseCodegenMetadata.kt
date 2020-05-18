@@ -1,4 +1,4 @@
-package com.vinaygaba.browser
+package com.vinaygaba.browser.models
 
 import androidx.compose.Composable
 

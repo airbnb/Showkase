@@ -1,14 +1,14 @@
-package com.vinaygaba.browser
+package com.vinaygaba.browser.ui
 
 import android.content.res.Configuration
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.Providers
-import androidx.ui.core.*
+import androidx.ui.core.ConfigurationAmbient
+import androidx.ui.core.ContextAmbient
+import androidx.ui.core.DensityAmbient
+import androidx.ui.core.Modifier
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
-import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.Text
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
@@ -20,92 +20,16 @@ import androidx.ui.text.font.FontWeight
 import androidx.ui.unit.Density
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
+import com.vinaygaba.browser.models.ShowcaseBrowserScreenMetadata
+import com.vinaygaba.browser.models.ShowcaseCodegenMetadata
 import java.util.*
 
-class ShowcaseBrowserActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            val showcaseComponentsClass = Class.forName("$CODEGEN_PACKAGE_NAME.ShowcaseComponents")
-            val componentList = showcaseComponentsClass.getDeclaredField("componentList")
-            componentList.isAccessible = true
-            val result =
-                componentList.get(showcaseComponentsClass.newInstance()) as List<ShowcaseCodegenMetadata>
-            val groupedComponentsMap = result.groupBy { it.group }
-            
-            ShowcaseBrowserApp(groupedComponentsMap)
-        }
-    }
-
-    override fun onBackPressed() {
-        when(ShowcaseBrowserScreenMetadata.currentScreen) {
-            ShowcaseCurrentScreen.GROUPS -> {
-                finish()
-            }
-            ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
-                ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUPS
-                ShowcaseBrowserScreenMetadata.currentGroup = null
-                ShowcaseBrowserScreenMetadata.currentComponent = null
-            }
-            ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
-                ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
-                ShowcaseBrowserScreenMetadata.currentComponent = null
-            }
-        }
-    }
-}
-
-@Composable
-fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
-    when (ShowcaseBrowserScreenMetadata.currentScreen) {
-        ShowcaseCurrentScreen.GROUPS -> {
-            ShowcaseAllGroupsScreen(groupedComponentMap)
-        }
-        ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
-            ShowcaseGroupComponentsScreen(groupedComponentMap)
-        }
-        ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
-            ShowcaseComponentDetailScreen(groupedComponentMap)
-        }
-    }
-}
-
-@Composable
-fun ShowcaseAllGroupsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
-) {
-    AdapterList(data = groupedComponentMap.keys.toList()) { group ->
-        Clickable(onClick = {
-            ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
-            ShowcaseBrowserScreenMetadata.currentGroup = group
-        }) {
-            Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
-                Text(
-                    text = group, modifier = Modifier.padding(16.dp),
-                    style = TextStyle(
-                        fontSize = 20.sp, fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ShowcaseGroupComponentsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
-) {
-    val groupComponentsList = groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
-    AdapterList(data = groupComponentsList) { groupComponent ->
-        ComponentCardTitle(groupComponent.componentName)
-        Clickable(onClick = {
-            ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.COMPONENT_DETAIL
-            ShowcaseBrowserScreenMetadata.currentComponent = groupComponent.componentName
-        }) {
-            ComponentCard(groupComponent.component)
-        }
-    }
+enum class ShowcaseComponentCardType {
+    BASIC,
+    DARK_MODE,
+    RTL,
+    FONT_SCALE,
+    DISPLAY_SCALED,
 }
 
 @Composable
@@ -113,10 +37,10 @@ fun ShowcaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
     val componentMetadataList = groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
-    val componentMetadata = componentMetadataList.find { 
+    val componentMetadata = componentMetadataList.find {
         it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
     } ?: return
-    
+
     AdapterList(data = listOf(componentMetadata)) { componentMetadata ->
         ShowcaseComponentCardType.values().forEach { showcaseComponentCardType ->
             when (showcaseComponentCardType) {
@@ -142,7 +66,7 @@ fun ShowcaseComponentDetailScreen(
                 )
             }
         }
-        
+
     }
 }
 
@@ -218,12 +142,4 @@ fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
     Providers(ConfigurationAmbient provides customConfiguration) {
         ComponentCard(component)
     }
-}
-
-enum class ShowcaseComponentCardType {
-    BASIC,
-    DARK_MODE,
-    RTL,
-    FONT_SCALE,
-    DISPLAY_SCALED,
 }

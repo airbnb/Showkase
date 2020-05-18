@@ -1,4 +1,4 @@
-package com.vinaygaba.browser
+package com.vinaygaba.browser.models
 
 import androidx.compose.Model
 
@@ -10,7 +10,8 @@ enum class ShowcaseCurrentScreen {
 
 @Model
 object ShowcaseBrowserScreenMetadata {
-    var currentScreen: ShowcaseCurrentScreen = ShowcaseCurrentScreen.GROUPS
+    var currentScreen: ShowcaseCurrentScreen =
+        ShowcaseCurrentScreen.GROUPS
     var currentGroup: String? = null
     var currentComponent: String? = null
 }

@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.vinaygaba.browser.ShowcaseBrowserActivity"
+            android:name="com.vinaygaba.browser.ui.ShowcaseBrowserActivity"
             android:label="ShowcaseBrowserActivity"
             android:theme="@style/Theme.App.NoActionBar"
             />

@@ -5,7 +5,7 @@
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity
-            android:name=".ShowcaseBrowserActivity"
+            android:name=".ui.ShowcaseBrowserActivity"
             android:label="ShowcaseBrowserActivity"
             android:theme="@style/Theme.App.NoActionBar">
             <!-- TODO(vinaygaba): Figure out product flavor stuff -->

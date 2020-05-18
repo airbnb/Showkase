@@ -116,6 +116,6 @@ class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
 
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
         val SHOWCASE_CODEGEN_METADATA_CLASS_NAME =
-            ClassName("com.vinaygaba.browser", "ShowcaseCodegenMetadata")
+            ClassName("com.vinaygaba.browser.models", "ShowcaseCodegenMetadata")
     }
 }
