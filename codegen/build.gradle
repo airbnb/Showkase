@@ -32,8 +32,8 @@ compileKotlin {
 }
 
 dependencies {
-    kapt project(":annotation")
-    compileOnly project(':annotation')
+    kapt project(':showcase-annotation')
+    compileOnly project(':showcase-annotation')
     
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     

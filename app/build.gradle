@@ -52,11 +52,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
     implementation deps.kotlinStdLib
+    
+//    implementation "com.vinaygaba.showcase:0.0.1-SNAPSHOT"
 
     // Showcase dependencies
-    implementation project(':annotation')
-    debugImplementation(project(':browser'))
-    kapt project(':codegen')
+    implementation project(':showcase-annotation')
+//    debugImplementation(project(':browser'))
+//    kapt project(':codegen')
     // TODO(vinaygaba): Figure out product flavor stuff
 //    browserApi(project(':browser'))
 

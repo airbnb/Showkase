@@ -46,7 +46,7 @@ dependencies {
     // Kotlin
     implementation deps.kotlinStdLib
 
-    implementation project(':annotation')
+    api project(':showcase-annotation')
     kapt project(':codegen')
 
     // Support Libraries
@@ -73,7 +73,10 @@ dependencies {
     // RxJava
     implementation deps.rx.core
     implementation deps.rx.android
+    
 
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
 }
+
+apply from: '../gradle-mvn-push.gradle'
