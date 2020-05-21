@@ -13,12 +13,15 @@ import androidx.ui.graphics.Color
 import androidx.ui.graphics.Paint
 import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.fillMaxWidth
+import androidx.ui.layout.padding
 import androidx.ui.layout.preferredSize
 import androidx.ui.material.Card
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.darkColorPalette
 import androidx.ui.material.lightColorPalette
 import androidx.ui.text.TextStyle
+import androidx.ui.text.font.FontFamily
+import androidx.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
@@ -52,7 +55,9 @@ fun GreetingPreview2() {
     
     MaterialTheme(colors = colors) {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth())
+            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, 
+                    fontFamily = FontFamily.Cursive))
         }
     }
 }
