@@ -23,8 +23,9 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
                 }
                 else -> {
                     Snackbar(modifier = Modifier.padding(16.dp),text = {
-                        Text("There was an error with the Showcase annotation processor. " +
-                                "File an issue at https://github.com/vinaygaba/Showcase/issues",
+                        Text("There were no @Composable functions that were annotated with " +
+                                "@Showcase. If you think this is a mistake, file an issue at " +
+                                "https://github.com/vinaygaba/Showcase/issues",
                             modifier = Modifier.padding(4.dp))
                     })
                 }
