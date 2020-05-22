@@ -2,7 +2,12 @@ package com.vinaygaba.browser.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.ui.core.Modifier
 import androidx.ui.core.setContent
+import androidx.ui.foundation.Text
+import androidx.ui.layout.padding
+import androidx.ui.material.Snackbar
+import androidx.ui.unit.dp
 import com.vinaygaba.browser.models.ShowcaseBrowserScreenMetadata
 import com.vinaygaba.browser.models.ShowcaseCodegenMetadata
 import com.vinaygaba.browser.models.ShowcaseCurrentScreen
@@ -12,18 +17,33 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val groupedComponentsMap = getGroupedComponentsMap()
-            ShowcaseBrowserApp(groupedComponentsMap)
+            when {
+                groupedComponentsMap.isNotEmpty() -> {
+                    ShowcaseBrowserApp(groupedComponentsMap)
+                }
+                else -> {
+                    Snackbar(modifier = Modifier.padding(16.dp),text = {
+                        Text("There was an error with the Showcase annotation processor. " +
+                                "File an issue at https://github.com/vinaygaba/Showcase/issues",
+                            modifier = Modifier.padding(4.dp))
+                    })
+                }
+            }
         }
     }
 
     private fun getGroupedComponentsMap(): Map<String, List<ShowcaseCodegenMetadata>> {
-        val showcaseComponentsClass = Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME")
-        val componentList = showcaseComponentsClass.getDeclaredField("componentList").apply {
-            isAccessible = true
+        return try {
+            val showcaseComponentsClass = Class.forName("a$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME")
+            val componentList = showcaseComponentsClass.getDeclaredField("componentList").apply {
+                isAccessible = true
+            }
+            val result =
+                componentList.get(showcaseComponentsClass.newInstance()) as List<ShowcaseCodegenMetadata>
+            result.groupBy { it.group }
+        } catch (exception: ClassNotFoundException) {
+            mapOf()
         }
-        val result =
-            componentList.get(showcaseComponentsClass.newInstance()) as List<ShowcaseCodegenMetadata>
-        return result.groupBy { it.group }
     }
 
     override fun onBackPressed() {
