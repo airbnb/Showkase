@@ -54,6 +54,8 @@ class ShowcaseProcessor: AbstractProcessor() {
         val list = mutableListOf<ShowcaseMetadata>()
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
             // Throw error if this annotation is added to something that is not a method.
+            // TODO(vinaygaba) Add check to ensure only methods annotated with @Composable annotation
+            // qualify for the @Showcase annotation
             if (element.kind != ElementKind.METHOD) {
                 logger.logMessage("Only composable methods can be annotated " +
                         "with ${Showcase::class.java.simpleName}")
