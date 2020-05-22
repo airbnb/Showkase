@@ -53,12 +53,10 @@ dependencies {
     // Kotlin
     implementation deps.kotlinStdLib
     
-//    implementation "com.vinaygaba.showcase:0.0.1-SNAPSHOT"
-
     // Showcase dependencies
-    implementation project(':showcase-annotation')
-//    debugImplementation(project(':browser'))
-//    kapt project(':codegen')
+    debugImplementation project(':showcase')
+    kapt project(':showcase-processor')
+    
     // TODO(vinaygaba): Figure out product flavor stuff
 //    browserApi(project(':browser'))
 

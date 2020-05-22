@@ -52,11 +52,11 @@ android {
 }
 
 dependencies {
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
     implementation deps.kotlinStdLib
 
+    // Showcase
     api project(':showcase-annotation')
     kapt project(':showcase-processor')
 
@@ -76,15 +76,8 @@ dependencies {
     implementation deps.compose.savedInstanceState
     implementation deps.compose.uiLiveData
     androidTestImplementation deps.compose.uiTest
-
-    // Image loading
-    implementation deps.imageLoading.picasso
-    implementation deps.imageLoading.glideCore
-
-    // RxJava
-    implementation deps.rx.core
-    implementation deps.rx.android
     
+    // Unit Testing
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
 }
