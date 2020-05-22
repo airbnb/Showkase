@@ -66,10 +66,8 @@ class ShowcaseProcessor: AbstractProcessor() {
                     element = element, elementUtil = elementUtils!!, typeUtils = typeUtils!!
                 )
                 list += showcaseMetadata
-                // TODO(vinaygaba) Remove suppress and replace with appropriate exception type
-            } catch (@Suppress("TooGenericExceptionCaught")exception: Exception) {
-                logger
-                    .logMessage("Error encountered ${exception.message}")
+            } catch (exception: ShowcaseProcessorException) {
+                logger.logMessage("Error encountered: ${exception.message}")
             }
         }
 
