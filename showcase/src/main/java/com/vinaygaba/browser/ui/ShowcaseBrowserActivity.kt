@@ -2,7 +2,7 @@ package com.vinaygaba.browser.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.ui.core.*
+import androidx.ui.core.setContent
 import com.vinaygaba.browser.models.ShowcaseBrowserScreenMetadata
 import com.vinaygaba.browser.models.ShowcaseCodegenMetadata
 import com.vinaygaba.browser.models.ShowcaseCurrentScreen

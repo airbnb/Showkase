@@ -8,7 +8,11 @@ import androidx.compose.Composable
 import androidx.ui.animation.Transition
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.*
+import androidx.ui.foundation.Box
+import androidx.ui.foundation.Canvas
+import androidx.ui.foundation.ContentGravity
+import androidx.ui.foundation.Text
+import androidx.ui.foundation.isSystemInDarkTheme
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.Paint
 import androidx.ui.layout.fillMaxSize
