@@ -24,7 +24,7 @@ import javax.lang.model.util.Types
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedOptions(KotlinComposableWriter.KAPT_KOTLIN_DIR_PATH)
-class ShowcaseProcessor : AbstractProcessor() {
+class ShowcaseProcessor: AbstractProcessor() {
     private var typeUtils: Types? = null
     private var elementUtils: Elements? = null
     private var filter: Filer? = null

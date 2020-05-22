@@ -63,7 +63,7 @@ fun ShowcaseComponentDetailScreen(
 }
 
 @Composable
-private fun ComponentCardTitle(componentName: String) {
+internal fun ComponentCardTitle(componentName: String) {
     Text(
         text = componentName, modifier = Modifier.padding(16.dp),
         style = TextStyle(
@@ -74,7 +74,7 @@ private fun ComponentCardTitle(componentName: String) {
 }
 
 @Composable
-private fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modifier) {
+internal fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modifier) {
     Card {
         Box(modifier = Modifier.padding(8.dp) + Modifier.fillMaxWidth() + modifier) {
             component()
