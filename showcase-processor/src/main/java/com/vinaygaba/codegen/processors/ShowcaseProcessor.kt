@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService
 import com.vinaygaba.annotation.Showcase
 import com.vinaygaba.codegen.logging.Logger
 import com.vinaygaba.annotation.models.ShowcaseMetadata
+import com.vinaygaba.codegen.exceptions.ShowcaseProcessorException
 import com.vinaygaba.codegen.writer.KotlinComposableWriter
 import java.lang.Exception
 import javax.annotation.processing.AbstractProcessor
@@ -15,7 +16,9 @@ import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedOptions
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -50,8 +53,6 @@ class ShowcaseProcessor: AbstractProcessor() {
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val list = mutableListOf<ShowcaseMetadata>()
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
-            // TODO(vinaygaba) Also add check to ensure that it's a @Composable method with no 
-            //  parameters passed to it
             // Throw error if this annotation is added to something that is not a method.
             if (element.kind != ElementKind.METHOD) {
                 logger.logMessage("Only composable methods can be annotated " +
@@ -59,7 +60,7 @@ class ShowcaseProcessor: AbstractProcessor() {
             }
 
             try {
-                val showcaseMetadata = ShowcaseMetadata.getShowcaseMetadata(
+                val showcaseMetadata = getShowcaseMetadata(
                     element = element, elementUtil = elementUtils!!, typeUtils = typeUtils!!
                 )
                 list += showcaseMetadata
@@ -76,6 +77,27 @@ class ShowcaseProcessor: AbstractProcessor() {
             logger.publishMessages(messager)
         }
         return true
+    }
+
+    companion object {
+        fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
+            val executableElement = element as ExecutableElement
+            val showcaseAnnotation = executableElement.getAnnotation(Showcase::class.java)
+
+            val noOfParameters = executableElement.parameters.size
+            if (noOfParameters > 0) {
+                throw ShowcaseProcessorException("Make sure that the @Composable functions that you " +
+                        "annotate with the @Showcase annotation do not take in any parameters")
+            }
+
+            return ShowcaseMetadata(
+                executableElement,
+                executableElement.simpleName.toString(),
+                element.enclosingElement.enclosingElement.asType().toString(),
+                showcaseAnnotation.name,
+                showcaseAnnotation.group
+            )
+        }
     }
 }
 
