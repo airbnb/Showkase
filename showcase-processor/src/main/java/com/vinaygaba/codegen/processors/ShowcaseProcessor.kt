@@ -6,10 +6,16 @@ import com.vinaygaba.codegen.logging.Logger
 import com.vinaygaba.annotation.models.ShowcaseMetadata
 import com.vinaygaba.codegen.writer.KotlinComposableWriter
 import java.lang.Exception
-import javax.annotation.processing.*
+import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.Filer
+import javax.annotation.processing.Messager
+import javax.annotation.processing.ProcessingEnvironment
+import javax.annotation.processing.Processor
+import javax.annotation.processing.RoundEnvironment
+import javax.annotation.processing.SupportedOptions
+import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -24,7 +30,6 @@ class ShowcaseProcessor: AbstractProcessor() {
     private var filter: Filer? = null
     private var messager: Messager? = null
     private val logger = Logger()
-//    private val kotlinComposableWriter = KotlinComposableWriter(processingEnv)
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
@@ -41,7 +46,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     override fun getSupportedOptions(): MutableSet<String> {
         return mutableSetOf(KotlinComposableWriter.KAPT_KOTLIN_DIR_PATH)
     }
-    
+
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val list = mutableListOf<ShowcaseMetadata>()
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
@@ -49,19 +54,22 @@ class ShowcaseProcessor: AbstractProcessor() {
             //  parameters passed to it
             // Throw error if this annotation is added to something that is not a method.
             if (element.kind != ElementKind.METHOD) {
-                logger.logMessage("Only composable methods can be annotated with ${Showcase::class.java.simpleName}")
+                logger.logMessage("Only composable methods can be annotated " +
+                        "with ${Showcase::class.java.simpleName}")
             }
 
             try {
-                val showcaseMetadata = ShowcaseMetadata.getShowcaseMetadata(element = element, elementUtil = elementUtils!!,
-                    typeUtils = typeUtils!!
+                val showcaseMetadata = ShowcaseMetadata.getShowcaseMetadata(
+                    element = element, elementUtil = elementUtils!!, typeUtils = typeUtils!!
                 )
                 list += showcaseMetadata
-            } catch (exception: Exception) {
-                logger.logMessage("Only composable methods can be annotated with ${Showcase::class.java.simpleName}")
+                // TODO(vinaygaba) Remove suppress and replace with appropriate exception type
+            } catch (@Suppress("TooGenericExceptionCaught")exception: Exception) {
+                logger
+                    .logMessage("Error encountered ${exception.message}")
             }
         }
-        
+
         KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(list)
 
         if (p1?.processingOver() == true) {

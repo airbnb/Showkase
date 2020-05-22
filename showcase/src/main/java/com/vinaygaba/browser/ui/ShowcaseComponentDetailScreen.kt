@@ -24,14 +24,6 @@ import com.vinaygaba.browser.models.ShowcaseBrowserScreenMetadata
 import com.vinaygaba.browser.models.ShowcaseCodegenMetadata
 import java.util.*
 
-enum class ShowcaseComponentCardType {
-    BASIC,
-    DARK_MODE,
-    RTL,
-    FONT_SCALE,
-    DISPLAY_SCALED,
-}
-
 @Composable
 fun ShowcaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
@@ -71,7 +63,7 @@ fun ShowcaseComponentDetailScreen(
 }
 
 @Composable
-fun ComponentCardTitle(componentName: String) {
+internal fun ComponentCardTitle(componentName: String) {
     Text(
         text = componentName, modifier = Modifier.padding(16.dp),
         style = TextStyle(
@@ -82,7 +74,7 @@ fun ComponentCardTitle(componentName: String) {
 }
 
 @Composable
-fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modifier) {
+internal fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modifier) {
     Card {
         Box(modifier = Modifier.padding(8.dp) + Modifier.fillMaxWidth() + modifier) {
             component()
@@ -91,13 +83,13 @@ fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modi
 }
 
 @Composable
-fun BasicComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun BasicComponentCard(component: @Composable() () -> Unit, title: String) {
     ComponentCardTitle("$title [Basic Example]")
     ComponentCard(component)
 }
 
 @Composable
-fun FontScaledComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun FontScaledComponentCard(component: @Composable() () -> Unit, title: String) {
     val density = DensityAmbient.current
     val customDensity = Density(fontScale = density.fontScale * 2, density = density.density)
 
@@ -108,7 +100,7 @@ fun FontScaledComponentCard(component: @Composable() () -> Unit, title: String) 
 }
 
 @Composable
-fun DisplayScaledComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun DisplayScaledComponentCard(component: @Composable() () -> Unit, title: String) {
     val density = DensityAmbient.current
     val customDensity = Density(density = density.density * 2f)
 
@@ -119,7 +111,7 @@ fun DisplayScaledComponentCard(component: @Composable() () -> Unit, title: Strin
 }
 
 @Composable
-fun RTLComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun RTLComponentCard(component: @Composable() () -> Unit, title: String) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         val locale = Locale("ar")
         setLocale(locale)
@@ -133,7 +125,7 @@ fun RTLComponentCard(component: @Composable() () -> Unit, title: String) {
 }
 
 @Composable
-fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
