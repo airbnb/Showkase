@@ -87,15 +87,13 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
+    // Needed due to kotlin bug that is fixed in Kotlin 1.4. Since Compose doesn't yet work with 1.4, 
+    // we'll have to use this compiler flag. 
+    // https://youtrack.jetbrains.com/issue/KT-31734
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
             freeCompilerArgs += '-XXLanguage:+NonParenthesizedAnnotationsOnFunctionalTypes'
         }
-    }
-
-    // Bypass javadoc error
-    tasks.withType(Javadoc) {
-        excludes = ['**/*.kt'] // < ---- Exclude all kotlin files from javadoc file.
     }
 }
 
