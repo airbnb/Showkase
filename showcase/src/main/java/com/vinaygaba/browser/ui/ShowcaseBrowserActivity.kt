@@ -34,7 +34,7 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
 
     private fun getGroupedComponentsMap(): Map<String, List<ShowcaseCodegenMetadata>> {
         return try {
-            val showcaseComponentsClass = Class.forName("a$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME")
+            val showcaseComponentsClass = Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME")
             val componentList = showcaseComponentsClass.getDeclaredField("componentList").apply {
                 isAccessible = true
             }
