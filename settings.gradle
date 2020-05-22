@@ -1,5 +1,5 @@
-include ':browser'
-include ':codegen'
-include ':annotation'
+include ':showcase'
+include ':showcase-processor'
+include ':showcase-annotation'
 include ':app'
 rootProject.name = "Showcase"

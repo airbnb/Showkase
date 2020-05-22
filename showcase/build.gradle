@@ -1,9 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    // Maven artifact publish
+    dependencies {
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
+    }
+}
+
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
 }
 apply plugin: 'kotlin-kapt'
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
     compileSdkVersion 29
@@ -41,13 +52,13 @@ android {
 }
 
 dependencies {
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
     implementation deps.kotlinStdLib
 
-    implementation project(':annotation')
-    kapt project(':codegen')
+    // Showcase
+    api project(':showcase-annotation')
+    kapt project(':showcase-processor')
 
     // Support Libraries
     implementation deps.support.appCompat
@@ -65,15 +76,8 @@ dependencies {
     implementation deps.compose.savedInstanceState
     implementation deps.compose.uiLiveData
     androidTestImplementation deps.compose.uiTest
-
-    // Image loading
-    implementation deps.imageLoading.picasso
-    implementation deps.imageLoading.glideCore
-
-    // RxJava
-    implementation deps.rx.core
-    implementation deps.rx.android
-
+    
+    // Unit Testing
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
 }
