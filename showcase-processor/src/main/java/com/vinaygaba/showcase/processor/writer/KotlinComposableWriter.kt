@@ -13,7 +13,7 @@ import com.squareup.kotlinpoet.asClassName
 
 internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
 
-    fun generateShowcaseBrowserComponents(showcaseMetadataList: List<ShowcaseMetadata>) {
+    internal fun generateShowcaseBrowserComponents(showcaseMetadataList: List<ShowcaseMetadata>) {
         if (showcaseMetadataList.isEmpty()) return
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
@@ -73,7 +73,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         fileBuilder.build().writeTo(processingEnv.filer)
     }
 
-    fun composePreviewFunctionLambda(
+    private fun composePreviewFunctionLambda(
         functionPackageName: String,
         composeFunctionName: String
     ): CodeBlock {
@@ -85,7 +85,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
     }
     
     companion object {
-        const val FILE_NAME = "ShowcaseComposables"
+        const val FILE_NAME = "ShowcaseCodegenComponents"
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
         const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
