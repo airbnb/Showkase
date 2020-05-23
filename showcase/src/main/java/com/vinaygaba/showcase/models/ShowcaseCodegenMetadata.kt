@@ -7,6 +7,8 @@ import androidx.compose.Composable
 data class ShowcaseCodegenMetadata(
     val group: String,
     val componentName: String,
+    val widthDp: Int,
+    val heightDp: Int,
     val component: @Composable () -> Unit
 )
  

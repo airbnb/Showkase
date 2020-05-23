@@ -7,5 +7,7 @@ internal data class ShowcaseMetadata(
     val methodName: String,
     val packageName: String,
     val name: String,
-    val group: String
+    val group: String,
+    val widthDp: Int,
+    val heightDp: Int
 )

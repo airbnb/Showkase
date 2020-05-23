@@ -19,7 +19,7 @@ internal fun ShowcaseGroupComponentsScreen(
                 ShowcaseCurrentScreen.COMPONENT_DETAIL
             ShowcaseBrowserScreenMetadata.currentComponent = groupComponent.componentName
         }) {
-            ComponentCard(groupComponent.component)
+            ComponentCard(groupComponent)
         }
     }
 }
