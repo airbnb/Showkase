@@ -5,5 +5,7 @@ package com.vinaygaba.showcase.annotation.models
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
 annotation class Showcase(
     val name: String = "",
-    val group: String = ""
+    val group: String = "",
+    val widthDp: Int = -1,
+    val heightDp: Int = -1
 )

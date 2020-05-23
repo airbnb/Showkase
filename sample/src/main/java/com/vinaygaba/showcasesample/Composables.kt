@@ -11,9 +11,11 @@ import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Canvas
 import androidx.ui.foundation.ContentGravity
+import androidx.ui.foundation.Image
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.isSystemInDarkTheme
 import androidx.ui.graphics.Color
+import androidx.ui.graphics.ColorFilter
 import androidx.ui.graphics.painter.rotate
 import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.fillMaxWidth
@@ -23,6 +25,8 @@ import androidx.ui.material.Card
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.darkColorPalette
 import androidx.ui.material.lightColorPalette
+import androidx.ui.res.loadImageResource
+import androidx.ui.res.loadVectorResource
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
 import androidx.ui.text.font.FontWeight
@@ -36,7 +40,7 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!", style = TextStyle(fontSize = 15.sp))
 }
 
-@Showcase(name = "Greeting 1", group = "Group1")
+@Showcase(name = "Greeting 1", group = "Group1", widthDp = 20, heightDp = 20)
 @Preview()
 @Composable
 fun GreetingPreview1() {
@@ -163,4 +167,14 @@ fun RotatingSquareComponent() {
 @Composable
 fun RotatingSquareComponentPreview() {
     RotatingSquareComponent()
+}
+
+
+@Showcase(group = "Group2", name = "Vector Resource", widthDp = 10, heightDp = 10)
+@Composable
+fun TestComponent() {
+    val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
+    vectorAsset.resource.resource?.let {
+        Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
+    }
 }

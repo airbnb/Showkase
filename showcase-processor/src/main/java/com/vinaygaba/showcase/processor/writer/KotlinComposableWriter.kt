@@ -40,10 +40,12 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
 
         showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
             componentListInitializerCodeBlock.addStatement(
-                "%T(%S, %S, ",
+                "%T(%S, %S, %L, %L, ",
                 SHOWCASE_CODEGEN_METADATA_CLASS_NAME,
                 showcaseMetadata.group,
-                showcaseMetadata.name
+                showcaseMetadata.name,
+                showcaseMetadata.widthDp,
+                showcaseMetadata.heightDp
             )
 
             val composableLambdaCodeBlock = composePreviewFunctionLambda(

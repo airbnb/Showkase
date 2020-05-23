@@ -3,6 +3,7 @@ package com.vinaygaba.showcase.ui
 import android.content.res.Configuration
 import androidx.compose.Composable
 import androidx.compose.Providers
+import androidx.ui.core.CombinedModifier
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
@@ -13,6 +14,7 @@ import androidx.ui.foundation.Text
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.rtl
+import androidx.ui.layout.size
 import androidx.ui.material.Card
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -33,29 +35,14 @@ internal fun ShowcaseComponentDetailScreen(
         it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
     } ?: return
 
-    AdapterList(data = listOf(componentMetadata)) { componentMetadata ->
+    AdapterList(data = listOf(componentMetadata)) { metadata ->
         ShowcaseComponentCardType.values().forEach { showcaseComponentCardType ->
             when (showcaseComponentCardType) {
-                ShowcaseComponentCardType.BASIC -> BasicComponentCard(
-                    componentMetadata.component,
-                    componentMetadata.componentName
-                )
-                ShowcaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(
-                    componentMetadata.component,
-                    componentMetadata.componentName
-                )
-                ShowcaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(
-                    componentMetadata.component,
-                    componentMetadata.componentName
-                )
-                ShowcaseComponentCardType.RTL -> RTLComponentCard(
-                    componentMetadata.component,
-                    componentMetadata.componentName
-                )
-                ShowcaseComponentCardType.DARK_MODE -> DarkModeComponentCard(
-                    componentMetadata.component,
-                    componentMetadata.componentName
-                )
+                ShowcaseComponentCardType.BASIC -> BasicComponentCard(metadata)
+                ShowcaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(metadata)
+                ShowcaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(metadata)
+                ShowcaseComponentCardType.RTL -> RTLComponentCard(metadata)
+                ShowcaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
             }
         }
 
@@ -74,64 +61,81 @@ internal fun ComponentCardTitle(componentName: String) {
 }
 
 @Composable
-internal fun ComponentCard(component: @Composable() () -> Unit, modifier: Modifier = Modifier) {
-    Card {
-        Box(modifier = Modifier.padding(8.dp) + Modifier.fillMaxWidth() + modifier) {
-            component()
+internal fun ComponentCard(metadata: ShowcaseCodegenMetadata) {
+    val updatedModifier = generateDimensionModifier(metadata)
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = updatedModifier) {
+            metadata.component()
         }
     }
 }
 
 @Composable
-private fun BasicComponentCard(component: @Composable() () -> Unit, title: String) {
-    ComponentCardTitle("$title [Basic Example]")
-    ComponentCard(component)
+private fun BasicComponentCard(metadata: ShowcaseCodegenMetadata) {
+    ComponentCardTitle("${metadata.componentName} [Basic Example]")
+    ComponentCard(metadata)
 }
 
 @Composable
-private fun FontScaledComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun FontScaledComponentCard(metadata: ShowcaseCodegenMetadata) {
     val density = DensityAmbient.current
     val customDensity = Density(fontScale = density.fontScale * 2, density = density.density)
 
-    ComponentCardTitle("$title [Font Scaled x 2]")
+    ComponentCardTitle("${metadata.componentName} [Font Scaled x 2]")
     Providers(DensityAmbient provides customDensity) {
-        ComponentCard(component)
+        ComponentCard(metadata)
     }
 }
 
 @Composable
-private fun DisplayScaledComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun DisplayScaledComponentCard(metadata: ShowcaseCodegenMetadata) {
     val density = DensityAmbient.current
     val customDensity = Density(density = density.density * 2f)
 
-    ComponentCardTitle("$title [Display Scaled x 2]")
+    ComponentCardTitle("${metadata.componentName} [Display Scaled x 2]")
     Providers(DensityAmbient provides customDensity) {
-        ComponentCard(component)
+        ComponentCard(metadata)
     }
 }
 
 @Composable
-private fun RTLComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun RTLComponentCard(metadata: ShowcaseCodegenMetadata) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         val locale = Locale("ar")
         setLocale(locale)
         setLayoutDirection(locale)
     }
     val customContext = ContextAmbient.current.createConfigurationContext(customConfiguration)
-    ComponentCardTitle("$title [RTL]")
+    ComponentCardTitle("${metadata.componentName} [RTL]")
     Providers(ContextAmbient provides customContext) {
-        ComponentCard(component, Modifier.rtl)
+        val updatedModifier = generateDimensionModifier(metadata)
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.rtl) {
+                Box(modifier = updatedModifier) {
+                    metadata.component()
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun DarkModeComponentCard(component: @Composable() () -> Unit, title: String) {
+private fun DarkModeComponentCard(metadata: ShowcaseCodegenMetadata) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
 
-    ComponentCardTitle("$title [Dark Mode]")
+    ComponentCardTitle("${metadata.componentName} [Dark Mode]")
     Providers(ConfigurationAmbient provides customConfiguration) {
-        ComponentCard(component)
+        ComponentCard(metadata)
     }
+}
+
+private fun generateDimensionModifier(metadata: ShowcaseCodegenMetadata): Modifier {
+    val baseModifier = Modifier.padding(16.dp)
+    if (metadata.heightDp > 0 || metadata.widthDp > 0) {
+        return baseModifier + 
+                Modifier.size(width =  metadata.widthDp.dp, height = metadata.heightDp.dp)
+    }
+    return baseModifier + Modifier.fillMaxWidth()
 }

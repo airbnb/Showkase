@@ -97,7 +97,9 @@ class ShowcaseProcessor: AbstractProcessor() {
                 executableElement.simpleName.toString(),
                 element.enclosingElement.enclosingElement.asType().toString(),
                 showcaseAnnotation.name,
-                showcaseAnnotation.group
+                showcaseAnnotation.group,
+                showcaseAnnotation.widthDp,
+                showcaseAnnotation.heightDp
             )
         }
     }
