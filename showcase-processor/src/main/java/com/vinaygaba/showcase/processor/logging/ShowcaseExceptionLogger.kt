@@ -3,7 +3,7 @@ package com.vinaygaba.showcase.processor.logging
 import javax.annotation.processing.Messager
 import javax.tools.Diagnostic
 
-class Logger {
+internal class ShowcaseExceptionLogger {
     private val loggedExceptions: MutableList<Exception> = mutableListOf()
     
     

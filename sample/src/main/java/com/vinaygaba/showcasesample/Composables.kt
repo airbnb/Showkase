@@ -65,7 +65,6 @@ fun GreetingPreview2() {
     }
 }
 
-
 /**
  * PropKeys are used in Jetpack Compose animations to hold properties that are going to be
  * updated by the animation transitions. In this example, we use a [FloatPropKey] to hold a float

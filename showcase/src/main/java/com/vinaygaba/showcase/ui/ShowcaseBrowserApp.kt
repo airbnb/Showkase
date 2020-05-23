@@ -6,7 +6,7 @@ import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
-fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
+internal fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
     when (ShowcaseBrowserScreenMetadata.currentScreen) {
         ShowcaseCurrentScreen.GROUPS -> {
             ShowcaseAllGroupsScreen(groupedComponentMap)

@@ -67,7 +67,7 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcasecodegen"
-        const val AUTOGEN_CLASS_NAME = "ShowcaseComponents"
+        const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcase"
+        const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
     }
 }
