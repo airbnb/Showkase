@@ -1,8 +1,8 @@
-package com.vinaygaba.showcase.annotation.models
+package com.vinaygaba.showcase.processor.models
 
 import javax.lang.model.element.ExecutableElement
 
-data class ShowcaseMetadata(
+internal data class ShowcaseMetadata(
     val methodElement: ExecutableElement,
     val methodName: String,
     val packageName: String,

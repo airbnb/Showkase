@@ -31,7 +31,6 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.vinaygaba.showcase.annotation.models.Showcase
 
-
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!", style = TextStyle(fontSize = 15.sp))
@@ -64,7 +63,6 @@ fun GreetingPreview2() {
         }
     }
 }
-
 
 /**
  * PropKeys are used in Jetpack Compose animations to hold properties that are going to be

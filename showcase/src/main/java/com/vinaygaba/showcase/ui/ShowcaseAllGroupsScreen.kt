@@ -18,7 +18,7 @@ import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
-fun ShowcaseAllGroupsScreen(
+internal fun ShowcaseAllGroupsScreen(
     groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
     AdapterList(data = groupedComponentMap.keys.toList()) { group ->

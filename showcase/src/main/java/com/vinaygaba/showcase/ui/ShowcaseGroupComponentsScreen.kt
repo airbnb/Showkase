@@ -8,7 +8,7 @@ import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
-fun ShowcaseGroupComponentsScreen(
+internal fun ShowcaseGroupComponentsScreen(
     groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
     val groupComponentsList = groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return

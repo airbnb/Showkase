@@ -1,6 +1,6 @@
 package com.vinaygaba.showcase.ui
 
-enum class ShowcaseComponentCardType {
+internal enum class ShowcaseComponentCardType {
     BASIC,
     DARK_MODE,
     RTL,

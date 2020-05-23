@@ -2,8 +2,8 @@ package com.vinaygaba.showcase.processor
 
 import com.google.auto.service.AutoService
 import com.vinaygaba.showcase.annotation.models.Showcase
-import com.vinaygaba.showcase.processor.logging.Logger
-import com.vinaygaba.showcase.annotation.models.ShowcaseMetadata
+import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
+import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
 import com.vinaygaba.showcase.processor.exceptions.ShowcaseProcessorException
 import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter
 import javax.annotation.processing.AbstractProcessor
@@ -31,7 +31,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     private var elementUtils: Elements? = null
     private var filter: Filer? = null
     private var messager: Messager? = null
-    private val logger = Logger()
+    private val logger = ShowcaseExceptionLogger()
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
@@ -80,7 +80,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
 
     companion object {
-        fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
+        private fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
             val executableElement = element as ExecutableElement
             val showcaseAnnotation = executableElement.getAnnotation(Showcase::class.java)
 
