@@ -6,6 +6,7 @@ import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
 import com.vinaygaba.showcase.processor.exceptions.ShowcaseProcessorException
 import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter
+import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter.Companion.COMPOSE_CLASS_NAME
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -19,6 +20,7 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.TypeKind
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -32,6 +34,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     private var filter: Filer? = null
     private var messager: Messager? = null
     private val logger = ShowcaseExceptionLogger()
+    private var composableKind: TypeKind? = null
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
@@ -39,6 +42,10 @@ class ShowcaseProcessor: AbstractProcessor() {
         elementUtils = processingEnv?.elementUtils
         filter = processingEnv?.filer
         messager = processingEnv?.messager
+        composableKind = elementUtils
+            ?.getTypeElement(COMPOSABLE_CLASS_NAME.canonicalName)
+            ?.asType()
+            ?.kind!!
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
@@ -52,12 +59,13 @@ class ShowcaseProcessor: AbstractProcessor() {
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val list = mutableListOf<ShowcaseMetadata>()
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
-            // Throw error if this annotation is added to something that is not a method.
-            // TODO(vinaygaba) Add check to ensure only methods annotated with @Composable annotation
-            // qualify for the @Showcase annotation
-            if (element.kind != ElementKind.METHOD) {
+            // Throw error if this annotation is added to something that is not a method or if the 
+            // method annotated with the showcase annotation isn't a @Composable function.
+            if (element.kind != ElementKind.METHOD || 
+                element.annotationMirrors.find { it.annotationType.kind == composableKind } == null) {
                 logger.logMessage("Only composable methods can be annotated " +
                         "with ${Showcase::class.java.simpleName}")
+                return@forEach
             }
 
             try {
@@ -80,6 +88,8 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
 
     companion object {
+        val COMPOSABLE_CLASS_NAME = Class.forName("androidx.compose.Composable")
+        
         private fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
             val executableElement = element as ExecutableElement
             val showcaseAnnotation = executableElement.getAnnotation(Showcase::class.java)
