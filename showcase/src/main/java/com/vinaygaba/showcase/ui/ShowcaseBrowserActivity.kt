@@ -22,12 +22,11 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
                     ShowcaseBrowserApp(groupedComponentsMap)
                 }
                 else -> {
-                    Snackbar(modifier = Modifier.padding(16.dp),text = {
-                        Text("There were no @Composable functions that were annotated with " +
+                    ShowcaseErrorScreen(
+                        errorText = "There were no @Composable functions that were annotated with " +
                                 "@Showcase. If you think this is a mistake, file an issue at " +
-                                "https://github.com/vinaygaba/Showcase/issues",
-                            modifier = Modifier.padding(4.dp))
-                    })
+                                "https://github.com/vinaygaba/Showcase/issues"
+                    )
                 }
             }
         }

@@ -30,7 +30,8 @@ import java.util.*
 internal fun ShowcaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
-    val componentMetadataList = groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
+    val componentMetadataList =
+        groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find {
         it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
     } ?: return
@@ -61,9 +62,12 @@ internal fun ComponentCardTitle(componentName: String) {
 }
 
 @Composable
-internal fun ComponentCard(metadata: ShowcaseCodegenMetadata) {
+internal fun ComponentCard(
+    metadata: ShowcaseCodegenMetadata,
+    cardModifier: Modifier = Modifier.fillMaxWidth()
+) {
     val updatedModifier = generateDimensionModifier(metadata)
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = cardModifier) {
         Box(modifier = updatedModifier) {
             metadata.component()
         }
@@ -134,8 +138,8 @@ private fun DarkModeComponentCard(metadata: ShowcaseCodegenMetadata) {
 private fun generateDimensionModifier(metadata: ShowcaseCodegenMetadata): Modifier {
     val baseModifier = Modifier.padding(16.dp)
     if (metadata.heightDp > 0 || metadata.widthDp > 0) {
-        return baseModifier + 
-                Modifier.size(width =  metadata.widthDp.dp, height = metadata.heightDp.dp)
+        return baseModifier +
+                Modifier.size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
     }
     return baseModifier + Modifier.fillMaxWidth()
 }
