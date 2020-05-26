@@ -4,6 +4,7 @@ import androidx.compose.Composable
 import androidx.compose.state
 import androidx.compose.getValue
 import androidx.compose.setValue
+import androidx.ui.core.ContextAmbient
 import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.TextFieldValue
@@ -13,6 +14,7 @@ import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Search
+import com.vinaygaba.showcase.R
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
@@ -49,12 +51,13 @@ internal fun ShowcaseAppBar() {
 
 @Composable
 private fun ShowcaseAppBarTitle(currentScreen: ShowcaseCurrentScreen) {
+    val context = ContextAmbient.current
     when {
         ShowcaseBrowserScreenMetadata.isSearchActive -> {
             ShowcaseSearchField()
         }
         currentScreen == ShowcaseCurrentScreen.GROUPS -> {
-            Text("Showcase")
+            Text(context.resources.getString(R.string.app_name))
         }
         currentScreen == ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
             Text(ShowcaseBrowserScreenMetadata.currentGroup.orEmpty())
