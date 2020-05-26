@@ -11,7 +11,7 @@ import androidx.ui.material.Snackbar
 import androidx.ui.unit.dp
 
 @Composable
-fun ShowcaseErrorScreen(errorText: String) {
+internal fun ShowcaseErrorScreen(errorText: String) {
     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
         Snackbar(modifier = Modifier.padding(16.dp),
             text = {
