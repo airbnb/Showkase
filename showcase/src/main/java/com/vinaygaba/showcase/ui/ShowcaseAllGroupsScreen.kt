@@ -21,11 +21,14 @@ import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 internal fun ShowcaseAllGroupsScreen(
     groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
 ) {
-    AdapterList(data = groupedComponentMap.keys.toList()) { group ->
+    val filteredList = getFilteredSearchList(groupedComponentMap.keys.toList())
+
+    AdapterList(data = filteredList) { group ->
         Clickable(onClick = {
             ShowcaseBrowserScreenMetadata.currentScreen =
                 ShowcaseCurrentScreen.GROUP_COMPONENTS
             ShowcaseBrowserScreenMetadata.currentGroup = group
+            ShowcaseBrowserScreenMetadata.isSearchActive = false
         }) {
             Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
                 Text(
@@ -39,3 +42,14 @@ internal fun ShowcaseAllGroupsScreen(
         }
     }
 }
+
+internal fun getFilteredSearchList(list: List<String>) =
+    when (ShowcaseBrowserScreenMetadata.isSearchActive) {
+        false -> list
+        !ShowcaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
+            list.filter {
+                it.toLowerCase().contains(ShowcaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
+            }
+        }
+        else -> list
+    }
