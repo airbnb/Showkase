@@ -28,6 +28,7 @@ internal fun ShowcaseAllGroupsScreen(
             ShowcaseBrowserScreenMetadata.currentScreen =
                 ShowcaseCurrentScreen.GROUP_COMPONENTS
             ShowcaseBrowserScreenMetadata.currentGroup = group
+            ShowcaseBrowserScreenMetadata.isSearchActive = false
         }) {
             Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp)) {
                 Text(
