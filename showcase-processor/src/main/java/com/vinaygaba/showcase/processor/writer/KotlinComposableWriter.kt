@@ -47,7 +47,6 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                 showcaseMetadata.widthDp,
                 showcaseMetadata.heightDp
             )
-
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showcaseMetadata.packageName,
                 showcaseMetadata.methodName

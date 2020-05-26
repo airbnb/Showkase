@@ -170,11 +170,13 @@ fun RotatingSquareComponentPreview() {
 }
 
 
-@Showcase(group = "Group2", name = "Vector Resource", widthDp = 10, heightDp = 10)
-@Composable
-fun TestComponent() {
-    val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
-    vectorAsset.resource.resource?.let {
-        Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
+class ComposablesClass {
+    @Showcase(group = "Group2", name = "Vector Resource", widthDp = 10, heightDp = 10)
+    @Composable
+    fun TestComponent() {
+        val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
+        vectorAsset.resource.resource?.let {
+            Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
+        }
     }
 }

@@ -79,7 +79,7 @@ class ShowcaseProcessor: AbstractProcessor() {
             }
         }
 
-        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(list)
+//        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(list)
 
         if (p1?.processingOver() == true) {
             logger.publishMessages(messager)
@@ -92,6 +92,12 @@ class ShowcaseProcessor: AbstractProcessor() {
         
         private fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
             val executableElement = element as ExecutableElement
+            val enclosingElement = element.enclosingElement
+            val isClass = enclosingElement.kind == ElementKind.CLASS
+            println("********************************")
+            println("Enclosing element ${enclosingElement}")
+            println("Enclosing element kind $isClass")
+            
             val showcaseAnnotation = executableElement.getAnnotation(Showcase::class.java)
 
             val noOfParameters = executableElement.parameters.size
