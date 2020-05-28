@@ -14,4 +14,6 @@ internal object ShowcaseBrowserScreenMetadata {
         ShowcaseCurrentScreen.GROUPS
     var currentGroup: String? = null
     var currentComponent: String? = null
+    var isSearchActive = false
+    var searchQuery: String? = null
 }
