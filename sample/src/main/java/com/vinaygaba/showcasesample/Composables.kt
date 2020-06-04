@@ -164,7 +164,7 @@ fun RotatingSquareComponent() {
 @Showcase(group = "Group2", name = "Animation")
 @Preview
 @Composable
-internal fun RotatingSquareComponentPreview() {
+private fun RotatingSquareComponentPreview() {
     RotatingSquareComponent()
 }
 

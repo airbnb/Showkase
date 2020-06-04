@@ -5,6 +5,7 @@ import com.vinaygaba.showcase.annotation.models.Showcase
 import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
 import com.vinaygaba.showcase.processor.exceptions.ShowcaseProcessorException
+import com.vinaygaba.showcase.processor.logging.ShowcaseValidator
 import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
@@ -16,7 +17,6 @@ import javax.annotation.processing.SupportedOptions
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
@@ -33,6 +33,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     private var filter: Filer? = null
     private var messager: Messager? = null
     private val logger = ShowcaseExceptionLogger()
+    private val showcaseValidator = ShowcaseValidator()
     private var composableKind: TypeKind? = null
 
     override fun init(processingEnv: ProcessingEnvironment?) {
@@ -60,10 +61,7 @@ class ShowcaseProcessor: AbstractProcessor() {
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
             // Throw error if this annotation is added to something that is not a method or if the 
             // method annotated with the showcase annotation isn't a @Composable function.
-            if (element.kind != ElementKind.METHOD || 
-                element.annotationMirrors.find { it.annotationType.kind == composableKind } == null) {
-                logger.logMessage("Only composable methods can be annotated " +
-                        "with ${Showcase::class.java.simpleName}")
+            if (!showcaseValidator.validateElement(element, logger, composableKind)) {
                 return@forEach
             }
 
@@ -88,8 +86,12 @@ class ShowcaseProcessor: AbstractProcessor() {
 
     companion object {
         val COMPOSABLE_CLASS_NAME = Class.forName("androidx.compose.Composable")
-        
-        private fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
+
+        private fun getShowcaseMetadata(
+            element: Element,
+            elementUtil: Elements,
+            typeUtils: Types
+        ): ShowcaseMetadata {
             val executableElement = element as ExecutableElement
             val enclosingElement = element.enclosingElement
             val isStaticMethod = executableElement.modifiers.contains(Modifier.STATIC)
