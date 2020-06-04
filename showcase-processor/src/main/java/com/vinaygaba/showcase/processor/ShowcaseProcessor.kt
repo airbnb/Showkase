@@ -24,7 +24,6 @@ import javax.lang.model.type.TypeKind
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedOptions(KotlinComposableWriter.KAPT_KOTLIN_DIR_PATH)
@@ -107,6 +106,10 @@ class ShowcaseProcessor: AbstractProcessor() {
             return ShowcaseMetadata(
                 executableElement,
                 executableElement.simpleName.toString(),
+                // If isStaticMethod is true, it means the method was declared at the top level. 
+                // If not, it was declared inside a class
+                // TODO(vinaygaba): Add support for methods inside companion objects and 
+                // objects
                 if (isStaticMethod) null else enclosingElement.asType(),
                 element.enclosingElement.enclosingElement.asType().toString(),
                 showcaseAnnotation.name,

@@ -81,6 +81,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         enclosingClass: TypeMirror?= null,
         composeFunctionName: String
     ): CodeBlock {
+        // IF enclosingClass is null, it denotes that the method was a top-level method declaration.
         return if (enclosingClass == null) {
             val composeMember = MemberName(functionPackageName, composeFunctionName)
             CodeBlock.Builder()
@@ -88,6 +89,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                     COMPOSE_CLASS_NAME, composeMember)
                 .build()
         } else {
+            // Otherwise it was declared inside a class.
             CodeBlock.Builder()
                 .add("@%T { %T().${composeFunctionName}() }",
                     COMPOSE_CLASS_NAME, enclosingClass)
