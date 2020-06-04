@@ -6,7 +6,6 @@ import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
 import com.vinaygaba.showcase.processor.exceptions.ShowcaseProcessorException
 import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter
-import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter.Companion.COMPOSE_CLASS_NAME
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -19,11 +18,11 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeKind
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
@@ -92,6 +91,8 @@ class ShowcaseProcessor: AbstractProcessor() {
         
         private fun getShowcaseMetadata(element: Element, elementUtil: Elements, typeUtils: Types): ShowcaseMetadata {
             val executableElement = element as ExecutableElement
+            val enclosingElement = element.enclosingElement
+            val isStaticMethod = executableElement.modifiers.contains(Modifier.STATIC)
             val showcaseAnnotation = executableElement.getAnnotation(Showcase::class.java)
 
             val noOfParameters = executableElement.parameters.size
@@ -105,6 +106,11 @@ class ShowcaseProcessor: AbstractProcessor() {
             return ShowcaseMetadata(
                 executableElement,
                 executableElement.simpleName.toString(),
+                // If isStaticMethod is true, it means the method was declared at the top level. 
+                // If not, it was declared inside a class
+                // TODO(vinaygaba): Add support for methods inside companion objects and 
+                // objects
+                if (isStaticMethod) null else enclosingElement.asType(),
                 element.enclosingElement.enclosingElement.asType().toString(),
                 showcaseAnnotation.name,
                 showcaseAnnotation.group,

@@ -25,7 +25,6 @@ import androidx.ui.material.Card
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.darkColorPalette
 import androidx.ui.material.lightColorPalette
-import androidx.ui.res.loadImageResource
 import androidx.ui.res.loadVectorResource
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -165,16 +164,18 @@ fun RotatingSquareComponent() {
 @Showcase(group = "Group2", name = "Animation")
 @Preview
 @Composable
-fun RotatingSquareComponentPreview() {
+internal fun RotatingSquareComponentPreview() {
     RotatingSquareComponent()
 }
 
-
-@Showcase(group = "Group2", name = "Vector Resource", widthDp = 10, heightDp = 10)
-@Composable
-fun TestComponent() {
-    val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
-    vectorAsset.resource.resource?.let {
-        Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
+class WrapperClass {
+    @Showcase(group = "Group3", name = "Test Component", widthDp = 10, heightDp = 10)
+    @Composable
+    fun TestComponent() {
+        val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
+        vectorAsset.resource.resource?.let {
+            Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
+        }
     }
 }
+
