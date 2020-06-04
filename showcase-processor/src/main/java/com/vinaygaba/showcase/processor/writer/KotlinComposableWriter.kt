@@ -10,6 +10,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import javax.lang.model.type.TypeMirror
 
 internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
 
@@ -49,6 +50,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
             )
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showcaseMetadata.packageName,
+                showcaseMetadata.enclosingClass,
                 showcaseMetadata.methodName
             )
             componentListInitializerCodeBlock.add(composableLambdaCodeBlock)
@@ -76,13 +78,21 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
 
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
+        enclosingClass: TypeMirror?= null,
         composeFunctionName: String
     ): CodeBlock {
-        val composeMember = MemberName(functionPackageName, composeFunctionName)
-        return CodeBlock.Builder()
-            .add("@%T { %M() }",
-                COMPOSE_CLASS_NAME, composeMember)
-            .build()
+        return if (enclosingClass == null) {
+            val composeMember = MemberName(functionPackageName, composeFunctionName)
+            CodeBlock.Builder()
+                .add("@%T { %M() }",
+                    COMPOSE_CLASS_NAME, composeMember)
+                .build()
+        } else {
+            CodeBlock.Builder()
+                .add("@%T { %T().${composeFunctionName}() }",
+                    COMPOSE_CLASS_NAME, enclosingClass)
+                .build()
+        }
     }
     
     companion object {
