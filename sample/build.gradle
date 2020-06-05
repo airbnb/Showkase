@@ -5,6 +5,11 @@ plugins {
 }
 apply plugin: 'kotlin-kapt'
 
+kapt {
+    correctErrorTypes = true
+    generateStubs = true
+}
+
 android {
     compileSdkVersion 29
 

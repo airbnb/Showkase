@@ -16,6 +16,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 kapt {
+    correctErrorTypes = true
     generateStubs = true
 }
 
@@ -45,7 +46,7 @@ compileKotlin {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compileOnly project(':showcase-annotation')
+    implementation project(':showcase-annotation')
     
     implementation deps.kotlinStdLib
     implementation deps.kotlinPoet
