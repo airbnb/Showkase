@@ -46,7 +46,7 @@ compileKotlin {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation project(':showcase-annotation')
+    compileOnly project(':showcase-annotation')
     
     implementation deps.kotlinStdLib
     implementation deps.kotlinPoet

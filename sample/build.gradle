@@ -60,6 +60,8 @@ dependencies {
     implementation deps.kotlinStdLib
     
     // Showcase dependencies
+    // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 
+    //  Figure out a way to enable using debugImplementation
     implementation project(':showcase')
     kapt project(':showcase-processor')
 
