@@ -534,8 +534,16 @@ fun SimpleConstraintLayoutComponent() {
     }
 }
 
+@Showcase("List Component", "List Items")
+@Preview("Simple constraint layout example")
+@Composable
+fun SimpleConstraintLayoutComponentPreview() {
+    Column {
+        SimpleConstraintLayoutComponent()
+    }
+}
 
-@Showcase("Vinay's List Item","List Item's")
+@Showcase("List Component", "List Items")
 @Preview("Simple constraint layout example")
 @Composable
 fun SimpleConstraintLayoutComponentPreview() {
