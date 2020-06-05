@@ -16,6 +16,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 kapt {
+    correctErrorTypes = true
     generateStubs = true
 }
 
