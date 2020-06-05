@@ -7,7 +7,6 @@ apply plugin: 'kotlin-kapt'
 
 kapt {
     correctErrorTypes = true
-    generateStubs = true
 }
 
 android {
@@ -61,7 +60,7 @@ dependencies {
     implementation deps.kotlinStdLib
     
     // Showcase dependencies
-    debugImplementation project(':showcase')
+    implementation project(':showcase')
     kapt project(':showcase-processor')
 
     // Support Libraries
