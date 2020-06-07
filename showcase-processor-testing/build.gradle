@@ -65,6 +65,7 @@ dependencies {
     implementation deps.compose.foundation
 
     // Testing
+    testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
