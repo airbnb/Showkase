@@ -20,7 +20,7 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeKind
+import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -34,7 +34,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     private var messager: Messager? = null
     private val logger = ShowcaseExceptionLogger()
     private val showcaseValidator = ShowcaseValidator()
-    private var composableKind: TypeKind? = null
+    private var composableTypeMirror: TypeMirror? = null
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
@@ -42,10 +42,9 @@ class ShowcaseProcessor: AbstractProcessor() {
         elementUtils = processingEnv?.elementUtils
         filter = processingEnv?.filer
         messager = processingEnv?.messager
-        composableKind = elementUtils
+        composableTypeMirror = elementUtils
             ?.getTypeElement(Class.forName("androidx.compose.Composable").canonicalName)
             ?.asType()
-            ?.kind!!
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
@@ -61,10 +60,9 @@ class ShowcaseProcessor: AbstractProcessor() {
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
             // Throw error if this annotation is added to something that is not a method or if the 
             // method annotated with the showcase annotation isn't a @Composable function.
-            if (!showcaseValidator.validateElement(element, logger, composableKind)) {
+            if (!showcaseValidator.validateElement(element, logger, composableTypeMirror, typeUtils)) {
                 return@forEach
             }
-
             try {
                 val showcaseMetadata =
                     getShowcaseMetadata(
