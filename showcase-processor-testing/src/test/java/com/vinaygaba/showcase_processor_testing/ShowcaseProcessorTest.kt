@@ -216,8 +216,10 @@ class ShowcaseProcessorTest {
                 
                 class ShowcaseCodegenComponents {
                   val componentList: List<ShowcaseCodegenMetadata> = listOf<ShowcaseCodegenMetadata>(
-                    ShowcaseCodegenMetadata("name", "group", -1, -1, 
-                    @Composable { TestComposable() }))
+                
+                        ShowcaseCodegenMetadata("name", "group", -1, -1,
+                            @Composable { TestComposable() })
+                        )
                   }
             """.trimIndent()
             )
@@ -265,9 +267,12 @@ class ShowcaseProcessorTest {
                 
                 class ShowcaseCodegenComponents {
                   val componentList: List<ShowcaseCodegenMetadata> = listOf<ShowcaseCodegenMetadata>(
-                    ShowcaseCodegenMetadata("name1", "group1", -1, -1, 
-                    @Composable { TestComposable1() }),ShowcaseCodegenMetadata("name2", "group1", -1, -1, 
-                    @Composable { TestComposable2() }))
+                
+                        ShowcaseCodegenMetadata("name1", "group1", -1, -1,
+                            @Composable { TestComposable1() }),
+                        ShowcaseCodegenMetadata("name2", "group1", -1, -1,
+                            @Composable { TestComposable2() })
+                        )
                   }
             """.trimIndent()
             )
