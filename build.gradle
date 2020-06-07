@@ -2,7 +2,7 @@
 buildscript {
     ext.versions = [
             'assertJ': '3.16.1',
-            'compose': '0.1.0-dev11',
+            'compose': '0.1.0-dev12',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
             'glide': '4.10.0',
