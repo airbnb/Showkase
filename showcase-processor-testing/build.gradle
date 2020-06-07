@@ -16,6 +16,12 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -24,6 +30,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
     buildFeatures {
         compose true
     }
@@ -31,6 +42,7 @@ android {
         kotlinCompilerVersion "1.3.70-dev-withExperimentalGoogleExtensions-20200424"
         kotlinCompilerExtensionVersion "${versions.compose}"
     }
+    defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 }
 
 dependencies {
@@ -53,6 +65,7 @@ dependencies {
     implementation deps.compose.foundation
 
     // Testing
+    testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation

@@ -5,12 +5,15 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
 import javax.lang.model.type.TypeKind
+import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Types
 
 class ShowcaseValidator {
     internal fun validateElement(
         element: Element,
         logger: ShowcaseExceptionLogger,
-        composableKind: TypeKind?
+        composableTypeMirror: TypeMirror?,
+        typeUtils: Types?
     ): Boolean {
         
         return when {
@@ -21,7 +24,9 @@ class ShowcaseValidator {
                 )
                 false
             }
-            element.annotationMirrors.find { it.annotationType.kind == composableKind } == null -> {
+            element.annotationMirrors.find {
+                typeUtils?.isSameType(it.annotationType, composableTypeMirror!!) ?: false
+            } == null -> {
                 logger.logMessage(
                     "Only composable methods can be annotated " +
                             "with ${Showcase::class.java.simpleName}"
@@ -31,7 +36,7 @@ class ShowcaseValidator {
             element.modifiers.contains(Modifier.PRIVATE) -> {
                 logger.logMessage(
                     "The methods annotated with ${Showcase::class.java.simpleName} can't be private " +
-                            "as the library won't be able to access them otherwise. "
+                            "as the library won't be able to access them otherwise."
                 )
                 false
             }
