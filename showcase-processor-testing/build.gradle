@@ -6,16 +6,16 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-
+    // Added to avoid this error -
+    // Execution failed for task ':showcase-processor-testing:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+    // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+    }
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -24,11 +24,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
     buildFeatures {
         compose true
     }
@@ -36,7 +31,6 @@ android {
         kotlinCompilerVersion "1.3.70-dev-withExperimentalGoogleExtensions-20200424"
         kotlinCompilerExtensionVersion "${versions.compose}"
     }
-    defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 }
 
 dependencies {
