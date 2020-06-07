@@ -216,8 +216,10 @@ class ShowcaseProcessorTest {
                 
                 class ShowcaseCodegenComponents {
                   val componentList: List<ShowcaseCodegenMetadata> = listOf<ShowcaseCodegenMetadata>(
-                    ShowcaseCodegenMetadata("name", "group", -1, -1, 
-                    @Composable { TestComposable() }))
+                
+                        ShowcaseCodegenMetadata("name", "group", -1, -1,
+                            @Composable { TestComposable() })
+                        )
                   }
             """.trimIndent()
             )
@@ -227,22 +229,24 @@ class ShowcaseProcessorTest {
     @Test
     fun `multiple composable functions with showcase annotations generates correct file`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        package com.vinaygaba.showcase_processor_testing
+        // This is an auto-generated file. Please do not edit/modify this file.
+        package com.vinaygaba.showcase
         
-        import com.vinaygaba.showcase.annotation.models.Showcase
         import androidx.compose.Composable
+        import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+        import com.vinaygaba.showcase_processor_testing.TestComposable1
+        import com.vinaygaba.showcase_processor_testing.TestComposable2
+        import kotlin.collections.List
         
-        @Showcase("group1", "name1")
-        @Composable
-        fun TestComposable1() {
-            
-        }
+        class ShowcaseCodegenComponents {
+          val componentList: List<ShowcaseCodegenMetadata> = listOf<ShowcaseCodegenMetadata>(
         
-        @Showcase("group1", "name2")
-        @Composable
-        fun TestComposable2() {
-            
-        }
+                ShowcaseCodegenMetadata("name1", "group1", -1, -1,
+                    @Composable { TestComposable1() }),
+                ShowcaseCodegenMetadata("name2", "group1", -1, -1,
+                    @Composable { TestComposable2() })
+                )
+          }
     """)
         val result = KotlinCompilation().apply {
             sources = listOf(kotlinSource)

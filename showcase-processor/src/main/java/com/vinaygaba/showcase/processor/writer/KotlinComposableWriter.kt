@@ -40,8 +40,9 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
             .indent()
 
         showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
-            componentListInitializerCodeBlock.addStatement(
-                "%T(%S, %S, %L, %L, ",
+            componentListInitializerCodeBlock.add("\n")
+            componentListInitializerCodeBlock.add(
+                "%T(%S, %S, %L, %L,",
                 SHOWCASE_CODEGEN_METADATA_CLASS_NAME,
                 showcaseMetadata.group,
                 showcaseMetadata.name,
@@ -53,7 +54,10 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                 showcaseMetadata.enclosingClass,
                 showcaseMetadata.methodName
             )
+            componentListInitializerCodeBlock.add("\n")
+            componentListInitializerCodeBlock.indent().indent()
             componentListInitializerCodeBlock.add(composableLambdaCodeBlock)
+            componentListInitializerCodeBlock.unindent().unindent()
 
             if (index == showcaseMetadataList.lastIndex) {
                 componentListInitializerCodeBlock.add(")")
@@ -61,7 +65,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                 componentListInitializerCodeBlock.add("),")
             }
         }
-        componentListInitializerCodeBlock.add(")")
+        componentListInitializerCodeBlock.add("\n)")
 
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
 
