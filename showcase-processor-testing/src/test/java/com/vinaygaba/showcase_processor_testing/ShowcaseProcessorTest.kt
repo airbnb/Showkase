@@ -28,6 +28,6 @@ class ShowcaseProcessorTest {
             messageOutputStream = System.out // see diagnostics in real time
         }.compile()
 
-        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
     }
 }
