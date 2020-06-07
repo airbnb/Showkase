@@ -68,9 +68,6 @@ dependencies {
     testImplementation files(getRuntimeJar())
     testImplementation files(Jvm.current().getToolsJar())
     testImplementation deps.kotlinCompileTesting
-
-    implementation deps.autoService
-    kapt deps.autoService
 }
 
 static def getRuntimeJar() {
