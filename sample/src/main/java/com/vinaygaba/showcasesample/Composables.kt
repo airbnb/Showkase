@@ -16,7 +16,7 @@ import androidx.ui.foundation.Text
 import androidx.ui.foundation.isSystemInDarkTheme
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.ColorFilter
-import androidx.ui.graphics.painter.rotate
+import androidx.ui.graphics.drawscope.rotate
 import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
