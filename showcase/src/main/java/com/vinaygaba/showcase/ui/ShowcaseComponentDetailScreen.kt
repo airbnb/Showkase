@@ -53,7 +53,7 @@ internal fun ShowcaseComponentDetailScreen(
 @Composable
 internal fun ComponentCardTitle(componentName: String) {
     Text(
-        text = componentName, modifier = Modifier.padding(16.dp),
+        text = componentName, modifier = Modifier.padding(16.dp) + Modifier.testTag(),
         style = TextStyle(
             fontSize = 20.sp, fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold

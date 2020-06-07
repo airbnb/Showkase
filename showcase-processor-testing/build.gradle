@@ -16,6 +16,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -51,6 +52,7 @@ dependencies {
     implementation deps.compose.composeRuntime
     implementation deps.compose.core
     implementation deps.compose.foundation
+    androidTestImplementation deps.compose.uiTest
 
     // Testing
     testImplementation deps.test.assertJ
