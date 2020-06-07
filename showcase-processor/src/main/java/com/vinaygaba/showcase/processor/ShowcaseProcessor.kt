@@ -43,7 +43,7 @@ class ShowcaseProcessor: AbstractProcessor() {
         filter = processingEnv?.filer
         messager = processingEnv?.messager
         composableKind = elementUtils
-            ?.getTypeElement(COMPOSABLE_CLASS_NAME.canonicalName)
+            ?.getTypeElement(Class.forName("androidx.compose.Composable").canonicalName)
             ?.asType()
             ?.kind!!
     }
@@ -85,8 +85,6 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
 
     companion object {
-        val COMPOSABLE_CLASS_NAME = Class.forName("androidx.compose.Composable")
-
         private fun getShowcaseMetadata(
             element: Element,
             elementUtil: Elements,
