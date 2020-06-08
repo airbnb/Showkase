@@ -8,6 +8,7 @@ import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
+import androidx.ui.core.testTag
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
@@ -36,7 +37,7 @@ internal fun ShowcaseComponentDetailScreen(
         it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
     } ?: return
 
-    AdapterList(data = listOf(componentMetadata)) { metadata ->
+    AdapterList(data = listOf(componentMetadata), modifier = Modifier.testTag("ComponentDetailsList")) { metadata ->
         ShowcaseComponentCardType.values().forEach { showcaseComponentCardType ->
             when (showcaseComponentCardType) {
                 ShowcaseComponentCardType.BASIC -> BasicComponentCard(metadata)
@@ -53,7 +54,7 @@ internal fun ShowcaseComponentDetailScreen(
 @Composable
 internal fun ComponentCardTitle(componentName: String) {
     Text(
-        text = componentName, modifier = Modifier.padding(16.dp) + Modifier.testTag(),
+        text = componentName, modifier =  Modifier.padding(16.dp),
         style = TextStyle(
             fontSize = 20.sp, fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold

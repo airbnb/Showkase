@@ -1,18 +1,18 @@
 package com.vinaygaba.showcase_processor_testing
 
+import android.content.Intent
 import androidx.ui.test.android.AndroidComposeTestRule
-import androidx.ui.test.assertAll
 import androidx.ui.test.assertCountEquals
 import androidx.ui.test.assertHasClickAction
 import androidx.ui.test.assertIsDisplayed
+import androidx.ui.test.children
 import androidx.ui.test.doClick
-import androidx.ui.test.findAll
-import androidx.ui.test.findAllByText
 import androidx.ui.test.findBySubstring
+import androidx.ui.test.findByTag
 import androidx.ui.test.findByText
-import androidx.ui.test.hasSubstring
-import androidx.ui.test.hasText
+import androidx.ui.test.waitForIdle
 import com.vinaygaba.showcase.ui.ShowcaseBrowserActivity
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,6 +30,11 @@ class ShowcaseBrowserTest {
     @get:Rule
     val composeTestRule = 
         AndroidComposeTestRule<ShowcaseBrowserActivity>(disableTransitions = true)
+    
+    @Before
+    fun setup() {
+        restartActivity()
+    }
 
     @Test
     fun activity_starts_and_all_the_groups_are_visible_on_the_screen_and_clickable() {
@@ -59,8 +64,11 @@ class ShowcaseBrowserTest {
 
         // Click on one of the groups visible on the screen
         findByText("Group1").doClick()
+        waitForIdle()
 
         findByText("Group1").assertIsDisplayed()
+        findByTag("GroupComponentsList").children().assertCountEquals(4)
+        
         findByText("Test Composable1").assertIsDisplayed()
         findByText("Test Composable2").assertIsDisplayed()
     }
@@ -77,12 +85,22 @@ class ShowcaseBrowserTest {
 
         // Click on one of the groups visible on the screen
         findByText("Group1").doClick()
+        waitForIdle()
 
         findByText("Test Composable1").doClick()
-        
-        findAllByText("Test Composable1").assertAll(hasSubstring("Test Composable1"))
-        
-        findAll(hasSubstring("Composable1")).assertCountEquals(5)
-//        findAllByText("Test Composable1").assertCountEquals(5)
+        waitForIdle()
+
+        findBySubstring("[Basic Example]").assertIsDisplayed()
+        findBySubstring("[Dark Mode]").assertIsDisplayed()
+        findBySubstring("[RTL]").assertIsDisplayed()
+        findBySubstring("[Font Scaled x 2]").assertIsDisplayed()
+        findBySubstring("[Display Scaled x 2]").assertIsDisplayed()
+    }
+
+    private fun restartActivity() {
+        composeTestRule.activityTestRule.activity.finish()
+        composeTestRule.activityTestRule.activity.startActivity(
+            Intent(composeTestRule.activityTestRule.activity.applicationContext,
+                ShowcaseBrowserActivity::class.java))
     }
 }

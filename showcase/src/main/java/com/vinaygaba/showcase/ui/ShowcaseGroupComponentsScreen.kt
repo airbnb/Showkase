@@ -2,6 +2,7 @@ package com.vinaygaba.showcase.ui
 
 import androidx.compose.Composable
 import androidx.ui.core.Modifier
+import androidx.ui.core.testTag
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Clickable
 import androidx.ui.layout.fillMaxWidth
@@ -18,7 +19,7 @@ internal fun ShowcaseGroupComponentsScreen(
     val groupComponentsList =
         groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
     val filteredList = getFilteredSearchList(groupComponentsList)
-    AdapterList(data = filteredList) { groupComponent ->
+    AdapterList(data = filteredList, modifier = Modifier.testTag("GroupComponentsList")) { groupComponent ->
         ComponentCardTitle(groupComponent.componentName)
         Clickable(onClick = {
             ShowcaseBrowserScreenMetadata.currentScreen =
