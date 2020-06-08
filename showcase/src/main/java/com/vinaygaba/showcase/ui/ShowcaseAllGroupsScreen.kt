@@ -2,6 +2,7 @@ package com.vinaygaba.showcase.ui
 
 import androidx.compose.Composable
 import androidx.ui.core.Modifier
+import androidx.ui.core.testTag
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.Text
@@ -23,7 +24,7 @@ internal fun ShowcaseAllGroupsScreen(
 ) {
     val filteredList = getFilteredSearchList(groupedComponentMap.keys.toList())
 
-    AdapterList(data = filteredList) { group ->
+    AdapterList(data = filteredList, modifier = Modifier.testTag("AllGroupsList")) { group ->
         Clickable(onClick = {
             ShowcaseBrowserScreenMetadata.currentScreen =
                 ShowcaseCurrentScreen.GROUP_COMPONENTS

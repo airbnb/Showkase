@@ -1,6 +1,7 @@
 package com.vinaygaba.showcase_processor_testing
 
 import androidx.compose.Composable
+import androidx.ui.core.ContextAmbient
 import androidx.ui.foundation.Text
 import com.vinaygaba.showcase.annotation.models.Showcase
 
@@ -19,7 +20,8 @@ fun TestComposable2() {
 @Showcase("Composable3", "Group2")
 @Composable
 fun TestComposable3() {
-    Text(text = "Test Composable3")
+    val context = ContextAmbient.current
+    Text(text = context.getString(R.string.showcase))
 }
 
 @Showcase("Composable4", "Group3")

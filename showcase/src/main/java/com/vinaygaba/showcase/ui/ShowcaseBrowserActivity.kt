@@ -42,26 +42,32 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val currentScreen = ShowcaseBrowserScreenMetadata.currentScreen
-        val isSearchActive = ShowcaseBrowserScreenMetadata.isSearchActive
-        when {
-            isSearchActive -> {
-                ShowcaseBrowserScreenMetadata.isSearchActive = false
-                ShowcaseBrowserScreenMetadata.searchQuery = null
-            }
-            currentScreen == ShowcaseCurrentScreen.GROUPS -> {
-                finish()
-            }
-            currentScreen == ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
-                ShowcaseBrowserScreenMetadata.currentScreen =
-                    ShowcaseCurrentScreen.GROUPS
-                ShowcaseBrowserScreenMetadata.currentGroup = null
-                ShowcaseBrowserScreenMetadata.currentComponent = null
-            }
-            currentScreen == ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
-                ShowcaseBrowserScreenMetadata.currentScreen =
-                    ShowcaseCurrentScreen.GROUP_COMPONENTS
-                ShowcaseBrowserScreenMetadata.currentComponent = null
+        // runOnUiThread was added because when I was noticing a crash when it was run as part of 
+        // the tests. This was done to avoid it.
+        // Crash - java.lang.IllegalStateException: Not in a frame
+        // Related discussion - https://kotlinlang.slack.com/archives/CJLTWPH7S/p1591055630230800
+        runOnUiThread {
+            val currentScreen = ShowcaseBrowserScreenMetadata.currentScreen
+            val isSearchActive = ShowcaseBrowserScreenMetadata.isSearchActive
+            when {
+                isSearchActive -> {
+                    ShowcaseBrowserScreenMetadata.isSearchActive = false
+                    ShowcaseBrowserScreenMetadata.searchQuery = null
+                }
+                currentScreen == ShowcaseCurrentScreen.GROUPS -> {
+                    finish()
+                }
+                currentScreen == ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
+                    ShowcaseBrowserScreenMetadata.currentScreen =
+                        ShowcaseCurrentScreen.GROUPS
+                    ShowcaseBrowserScreenMetadata.currentGroup = null
+                    ShowcaseBrowserScreenMetadata.currentComponent = null
+                }
+                currentScreen == ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
+                    ShowcaseBrowserScreenMetadata.currentScreen =
+                        ShowcaseCurrentScreen.GROUP_COMPONENTS
+                    ShowcaseBrowserScreenMetadata.currentComponent = null
+                }
             }
         }
     }

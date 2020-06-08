@@ -6,6 +6,7 @@ import androidx.compose.getValue
 import androidx.compose.setValue
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Modifier
+import androidx.ui.core.testTag
 import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.TextFieldValue
@@ -91,7 +92,7 @@ internal fun ShowcaseSearchField() {
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.W500
         ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth() + Modifier.testTag("SearchTextField"),
         leadingIcon = {
             Icon(asset = Icons.Filled.Search)
         }
@@ -107,7 +108,7 @@ private fun ShowcaseAppBarActions() {
             IconButton(onClick = {
                 ShowcaseBrowserScreenMetadata.isSearchActive = true
             }) {
-                Icon(asset = Icons.Filled.Search)
+                Icon(asset = Icons.Filled.Search, modifier = Modifier.testTag("SearchIcon"))
             }
         }
     }
