@@ -39,31 +39,6 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onBackPressed() {
-//        val currentScreen = ShowcaseBrowserScreenMetadata.currentScreen
-//        val isSearchActive = ShowcaseBrowserScreenMetadata.isSearchActive
-//        when {
-//            isSearchActive -> {
-//                ShowcaseBrowserScreenMetadata.isSearchActive = false
-//                ShowcaseBrowserScreenMetadata.searchQuery = null
-//            }
-//            currentScreen == ShowcaseCurrentScreen.GROUPS -> {
-//                finish()
-//            }
-//            currentScreen == ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
-//                ShowcaseBrowserScreenMetadata.currentScreen =
-//                    ShowcaseCurrentScreen.GROUPS
-//                ShowcaseBrowserScreenMetadata.currentGroup = null
-//                ShowcaseBrowserScreenMetadata.currentComponent = null
-//            }
-//            currentScreen == ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
-//                ShowcaseBrowserScreenMetadata.currentScreen =
-//                    ShowcaseCurrentScreen.GROUP_COMPONENTS
-//                ShowcaseBrowserScreenMetadata.currentComponent = null
-//            }
-//        }
-//    }
-
     companion object {
         const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcase"
         const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
