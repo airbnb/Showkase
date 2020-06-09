@@ -1,3 +1,4 @@
+@file:Suppress("PackageNaming")
 package com.vinaygaba.showcase_processor_testing
 
 import androidx.compose.Composable
