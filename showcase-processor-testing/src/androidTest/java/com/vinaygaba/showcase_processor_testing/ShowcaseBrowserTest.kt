@@ -1,6 +1,5 @@
 package com.vinaygaba.showcase_processor_testing
 
-import android.content.Intent
 import androidx.ui.test.android.AndroidComposeTestRule
 import androidx.ui.test.assertCountEquals
 import androidx.ui.test.assertHasClickAction
@@ -13,6 +12,7 @@ import androidx.ui.test.findByTag
 import androidx.ui.test.findByText
 import androidx.ui.test.waitForIdle
 import com.vinaygaba.showcase.ui.ShowcaseBrowserActivity
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,6 +30,11 @@ class ShowcaseBrowserTest {
     @get:Rule
     val composeTestRule = 
         AndroidComposeTestRule<ShowcaseBrowserActivity>(disableTransitions = true)
+    
+    @Before
+    fun setup() {
+        restartActivity()
+    }
 
     @Test
     fun activity_starts_and_all_the_groups_are_visible_on_the_screen_and_clickable() {
@@ -158,10 +163,13 @@ class ShowcaseBrowserTest {
     }
 
     private fun restartActivity() {
-        composeTestRule.activityTestRule.activity.finish()
-        composeTestRule.activityTestRule.activity.startActivity(
-            Intent(composeTestRule.activityTestRule.activity.applicationContext,
-                ShowcaseBrowserActivity::class.java))
+//        composeTestRule.activityTestRule.activity.finish()
+//        composeTestRule.activityTestRule.activity.runOnUiThread {
+//            composeTestRule.activityTestRule.activity.recreate()
+//        }
+//        composeTestRule.activityTestRule.activity.startActivity(
+//            Intent(composeTestRule.activityTestRule.activity.applicationContext,
+//                ShowcaseBrowserActivity::class.java))
     }
     
     private fun goBack() {
