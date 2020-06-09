@@ -161,16 +161,6 @@ class ShowcaseBrowserTest {
         findByText("Group2").assertIsDisplayed()
         findByText("Group3").assertIsDisplayed()
     }
-
-    private fun restartActivity() {
-//        composeTestRule.activityTestRule.activity.finish()
-//        composeTestRule.activityTestRule.activity.runOnUiThread {
-//            composeTestRule.activityTestRule.activity.recreate()
-//        }
-//        composeTestRule.activityTestRule.activity.startActivity(
-//            Intent(composeTestRule.activityTestRule.activity.applicationContext,
-//                ShowcaseBrowserActivity::class.java))
-    }
     
     private fun goBack() {
         composeTestRule.activityTestRule.activity.onBackPressed()
