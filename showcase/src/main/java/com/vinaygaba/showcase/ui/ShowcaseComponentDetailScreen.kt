@@ -2,8 +2,8 @@ package com.vinaygaba.showcase.ui
 
 import android.content.res.Configuration
 import androidx.compose.Composable
+import androidx.compose.FrameManager
 import androidx.compose.Providers
-import androidx.ui.core.CombinedModifier
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
@@ -25,6 +25,7 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 import java.util.*
 
 @Composable
@@ -36,7 +37,6 @@ internal fun ShowcaseComponentDetailScreen(
     val componentMetadata = componentMetadataList.find {
         it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
     } ?: return
-
     AdapterList(data = listOf(componentMetadata), modifier = Modifier.testTag("ComponentDetailsList")) { metadata ->
         ShowcaseComponentCardType.values().forEach { showcaseComponentCardType ->
             when (showcaseComponentCardType) {
@@ -49,6 +49,10 @@ internal fun ShowcaseComponentDetailScreen(
         }
 
     }
+    BackButtonHandler {
+        goBack()
+    }
+    
 }
 
 @Composable
@@ -143,4 +147,15 @@ private fun generateDimensionModifier(metadata: ShowcaseCodegenMetadata): Modifi
                 Modifier.size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
     }
     return baseModifier + Modifier.fillMaxWidth()
+}
+
+private fun goBack() {
+    // FrameManager.framed was added because when I was noticing a crash when it was run as part of 
+    // the tests. This was done to avoid it.
+    // Crash - java.lang.IllegalStateException: Not in a frame
+    // Related discussion - https://kotlinlang.slack.com/archives/CJLTWPH7S/p1591055630230800
+    FrameManager.framed {
+        ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
+        ShowcaseBrowserScreenMetadata.currentComponent = null
+    }
 }
