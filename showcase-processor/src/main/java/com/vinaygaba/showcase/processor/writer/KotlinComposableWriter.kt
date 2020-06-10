@@ -10,6 +10,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import javax.lang.model.type.TypeMirror
 
 internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
 
@@ -39,20 +40,24 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
             .indent()
 
         showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
-            componentListInitializerCodeBlock.addStatement(
-                "%T(%S, %S, %L, %L, ",
+            componentListInitializerCodeBlock.add("\n")
+            componentListInitializerCodeBlock.add(
+                "%T(%S, %S, %L, %L,",
                 SHOWCASE_CODEGEN_METADATA_CLASS_NAME,
                 showcaseMetadata.group,
                 showcaseMetadata.name,
                 showcaseMetadata.widthDp,
                 showcaseMetadata.heightDp
             )
-
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showcaseMetadata.packageName,
+                showcaseMetadata.enclosingClass,
                 showcaseMetadata.methodName
             )
+            componentListInitializerCodeBlock.add("\n")
+            componentListInitializerCodeBlock.indent().indent()
             componentListInitializerCodeBlock.add(composableLambdaCodeBlock)
+            componentListInitializerCodeBlock.unindent().unindent()
 
             if (index == showcaseMetadataList.lastIndex) {
                 componentListInitializerCodeBlock.add(")")
@@ -60,7 +65,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                 componentListInitializerCodeBlock.add("),")
             }
         }
-        componentListInitializerCodeBlock.add(")")
+        componentListInitializerCodeBlock.add("\n)")
 
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
 
@@ -77,13 +82,23 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
 
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
+        enclosingClass: TypeMirror?= null,
         composeFunctionName: String
     ): CodeBlock {
-        val composeMember = MemberName(functionPackageName, composeFunctionName)
-        return CodeBlock.Builder()
-            .add("@%T { %M() }",
-                COMPOSE_CLASS_NAME, composeMember)
-            .build()
+        // IF enclosingClass is null, it denotes that the method was a top-level method declaration.
+        return if (enclosingClass == null) {
+            val composeMember = MemberName(functionPackageName, composeFunctionName)
+            CodeBlock.Builder()
+                .add("@%T { %M() }",
+                    COMPOSE_CLASS_NAME, composeMember)
+                .build()
+        } else {
+            // Otherwise it was declared inside a class.
+            CodeBlock.Builder()
+                .add("@%T { %T().${composeFunctionName}() }",
+                    COMPOSE_CLASS_NAME, enclosingClass)
+                .build()
+        }
     }
     
     companion object {

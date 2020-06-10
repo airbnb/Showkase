@@ -5,7 +5,6 @@ import androidx.animation.FloatPropKey
 import androidx.animation.Infinite
 import androidx.animation.transitionDefinition
 import androidx.compose.Composable
-import androidx.compose.Pivotal
 import androidx.compose.frames.modelListOf
 import androidx.compose.getValue
 import androidx.compose.setValue
@@ -23,12 +22,11 @@ import androidx.ui.foundation.Image
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.drawBackground
 import androidx.ui.foundation.isSystemInDarkTheme
-import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.ColorFilter
 import androidx.ui.graphics.imageFromResource
-import androidx.ui.graphics.painter.rotate
+import androidx.ui.graphics.drawscope.rotate
 import androidx.ui.layout.Column
 import androidx.ui.layout.ConstraintLayout
 import androidx.ui.layout.ConstraintSet
@@ -55,7 +53,6 @@ import androidx.ui.material.icons.filled.Add
 import androidx.ui.material.icons.filled.Done
 import androidx.ui.material.icons.filled.Favorite
 import androidx.ui.material.lightColorPalette
-import androidx.ui.res.loadImageResource
 import androidx.ui.res.loadVectorResource
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -216,19 +213,20 @@ fun RotatingSquareComponent() {
 @Showcase(group = "Rotating Animation", name = "Animations")
 @Preview
 @Composable
-fun RotatingSquareComponentPreview() {
+internal fun RotatingSquareComponentPreview() {
     RotatingSquareComponent()
 }
 
-
-@Showcase(group = "Icons", name = "Verified Icon", widthDp = 10, heightDp = 10)
-@Composable
-fun TestComponent() {
-    val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
-    vectorAsset.resource.resource?.let {
-        Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
-    }
-}
+//class WrapperClass {
+//    @Showcase(group = "Group3", name = "Test Component", widthDp = 10, heightDp = 10)
+//    @Composable
+//    fun TestComponent() {
+//        val vectorAsset = loadVectorResource(id = R.drawable.ic_baseline_verified_user_24)
+//        vectorAsset.resource.resource?.let {
+//            Image(asset = it, colorFilter = ColorFilter.tint(Color.Black))
+//        }
+//    }
+//}
 
 val listItems = listOf("Games", "Apps", "Movies", "Books")
 
@@ -531,15 +529,6 @@ fun SimpleConstraintLayoutComponent() {
                 }
             }
         }
-    }
-}
-
-@Showcase("List Component", "List Items")
-@Preview("Simple constraint layout example")
-@Composable
-fun SimpleConstraintLayoutComponentPreview() {
-    Column {
-        SimpleConstraintLayoutComponent()
     }
 }
 

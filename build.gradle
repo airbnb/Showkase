@@ -1,7 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.versions = [
-            'compose': '0.1.0-dev11',
+            'assertJ': '3.16.1',
+            'compose': '0.1.0-dev12',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
             'glide': '4.10.0',
@@ -10,11 +11,14 @@ buildscript {
             'junitImplementation' : '1.1.1',
             'kotlin': '1.3.72',
             'kotlinPoet': '1.6.0',
+            'kotlinCompileTesting': '1.2.8',
+            'kotlinPoet': '1.6.0',
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
             'picasso': '2.71828',
             'supportLibrary': '1.1.0',
             'testRunner': '1.2.0',
+            'googleTruth': '1.0.1',
             'autoService': '1.0-rc7'
     ]
     ext.deps = [
@@ -32,6 +36,7 @@ buildscript {
                     'uiLiveData': "androidx.ui:ui-livedata:${versions.compose}"
             ],
             'kotlinStdLib': "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
+            'kotlinCompileTesting': "com.github.tschuchortdev:kotlin-compile-testing:${versions.kotlinCompileTesting}",
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'imageLoading': [
                     'picasso': "com.squareup.picasso:picasso:${versions.picasso}",
@@ -44,6 +49,8 @@ buildscript {
                     'lifecycleExtensions': "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
             ],
             'test': [
+                    'assertJ': "org.assertj:assertj-core:${versions.assertJ}",
+                    'googleTruth': "com.google.truth:truth:${versions.googleTruth}",
                     'junit': "junit:junit:${versions.junit}",
                     'junitImplementation': "androidx.test.ext:junit:${versions.junitImplementation}",
                     'androidxTestRunner': "androidx.test:runner:${versions.testRunner}"

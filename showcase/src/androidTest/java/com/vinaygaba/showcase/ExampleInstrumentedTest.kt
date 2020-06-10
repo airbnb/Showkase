@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.vinaygaba.browser.test", appContext.packageName)
+        assertEquals("com.vinaygaba.showcase.test", appContext.packageName)
     }
 }

@@ -1,5 +1,6 @@
 include ':showcase'
 include ':showcase-processor'
+include ':showcase-processor-testing'
 include ':showcase-annotation'
 include ':sample'
 rootProject.name = "Showcase"
