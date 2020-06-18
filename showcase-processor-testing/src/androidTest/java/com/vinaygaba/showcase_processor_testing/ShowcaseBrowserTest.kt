@@ -30,11 +30,6 @@ class ShowcaseBrowserTest {
     @get:Rule
     val composeTestRule = 
         AndroidComposeTestRule<ShowcaseBrowserActivity>(disableTransitions = true)
-    
-    @Before
-    fun setup() {
-        restartActivity()
-    }
 
     @Test
     fun activity_starts_and_all_the_groups_are_visible_on_the_screen_and_clickable() {
