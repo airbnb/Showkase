@@ -75,7 +75,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         fileBuilder
             .addType(
                 TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
-                    .addSuperinterface(SHOWCASE_COMPONENT_PROVIDER_CLASS_NAME)
+                    .addSuperinterface(SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME)
                     .addFunction(
                         FunSpec.builder("getShowcaseComponents")
                             .addModifiers(KModifier.OVERRIDE)
@@ -122,7 +122,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
         val SHOWCASE_CODEGEN_METADATA_CLASS_NAME =
             ClassName(SHOWCASE_MODELS_PACKAGE_NAME, "ShowcaseCodegenMetadata")
-        val SHOWCASE_COMPONENT_PROVIDER_CLASS_NAME =
-            ClassName(SHOWCASE_MODELS_PACKAGE_NAME, "ShowcaseComponentProvider")
+        val SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME =
+            ClassName(SHOWCASE_MODELS_PACKAGE_NAME, "ShowcaseComponentsProvider")
     }
 }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.ui.core.setContent
 import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
-import com.vinaygaba.showcase.models.ShowcaseComponentProvider
+import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
 
 class ShowcaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         return try {
             val showcaseComponentProvider =
                 Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME").newInstance()
-            val componentList = (showcaseComponentProvider as ShowcaseComponentProvider).getShowcaseComponents()
+            val componentList = (showcaseComponentProvider as ShowcaseComponentsProvider).getShowcaseComponents()
             componentList.groupBy { it.group }
         } catch (exception: ClassNotFoundException) {
             mapOf()

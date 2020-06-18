@@ -1,5 +1,5 @@
 package com.vinaygaba.showcase.models
 
-interface ShowcaseComponentProvider {
+interface ShowcaseComponentsProvider {
     fun getShowcaseComponents(): List<ShowcaseCodegenMetadata>
 }
