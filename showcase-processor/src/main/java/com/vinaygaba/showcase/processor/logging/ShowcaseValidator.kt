@@ -10,6 +10,7 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Types
 
 class ShowcaseValidator {
+    @Suppress("ThrowsCount")
     internal fun validateElement(
         element: Element,
         composableTypeMirror: TypeMirror?,
