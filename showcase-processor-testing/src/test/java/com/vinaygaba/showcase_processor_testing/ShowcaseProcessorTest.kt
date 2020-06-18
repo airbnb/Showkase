@@ -211,15 +211,18 @@ class ShowcaseProcessorTest {
                 
                 import androidx.compose.Composable
                 import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+                import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
                 import com.vinaygaba.showcase_processor_testing.TestComposable
                 import kotlin.collections.List
                 
-                class ShowcaseCodegenComponents {
+                class ShowcaseCodegenComponents : ShowcaseComponentsProvider {
                   val componentList: List<ShowcaseCodegenMetadata> = listOf<ShowcaseCodegenMetadata>(
                 
                         ShowcaseCodegenMetadata("name", "group", -1, -1,
                             @Composable { TestComposable() })
                         )
+
+                    override fun getShowcaseComponents() = componentList
                   }
             """.trimIndent()
             )
@@ -261,11 +264,12 @@ class ShowcaseProcessorTest {
                 
                 import androidx.compose.Composable
                 import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+                import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
                 import com.vinaygaba.showcase_processor_testing.TestComposable1
                 import com.vinaygaba.showcase_processor_testing.TestComposable2
                 import kotlin.collections.List
                 
-                class ShowcaseCodegenComponents {
+                class ShowcaseCodegenComponents : ShowcaseComponentsProvider {
                   val componentList: List<ShowcaseCodegenMetadata> = listOf<ShowcaseCodegenMetadata>(
                 
                         ShowcaseCodegenMetadata("name1", "group1", -1, -1,
@@ -273,6 +277,8 @@ class ShowcaseProcessorTest {
                         ShowcaseCodegenMetadata("name2", "group1", -1, -1,
                             @Composable { TestComposable2() })
                         )
+
+                    override fun getShowcaseComponents() = componentList
                   }
             """.trimIndent()
             )
