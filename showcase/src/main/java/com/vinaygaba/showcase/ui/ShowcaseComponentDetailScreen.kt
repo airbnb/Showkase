@@ -22,7 +22,7 @@ import androidx.ui.unit.Density
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
-import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 import java.util.*
 
@@ -72,9 +72,7 @@ internal fun ComponentCard(
     val updatedModifier = generateDimensionModifier(metadata)
     Card(modifier = cardModifier) {
         Box(modifier = updatedModifier) {
-            @Composable {
-                metadata.component()
-            }
+            metadata.component()
         }
     }
 }

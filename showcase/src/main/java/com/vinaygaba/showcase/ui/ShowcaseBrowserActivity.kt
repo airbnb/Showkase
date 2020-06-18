@@ -3,7 +3,7 @@ package com.vinaygaba.showcase.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.ui.core.setContent
-import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.models.ShowcaseComponentProvider
 
 class ShowcaseBrowserActivity : AppCompatActivity() {
@@ -29,8 +29,8 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
     private fun getGroupedComponentsMap(): Map<String, List<ShowcaseCodegenMetadata>> {
         return try {
             val showcaseComponentProvider =
-                Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME") as ShowcaseComponentProvider
-            val componentList = showcaseComponentProvider.getShowcaseComponents()
+                Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME").newInstance()
+            val componentList = (showcaseComponentProvider as ShowcaseComponentProvider).getShowcaseComponents()
             componentList.groupBy { it.group }
         } catch (exception: ClassNotFoundException) {
             mapOf()
