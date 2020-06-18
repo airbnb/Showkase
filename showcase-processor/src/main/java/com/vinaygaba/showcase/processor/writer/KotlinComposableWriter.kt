@@ -77,10 +77,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                 TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
                     .addSuperinterface(SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME)
                     .addFunction(
-                        FunSpec.builder("getShowcaseComponents")
-                            .addModifiers(KModifier.OVERRIDE)
-                            .addStatement("return componentList")
-                            .build()
+                        getShowcaseComponentsProviderInterfaceFunction()
                     )
                     .addProperty(componentListProperty.build())
                     .build()
@@ -91,27 +88,38 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
 
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
-        enclosingClass: TypeMirror?= null,
+        enclosingClass: TypeMirror? = null,
         composeFunctionName: String
     ): CodeBlock {
         // IF enclosingClass is null, it denotes that the method was a top-level method declaration.
         return if (enclosingClass == null) {
             val composeMember = MemberName(functionPackageName, composeFunctionName)
             CodeBlock.Builder()
-                .add("@%T { %M() }",
-                    COMPOSE_CLASS_NAME, composeMember)
+                .add(
+                    "@%T { %M() }",
+                    COMPOSE_CLASS_NAME, composeMember
+                )
                 .build()
         } else {
             // Otherwise it was declared inside a class.
             CodeBlock.Builder()
-                .add("@%T { %T().${composeFunctionName}() }",
-                    COMPOSE_CLASS_NAME, enclosingClass)
+                .add(
+                    "@%T { %T().${composeFunctionName}() }",
+                    COMPOSE_CLASS_NAME, enclosingClass
+                )
                 .build()
         }
     }
-    
+
+    private fun getShowcaseComponentsProviderInterfaceFunction() =
+        FunSpec.builder("getShowcaseComponents")
+            .addModifiers(KModifier.OVERRIDE)
+            .addStatement("return componentList")
+            .build()
+
     companion object {
         const val FILE_NAME = "ShowcaseCodegenComponents"
+
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
         const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
