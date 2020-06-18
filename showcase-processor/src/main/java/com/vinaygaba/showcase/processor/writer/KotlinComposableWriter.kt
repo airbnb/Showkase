@@ -73,6 +73,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         fileBuilder
             .addType(
                 TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
+//                    .addSuperinterface()
                     .addProperty(componentListProperty.build())
                     .build()
             )

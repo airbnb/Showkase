@@ -210,7 +210,7 @@ class ShowcaseProcessorTest {
                 package com.vinaygaba.showcase
                 
                 import androidx.compose.Composable
-                import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+                import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
                 import com.vinaygaba.showcase_processor_testing.TestComposable
                 import kotlin.collections.List
                 
@@ -260,7 +260,7 @@ class ShowcaseProcessorTest {
                 package com.vinaygaba.showcase
                 
                 import androidx.compose.Composable
-                import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+                import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
                 import com.vinaygaba.showcase_processor_testing.TestComposable1
                 import com.vinaygaba.showcase_processor_testing.TestComposable2
                 import kotlin.collections.List
