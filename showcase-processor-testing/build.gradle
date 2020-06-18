@@ -68,6 +68,7 @@ dependencies {
     androidTestImplementation deps.test.junitImplementation
     androidTestImplementation deps.test.androidXTestCore
     androidTestImplementation deps.test.androidXTestRules
+    androidTestImplementation deps.test.androidxTestRunner
     // Allows this module to access the annotation processor related classes. Otherwise those are 
     // only available in java library modules. Inspiration - 
     // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
