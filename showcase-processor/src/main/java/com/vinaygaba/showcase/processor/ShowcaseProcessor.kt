@@ -43,7 +43,7 @@ class ShowcaseProcessor: AbstractProcessor() {
         filter = processingEnv?.filer
         messager = processingEnv?.messager
         composableTypeMirror = elementUtils
-            ?.getTypeElement(Class.forName("androidx.compose.Composable").canonicalName)
+            ?.getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
             ?.asType()
     }
 
@@ -58,19 +58,17 @@ class ShowcaseProcessor: AbstractProcessor() {
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val list = mutableListOf<ShowcaseMetadata>()
         p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
-            // Throw error if this annotation is added to something that is not a method or if the 
-            // method annotated with the showcase annotation isn't a @Composable function.
-            if (!showcaseValidator.validateElement(element, logger, composableTypeMirror, typeUtils)) {
-                return@forEach
-            }
             try {
+                // Throw error if this annotation is added to something that is not a method or if the 
+                // method annotated with the showcase annotation isn't a @Composable function.
+                showcaseValidator.validateElement(element, composableTypeMirror, typeUtils)
                 val showcaseMetadata =
                     getShowcaseMetadata(
                         element = element, elementUtil = elementUtils!!, typeUtils = typeUtils!!
                     )
                 list += showcaseMetadata
             } catch (exception: ShowcaseProcessorException) {
-                logger.logMessage("Error encountered: ${exception.message}")
+                logger.logMessage("Error encountered at ${element.simpleName}: ${exception.message}")
             }
         }
 
@@ -83,6 +81,8 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
 
     companion object {
+        const val COMPOSABLE_CLASS_NAME = "androidx.compose.Composable"
+        
         private fun getShowcaseMetadata(
             element: Element,
             elementUtil: Elements,

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.ui.core.setContent
 import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
 
 class ShowcaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +28,10 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
 
     private fun getGroupedComponentsMap(): Map<String, List<ShowcaseCodegenMetadata>> {
         return try {
-            val showcaseComponentsClass = Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME")
-            val componentList = showcaseComponentsClass.getDeclaredField("componentList").apply {
-                isAccessible = true
-            }
-            val result =
-                componentList.get(showcaseComponentsClass.newInstance()) as List<ShowcaseCodegenMetadata>
-            result.groupBy { it.group }
+            val showcaseComponentProvider =
+                Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME").newInstance()
+            val componentList = (showcaseComponentProvider as ShowcaseComponentsProvider).getShowcaseComponents()
+            componentList.groupBy { it.group }
         } catch (exception: ClassNotFoundException) {
             mapOf()
         }

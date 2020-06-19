@@ -11,4 +11,3 @@ data class ShowcaseCodegenMetadata(
     val heightDp: Int,
     val component: @Composable () -> Unit
 )
- 
