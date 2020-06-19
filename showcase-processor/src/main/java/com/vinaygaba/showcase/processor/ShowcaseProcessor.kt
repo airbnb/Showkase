@@ -72,7 +72,7 @@ class ShowcaseProcessor: AbstractProcessor() {
             }
         }
 
-        KotlinComposableWriter(processingEnv).generateShowcaseBrowserComponents(list)
+        KotlinComposableWriter(processingEnv).generateShowcaseCodegenFunctions(list, typeUtils, elementUtils, logger)
 
         if (p1?.processingOver() == true) {
             logger.publishMessages(messager)

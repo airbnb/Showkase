@@ -1,5 +1,6 @@
 package com.vinaygaba.showcase.processor.writer
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -12,11 +13,61 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import com.vinaygaba.showcase.annotation.models.ShowcaseCodegen
+import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
 import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
 
-    internal fun generateShowcaseBrowserComponents(showcaseMetadataList: List<ShowcaseMetadata>) {
+    internal fun generateShowcaseCodegenFunctions(
+        showcaseMetadataList: List<ShowcaseMetadata>,
+        typeUtil: Types?,
+        elementUtil: Elements?,
+        logger: ShowcaseExceptionLogger
+    ) {
+        if (showcaseMetadataList.isEmpty()) return
+        val fileBuilder = FileSpec.builder(
+            CODEGEN_PACKAGE_NAME,
+            FILE_NAME
+        )
+            .addComment("This is an auto-generated file. Please do not edit/modify this file.")
+
+        val autogenClass = TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
+
+        showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
+            val methodName = when {
+                showcaseMetadata.enclosingClass == null -> showcaseMetadata.methodName
+                // TODO(vinaygaba): Fix wrapper class name below
+                else -> "${showcaseMetadata.enclosingClass.kind}_${showcaseMetadata.methodName}"
+            }
+
+            val annotation = AnnotationSpec.builder(ShowcaseCodegen::class)
+                .addMember("name = %S", showcaseMetadata.name)
+                .addMember("group = %S", showcaseMetadata.group)
+                .addMember("widthDp = %L", showcaseMetadata.widthDp)
+                .addMember("heightDp = %L", showcaseMetadata.heightDp)
+                .addMember("packageName = %S", showcaseMetadata.packageName)
+                .addMember("composableMethodName = %S", showcaseMetadata.methodName)
+
+            showcaseMetadata.enclosingClass?.let {
+                annotation.addMember("enclosingClass = [%T::class]", it)
+            }
+
+            val composableFunction = FunSpec.builder(methodName)
+                .addAnnotation(annotation.build())
+                .build()
+
+            autogenClass.addFunction(composableFunction)
+        }
+
+        fileBuilder.addType(autogenClass.build())
+
+        fileBuilder.build().writeTo(processingEnv.filer)
+    }
+
+    internal fun generateShowcaseBrowserComponents2(showcaseMetadataList: List<ShowcaseMetadata>) {
         if (showcaseMetadataList.isEmpty()) return
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,

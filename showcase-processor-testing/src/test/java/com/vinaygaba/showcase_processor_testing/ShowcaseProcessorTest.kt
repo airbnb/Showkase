@@ -10,6 +10,8 @@ class ShowcaseProcessorTest {
     @Test
     fun `composable with showcase annotation inside class compiles ok`() {
         val kotlinSource = SourceFile.kotlin("Composables.kt", """
+        package com.vinaygaba.showcase_processor_testing
+        
         import com.vinaygaba.showcase.annotation.models.Showcase
         import androidx.compose.Composable
         
