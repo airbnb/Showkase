@@ -63,7 +63,7 @@ class ShowcaseProcessor: AbstractProcessor() {
             
             processShowcaseMetadata(showcaseMetadataList)
         } catch (exception: ShowcaseProcessorException) {
-            logger.logMessage("${exception.message}")
+            logger.logErrorMessage("${exception.message}")
         }
         
 

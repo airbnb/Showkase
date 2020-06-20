@@ -5,14 +5,14 @@ import javax.tools.Diagnostic
 
 internal class ShowcaseExceptionLogger {
     private val loggedExceptions: MutableList<Exception> = mutableListOf()
-    private val loggedInfo: MutableList<String> = mutableListOf()
+    private val loggedInfoMessage: MutableList<String> = mutableListOf()
     
-    internal fun logMessage(message: String) {
+    internal fun logErrorMessage(message: String) {
         logError(Exception(message))
     }
 
-    internal fun logInfo(message: String) {
-        loggedInfo += message
+    internal fun logInfoMessage(message: String) {
+        loggedInfoMessage += message
     }
 
     private fun logError(e: Exception) {
@@ -21,6 +21,6 @@ internal class ShowcaseExceptionLogger {
 
     internal fun publishMessages(messager: Messager?) {
         loggedExceptions.forEach { messager?.printMessage(Diagnostic.Kind.ERROR, "${it.message}") }
-        loggedInfo.forEach { messager?.printMessage(Diagnostic.Kind.NOTE, "$it") }
+        loggedInfoMessage.forEach { messager?.printMessage(Diagnostic.Kind.NOTE, "$it") }
     }
 }

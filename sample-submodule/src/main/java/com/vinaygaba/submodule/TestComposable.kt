@@ -1,4 +1,4 @@
-package com.vinaygaba.subsample
+package com.vinaygaba.submodule
 
 import androidx.compose.Composable
 import androidx.ui.foundation.Text
