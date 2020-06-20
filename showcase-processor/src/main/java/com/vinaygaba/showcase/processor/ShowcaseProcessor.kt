@@ -2,11 +2,16 @@ package com.vinaygaba.showcase.processor
 
 import com.google.auto.service.AutoService
 import com.vinaygaba.showcase.annotation.models.Showcase
+import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.processor.ShowcaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
 import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
 import com.vinaygaba.showcase.processor.exceptions.ShowcaseProcessorException
 import com.vinaygaba.showcase.processor.logging.ShowcaseValidator
-import com.vinaygaba.showcase.processor.writer.KotlinComposableWriter
+import com.vinaygaba.showcase.processor.models.getShowcaseMetadata
+import com.vinaygaba.showcase.processor.models.toModel
+import com.vinaygaba.showcase.processor.writer.ShowcaseCodegenMetadataWriter
+import com.vinaygaba.showcase.processor.writer.ShowcaseComponentsWriter
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -16,9 +21,6 @@ import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedOptions
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
@@ -26,25 +28,25 @@ import javax.lang.model.util.Types
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
-@SupportedOptions(KotlinComposableWriter.KAPT_KOTLIN_DIR_PATH)
+@SupportedOptions(KAPT_KOTLIN_DIR_PATH)
 class ShowcaseProcessor: AbstractProcessor() {
-    private var typeUtils: Types? = null
-    private var elementUtils: Elements? = null
-    private var filter: Filer? = null
-    private var messager: Messager? = null
+    private lateinit var  typeUtils: Types
+    private lateinit var elementUtils: Elements
+    private lateinit var filter: Filer
+    private lateinit var messager: Messager
     private val logger = ShowcaseExceptionLogger()
     private val showcaseValidator = ShowcaseValidator()
-    private var composableTypeMirror: TypeMirror? = null
+    private lateinit var composableTypeMirror: TypeMirror
 
-    override fun init(processingEnv: ProcessingEnvironment?) {
+    override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
-        typeUtils = processingEnv?.typeUtils
-        elementUtils = processingEnv?.elementUtils
-        filter = processingEnv?.filer
-        messager = processingEnv?.messager
+        typeUtils = processingEnv.typeUtils
+        elementUtils = processingEnv.elementUtils
+        filter = processingEnv.filer
+        messager = processingEnv.messager
         composableTypeMirror = elementUtils
-            ?.getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
-            ?.asType()
+            .getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
+            .asType()
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
@@ -52,70 +54,69 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
 
     override fun getSupportedOptions(): MutableSet<String> {
-        return mutableSetOf(KotlinComposableWriter.KAPT_KOTLIN_DIR_PATH)
+        return mutableSetOf(KAPT_KOTLIN_DIR_PATH)
     }
 
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
-        val list = mutableListOf<ShowcaseMetadata>()
-        p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
-            try {
-                // Throw error if this annotation is added to something that is not a method or if the 
-                // method annotated with the showcase annotation isn't a @Composable function.
-                showcaseValidator.validateElement(element, composableTypeMirror, typeUtils)
-                val showcaseMetadata =
-                    getShowcaseMetadata(
-                        element = element, elementUtil = elementUtils!!, typeUtils = typeUtils!!
-                    )
-                list += showcaseMetadata
-            } catch (exception: ShowcaseProcessorException) {
-                logger.logMessage("Error encountered at ${element.simpleName}: ${exception.message}")
-            }
+        try {
+            val showcaseMetadataList = processShowcaseAnnotation(p1)
+            
+            processShowcaseMetadata(showcaseMetadataList)
+        } catch (exception: ShowcaseProcessorException) {
+            logger.logMessage("${exception.message}")
         }
-
-        KotlinComposableWriter(processingEnv).generateShowcaseCodegenFunctions(list, typeUtils, elementUtils, logger)
+        
 
         if (p1?.processingOver() == true) {
             logger.publishMessages(messager)
         }
         return true
     }
+    
+    private fun processShowcaseAnnotation(p1: RoundEnvironment?): List<ShowcaseMetadata> {
+        val showcaseMetadataList = mutableListOf<ShowcaseMetadata>()
+        p1?.getElementsAnnotatedWith(Showcase::class.java)?.forEach { element ->
+            showcaseValidator.validateElement(element, composableTypeMirror, typeUtils)
+            val showcaseMetadata = getShowcaseMetadata(
+                element = element, elementUtil = elementUtils)
+            showcaseMetadataList += showcaseMetadata
+        }
+
+        ShowcaseCodegenMetadataWriter(processingEnv).apply {
+            generateShowcaseCodegenFunctions(showcaseMetadataList)
+        }
+        return showcaseMetadataList
+    }
+    
+    private fun processShowcaseMetadata(
+        currentShowcaseMetadataList: List<ShowcaseMetadata>
+    ) {
+        if (currentShowcaseMetadataList.isEmpty()) return
+        val generatedShowcaseMetadataOnClasspath = getShowcaseCodegenOnClassPath(elementUtils)
+        val allShowcaseMetadataList = generatedShowcaseMetadataOnClasspath
+            .plus(currentShowcaseMetadataList)
+
+        ShowcaseComponentsWriter(processingEnv).apply {
+            generateShowcaseBrowserComponents(allShowcaseMetadataList)
+        }
+    }
+    
+    private fun getShowcaseCodegenOnClassPath(elementUtils: Elements): List<ShowcaseMetadata> {
+        val showcaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
+        return showcaseGeneratedPackageElement.enclosedElements
+            .flatMap { it.enclosedElements }
+            .mapNotNull { plugin -> plugin.getAnnotation(ShowcaseCodegenMetadata::class.java) }
+            .map {
+                it.toModel()
+            }
+    }
 
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.Composable"
-        
-        private fun getShowcaseMetadata(
-            element: Element,
-            elementUtil: Elements,
-            typeUtils: Types
-        ): ShowcaseMetadata {
-            val executableElement = element as ExecutableElement
-            val enclosingElement = element.enclosingElement
-            val isStaticMethod = executableElement.modifiers.contains(Modifier.STATIC)
-            val showcaseAnnotation = executableElement.getAnnotation(Showcase::class.java)
-
-            val noOfParameters = executableElement.parameters.size
-            if (noOfParameters > 0) {
-                throw ShowcaseProcessorException(
-                    "Make sure that the @Composable functions that you " +
-                            "annotate with the @Showcase annotation do not take in any parameters"
-                )
-            }
-
-            return ShowcaseMetadata(
-                executableElement,
-                executableElement.simpleName.toString(),
-                // If isStaticMethod is true, it means the method was declared at the top level. 
-                // If not, it was declared inside a class
-                // TODO(vinaygaba): Add support for methods inside companion objects and 
-                // objects
-                if (isStaticMethod) null else enclosingElement.asType(),
-                element.enclosingElement.enclosingElement.asType().toString(),
-                showcaseAnnotation.name,
-                showcaseAnnotation.group,
-                showcaseAnnotation.widthDp,
-                showcaseAnnotation.heightDp
-            )
-        }
+        // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
+        // annotation-processor/src/main/java/TestAnnotationProcessor.kt
+        const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
+        const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcase"
     }
 }
 

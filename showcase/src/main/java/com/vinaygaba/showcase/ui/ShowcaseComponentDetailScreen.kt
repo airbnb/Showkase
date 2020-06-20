@@ -22,13 +22,13 @@ import androidx.ui.unit.Density
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
-import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 import java.util.*
 
 @Composable
 internal fun ShowcaseComponentDetailScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
+    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>
 ) {
     val componentMetadataList =
         groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
@@ -66,7 +66,7 @@ internal fun ComponentCardTitle(componentName: String) {
 
 @Composable
 internal fun ComponentCard(
-    metadata: ShowcaseCodegenMetadata,
+    metadata: ShowcaseBrowserComponent,
     cardModifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val updatedModifier = generateDimensionModifier(metadata)
@@ -78,13 +78,13 @@ internal fun ComponentCard(
 }
 
 @Composable
-private fun BasicComponentCard(metadata: ShowcaseCodegenMetadata) {
+private fun BasicComponentCard(metadata: ShowcaseBrowserComponent) {
     ComponentCardTitle("${metadata.componentName} [Basic Example]")
     ComponentCard(metadata)
 }
 
 @Composable
-private fun FontScaledComponentCard(metadata: ShowcaseCodegenMetadata) {
+private fun FontScaledComponentCard(metadata: ShowcaseBrowserComponent) {
     val density = DensityAmbient.current
     val customDensity = Density(fontScale = density.fontScale * 2, density = density.density)
 
@@ -95,7 +95,7 @@ private fun FontScaledComponentCard(metadata: ShowcaseCodegenMetadata) {
 }
 
 @Composable
-private fun DisplayScaledComponentCard(metadata: ShowcaseCodegenMetadata) {
+private fun DisplayScaledComponentCard(metadata: ShowcaseBrowserComponent) {
     val density = DensityAmbient.current
     val customDensity = Density(density = density.density * 2f)
 
@@ -106,7 +106,7 @@ private fun DisplayScaledComponentCard(metadata: ShowcaseCodegenMetadata) {
 }
 
 @Composable
-private fun RTLComponentCard(metadata: ShowcaseCodegenMetadata) {
+private fun RTLComponentCard(metadata: ShowcaseBrowserComponent) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         val locale = Locale("ar")
         setLocale(locale)
@@ -127,7 +127,7 @@ private fun RTLComponentCard(metadata: ShowcaseCodegenMetadata) {
 }
 
 @Composable
-private fun DarkModeComponentCard(metadata: ShowcaseCodegenMetadata) {
+private fun DarkModeComponentCard(metadata: ShowcaseBrowserComponent) {
     val customConfiguration = Configuration(ConfigurationAmbient.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
@@ -138,7 +138,7 @@ private fun DarkModeComponentCard(metadata: ShowcaseCodegenMetadata) {
     }
 }
 
-private fun generateDimensionModifier(metadata: ShowcaseCodegenMetadata): Modifier {
+private fun generateDimensionModifier(metadata: ShowcaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(16.dp)
     if (metadata.heightDp > 0 || metadata.widthDp > 0) {
         return baseModifier +

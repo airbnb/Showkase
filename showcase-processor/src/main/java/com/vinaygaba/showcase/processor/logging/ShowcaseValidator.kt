@@ -16,21 +16,22 @@ class ShowcaseValidator {
         composableTypeMirror: TypeMirror?,
         typeUtils: Types?
     ) {
-        
+        val errorPrefix = "Error in ${element.simpleName}:"
+        val showcaseAnnotationName = Showcase::class.java.simpleName
         when {
             element.kind != ElementKind.METHOD -> {
-                throw ShowcaseProcessorException("Only composable methods can be annotated " +
-                        "with ${Showcase::class.java.simpleName}")
+                throw ShowcaseProcessorException("$errorPrefix Only composable methods can be " +
+                        "annotated with $showcaseAnnotationName")
             }
             element.annotationMirrors.find {
                 typeUtils?.isSameType(it.annotationType, composableTypeMirror!!) ?: false
             } == null -> {
-                throw ShowcaseProcessorException("Only composable methods can be annotated " +
-                        "with ${Showcase::class.java.simpleName}")
+                throw ShowcaseProcessorException("$errorPrefix Only composable methods can be " +
+                        "annotated with $showcaseAnnotationName")
             }
             element.modifiers.contains(Modifier.PRIVATE) -> {
-                throw ShowcaseProcessorException("The methods annotated with " +
-                        "${Showcase::class.java.simpleName} can't be private " +
+                throw ShowcaseProcessorException("$errorPrefix The methods annotated with " +
+                        "$showcaseAnnotationName can't be private " +
                         "as the library won't be able to access them otherwise.")
             }
             else -> { }

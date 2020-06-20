@@ -16,12 +16,12 @@ import androidx.ui.text.font.FontWeight
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
-import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
 internal fun ShowcaseAllGroupsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
+    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>
 ) {
     val filteredList = getFilteredSearchList(groupedComponentMap.keys.toList())
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)

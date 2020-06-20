@@ -22,11 +22,11 @@ import androidx.ui.text.font.FontFamily
 import androidx.ui.text.font.FontWeight
 import com.vinaygaba.showcase.R
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
-import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
-internal fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
+internal fun ShowcaseBrowserApp(groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>) {
     Scaffold(
         drawerContent = null,
         topAppBar = {
@@ -114,7 +114,7 @@ private fun ShowcaseAppBarActions() {
 }
 
 @Composable
-internal fun ShowcaseBodyContent(groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>) {
+internal fun ShowcaseBodyContent(groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>) {
     when (ShowcaseBrowserScreenMetadata.currentScreen) {
         ShowcaseCurrentScreen.GROUPS -> {
             ShowcaseAllGroupsScreen(groupedComponentMap)
