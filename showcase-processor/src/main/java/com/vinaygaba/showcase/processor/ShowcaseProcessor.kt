@@ -84,7 +84,7 @@ class ShowcaseProcessor: AbstractProcessor() {
         }
 
         ShowcaseCodegenMetadataWriter(processingEnv).apply {
-            generateShowcaseCodegenFunctions(showcaseMetadataList)
+            generateShowcaseCodegenFunctions(showcaseMetadataList, typeUtils)
         }
         return showcaseMetadataList
     }

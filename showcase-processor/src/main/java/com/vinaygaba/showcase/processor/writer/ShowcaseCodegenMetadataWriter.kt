@@ -8,11 +8,13 @@ import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.TypeSpec
 import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
 import com.vinaygaba.showcase.processor.ShowcaseProcessor.Companion.CODEGEN_PACKAGE_NAME
+import javax.lang.model.util.Types
 
 internal class ShowcaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
 
     internal fun generateShowcaseCodegenFunctions(
-        showcaseMetadataList: List<ShowcaseMetadata>
+        showcaseMetadataList: List<ShowcaseMetadata>,
+        typeUtil: Types
     ) {
         if (showcaseMetadataList.isEmpty()) return
         val moduleName = showcaseMetadataList.first().moduleName
@@ -28,8 +30,10 @@ internal class ShowcaseCodegenMetadataWriter(private val processingEnv: Processi
         showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
             val methodName = when {
                 showcaseMetadata.enclosingClass == null -> showcaseMetadata.methodName
-                // TODO(vinaygaba): Fix wrapper class name below
-                else -> "${showcaseMetadata.enclosingClass.kind}_${showcaseMetadata.methodName}"
+                else -> {
+                    val enclosingClassName = typeUtil.asElement(showcaseMetadata.enclosingClass).simpleName
+                    "${enclosingClassName}_${showcaseMetadata.methodName}"
+                }
             }
 
             val annotation = AnnotationSpec.builder(ShowcaseCodegenMetadata::class)
