@@ -3,6 +3,8 @@ package com.vinaygaba.submodule
 import androidx.compose.Composable
 import androidx.ui.foundation.Text
 import com.vinaygaba.showcase.annotation.models.Showcase
+import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
+import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
 
 @Showcase(name = "SubModule Composable1", group = "Submodule")
 @Composable

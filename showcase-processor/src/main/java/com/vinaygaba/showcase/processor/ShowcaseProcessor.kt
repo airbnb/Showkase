@@ -3,6 +3,7 @@ package com.vinaygaba.showcase.processor
 import com.google.auto.service.AutoService
 import com.vinaygaba.showcase.annotation.models.Showcase
 import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
 import com.vinaygaba.showcase.processor.ShowcaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
 import com.vinaygaba.showcase.processor.logging.ShowcaseExceptionLogger
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
@@ -50,7 +51,7 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(Showcase::class.java.name)
+        return mutableSetOf(Showcase::class.java.name, ShowcaseRoot::class.java.name)
     }
 
     override fun getSupportedOptions(): MutableSet<String> {
@@ -61,7 +62,7 @@ class ShowcaseProcessor: AbstractProcessor() {
         try {
             val showcaseMetadataList = processShowcaseAnnotation(p1)
             
-            processShowcaseMetadata(showcaseMetadataList)
+            processShowcaseMetadata(showcaseMetadataList, p1)
         } catch (exception: ShowcaseProcessorException) {
             logger.logErrorMessage("${exception.message}")
         }
@@ -89,23 +90,29 @@ class ShowcaseProcessor: AbstractProcessor() {
     }
     
     private fun processShowcaseMetadata(
-        currentShowcaseMetadataList: List<ShowcaseMetadata>
+        currentShowcaseMetadataList: List<ShowcaseMetadata>,
+        p1: RoundEnvironment?
     ) {
         if (currentShowcaseMetadataList.isEmpty()) return
-        val generatedShowcaseMetadataOnClasspath = getShowcaseCodegenOnClassPath(elementUtils)
-        val allShowcaseMetadataList = generatedShowcaseMetadataOnClasspath
-            .plus(currentShowcaseMetadataList)
+        val showcaseRootElements = p1?.getElementsAnnotatedWith(ShowcaseRoot::class.java) ?: setOf()
+        
+        showcaseRootElements.forEach {
+            showcaseValidator.validateShowcaseRootElement(showcaseRootElements, elementUtils, typeUtils)
+            val generatedShowcaseMetadataOnClasspath = getShowcaseCodegenMetadataOnClassPath(elementUtils)
+            val allShowcaseMetadataList = generatedShowcaseMetadataOnClasspath
+                .plus(currentShowcaseMetadataList)
 
-        ShowcaseComponentsWriter(processingEnv).apply {
-            generateShowcaseBrowserComponents(allShowcaseMetadataList)
+            ShowcaseComponentsWriter(processingEnv).apply {
+                generateShowcaseBrowserComponents(allShowcaseMetadataList)
+            }
         }
     }
     
-    private fun getShowcaseCodegenOnClassPath(elementUtils: Elements): List<ShowcaseMetadata> {
+    private fun getShowcaseCodegenMetadataOnClassPath(elementUtils: Elements): List<ShowcaseMetadata> {
         val showcaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
         return showcaseGeneratedPackageElement.enclosedElements
             .flatMap { it.enclosedElements }
-            .mapNotNull { plugin -> plugin.getAnnotation(ShowcaseCodegenMetadata::class.java) }
+            .mapNotNull { element -> element.getAnnotation(ShowcaseCodegenMetadata::class.java) }
             .map {
                 it.toModel()
             }
