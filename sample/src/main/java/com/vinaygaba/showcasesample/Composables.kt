@@ -182,4 +182,4 @@ class WrapperClass {
 }
 
 @ShowcaseRoot
-class NoOp: ShowcaseRootModule
+class RootModule: ShowcaseRootModule

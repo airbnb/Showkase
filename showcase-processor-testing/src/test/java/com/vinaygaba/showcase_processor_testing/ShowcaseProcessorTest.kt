@@ -66,10 +66,10 @@ class ShowcaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "The methods annotated with Showcase can't be private as the library won't be " +
                 "able to access them otherwise."
         assertThat(result.messages.contains(error))
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
@@ -87,9 +87,9 @@ class ShowcaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Showcase"
         assertThat(result.messages.contains(error))
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
@@ -108,9 +108,9 @@ class ShowcaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Showcase"
         assertThat(result.messages.contains(error))
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
@@ -129,9 +129,9 @@ class ShowcaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Showcase"
         assertThat(result.messages.contains(error))
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
     
     @Test
@@ -150,10 +150,98 @@ class ShowcaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Make sure that the @Composable functions that you annotate with the " +
                 "@Showcase annotation do not take in any parameters"
         assertThat(result.messages.contains(error))
+    }
+
+    @Test
+    fun `multiple classes with showcaseroot annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        import com.vinaygaba.showcase.annotation.models.Showcase
+        import androidx.compose.Composable
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
+        
+        @Showcase("group", "name")
+        class GeneratedTestComposables {
+            fun TestComposable(name: String, age: Int) {
+                
+            }
+        }
+        
+        @ShowcaseRoot
+        class RootModule1: ShowcaseRootModule
+        
+        @ShowcaseRoot
+        class RootModule2: ShowcaseRootModule
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Only one class in the root module can be annotated with @ShowcaseRoot"
+        assertThat(result.messages.contains(error))
+    }
+
+    @Test
+    fun `method with showcaseroot annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        import com.vinaygaba.showcase.annotation.models.Showcase
+        import androidx.compose.Composable
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
+        
+        @Showcase("group", "name")
+        class GeneratedTestComposables {
+            fun TestComposable(name: String, age: Int) {
+                
+            }
+        }
+        
+        @ShowcaseRoot
+        fun testMethod() {
+        
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Only classes can be annotated with @ShowcaseRoot"
+        assertThat(result.messages.contains(error))
+    }
+
+    @Test
+    fun `class with no interface but showcaseroot annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        import com.vinaygaba.showcase.annotation.models.Showcase
+        import androidx.compose.Composable
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
+        
+        @Showcase("group", "name")
+        class GeneratedTestComposables {
+            fun TestComposable(name: String, age: Int) {
+                
+            }
+        }
+        
+        @ShowcaseRoot
+        class TestClass() {
+        
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Only an implementation of ShowcaseRootModule can be annotated @ShowcaseRoot"
+        assertThat(result.messages.contains(error))
     }
 
     @Test
