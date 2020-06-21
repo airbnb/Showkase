@@ -16,13 +16,14 @@ internal class ShowcaseCodegenMetadataWriter(private val processingEnv: Processi
     ) {
         if (showcaseMetadataList.isEmpty()) return
         val moduleName = showcaseMetadataList.first().moduleName
+        val generatedClassName = "ShowcaseMetadata${moduleName.capitalize()}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
-            moduleName
+            generatedClassName
         )
             .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
-        val autogenClass = TypeSpec.classBuilder(moduleName)
+        val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showcaseMetadataList.forEachIndexed { index, showcaseMetadata ->
             val methodName = when {
