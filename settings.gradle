@@ -4,3 +4,4 @@ include ':showcase-processor-testing'
 include ':showcase-annotation'
 include ':sample'
 rootProject.name = "Showcase"
+include ':sample-submodule'

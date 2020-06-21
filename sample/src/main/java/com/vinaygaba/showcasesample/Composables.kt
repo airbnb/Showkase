@@ -33,6 +33,8 @@ import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.vinaygaba.showcase.annotation.models.Showcase
+import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
+import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
 
 @Composable
 fun Greeting(name: String) {
@@ -179,3 +181,5 @@ class WrapperClass {
     }
 }
 
+@ShowcaseRoot
+class RootModule: ShowcaseRootModule

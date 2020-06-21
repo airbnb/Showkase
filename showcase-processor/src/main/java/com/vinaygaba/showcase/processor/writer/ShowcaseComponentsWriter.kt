@@ -6,27 +6,28 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
-import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
-import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import com.vinaygaba.showcase.annotation.models.ShowcaseComponents
+import com.vinaygaba.showcase.processor.ShowcaseProcessor.Companion.CODEGEN_PACKAGE_NAME
+import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
+import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
-internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvironment) {
-
+internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnvironment) {
     internal fun generateShowcaseBrowserComponents(showcaseMetadataList: List<ShowcaseMetadata>) {
         if (showcaseMetadataList.isEmpty()) return
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
-            FILE_NAME
+            AUTOGEN_CLASS_NAME
         )
             .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
         // List<ShowcaseCodegenMetadata>
         val showcaseCodegenMetadataParameterizedList =
-            List::class.asClassName().parameterizedBy(SHOWCASE_CODEGEN_METADATA_CLASS_NAME)
+            List::class.asClassName().parameterizedBy(SHOWCASE_BROWSER_COMPONENT_CLASS_NAME)
 
         // val componentList: List<ShowcaseCodegenMetadata>
         val componentListProperty = PropertySpec.builder(
@@ -37,7 +38,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         val componentListInitializerCodeBlock = CodeBlock.Builder()
             .add(
                 "listOf<%T>(\n",
-                SHOWCASE_CODEGEN_METADATA_CLASS_NAME
+                SHOWCASE_BROWSER_COMPONENT_CLASS_NAME
             )
             .indent()
 
@@ -45,11 +46,11 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.add(
                 "%T(%S, %S, %L, %L,",
-                SHOWCASE_CODEGEN_METADATA_CLASS_NAME,
-                showcaseMetadata.group,
-                showcaseMetadata.name,
-                showcaseMetadata.widthDp,
-                showcaseMetadata.heightDp
+                SHOWCASE_BROWSER_COMPONENT_CLASS_NAME,
+                showcaseMetadata.showcaseComponentGroup,
+                showcaseMetadata.showcaseComponentName,
+                showcaseMetadata.showcaseComponentWidthDp,
+                showcaseMetadata.showcaseComponentHeightDp
             )
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showcaseMetadata.packageName,
@@ -75,6 +76,7 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
         fileBuilder
             .addType(
                 TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
+                    .addAnnotation(ShowcaseComponents::class.java)
                     .addSuperinterface(SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME)
                     .addFunction(
                         getShowcaseComponentsProviderInterfaceFunction()
@@ -85,6 +87,12 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
 
         fileBuilder.build().writeTo(processingEnv.filer)
     }
+
+    private fun getShowcaseComponentsProviderInterfaceFunction() =
+        FunSpec.builder("getShowcaseComponents")
+            .addModifiers(KModifier.OVERRIDE)
+            .addStatement("return componentList")
+            .build()
 
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
@@ -110,26 +118,14 @@ internal class KotlinComposableWriter(private val processingEnv: ProcessingEnvir
                 .build()
         }
     }
-
-    private fun getShowcaseComponentsProviderInterfaceFunction() =
-        FunSpec.builder("getShowcaseComponents")
-            .addModifiers(KModifier.OVERRIDE)
-            .addStatement("return componentList")
-            .build()
-
+    
     companion object {
-        const val FILE_NAME = "ShowcaseCodegenComponents"
-
-        // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
-        // annotation-processor/src/main/java/TestAnnotationProcessor.kt
-        const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
-        const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcase"
-        const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
+        private const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
         private const val SHOWCASE_MODELS_PACKAGE_NAME = "com.vinaygaba.showcase.models"
 
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
-        val SHOWCASE_CODEGEN_METADATA_CLASS_NAME =
-            ClassName(SHOWCASE_MODELS_PACKAGE_NAME, "ShowcaseCodegenMetadata")
+        val SHOWCASE_BROWSER_COMPONENT_CLASS_NAME =
+            ClassName(SHOWCASE_MODELS_PACKAGE_NAME, "ShowcaseBrowserComponent")
         val SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME =
             ClassName(SHOWCASE_MODELS_PACKAGE_NAME, "ShowcaseComponentsProvider")
     }

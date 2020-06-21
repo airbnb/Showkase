@@ -8,12 +8,12 @@ import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.unit.dp
 import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
-import com.vinaygaba.showcase.models.ShowcaseCodegenMetadata
+import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
 import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
 internal fun ShowcaseGroupComponentsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseCodegenMetadata>>
+    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>
 ) {
     val groupComponentsList =
         groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
@@ -54,7 +54,7 @@ private fun goBack() {
 }
 
 
-private fun getFilteredSearchList(list: List<ShowcaseCodegenMetadata>) =
+private fun getFilteredSearchList(list: List<ShowcaseBrowserComponent>) =
     when (ShowcaseBrowserScreenMetadata.isSearchActive) {
         false -> list
         !ShowcaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
