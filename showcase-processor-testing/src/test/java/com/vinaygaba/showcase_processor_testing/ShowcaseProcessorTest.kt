@@ -23,14 +23,10 @@ class ShowcaseProcessorTest {
             }
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
     }
 
     @Test
@@ -47,14 +43,10 @@ class ShowcaseProcessorTest {
             
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
     }
 
     @Test
@@ -71,17 +63,13 @@ class ShowcaseProcessorTest {
             }
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         val error = "The methods annotated with Showcase can't be private as the library won't be " +
                 "able to access them otherwise."
         assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
@@ -96,16 +84,12 @@ class ShowcaseProcessorTest {
             }
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         val error = "Only composable methods can be annotated with Showcase"
         assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
@@ -121,16 +105,12 @@ class ShowcaseProcessorTest {
             }
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         val error = "Only composable methods can be annotated with Showcase"
         assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
@@ -146,16 +126,12 @@ class ShowcaseProcessorTest {
             }
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         val error = "Only composable methods can be annotated with Showcase"
         assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
     
     @Test
@@ -171,21 +147,17 @@ class ShowcaseProcessorTest {
             }
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         val error = "Make sure that the @Composable functions that you annotate with the " +
                 "@Showcase annotation do not take in any parameters"
         assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
     }
 
     @Test
-    fun `top level composable function with showcase annotation generates correct file`() {
+    fun `top level composable function with showcase annotation generates only metadata file`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.vinaygaba.showcase_processor_testing
         
@@ -198,32 +170,122 @@ class ShowcaseProcessorTest {
             
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
         result.sourcesGeneratedByAnnotationProcessor.forEach { 
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.vinaygaba.showcase
                 
+                import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+                
+                class ShowcaseMetadataShowcase_processor_testing {
+                  @ShowcaseCodegenMetadata(
+                    showcaseComposableName = "group",
+                    showcaseComposableGroup = "name",
+                    showcaseComposableWidthDp = -1,
+                    showcaseComposableHeightDp = -1,
+                    packageName = "com.vinaygaba.showcase_processor_testing",
+                    moduleName = "showcase_processor_testing",
+                    composableMethodName = "TestComposable"
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level composable function with showcase and showcaseroot generates 2 files`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.vinaygaba.showcase_processor_testing
+        
+        import com.vinaygaba.showcase.annotation.models.Showcase
+        import androidx.compose.Composable
+        
+        @Showcase("group", "name")
+        @Composable
+        fun TestComposable() {
+            
+        }
+    """)
+
+        val kotlinShowcaseRootSource = SourceFile.kotlin("TestShowcaseRoot.kt", """
+        package com.vinaygaba.showcase_processor_testing
+        
+        import com.vinaygaba.showcase.annotation.models.Showcase
+        import androidx.compose.Composable
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
+        import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
+        
+        @ShowcaseRoot
+        class TestShowcaseRoot: ShowcaseRootModule {
+        
+        }
+    """
+        )
+        
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowcaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find { 
+            it.name ==  "ShowcaseMetadataShowcase_processor_testing.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowcaseCodegenComponents.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find { 
+            it.name ==  "ShowcaseMetadataShowcase_processor_testing.kt" 
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.vinaygaba.showcase
+                
+                import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+                
+                class ShowcaseMetadataShowcase_processor_testing {
+                  @ShowcaseCodegenMetadata(
+                    showcaseComposableName = "group",
+                    showcaseComposableGroup = "name",
+                    showcaseComposableWidthDp = -1,
+                    showcaseComposableHeightDp = -1,
+                    packageName = "com.vinaygaba.showcase_processor_testing",
+                    moduleName = "showcase_processor_testing",
+                    composableMethodName = "TestComposable"
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowcaseCodegenComponents.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.vinaygaba.showcase
+                
                 import androidx.compose.Composable
+                import com.vinaygaba.showcase.annotation.models.ShowcaseComponents
                 import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
                 import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
                 import com.vinaygaba.showcase_processor_testing.TestComposable
                 import kotlin.collections.List
                 
+                @ShowcaseComponents
                 class ShowcaseCodegenComponents : ShowcaseComponentsProvider {
                   val componentList: List<ShowcaseBrowserComponent> = listOf<ShowcaseBrowserComponent>(
                 
                         ShowcaseBrowserComponent("name", "group", -1, -1,
                             @Composable { TestComposable() })
                         )
-
+                
                     override fun getShowcaseComponents() = componentList
                   }
             """.trimIndent()
@@ -232,7 +294,54 @@ class ShowcaseProcessorTest {
     }
 
     @Test
-    fun `multiple composable functions with showcase annotations generates correct file`() {
+    fun `wrapped composable function with showcase annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.vinaygaba.showcase_processor_testing
+        
+        import com.vinaygaba.showcase.annotation.models.Showcase
+        import androidx.compose.Composable
+        
+        class WrapperClass {
+            @Showcase("group", "name")
+            @Composable
+            fun TestComposable() {
+            
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.vinaygaba.showcase
+                
+                import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
+                import com.vinaygaba.showcase_processor_testing.WrapperClass
+                
+                class ShowcaseMetadataShowcase_processor_testing {
+                  @ShowcaseCodegenMetadata(
+                    showcaseComposableName = "group",
+                    showcaseComposableGroup = "name",
+                    showcaseComposableWidthDp = -1,
+                    showcaseComposableHeightDp = -1,
+                    packageName = "com.vinaygaba.showcase_processor_testing",
+                    moduleName = "showcase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    enclosingClass = [WrapperClass::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `multiple composable functions with showcase annotations generates only metadata file`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.vinaygaba.showcase_processor_testing
         
@@ -251,39 +360,55 @@ class ShowcaseProcessorTest {
             
         }
     """)
-        val result = KotlinCompilation().apply {
-            sources = listOf(kotlinSource)
-            annotationProcessors = listOf(ShowcaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
         result.sourcesGeneratedByAnnotationProcessor.forEach {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.vinaygaba.showcase
                 
-                import androidx.compose.Composable
-                import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
-                import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
-                import com.vinaygaba.showcase_processor_testing.TestComposable1
-                import com.vinaygaba.showcase_processor_testing.TestComposable2
-                import kotlin.collections.List
+                import com.vinaygaba.showcase.annotation.models.ShowcaseCodegenMetadata
                 
-                class ShowcaseCodegenComponents : ShowcaseComponentsProvider {
-                  val componentList: List<ShowcaseBrowserComponent> = listOf<ShowcaseBrowserComponent>(
-                
-                        ShowcaseBrowserComponent("name1", "group1", -1, -1,
-                            @Composable { TestComposable1() }),
-                        ShowcaseBrowserComponent("name2", "group1", -1, -1,
-                            @Composable { TestComposable2() })
-                        )
-
-                    override fun getShowcaseComponents() = componentList
+                class ShowcaseMetadataShowcase_processor_testing {
+                  @ShowcaseCodegenMetadata(
+                    showcaseComposableName = "group1",
+                    showcaseComposableGroup = "name1",
+                    showcaseComposableWidthDp = -1,
+                    showcaseComposableHeightDp = -1,
+                    packageName = "com.vinaygaba.showcase_processor_testing",
+                    moduleName = "showcase_processor_testing",
+                    composableMethodName = "TestComposable1"
+                  )
+                  fun TestComposable1() {
                   }
+                
+                  @ShowcaseCodegenMetadata(
+                    showcaseComposableName = "group1",
+                    showcaseComposableGroup = "name2",
+                    showcaseComposableWidthDp = -1,
+                    showcaseComposableHeightDp = -1,
+                    packageName = "com.vinaygaba.showcase_processor_testing",
+                    moduleName = "showcase_processor_testing",
+                    composableMethodName = "TestComposable2"
+                  )
+                  fun TestComposable2() {
+                  }
+                }
             """.trimIndent()
             )
         }
+    }
+    
+    
+
+    private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
+        return KotlinCompilation().apply {
+            sources = kotlinSourceFiles
+            annotationProcessors = listOf(ShowcaseProcessor())
+            inheritClassPath = true
+            messageOutputStream = System.out // see diagnostics in real time
+        }.compile()
     }
 }

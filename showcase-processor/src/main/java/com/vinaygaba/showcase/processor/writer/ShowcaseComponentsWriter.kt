@@ -11,10 +11,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.vinaygaba.showcase.annotation.models.ShowcaseComponents
-import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
 import com.vinaygaba.showcase.processor.ShowcaseProcessor.Companion.CODEGEN_PACKAGE_NAME
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
-import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
@@ -120,17 +118,8 @@ internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnv
                 .build()
         }
     }
-
-    private fun getRandomString(sizeOfRandomString: Int): String {
-        val random = Random()
-        val sb = StringBuilder(sizeOfRandomString)
-        for (i in 0 until sizeOfRandomString)
-            sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
-        return sb.toString()
-    }
     
     companion object {
-        private const val ALLOWED_CHARACTERS = "qwertyuiopasdfghjklzxcvbnm"
         private const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
         private const val SHOWCASE_MODELS_PACKAGE_NAME = "com.vinaygaba.showcase.models"
 
