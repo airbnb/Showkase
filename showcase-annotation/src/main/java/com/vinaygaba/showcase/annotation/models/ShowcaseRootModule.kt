@@ -1,3 +1,3 @@
 package com.vinaygaba.showcase.annotation.models
 
-interface ShowcaseRootModule {}
+interface ShowcaseRootModule
