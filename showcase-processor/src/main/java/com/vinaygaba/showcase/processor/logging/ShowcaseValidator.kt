@@ -89,6 +89,7 @@ class ShowcaseValidator {
         }
     }
 
+    @Suppress("LongParameterList")
     private fun requireInterface(
         element: Element,
         elementUtils: Elements,
