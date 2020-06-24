@@ -28,12 +28,13 @@ import java.util.*
 
 @Composable
 internal fun ShowcaseComponentDetailScreen(
-    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>
+    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
+    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
 ) {
     val componentMetadataList =
-        groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
+        groupedComponentMap[showcaseBrowserScreenMetadata.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find {
-        it.componentName == ShowcaseBrowserScreenMetadata.currentComponent
+        it.componentName == showcaseBrowserScreenMetadata.currentComponent
     } ?: return
     AdapterList(data = listOf(componentMetadata)) { metadata ->
         ShowcaseComponentCardType.values().forEach { showcaseComponentCardType ->
@@ -48,7 +49,7 @@ internal fun ShowcaseComponentDetailScreen(
 
     }
     BackButtonHandler {
-        goBack()
+        goBack(showcaseBrowserScreenMetadata)
     }
     
 }
@@ -147,7 +148,7 @@ private fun generateDimensionModifier(metadata: ShowcaseBrowserComponent): Modif
     return baseModifier + Modifier.fillMaxWidth()
 }
 
-private fun goBack() {
-    ShowcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
-    ShowcaseBrowserScreenMetadata.currentComponent = null
+private fun goBack(showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata) {
+    showcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
+    showcaseBrowserScreenMetadata.currentComponent = null
 }

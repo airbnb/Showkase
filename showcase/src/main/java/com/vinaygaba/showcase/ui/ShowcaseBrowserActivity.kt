@@ -2,8 +2,10 @@ package com.vinaygaba.showcase.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.remember
 import androidx.ui.core.setContent
 import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
+import com.vinaygaba.showcase.models.ShowcaseBrowserScreenMetadata
 import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
 
 class ShowcaseBrowserActivity : AppCompatActivity() {
@@ -11,9 +13,10 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val groupedComponentsMap = getGroupedComponentsMap()
+            val showcaseBrowserScreenMetadata = remember { ShowcaseBrowserScreenMetadata() }
             when {
                 groupedComponentsMap.isNotEmpty() -> {
-                    ShowcaseBrowserApp(groupedComponentsMap)
+                    ShowcaseBrowserApp(groupedComponentsMap, showcaseBrowserScreenMetadata)
                 }
                 else -> {
                     ShowcaseErrorScreen(

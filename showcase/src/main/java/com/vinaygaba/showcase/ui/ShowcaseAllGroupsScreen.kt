@@ -21,18 +21,20 @@ import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
 internal fun ShowcaseAllGroupsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>
+    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
+    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
 ) {
-    val filteredList = getFilteredSearchList(groupedComponentMap.keys.toList())
+    val filteredList =
+        getFilteredSearchList(groupedComponentMap.keys.toList(), showcaseBrowserScreenMetadata)
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)
 
     AdapterList(data = filteredList) { group ->
         Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp) + Modifier.clickable(
             onClick = {
-                ShowcaseBrowserScreenMetadata.currentScreen =
+                showcaseBrowserScreenMetadata.currentScreen =
                     ShowcaseCurrentScreen.GROUP_COMPONENTS
-                ShowcaseBrowserScreenMetadata.currentGroup = group
-                ShowcaseBrowserScreenMetadata.isSearchActive = false
+                showcaseBrowserScreenMetadata.currentGroup = group
+                showcaseBrowserScreenMetadata.isSearchActive = false
             }
         )) {
             Text(
@@ -45,16 +47,19 @@ internal fun ShowcaseAllGroupsScreen(
         }
     }
     BackButtonHandler {
-        goBack(activity)
+        goBack(activity, showcaseBrowserScreenMetadata)
     }
 }
 
-fun goBack(activity: ComponentActivity) {
-    val isSearchActive = ShowcaseBrowserScreenMetadata.isSearchActive
+internal fun goBack(
+    activity: ComponentActivity,
+    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+) {
+    val isSearchActive = showcaseBrowserScreenMetadata.isSearchActive
     when {
         isSearchActive -> {
-            ShowcaseBrowserScreenMetadata.isSearchActive = false
-            ShowcaseBrowserScreenMetadata.searchQuery = null
+            showcaseBrowserScreenMetadata.isSearchActive = false
+            showcaseBrowserScreenMetadata.searchQuery = null
         }
         else -> {
             activity.finish()
@@ -62,12 +67,15 @@ fun goBack(activity: ComponentActivity) {
     }
 }
 
-internal fun getFilteredSearchList(list: List<String>) =
-    when (ShowcaseBrowserScreenMetadata.isSearchActive) {
+internal fun getFilteredSearchList(
+    list: List<String>,
+    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+) =
+    when (showcaseBrowserScreenMetadata.isSearchActive) {
         false -> list
-        !ShowcaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
+        !showcaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.toLowerCase().contains(ShowcaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
+                it.toLowerCase().contains(showcaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
             }
         }
         else -> list

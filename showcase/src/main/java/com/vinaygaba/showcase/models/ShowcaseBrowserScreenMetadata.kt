@@ -1,6 +1,8 @@
 package com.vinaygaba.showcase.models
 
-import androidx.compose.Model
+import androidx.compose.getValue
+import androidx.compose.mutableStateOf
+import androidx.compose.setValue
 
 internal enum class ShowcaseCurrentScreen {
     GROUPS,
@@ -8,12 +10,10 @@ internal enum class ShowcaseCurrentScreen {
     COMPONENT_DETAIL,
 }
 
-@Model
-internal object ShowcaseBrowserScreenMetadata {
-    var currentScreen: ShowcaseCurrentScreen =
-        ShowcaseCurrentScreen.GROUPS
-    var currentGroup: String? = null
-    var currentComponent: String? = null
-    var isSearchActive = false
-    var searchQuery: String? = null
+internal class ShowcaseBrowserScreenMetadata {
+    var currentScreen by mutableStateOf(ShowcaseCurrentScreen.GROUPS)
+    var currentGroup: String? by mutableStateOf(null)
+    var currentComponent: String?  by mutableStateOf(null)
+    var isSearchActive by mutableStateOf(false)
+    var searchQuery: String? by mutableStateOf(null)
 }
