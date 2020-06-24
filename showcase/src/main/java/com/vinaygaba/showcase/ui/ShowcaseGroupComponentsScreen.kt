@@ -1,6 +1,7 @@
 package com.vinaygaba.showcase.ui
 
 import androidx.compose.Composable
+import androidx.compose.MutableState
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.clickable
@@ -13,54 +14,62 @@ import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 
 @Composable
 internal fun ShowcaseGroupComponentsScreen(
-    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>
+    groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
 ) {
     val groupComponentsList =
-        groupedComponentMap[ShowcaseBrowserScreenMetadata.currentGroup] ?: return
-    val filteredList = getFilteredSearchList(groupComponentsList)
+        groupedComponentMap[showcaseBrowserScreenMetadata.value.currentGroup] ?: return
+    val filteredList = getFilteredSearchList(groupComponentsList, showcaseBrowserScreenMetadata)
     AdapterList(data = filteredList) { groupComponent ->
         ComponentCardTitle(groupComponent.componentName)
         ComponentCard(
             metadata = groupComponent,
             cardModifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp) + Modifier.clickable(
                 onClick = {
-                    ShowcaseBrowserScreenMetadata.currentScreen =
-                        ShowcaseCurrentScreen.COMPONENT_DETAIL
-                    ShowcaseBrowserScreenMetadata.currentComponent = groupComponent.componentName
-                    ShowcaseBrowserScreenMetadata.isSearchActive = false
+                    showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+                        currentScreen = ShowcaseCurrentScreen.COMPONENT_DETAIL,
+                        currentComponent = groupComponent.componentName,
+                        isSearchActive = false
+                    )
                 }
             )
         )
     }
     BackButtonHandler {
-        goBack()
+        goBack(showcaseBrowserScreenMetadata)
     }
 }
 
-private fun goBack() {
-    val isSearchActive = ShowcaseBrowserScreenMetadata.isSearchActive
+private fun goBack(showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>) {
+    val isSearchActive = showcaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> {
-            ShowcaseBrowserScreenMetadata.isSearchActive = false
-            ShowcaseBrowserScreenMetadata.searchQuery = null
+            showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+                isSearchActive = false,
+                searchQuery = null
+            )
         }
         else -> {
-            ShowcaseBrowserScreenMetadata.currentScreen =
-                ShowcaseCurrentScreen.GROUPS
-            ShowcaseBrowserScreenMetadata.currentGroup = null
-            ShowcaseBrowserScreenMetadata.currentComponent = null
+            showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+                currentScreen = ShowcaseCurrentScreen.GROUPS,
+                currentGroup = null,
+                currentComponent = null
+            )
         }
     }
 }
 
 
-private fun getFilteredSearchList(list: List<ShowcaseBrowserComponent>) =
-    when (ShowcaseBrowserScreenMetadata.isSearchActive) {
+private fun getFilteredSearchList(
+    list: List<ShowcaseBrowserComponent>,
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
+) =
+    when (showcaseBrowserScreenMetadata.value.isSearchActive) {
         false -> list
-        !ShowcaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
+        !showcaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
                 it.componentName.toLowerCase()
-                    .contains(ShowcaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
+                    .contains(showcaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
             }
         }
         else -> list

@@ -1,19 +1,15 @@
 package com.vinaygaba.showcase.models
 
-import androidx.compose.Model
-
 internal enum class ShowcaseCurrentScreen {
     GROUPS,
     GROUP_COMPONENTS,
     COMPONENT_DETAIL,
 }
 
-@Model
-internal object ShowcaseBrowserScreenMetadata {
-    var currentScreen: ShowcaseCurrentScreen =
-        ShowcaseCurrentScreen.GROUPS
-    var currentGroup: String? = null
-    var currentComponent: String? = null
-    var isSearchActive = false
-    var searchQuery: String? = null
-}
+internal data class ShowcaseBrowserScreenMetadata(
+    val currentScreen: ShowcaseCurrentScreen = ShowcaseCurrentScreen.GROUPS,
+    val currentGroup: String? = null,
+    val currentComponent: String? = null,
+    val isSearchActive: Boolean = false,
+    val searchQuery: String? = null
+)
