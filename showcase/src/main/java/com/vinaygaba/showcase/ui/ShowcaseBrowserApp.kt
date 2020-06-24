@@ -1,6 +1,7 @@
 package com.vinaygaba.showcase.ui
 
 import androidx.compose.Composable
+import androidx.compose.MutableState
 import androidx.compose.state
 import androidx.compose.getValue
 import androidx.compose.setValue
@@ -28,7 +29,7 @@ import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 @Composable
 internal fun ShowcaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
-    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
 ) {
     Scaffold(
         drawerContent = null,
@@ -42,7 +43,7 @@ internal fun ShowcaseBrowserApp(
 }
 
 @Composable
-internal fun ShowcaseAppBar(showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata) {
+internal fun ShowcaseAppBar(showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>) {
     TopAppBar(
         title = {
             ShowcaseAppBarTitle(showcaseBrowserScreenMetadata)
@@ -54,25 +55,25 @@ internal fun ShowcaseAppBar(showcaseBrowserScreenMetadata: ShowcaseBrowserScreen
 }
 
 @Composable
-private fun ShowcaseAppBarTitle(metadata: ShowcaseBrowserScreenMetadata) {
+private fun ShowcaseAppBarTitle(metadata: MutableState<ShowcaseBrowserScreenMetadata>) {
     when {
-        metadata.isSearchActive -> {
+        metadata.value.isSearchActive -> {
             ShowcaseSearchField(metadata)
         }
-        metadata.currentScreen == ShowcaseCurrentScreen.GROUPS -> {
+        metadata.value.currentScreen == ShowcaseCurrentScreen.GROUPS -> {
             Text(ContextAmbient.current.getString(R.string.app_name))
         }
-        metadata.currentScreen == ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
-            Text(metadata.currentGroup.orEmpty())
+        metadata.value.currentScreen == ShowcaseCurrentScreen.GROUP_COMPONENTS -> {
+            Text(metadata.value.currentGroup.orEmpty())
         }
-        metadata.currentScreen == ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
-            Text(metadata.currentComponent.orEmpty())
+        metadata.value.currentScreen == ShowcaseCurrentScreen.COMPONENT_DETAIL -> {
+            Text(metadata.value.currentComponent.orEmpty())
         }
     }
 }
 
 @Composable
-internal fun ShowcaseSearchField(metadata: ShowcaseBrowserScreenMetadata) {
+internal fun ShowcaseSearchField(metadata: MutableState<ShowcaseBrowserScreenMetadata>) {
     // Needed to create another field to due a crash I was seeing when I 
     // directly used the search query field inside the 
     // ShowcaseBrowserScreenMetadata model
@@ -83,7 +84,7 @@ internal fun ShowcaseSearchField(metadata: ShowcaseBrowserScreenMetadata) {
         // Update value of textValue with the latest value of the text field
         onValueChange = {
             searchQuery = it
-            metadata.searchQuery = it.text
+            metadata.value = metadata.value.copy(searchQuery = it.text)
         },
         label = {
             Text(text = ContextAmbient.current.getString(R.string.search_label))
@@ -101,13 +102,13 @@ internal fun ShowcaseSearchField(metadata: ShowcaseBrowserScreenMetadata) {
 }
 
 @Composable
-private fun ShowcaseAppBarActions(metadata: ShowcaseBrowserScreenMetadata) {
+private fun ShowcaseAppBarActions(metadata: MutableState<ShowcaseBrowserScreenMetadata>) {
     when {
-        metadata.isSearchActive -> {
+        metadata.value.isSearchActive -> {
         }
         else -> {
             IconButton(onClick = {
-                metadata.isSearchActive = true
+                metadata.value = metadata.value.copy(isSearchActive = true)
             }) {
                 Icon(asset = Icons.Filled.Search)
             }
@@ -118,9 +119,9 @@ private fun ShowcaseAppBarActions(metadata: ShowcaseBrowserScreenMetadata) {
 @Composable
 internal fun ShowcaseBodyContent(
     groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
-    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
 ) {
-    when (showcaseBrowserScreenMetadata.currentScreen) {
+    when (showcaseBrowserScreenMetadata.value.currentScreen) {
         ShowcaseCurrentScreen.GROUPS -> {
             ShowcaseAllGroupsScreen(
                 groupedComponentMap, 

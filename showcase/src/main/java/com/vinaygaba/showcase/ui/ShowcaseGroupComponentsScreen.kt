@@ -1,6 +1,7 @@
 package com.vinaygaba.showcase.ui
 
 import androidx.compose.Composable
+import androidx.compose.MutableState
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.clickable
@@ -14,10 +15,10 @@ import com.vinaygaba.showcase.models.ShowcaseCurrentScreen
 @Composable
 internal fun ShowcaseGroupComponentsScreen(
     groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
-    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
 ) {
     val groupComponentsList =
-        groupedComponentMap[showcaseBrowserScreenMetadata.currentGroup] ?: return
+        groupedComponentMap[showcaseBrowserScreenMetadata.value.currentGroup] ?: return
     val filteredList = getFilteredSearchList(groupComponentsList, showcaseBrowserScreenMetadata)
     AdapterList(data = filteredList) { groupComponent ->
         ComponentCardTitle(groupComponent.componentName)
@@ -25,10 +26,11 @@ internal fun ShowcaseGroupComponentsScreen(
             metadata = groupComponent,
             cardModifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp) + Modifier.clickable(
                 onClick = {
-                    showcaseBrowserScreenMetadata.currentScreen =
-                        ShowcaseCurrentScreen.COMPONENT_DETAIL
-                    showcaseBrowserScreenMetadata.currentComponent = groupComponent.componentName
-                    showcaseBrowserScreenMetadata.isSearchActive = false
+                    showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+                        currentScreen = ShowcaseCurrentScreen.COMPONENT_DETAIL,
+                        currentComponent = groupComponent.componentName,
+                        isSearchActive = false
+                    )
                 }
             )
         )
@@ -38,18 +40,21 @@ internal fun ShowcaseGroupComponentsScreen(
     }
 }
 
-private fun goBack(showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata) {
-    val isSearchActive = showcaseBrowserScreenMetadata.isSearchActive
+private fun goBack(showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>) {
+    val isSearchActive = showcaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> {
-            showcaseBrowserScreenMetadata.isSearchActive = false
-            showcaseBrowserScreenMetadata.searchQuery = null
+            showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+                isSearchActive = false,
+                searchQuery = null
+            )
         }
         else -> {
-            showcaseBrowserScreenMetadata.currentScreen =
-                ShowcaseCurrentScreen.GROUPS
-            showcaseBrowserScreenMetadata.currentGroup = null
-            showcaseBrowserScreenMetadata.currentComponent = null
+            showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+                currentScreen = ShowcaseCurrentScreen.GROUPS,
+                currentGroup = null,
+                currentComponent = null
+            )
         }
     }
 }
@@ -57,14 +62,14 @@ private fun goBack(showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata)
 
 private fun getFilteredSearchList(
     list: List<ShowcaseBrowserComponent>,
-    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
 ) =
-    when (showcaseBrowserScreenMetadata.isSearchActive) {
+    when (showcaseBrowserScreenMetadata.value.isSearchActive) {
         false -> list
-        !showcaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
+        !showcaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
                 it.componentName.toLowerCase()
-                    .contains(showcaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
+                    .contains(showcaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
             }
         }
         else -> list

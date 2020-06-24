@@ -2,6 +2,7 @@ package com.vinaygaba.showcase.ui
 
 import android.content.res.Configuration
 import androidx.compose.Composable
+import androidx.compose.MutableState
 import androidx.compose.Providers
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
@@ -29,12 +30,12 @@ import java.util.*
 @Composable
 internal fun ShowcaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowcaseBrowserComponent>>,
-    showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata
+    showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>
 ) {
     val componentMetadataList =
-        groupedComponentMap[showcaseBrowserScreenMetadata.currentGroup] ?: return
+        groupedComponentMap[showcaseBrowserScreenMetadata.value.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find {
-        it.componentName == showcaseBrowserScreenMetadata.currentComponent
+        it.componentName == showcaseBrowserScreenMetadata.value.currentComponent
     } ?: return
     AdapterList(data = listOf(componentMetadata)) { metadata ->
         ShowcaseComponentCardType.values().forEach { showcaseComponentCardType ->
@@ -46,7 +47,6 @@ internal fun ShowcaseComponentDetailScreen(
                 ShowcaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
             }
         }
-
     }
     BackButtonHandler {
         goBack(showcaseBrowserScreenMetadata)
@@ -148,7 +148,9 @@ private fun generateDimensionModifier(metadata: ShowcaseBrowserComponent): Modif
     return baseModifier + Modifier.fillMaxWidth()
 }
 
-private fun goBack(showcaseBrowserScreenMetadata: ShowcaseBrowserScreenMetadata) {
-    showcaseBrowserScreenMetadata.currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS
-    showcaseBrowserScreenMetadata.currentComponent = null
+private fun goBack(showcaseBrowserScreenMetadata: MutableState<ShowcaseBrowserScreenMetadata>) {
+    showcaseBrowserScreenMetadata.value = showcaseBrowserScreenMetadata.value.copy(
+        currentScreen = ShowcaseCurrentScreen.GROUP_COMPONENTS,
+        currentComponent = null
+    )
 }
