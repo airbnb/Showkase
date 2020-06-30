@@ -52,9 +52,9 @@ dependencies {
     implementation deps.support.ktx
     implementation deps.support.lifecycleExtensions
     
-    // Showcase
-    implementation project(':showcase')
-    kapt project(':showcase-processor')
+    // Showkase
+    implementation project(':showkase')
+    kapt project(':showkase-processor')
 
     // Compose
     implementation deps.compose.composeRuntime
