@@ -325,7 +325,7 @@ class ShowcaseProcessorTest {
             it.name ==  "ShowcaseMetadataShowcase_processor_testing.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
-            it.name ==  "ShowcaseCodegenComponents.kt"
+            it.name ==  "TestShowcaseRootCodegenComponents.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find { 
             it.name ==  "ShowcaseMetadataShowcase_processor_testing.kt" 
