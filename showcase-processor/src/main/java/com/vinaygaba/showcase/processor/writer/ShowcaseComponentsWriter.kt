@@ -15,6 +15,7 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
 internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnvironment) {
+    @Suppress("LongMethod")
     internal fun generateShowcaseBrowserComponents(
         showcaseMetadataList: List<ShowcaseMetadata>,
         rootModulePackageName: String,
