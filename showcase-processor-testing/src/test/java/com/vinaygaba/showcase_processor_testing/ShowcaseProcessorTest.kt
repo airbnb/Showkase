@@ -182,7 +182,7 @@ class ShowcaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only one class in the root module can be annotated with @ShowcaseRoot"
+        val error = "Only one class in a module can be annotated with @ShowcaseRoot"
         assertThat(result.messages.contains(error))
     }
 
@@ -360,13 +360,11 @@ class ShowcaseProcessorTest {
                 package com.vinaygaba.showcase
                 
                 import androidx.compose.Composable
-                import com.vinaygaba.showcase.annotation.models.ShowcaseComponents
                 import com.vinaygaba.showcase.models.ShowcaseBrowserComponent
                 import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
                 import com.vinaygaba.showcase_processor_testing.TestComposable
                 import kotlin.collections.List
                 
-                @ShowcaseComponents
                 class ShowcaseCodegenComponents : ShowcaseComponentsProvider {
                   val componentList: List<ShowcaseBrowserComponent> = listOf<ShowcaseBrowserComponent>(
                 

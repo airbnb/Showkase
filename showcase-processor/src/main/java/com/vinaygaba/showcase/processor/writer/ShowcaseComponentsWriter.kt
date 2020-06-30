@@ -21,9 +21,10 @@ internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnv
         rootModuleClassName: String
     ) {
         if (showcaseMetadataList.isEmpty()) return
+        val showcaseComponentsListClassName = "$rootModuleClassName$AUTOGEN_CLASS_NAME"
         val fileBuilder = FileSpec.builder(
             rootModulePackageName,
-            "$rootModuleClassName$AUTOGEN_CLASS_NAME"
+            showcaseComponentsListClassName
         )
             .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
@@ -77,7 +78,7 @@ internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnv
 
         fileBuilder
             .addType(
-                TypeSpec.classBuilder("$rootModuleClassName$AUTOGEN_CLASS_NAME")
+                TypeSpec.classBuilder(showcaseComponentsListClassName)
                     .addSuperinterface(SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME)
                     .addFunction(
                         getShowcaseComponentsProviderInterfaceFunction()

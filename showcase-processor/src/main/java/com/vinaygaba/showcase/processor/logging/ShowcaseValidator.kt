@@ -58,7 +58,7 @@ class ShowcaseValidator {
         when {
             elementSet.size != 1 -> {
                 throw ShowcaseProcessorException(
-                    "Only one class in the root module can be annotated with $showcaseRootAnnotationName"
+                    "Only one class in a module can be annotated with $showcaseRootAnnotationName"
                 )
             }
             else -> {
