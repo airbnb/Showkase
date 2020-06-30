@@ -14,7 +14,7 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         val classKey = intent.extras?.getString(SHOWCASE_ROOT_MODULE) ?: return 
         setContent {
             val groupedComponentsMap = getGroupedComponentsMap(classKey)
-            val showcaseBrowserScreenMetadata = state { ShowcaseBrowserScreenMetadata() }
+            var showcaseBrowserScreenMetadata = state { ShowcaseBrowserScreenMetadata() }
             when {
                 groupedComponentsMap.isNotEmpty() -> {
                     ShowcaseBrowserApp(groupedComponentsMap, showcaseBrowserScreenMetadata)
