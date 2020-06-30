@@ -183,6 +183,3 @@ class WrapperClass {
 
 @ShowcaseRoot
 class RootModule: ShowcaseRootModule
-
-@ShowcaseRoot
-class RootModule2: ShowcaseRootModule
