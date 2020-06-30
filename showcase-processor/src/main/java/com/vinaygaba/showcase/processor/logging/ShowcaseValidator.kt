@@ -1,10 +1,8 @@
 package com.vinaygaba.showcase.processor.logging
 
 import com.vinaygaba.showcase.annotation.models.Showcase
-import com.vinaygaba.showcase.annotation.models.ShowcaseComponents
 import com.vinaygaba.showcase.annotation.models.ShowcaseRoot
 import com.vinaygaba.showcase.annotation.models.ShowcaseRootModule
-import com.vinaygaba.showcase.processor.ShowcaseProcessor
 import com.vinaygaba.showcase.processor.exceptions.ShowcaseProcessorException
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -60,7 +58,7 @@ class ShowcaseValidator {
         when {
             elementSet.size != 1 -> {
                 throw ShowcaseProcessorException(
-                    "Only one class in the root module can be annotated with $showcaseRootAnnotationName"
+                    "Only one class in a module can be annotated with $showcaseRootAnnotationName"
                 )
             }
             else -> {
@@ -71,8 +69,6 @@ class ShowcaseValidator {
                 requireClass(element, showcaseRootAnnotationName, errorPrefix)
                 requireInterface(element, elementUtils, typeUtils, showcaseRootAnnotationName,
                     errorPrefix, showcaseRootModuleName)
-                requireNoShowcaseRootOnClassPath(elementUtils, errorPrefix, 
-                    showcaseRootAnnotationName, showcaseRootModuleName)
             }
         }
     }
@@ -104,24 +100,6 @@ class ShowcaseValidator {
             throw ShowcaseProcessorException(
                 "$errorPrefix Only an implementation of $showcaseRootModuleName can be annotated " +
                         "with $showcaseRootAnnotationName"
-            )
-        }
-    }
-
-    private fun requireNoShowcaseRootOnClassPath(
-        elementUtils: Elements,
-        errorPrefix: String,
-        showcaseRootAnnotationName: String,
-        showcaseRootModuleName: String
-    ) {
-        val showcaseGeneratedPackageElement =
-            elementUtils.getPackageElement(ShowcaseProcessor.CODEGEN_PACKAGE_NAME)
-        val showcaseComponentsOnClassPath = showcaseGeneratedPackageElement.enclosedElements
-            .mapNotNull { element -> element.getAnnotation(ShowcaseComponents::class.java) }
-        if (showcaseComponentsOnClassPath.isNotEmpty()) {
-            throw ShowcaseProcessorException(
-                "$errorPrefix Only your root module must have a single implementation of " +
-                        "$showcaseRootModuleName and be annotated by $showcaseRootAnnotationName"
             )
         }
     }

@@ -98,12 +98,15 @@ class ShowcaseProcessor: AbstractProcessor() {
         
         showcaseRootElements.forEach {
             showcaseValidator.validateShowcaseRootElement(showcaseRootElements, elementUtils, typeUtils)
+            val rootModuleClassName = it.simpleName.toString()
+            val rootModulePackageName = elementUtils.getPackageOf(it).qualifiedName.toString()
             val generatedShowcaseMetadataOnClasspath = getShowcaseCodegenMetadataOnClassPath(elementUtils)
             val allShowcaseMetadataList = generatedShowcaseMetadataOnClasspath
                 .plus(currentShowcaseMetadataList)
 
             ShowcaseComponentsWriter(processingEnv).apply {
-                generateShowcaseBrowserComponents(allShowcaseMetadataList)
+                generateShowcaseBrowserComponents(allShowcaseMetadataList, rootModulePackageName, 
+                    rootModuleClassName)
             }
         }
     }

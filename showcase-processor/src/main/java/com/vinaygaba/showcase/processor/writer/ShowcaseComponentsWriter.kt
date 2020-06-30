@@ -10,18 +10,22 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
-import com.vinaygaba.showcase.annotation.models.ShowcaseComponents
-import com.vinaygaba.showcase.processor.ShowcaseProcessor.Companion.CODEGEN_PACKAGE_NAME
 import com.vinaygaba.showcase.processor.models.ShowcaseMetadata
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
 internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnvironment) {
-    internal fun generateShowcaseBrowserComponents(showcaseMetadataList: List<ShowcaseMetadata>) {
+    @Suppress("LongMethod")
+    internal fun generateShowcaseBrowserComponents(
+        showcaseMetadataList: List<ShowcaseMetadata>,
+        rootModulePackageName: String,
+        rootModuleClassName: String
+    ) {
         if (showcaseMetadataList.isEmpty()) return
+        val showcaseComponentsListClassName = "$rootModuleClassName$AUTOGEN_CLASS_NAME"
         val fileBuilder = FileSpec.builder(
-            CODEGEN_PACKAGE_NAME,
-            AUTOGEN_CLASS_NAME
+            rootModulePackageName,
+            showcaseComponentsListClassName
         )
             .addComment("This is an auto-generated file. Please do not edit/modify this file.")
 
@@ -75,8 +79,7 @@ internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnv
 
         fileBuilder
             .addType(
-                TypeSpec.classBuilder(AUTOGEN_CLASS_NAME)
-                    .addAnnotation(ShowcaseComponents::class.java)
+                TypeSpec.classBuilder(showcaseComponentsListClassName)
                     .addSuperinterface(SHOWCASE_COMPONENTS_PROVIDER_CLASS_NAME)
                     .addFunction(
                         getShowcaseComponentsProviderInterfaceFunction()
@@ -118,9 +121,9 @@ internal class ShowcaseComponentsWriter(private val processingEnv: ProcessingEnv
                 .build()
         }
     }
-    
+
     companion object {
-        private const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
+        private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
         private const val SHOWCASE_MODELS_PACKAGE_NAME = "com.vinaygaba.showcase.models"
 
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
