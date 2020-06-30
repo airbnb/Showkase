@@ -11,9 +11,10 @@ import com.vinaygaba.showcase.models.ShowcaseComponentsProvider
 class ShowcaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val classKey = intent.extras?.getString(SHOWCASE_ROOT_MODULE) ?: return 
         setContent {
-            val groupedComponentsMap = getGroupedComponentsMap()
-            var showcaseBrowserScreenMetadata = state { ShowcaseBrowserScreenMetadata() }
+            val groupedComponentsMap = getGroupedComponentsMap(classKey)
+            val showcaseBrowserScreenMetadata = state { ShowcaseBrowserScreenMetadata() }
             when {
                 groupedComponentsMap.isNotEmpty() -> {
                     ShowcaseBrowserApp(groupedComponentsMap, showcaseBrowserScreenMetadata)
@@ -29,10 +30,10 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun getGroupedComponentsMap(): Map<String, List<ShowcaseBrowserComponent>> {
+    private fun getGroupedComponentsMap(classKey: String): Map<String, List<ShowcaseBrowserComponent>> {
         return try {
-            val showcaseComponentProvider =
-                Class.forName("$CODEGEN_PACKAGE_NAME.$AUTOGEN_CLASS_NAME").newInstance()
+            val showcaseComponentProvider = Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
+            
             val componentList = (showcaseComponentProvider as ShowcaseComponentsProvider).getShowcaseComponents()
             componentList.groupBy { it.group }
         } catch (exception: ClassNotFoundException) {
@@ -41,7 +42,7 @@ class ShowcaseBrowserActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val CODEGEN_PACKAGE_NAME = "com.vinaygaba.showcase"
-        const val AUTOGEN_CLASS_NAME = "ShowcaseCodegenComponents"
+        const val SHOWCASE_ROOT_MODULE = "SHOWCASE_ROOT_MODULE"
+        private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
     }
 }
