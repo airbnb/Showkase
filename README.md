@@ -1,9 +1,13 @@
 # Showkase
 
+TODO: Add poster
+
 Showkase is an annotation processor based library that helps you organize, discover, search and 
-visualize Jetpack Compose components. It magically generates a UI component browser for 
-@Composables with very minimal effort. In addition, it also helps you visualize your 
-components in common situations like dark mode, RTL layouts, font scaled situations, etc.  
+visualize Jetpack Compose components. It magically generates a UI component browser with very 
+minimal effort. In addition, it also helps you visualize your components in common situations 
+like dark mode, RTL layouts, font scaled situations, etc.  
+
+TODO: Add Screenshots
 
 **Benefits**
 - Showkase eliminates the manual work needed in maintaining a UI component preview/browser app that 
@@ -31,15 +35,15 @@ implementation "com.airbnb:showkase:0.1.0-alpha"
 kapt "com.airbnb:showkcase-processor:0.1.0-alpha"
 ```
 
-**Step 2**: Add the @Showkase annotation to the `@Composable` function/components that should be a 
-part of the Showkase browser. 
+**Step 2**: Add the @Showkase annotation to every `@Composable` function/component that should 
+be a part of the Showkase browser. 
 
 ```
 @Showkase(name="Name of component", group="Grouping Name")
 ```
 
-**Step 3**: Define an implementation of `ShowkaseRootModule` in your root module. If your setup 
-involves only a single module, add this implementation in that module. Ensure that this 
+**Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your root module. If 
+your setup involves only a single module, add this implementation in that module. Ensure that this 
 implementation is also annotated with the `@ShowkaseRoot` annotation.
 
 ```
@@ -55,8 +59,21 @@ module you created in `Step3`.
  
 
 ```
-startActivity(
-    ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!)
-)
+startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
 ```
 
+## Frequently Asked Questions
+
+TODO
+
+## Coming Soon!
+
+Here are some ideas that we are thinking about. We are also not limited to these and would love 
+to learn more about your use cases.
+
+- KDoc support so that the KDoc that you added to your @Composable functions is also available in
+ the Showkase browser activity.
+- Support for representing more aspects of your design system. Think `@ShowkaseColor`, 
+`@ShowkaseTypography`, etc.
+- Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
+this would be a good opportunity to make this a part of your CI and detect diffs in components. 
