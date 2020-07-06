@@ -51,9 +51,9 @@ implementation is also annotated with the `@ShowkaseRoot` annotation.
 class MyRootModule: ShowkaseRootModule
 ```
 
-**Step 4**: Showkase is now ready for use! Just start the `ShowcaseBrowserActivity` to access it. 
+**Step 4**: Showkase is now ready for use! Just start the `ShowkaseBrowserActivity` to access it. 
 Typically you would start this activity from the debug menu of your app but you are free to start 
-this from any place you like! `ShowcaseBrowserActivity` comes with a nice helper function that 
+this from any place you like! `ShowkaseBrowserActivity` comes with a nice helper function that 
 returns the intent you need to start. Just pass in the context & the `canonicalName` of the root 
 module you created in `Step3`.
  
