@@ -32,16 +32,13 @@ import androidx.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
-import com.airbnb.showkase.ShowkaseMetadataSubmodule
 import com.airbnb.showkase.annotation.models.Showkase
 import com.airbnb.showkase.annotation.models.ShowkaseRoot
 import com.airbnb.showkase.annotation.models.ShowkaseRootModule
-import com.airbnb.showkase.models.ShowkaseComponentsProvider
 
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!", style = TextStyle(fontSize = 15.sp))
-    ShowkaseComponentsProvider
 }
 
 @Showkase(name = "Greeting 1", group = "Group1")
