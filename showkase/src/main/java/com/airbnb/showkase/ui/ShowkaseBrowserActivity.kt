@@ -10,10 +10,17 @@ import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseComponentsProvider
 
+/**
+ * The activity that's responsible for showing all the @Composable components that were annotated
+ * with the @Showkase annotation.
+ */
 class ShowkaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val classKey = intent.extras?.getString(SHOWKASE_ROOT_MODULE_KEY) ?: return
+        val classKey = intent.extras?.getString(SHOWKASE_ROOT_MODULE_KEY) ?: throw Exception(
+            "Missing key in bundle. Please start this activity by using the intent returned by " +
+                    "the ShowkaseBrowserActivity.getIntent() method."
+        )
         setContent {
             val groupedComponentsMap = getGroupedComponentsMap(classKey)
             var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
@@ -49,6 +56,16 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
         private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
 
+        /**
+         * Returns the intent that the users of this library need to use for starting the
+         * Showkase browser activity. Please make sure to use this instead of starting the
+         * activity directly as it sets the right value in the bundle in order for the activity
+         * to start correctly.
+         * 
+         * @param context Android context
+         * @param rootModuleCanonicalName The canonical name of the implementation of 
+         * ShowkaseRootModule.
+         */
         fun getIntent(context: Context, rootModuleCanonicalName: String) =
             Intent(context, ShowkaseBrowserActivity::class.java).apply {
                 putExtra(SHOWKASE_ROOT_MODULE_KEY, rootModuleCanonicalName)
