@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.state
 import androidx.ui.core.setContent
+import com.airbnb.showkase.exceptions.ShowkaseException
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseComponentsProvider
@@ -17,7 +18,7 @@ import com.airbnb.showkase.models.ShowkaseComponentsProvider
 class ShowkaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val classKey = intent.extras?.getString(SHOWKASE_ROOT_MODULE_KEY) ?: throw Exception(
+        val classKey = intent.extras?.getString(SHOWKASE_ROOT_MODULE_KEY) ?: throw ShowkaseException(
             "Missing key in bundle. Please start this activity by using the intent returned by " +
                     "the ShowkaseBrowserActivity.getIntent() method."
         )
