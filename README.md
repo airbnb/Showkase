@@ -31,8 +31,8 @@ setup, add this dependency to all the modules which have a `@Composable` functio
 display inside the Showkase browser.
 
 ```
-implementation "com.airbnb:showkase:0.1.0-alpha"
-kapt "com.airbnb:showkcase-processor:0.1.0-alpha"
+implementation "com.airbnb.android:showkase:0.1.0-alpha"
+kapt "com.airbnb.android:showkcase-processor:0.1.0-alpha"
 ```
 
 **Step 2**: Add the @Showkase annotation to every `@Composable` function/component that should 
