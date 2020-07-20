@@ -8,9 +8,9 @@ import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
+import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.rtl
@@ -25,7 +25,7 @@ import androidx.ui.unit.sp
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
-import java.util.*
+import java.util.Locale
 
 @Composable
 internal fun ShowkaseComponentDetailScreen(
@@ -37,7 +37,7 @@ internal fun ShowkaseComponentDetailScreen(
     val componentMetadata = componentMetadataList.find {
         it.componentName == showkaseBrowserScreenMetadata.value.currentComponent
     } ?: return
-    AdapterList(data = listOf(componentMetadata)) { metadata ->
+    LazyColumnItems(items = listOf(componentMetadata), itemContent = { metadata ->
         ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
             when (showkaseComponentCardType) {
                 ShowkaseComponentCardType.BASIC -> BasicComponentCard(metadata)
@@ -47,7 +47,7 @@ internal fun ShowkaseComponentDetailScreen(
                 ShowkaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
             }
         }
-    }
+    })
     BackButtonHandler {
         goBack(showkaseBrowserScreenMetadata)
     }

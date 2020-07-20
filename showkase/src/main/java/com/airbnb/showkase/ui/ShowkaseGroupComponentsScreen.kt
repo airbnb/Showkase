@@ -3,8 +3,8 @@ package com.airbnb.showkase.ui
 import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.clickable
+import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.unit.dp
@@ -20,7 +20,7 @@ internal fun ShowkaseGroupComponentsScreen(
     val groupComponentsList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
     val filteredList = getFilteredSearchList(groupComponentsList, showkaseBrowserScreenMetadata)
-    AdapterList(data = filteredList) { groupComponent ->
+    LazyColumnItems(items = filteredList, itemContent = { groupComponent ->
         ComponentCardTitle(groupComponent.componentName)
         ComponentCard(
             metadata = groupComponent,
@@ -34,7 +34,7 @@ internal fun ShowkaseGroupComponentsScreen(
                 }
             )
         )
-    }
+    })
     BackButtonHandler {
         goBack(showkaseBrowserScreenMetadata)
     }

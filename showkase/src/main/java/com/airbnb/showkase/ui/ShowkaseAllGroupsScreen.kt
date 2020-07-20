@@ -5,9 +5,9 @@ import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.ui.core.LifecycleOwnerAmbient
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.clickable
+import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.material.Card
@@ -29,7 +29,7 @@ internal fun ShowkaseAllGroupsScreen(
         showkaseBrowserScreenMetadata)
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)
 
-    AdapterList(data = filteredList) { group ->
+    LazyColumnItems(items = filteredList, itemContent = { group ->
         Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp) + Modifier.clickable(
             onClick = {
                 showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
@@ -47,7 +47,7 @@ internal fun ShowkaseAllGroupsScreen(
                 )
             )
         }
-    }
+    })
     BackButtonHandler {
         goBack(activity, showkaseBrowserScreenMetadata)
     }
