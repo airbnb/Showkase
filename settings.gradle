@@ -1,6 +1,7 @@
-include ':showcase'
-include ':showcase-processor'
-include ':showcase-processor-testing'
-include ':showcase-annotation'
+include ':showkase'
+include ':showkase-processor'
+include ':showkase-processor-testing'
+include ':showkase-annotation'
 include ':sample'
-rootProject.name = "Showcase"
+rootProject.name = "Showkase"
+include ':sample-submodule'
