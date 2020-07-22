@@ -13,7 +13,6 @@ import androidx.ui.layout.ConstraintLayout
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.preferredHeight
-import androidx.ui.layout.preferredHeightIn
 import androidx.ui.layout.preferredWidth
 import androidx.ui.material.Card
 import androidx.ui.material.ListItem
@@ -29,14 +28,8 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
-data class Person(
-    val name: String,
-    val age: Int,
-    val profilePictureUrl: String? = null
-)
-
 @Composable
-fun SimpleRow(person: Person) {
+fun SimpleRow(title: String, subtitle: String) {
     ShowkaseTheme {
         Card(
             shape = RoundedCornerShape(4.dp),
@@ -44,7 +37,7 @@ fun SimpleRow(person: Person) {
         ) {
             ListItem(text = {
                 Text(
-                    text = person.name,
+                    text = title,
                     style = TextStyle(
                         fontFamily = FontFamily.Serif, fontSize = 25.sp,
                         fontWeight = FontWeight.Bold
@@ -52,19 +45,18 @@ fun SimpleRow(person: Person) {
                 )
             }, secondaryText = {
                 Text(
-                    text = "Age: ${person.age}",
+                    text = subtitle,
                     style = TextStyle(
                         fontFamily = FontFamily.Serif, fontSize = 15.sp,
                         fontWeight = FontWeight.Light, color = Color.DarkGray
                     )
                 )
             }, icon = {
-                person.profilePictureUrl?.let { imageUrl ->
-                    Box(
-                        modifier = Modifier.preferredWidth(60.dp) + Modifier.preferredHeight(60.dp) +
-                                Modifier.drawBackground(Color.Gray)
-                    )
-                }
+                Box(
+                    modifier = Modifier.preferredWidth(60.dp) +
+                            Modifier.preferredHeight(60.dp) +
+                            Modifier.drawBackground(Color.Gray)
+                )
             })
         }
     }
@@ -72,8 +64,6 @@ fun SimpleRow(person: Person) {
 
 @Composable
 fun TitleSubtitleThumbnailRow() {
-    val resources = ContextAmbient.current.resources
-
     ShowkaseTheme {
         Card(
             modifier = Modifier.preferredHeight(120.dp) + Modifier.fillMaxWidth() + Modifier.padding(
@@ -212,9 +202,10 @@ fun BottomLabelRowPreview() {
 @Composable
 fun ProductCardRowPreview() {
     ProductCardRow(
-        "http://a0.muscache.com/im/pictures/ef0ee86b-feba-47f8-8882-014b2a7b6926.jpg?im_w=1200", 
-        "Title", 
-        LoremIpsum(5).values.joinToString())
+        "http://a0.muscache.com/im/pictures/ef0ee86b-feba-47f8-8882-014b2a7b6926.jpg?im_w=1200",
+        "Title",
+        LoremIpsum(5).values.joinToString()
+    )
 }
 
 @Showkase("Simple Row", "Rows")
@@ -222,11 +213,8 @@ fun ProductCardRowPreview() {
 @Composable
 fun SimpleRowPreview() {
     SimpleRow(
-        Person(
-            "Iron Man",
-            43,
-            "https://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55.jpg"
-        )
+        "Iron Man",
+        "Age: 43"
     )
 }
 
