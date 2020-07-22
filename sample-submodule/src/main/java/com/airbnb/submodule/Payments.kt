@@ -3,6 +3,7 @@ package com.airbnb.submodule
 import androidx.compose.Composable
 import androidx.compose.getValue
 import androidx.compose.setValue
+import androidx.compose.state
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
@@ -22,7 +23,6 @@ import androidx.ui.layout.padding
 import androidx.ui.layout.preferredWidth
 import androidx.ui.material.Card
 import androidx.ui.material.MaterialTheme
-import androidx.ui.savedinstancestate.savedInstanceState
 import androidx.ui.text.AnnotatedString
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -42,7 +42,7 @@ fun CreditCardComponent(cardName: String) {
                 color = MaterialTheme.colors.primary
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
-                    var textValue by savedInstanceState { "1234567812345678" }
+                    var textValue by state { "1234567812345678" }
                     TextField(value = TextFieldValue(textValue),
                         modifier = Modifier.padding(16.dp),
                         textStyle = TextStyle(
