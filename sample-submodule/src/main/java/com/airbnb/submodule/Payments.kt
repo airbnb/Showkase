@@ -77,10 +77,14 @@ class CreditCardVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         return TransformedText(
             // Regex used to add a space after every 4 characters.
-            AnnotatedString(text.text.replace("....".toRegex(), "$0 ")),
+            AnnotatedString(text.text.replace(creditCardRegex, "$0 ")),
             creditCardOffsetMap
         )
     }
+}
+
+val creditCardRegex by lazy {
+    "....".toRegex()
 }
 
 val creditCardOffsetMap = object : OffsetMap {
