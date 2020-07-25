@@ -42,7 +42,7 @@ internal fun ShowkaseBrowserApp(
         bodyContent = {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                backgroundColor = Color(android.graphics.Color.parseColor("#e1e1e1"))
+                backgroundColor = SHOWKASE_BACKGROUND_COLOR
             ) {
                 ShowkaseBodyContent(groupedComponentMap, showkaseBrowserScreenMetadata)
             }
