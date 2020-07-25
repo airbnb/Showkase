@@ -19,22 +19,27 @@ internal fun ShowkaseGroupComponentsScreen(
 ) {
     val groupComponentsList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
-    val filteredList = getFilteredSearchList(groupComponentsList, showkaseBrowserScreenMetadata)
-    LazyColumnItems(items = filteredList, itemContent = { groupComponent ->
-        ComponentCardTitle(groupComponent.componentName)
-        ComponentCard(
-            metadata = groupComponent,
-            cardModifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp) + Modifier.clickable(
-                onClick = {
-                    showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                        currentScreen = ShowkaseCurrentScreen.COMPONENT_DETAIL,
-                        currentComponent = groupComponent.componentName,
-                        isSearchActive = false
-                    )
-                }
+    val filteredList =
+        getFilteredSearchList(groupComponentsList, showkaseBrowserScreenMetadata)
+    LazyColumnItems(
+        items = filteredList,
+        itemContent = { groupComponent ->
+            ComponentCardTitle(groupComponent.componentName)
+            ComponentCard(
+                metadata = groupComponent,
+                cardModifier = Modifier.fillMaxWidth() + Modifier.clickable(
+                    onClick = {
+                        showkaseBrowserScreenMetadata.value =
+                            showkaseBrowserScreenMetadata.value.copy(
+                                currentScreen = ShowkaseCurrentScreen.COMPONENT_DETAIL,
+                                currentComponent = groupComponent.componentName,
+                                isSearchActive = false
+                            )
+                    }
+                )
             )
-        )
-    })
+        }
+    )
     BackButtonHandler {
         goBack(showkaseBrowserScreenMetadata)
     }

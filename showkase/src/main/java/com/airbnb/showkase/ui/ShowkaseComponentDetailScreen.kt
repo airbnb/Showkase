@@ -8,8 +8,13 @@ import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
+import androidx.ui.core.PointerEventPass
+import androidx.ui.core.gesture.longPressGestureFilter
+import androidx.ui.core.gesture.pressIndicatorGestureFilter
+import androidx.ui.core.gesture.rawPressStartGestureFilter
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
+import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
@@ -57,9 +62,11 @@ internal fun ShowkaseComponentDetailScreen(
 @Composable
 internal fun ComponentCardTitle(componentName: String) {
     Text(
-        text = componentName, modifier = Modifier.padding(16.dp),
+        text = componentName, 
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 4.dp),
         style = TextStyle(
-            fontSize = 20.sp, fontFamily = FontFamily.Serif,
+            fontSize = 16.sp, 
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold
         )
     )
