@@ -9,17 +9,6 @@ like dark mode, RTL layouts, font scaled, etc.
     <img height="600" src="https://github.com/airbnb/Showkase/assets/showkase_demo.gif">
 </p>
  
- ## Features
- - Support for top level functions and class functions to be annotated with the `@Showkase` annotation.
- - 5 Permutations are auto created for each component (Basic Example, Dark Mode, RTL, Font Scaled,
-  Display Scaled. Look in the gif above for examples)'
- - Support for searching by component name and component group.
- - Multi-module support for showcasing composables across multiple modules.
- - Support for constraining a component with a custom height/width using additional parameters in 
- the `@Showkase` annotation.
- - Descriptive error messages so that the users of the library can fix any incorrect setup.
- - Incremental annotation processor that makes the code-gen more performant. 
- 
  ## Why should you use Showkase?
  - Showkase eliminates the manual work needed in maintaining a UI component preview/browser app that 
  each company is forced to build
@@ -31,6 +20,18 @@ like dark mode, RTL layouts, font scaled, etc.
   to improve the turnaround time in creating a production-ready component.
  - Showkase aids in catching common UI issues early with the help of auto-generated permutations 
  of your components.
+ 
+  ## Features
+  - [Super simple setup](#Installation)
+  - Support for top level functions and class functions to be annotated with the `@Showkase` annotation.
+  - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
+  Scaled, Display Scaled. Look in the gif above for examples)'. More to be added in the future!
+  - Support for searching a `@Composable` component by name or group.
+  - Multi-module support for showcasing composables across multiple modules.
+  - Support for constraining a component with a custom height/width using additional parameters in 
+  the `@Showkase` annotation.
+  - Descriptive error messages so that the users of the library can fix any incorrect setup.
+  - Incremental annotation processor that makes the code-gen more performant. 
 
 ## Installation
 
@@ -52,8 +53,8 @@ be a part of the Showkase browser.
 @Showkase(name="Name of component", group="Group Name")
 ```
 
-**Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your root module. If 
-your setup involves only a single module, add this implementation in that module. Ensure that this 
+**Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your **root** module.
+ If your setup involves only a single module, add this implementation in that module. Ensure that this 
 implementation is also annotated with the `@ShowkaseRoot` annotation.
 
 ```kotlin
