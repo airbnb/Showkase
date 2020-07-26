@@ -25,20 +25,27 @@ internal fun ShowkaseAllGroupsScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
-    val filteredList = getFilteredSearchList(groupedComponentMap.keys.toList(), 
-        showkaseBrowserScreenMetadata)
+    val filteredList = getFilteredSearchList(
+        groupedComponentMap.keys.toList(),
+        showkaseBrowserScreenMetadata
+    )
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)
 
     LazyColumnItems(items = filteredList, itemContent = { group ->
-        Card(modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp) + Modifier.clickable(
-            onClick = {
-                showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                    currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
-                    currentGroup = group,
-                    isSearchActive = false
-                )
-            }
-        )) {
+        Card(
+            modifier = Modifier.fillMaxWidth() +
+                    Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp) +
+                    Modifier.clickable(
+                        onClick = {
+                            showkaseBrowserScreenMetadata.value =
+                                showkaseBrowserScreenMetadata.value.copy(
+                                    currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
+                                    currentGroup = group,
+                                    isSearchActive = false
+                                )
+                        }
+                    )
+        ) {
             Text(
                 text = group, modifier = Modifier.padding(16.dp),
                 style = TextStyle(
@@ -79,7 +86,8 @@ internal fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.toLowerCase().contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
+                it.toLowerCase()
+                    .contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
             }
         }
         else -> list
