@@ -1,9 +1,9 @@
 # Showkase
 
-Showkase is an annotation processor based library that helps you organize, discover, search and 
-visualize Jetpack Compose components(composables). It magically generates a UI component browser 
-with very minimal effort. In addition, it also helps you visualize your components in common situations 
-like dark mode, RTL layouts, font scaled, etc.  
+Showkase is an Android library that helps you organize, discover, search and visualize Jetpack 
+Compose components(composables). It magically generates a UI component browser with very minimal 
+effort. In addition, it also helps you visualize your components in common situations like dark 
+mode, RTL layouts, font scaled, etc.  
 
 <p align="center">
     <img height="600" src="https://github.com/airbnb/Showkase/assets/showkase_demo.gif">
@@ -106,3 +106,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
