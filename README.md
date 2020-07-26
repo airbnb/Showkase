@@ -84,3 +84,25 @@ to learn more about your use cases.
 `@ShowkaseTypography`, etc.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
+
+## Contributing
+Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
+open issues to look for things that need work. If you have a feature request or bug, please open 
+a new issue so we can track it.
+
+## License
+
+```
+Copyright 2020 Airbnb, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
