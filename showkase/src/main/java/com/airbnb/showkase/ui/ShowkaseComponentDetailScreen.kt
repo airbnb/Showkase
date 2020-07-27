@@ -81,6 +81,11 @@ internal fun ComponentCard(
             Box(modifier = composableModifier) {
                 metadata.component()
             }
+            // Need to add this as part of the stack so that we can intercept the touch of the 
+            // component when we are on the "Group components" screen. If 
+            // composableContainerModifier does not have any clickable modifiers, this box has no
+            // impact and the touches go through to the component(this happens in the "Component 
+            // Detail" screen.
             Box(
                 modifier = Modifier.matchParentSize() + composableContainerModifier
             )
