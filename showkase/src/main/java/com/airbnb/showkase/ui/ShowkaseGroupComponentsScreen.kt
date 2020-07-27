@@ -27,16 +27,14 @@ internal fun ShowkaseGroupComponentsScreen(
             ComponentCardTitle(groupComponent.componentName)
             ComponentCard(
                 metadata = groupComponent,
-                cardModifier = Modifier.fillMaxWidth() + Modifier.clickable(
-                    onClick = {
-                        showkaseBrowserScreenMetadata.value =
-                            showkaseBrowserScreenMetadata.value.copy(
-                                currentScreen = ShowkaseCurrentScreen.COMPONENT_DETAIL,
-                                currentComponent = groupComponent.componentName,
-                                isSearchActive = false
-                            )
-                    }
-                )
+                onClick = {
+                    showkaseBrowserScreenMetadata.value =
+                        showkaseBrowserScreenMetadata.value.copy(
+                            currentScreen = ShowkaseCurrentScreen.COMPONENT_DETAIL,
+                            currentComponent = groupComponent.componentName,
+                            isSearchActive = false
+                        )
+                }
             )
         }
     )

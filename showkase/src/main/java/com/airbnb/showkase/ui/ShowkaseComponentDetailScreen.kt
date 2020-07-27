@@ -9,12 +9,9 @@ import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.core.PointerEventPass
-import androidx.ui.core.gesture.longPressGestureFilter
-import androidx.ui.core.gesture.pressIndicatorGestureFilter
 import androidx.ui.core.gesture.rawPressStartGestureFilter
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
-import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
@@ -75,11 +72,12 @@ internal fun ComponentCardTitle(componentName: String) {
 @Composable
 internal fun ComponentCard(
     metadata: ShowkaseBrowserComponent,
-    cardModifier: Modifier = Modifier.fillMaxWidth()
+    onClick: (() -> Unit)? = null
 ) {
-    val updatedModifier = generateDimensionModifier(metadata)
-    Card(modifier = cardModifier) {
-        Box(modifier = updatedModifier) {
+    val composableModifier = generateComposableModifier(metadata)
+    val composableContainerModifier = generateContainerModifier(onClick)
+    Card(modifier = composableContainerModifier) {
+        Box(modifier = composableModifier) { 
             metadata.component()
         }
     }
@@ -123,7 +121,7 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
     val customContext = ContextAmbient.current.createConfigurationContext(customConfiguration)
     ComponentCardTitle("${metadata.componentName} [RTL]")
     Providers(ContextAmbient provides customContext) {
-        val updatedModifier = generateDimensionModifier(metadata)
+        val updatedModifier = generateComposableModifier(metadata)
         Card(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.rtl) {
                 Box(modifier = updatedModifier) {
@@ -146,7 +144,7 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
 }
 
-private fun generateDimensionModifier(metadata: ShowkaseBrowserComponent): Modifier {
+private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(16.dp)
     if (metadata.heightDp > 0 || metadata.widthDp > 0) {
         return baseModifier +
@@ -154,6 +152,19 @@ private fun generateDimensionModifier(metadata: ShowkaseBrowserComponent): Modif
     }
     return baseModifier + Modifier.fillMaxWidth()
 }
+
+private fun generateContainerModifier(onClick: (() -> Unit)?) = onClick?.let {
+    // We need to override the down event here to ensure that the composable itself do not 
+    // intercept the touch on the Group Components screen. They should only be interactable on 
+    // the Component Detail screen. 
+    Modifier.fillMaxWidth() + Modifier.rawPressStartGestureFilter(
+        onPressStart = {
+            onClick()
+        },
+        enabled = true,
+        executionPass = PointerEventPass.InitialDown
+    )
+} ?: Modifier.fillMaxWidth()
 
 private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
