@@ -155,8 +155,8 @@ private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modi
 
 private fun generateContainerModifier(onClick: (() -> Unit)?) = onClick?.let {
     // We need to override the down event here to ensure that the composable itself do not 
-    // intercept the touch on the Group Components screen. They should only be interactable on 
-    // the Component Detail screen. 
+    // intercept the touch on the Group Components screen. Composables should only be interactive
+    // on the Component Detail screen.
     Modifier.fillMaxWidth() + Modifier.rawPressStartGestureFilter(
         onPressStart = {
             onClick()
