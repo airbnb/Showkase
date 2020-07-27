@@ -87,7 +87,7 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
     // directly used the search query field inside the 
     // ShowkaseBrowserScreenMetadata model
     // java.lang.IllegalStateException: Expected a group start
-    var searchQuery by state { TextFieldValue("") }
+    var searchQuery by state { TextFieldValue(metadata.value.searchQuery.orEmpty()) }
     FilledTextField(
         value = searchQuery,
         // Update value of textValue with the latest value of the text field

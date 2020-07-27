@@ -3,10 +3,12 @@ package com.airbnb.showkase.ui
 import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.ui.core.Modifier
+import androidx.ui.foundation.Box
 import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
+import androidx.ui.layout.wrapContentHeight
 import androidx.ui.unit.dp
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
@@ -56,7 +58,9 @@ private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserSc
             showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
                 currentScreen = ShowkaseCurrentScreen.GROUPS,
                 currentGroup = null,
-                currentComponent = null
+                currentComponent = null,
+                isSearchActive = false,
+                searchQuery = null
             )
         }
     }

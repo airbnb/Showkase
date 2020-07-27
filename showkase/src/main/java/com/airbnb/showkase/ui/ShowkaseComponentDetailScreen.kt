@@ -8,11 +8,11 @@ import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
-import androidx.ui.core.PointerEventPass
-import androidx.ui.core.gesture.rawPressStartGestureFilter
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
+import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
+import androidx.ui.layout.Stack
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.rtl
@@ -76,10 +76,16 @@ internal fun ComponentCard(
 ) {
     val composableModifier = generateComposableModifier(metadata)
     val composableContainerModifier = generateContainerModifier(onClick)
-    Card(modifier = composableContainerModifier) {
-        Box(modifier = composableModifier) { 
-            metadata.component()
+    Card() {
+        Stack() {
+            Box(modifier = composableModifier) {
+                metadata.component()
+            }
+            Box(
+                modifier = Modifier.matchParentSize() + composableContainerModifier
+            )
         }
+        
     }
 }
 
@@ -153,22 +159,19 @@ private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modi
     return baseModifier + Modifier.fillMaxWidth()
 }
 
-private fun generateContainerModifier(onClick: (() -> Unit)?) = onClick?.let {
+@Composable
+private fun generateContainerModifier(onClick: (() -> Unit)?): Modifier = onClick?.let {
     // We need to override the down event here to ensure that the composable itself do not 
     // intercept the touch on the Group Components screen. Composables should only be interactive
     // on the Component Detail screen.
-    Modifier.fillMaxWidth() + Modifier.rawPressStartGestureFilter(
-        onPressStart = {
-            onClick()
-        },
-        enabled = true,
-        executionPass = PointerEventPass.InitialDown
-    )
+    Modifier.fillMaxWidth() + Modifier.clickable(onClick = onClick)
 } ?: Modifier.fillMaxWidth()
 
 private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
         currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
-        currentComponent = null
+        currentComponent = null,
+        isSearchActive = false,
+        searchQuery = null
     )
 }
