@@ -204,7 +204,7 @@ fun ProductCardRowPreview() {
     ProductCardRow(
         "http://a0.muscache.com/im/pictures/ef0ee86b-feba-47f8-8882-014b2a7b6926.jpg?im_w=1200",
         "Title",
-        LoremIpsum(5).values.joinToString()
+        LoremIpsum(4).values.joinToString()
     )
 }
 
