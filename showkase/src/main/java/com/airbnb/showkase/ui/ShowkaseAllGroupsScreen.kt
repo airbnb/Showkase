@@ -41,7 +41,8 @@ internal fun ShowkaseAllGroupsScreen(
                                 showkaseBrowserScreenMetadata.value.copy(
                                     currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
                                     currentGroup = group,
-                                    isSearchActive = false
+                                    isSearchActive = false,
+                                    searchQuery = null
                                 )
                         }
                     )
