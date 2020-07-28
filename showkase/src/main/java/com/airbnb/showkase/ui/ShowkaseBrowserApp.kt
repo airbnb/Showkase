@@ -83,17 +83,11 @@ private fun ShowkaseAppBarTitle(metadata: MutableState<ShowkaseBrowserScreenMeta
 
 @Composable
 internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMetadata>) {
-    // Needed to create another field to due a crash I was seeing when I 
-    // directly used the search query field inside the 
-    // ShowkaseBrowserScreenMetadata model
-    // java.lang.IllegalStateException: Expected a group start
-    var searchQuery by state { TextFieldValue(metadata.value.searchQuery.orEmpty()) }
     FilledTextField(
-        value = searchQuery,
+        value = metadata.value.searchQuery.orEmpty(),
         // Update value of textValue with the latest value of the text field
         onValueChange = {
-            searchQuery = it
-            metadata.value = metadata.value.copy(searchQuery = it.text)
+            metadata.value = metadata.value.copy(searchQuery = it)
         },
         label = {
             Text(text = ContextAmbient.current.getString(R.string.search_label))
