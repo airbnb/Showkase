@@ -15,7 +15,7 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
-//@Showkase(name = "Cursive Text Style", group = "Text")
+@Showkase(name = "Cursive Text Style", group = "Text")
 @Preview(name = "Cursive Text Style", group = "Text")
 @Composable
 fun CursiveTextComponentPreview() {
@@ -33,7 +33,7 @@ fun CursiveTextComponentPreview() {
 }
 
 @Showkase(name = "Serif Text Style", group = "Text")
-//@Preview
+@Preview
 @Composable
 fun SerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -50,7 +50,7 @@ fun SerifTextComponentPreview() {
 }
 
 @Showkase(name = "Sans Serif Text Style", group = "Text")
-//@Preview
+@Preview
 @Composable
 fun SansSerifTextComponentPreview() {
     val context = ContextAmbient.current

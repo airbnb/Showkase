@@ -40,8 +40,7 @@ fun BottomNavigationAlwaysShowLabelComponent() {
     }
 }
 
-//@Showkase(name = "Bottom Navigation Bar", group = "Navigation")
-@Preview(name = "Bottom Navigation Bar", group = "Navigation")
+@Showkase(name = "Bottom Navigation Bar", group = "Navigation")
 @Composable
 fun BottomNavigationAlwaysShowLabelComponentPreview() {
     BottomNavigationAlwaysShowLabelComponent()

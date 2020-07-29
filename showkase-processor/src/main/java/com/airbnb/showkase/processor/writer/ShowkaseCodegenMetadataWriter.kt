@@ -13,11 +13,11 @@ import javax.lang.model.util.Types
 internal class ShowkaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
 
     internal fun generateShowkaseCodegenFunctions(
-        showkaseMetadataList: List<ShowkaseMetadata>,
+        showkaseMetadataSet: Set<ShowkaseMetadata>,
         typeUtil: Types
     ) {
-        if (showkaseMetadataList.isEmpty()) return
-        val moduleName = showkaseMetadataList.first().moduleName
+        if (showkaseMetadataSet.isEmpty()) return
+        val moduleName = showkaseMetadataSet.first().moduleName
         val generatedClassName = "ShowkaseMetadata${moduleName.capitalize()}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
@@ -27,7 +27,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
-        showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
+        showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             val methodName = when {
                 showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
                 else -> {
