@@ -93,7 +93,7 @@ val creditCardOffsetMap = object : OffsetMap {
 }
 
 @Showkase("Credit Card Component", "Payments")
-@Preview("Credit Card Component", "Payments")
+@Preview
 @Composable
 fun CreditCardComponentPreview() {
     CreditCardComponent("John Doe")

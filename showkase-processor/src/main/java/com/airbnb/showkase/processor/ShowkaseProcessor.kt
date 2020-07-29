@@ -31,7 +31,7 @@ import javax.lang.model.util.Types
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedOptions(KAPT_KOTLIN_DIR_PATH)
-class ShowkaseProcessor : AbstractProcessor() {
+class ShowkaseProcessor: AbstractProcessor() {
     private lateinit var typeUtils: Types
     private lateinit var elementUtils: Elements
     private lateinit var filter: Filer

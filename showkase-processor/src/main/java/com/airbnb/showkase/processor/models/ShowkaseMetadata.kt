@@ -93,7 +93,13 @@ internal fun getShowkaseMetadataFromPreview(
     
     val map = mutableMapOf<String, String>()
     previewAnnotationMirror?.elementValues?.map {
-        map[it.key.simpleName.toString()] = it.value.value as String
+        val key = it.key.simpleName.toString()
+        // Only store the properties that we currently support in the annotation
+        if (ShowkaseAnnotationProperties.values().find { it.key == key } != null) {
+            // All the supported types are safe to serialize as a String in order to store in the
+            // map.
+            map[it.key.simpleName.toString()] = it.value.value as String
+        }
     }
     val moduleName = elementUtil.getPackageOf(executableElement).simpleName.toString()
     val packageName = element.enclosingElement.enclosingElement.asType().toString()

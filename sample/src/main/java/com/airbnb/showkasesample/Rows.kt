@@ -187,6 +187,7 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
 }
 
 @Showkase("Bottom Label Row", "Rows")
+@Preview
 @Composable
 fun BottomLabelRowPreview() {
     BottomLabelRow(
@@ -197,6 +198,7 @@ fun BottomLabelRowPreview() {
 }
 
 @Showkase("Product Card", "Rows")
+@Preview
 @Composable
 fun ProductCardRowPreview() {
     ProductCardRow(
@@ -207,6 +209,7 @@ fun ProductCardRowPreview() {
 }
 
 @Showkase("Simple Row", "Rows")
+@Preview
 @Composable
 fun SimpleRowPreview() {
     SimpleRow(
@@ -215,7 +218,8 @@ fun SimpleRowPreview() {
     )
 }
 
-@Preview("Title Subtitle with Thumbnail", "Rows")
+@Showkase("Title Subtitle with Thumbnail", "Rows")
+@Preview
 @Composable
 fun TitleSubtitleThumbnailRowPreview() {
     Column {

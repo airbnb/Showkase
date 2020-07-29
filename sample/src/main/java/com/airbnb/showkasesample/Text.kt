@@ -16,7 +16,7 @@ import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
 @Showkase(name = "Cursive Text Style", group = "Text")
-@Preview(name = "Cursive Text Style", group = "Text")
+@Preview
 @Composable
 fun CursiveTextComponentPreview() {
     val context = ContextAmbient.current
