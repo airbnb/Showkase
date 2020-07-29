@@ -108,8 +108,7 @@ internal fun getShowkaseMetadataFromPreview(
     val noOfParameters = executableElement.parameters.size
     if (noOfParameters > 0) {
         throw ShowkaseProcessorException(
-            "Make sure that the @Composable functions that you " +
-                    "annotate with the @Showkase annotation do not take in any parameters"
+            "Showkase currently only supports functions that do not take in any parameters."
         )
     }
     return ShowkaseMetadata(
