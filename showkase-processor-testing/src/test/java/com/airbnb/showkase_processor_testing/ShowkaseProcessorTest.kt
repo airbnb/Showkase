@@ -486,6 +486,29 @@ class ShowkaseProcessorTest {
             )
         }
     }
+
+
+
+    @Test
+    fun `preview test`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        
+        @Preview(name="Basic Row", group="Amazing Group")
+        @Composable
+        fun TestComposable() {
+            
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
     
     private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
         return KotlinCompilation().apply {

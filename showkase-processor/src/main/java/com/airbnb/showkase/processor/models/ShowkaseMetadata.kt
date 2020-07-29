@@ -9,6 +9,7 @@ import javax.lang.model.element.Modifier
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal data class ShowkaseMetadata(
     val moduleName: String,
@@ -75,4 +76,55 @@ internal fun getShowkaseMetadata(
         showkaseComponentWidthDp = showkaseAnnotation.widthDp,
         showkaseComponentHeightDp = showkaseAnnotation.heightDp
     )
+}
+
+internal fun getShowkaseMetadataFromPreview(
+    element: Element,
+    elementUtil: Elements,
+    typeUtils: Types,
+    previewTypeMirror: TypeMirror
+): ShowkaseMetadata {
+    val executableElement = element as ExecutableElement
+    val enclosingElement = element.enclosingElement
+    val isStaticMethod = executableElement.modifiers.contains(Modifier.STATIC)
+    val previewAnnotationMirror = executableElement.annotationMirrors.find {
+        typeUtils.isSameType(it.annotationType, previewTypeMirror)
+    }
+    
+    val map = mutableMapOf<String, String>()
+    previewAnnotationMirror?.elementValues?.map {
+        map[it.key.simpleName.toString()] = it.value.value as String
+    }
+    val moduleName = elementUtil.getPackageOf(executableElement).simpleName.toString()
+    val packageName = element.enclosingElement.enclosingElement.asType().toString()
+    val methodName = executableElement.simpleName.toString()
+
+    val noOfParameters = executableElement.parameters.size
+    if (noOfParameters > 0) {
+        throw ShowkaseProcessorException(
+            "Make sure that the @Composable functions that you " +
+                    "annotate with the @Showkase annotation do not take in any parameters"
+        )
+    }
+    return ShowkaseMetadata(
+        moduleName = moduleName,
+        packageName = packageName,
+        // If isStaticMethod is true, it means the method was declared at the top level. 
+        // If not, it was declared inside a class
+        // TODO(vinaygaba): Add support for methods inside companion objects and 
+        // objects
+        enclosingClass = if (isStaticMethod) null else enclosingElement.asType(),
+        methodName = methodName,
+        showkaseComponentName = map[ShowkaseAnnotationProperties.NAME.key].orEmpty(),
+        showkaseComponentGroup = map[ShowkaseAnnotationProperties.GROUP.key].orEmpty(),
+        showkaseComponentWidthDp = (map[ShowkaseAnnotationProperties.WIDTH.key] ?: "-1").toInt(),
+        showkaseComponentHeightDp = (map[ShowkaseAnnotationProperties.HEIGHT.key] ?: "-1").toInt()
+    )
+}
+
+internal enum class ShowkaseAnnotationProperties(val key: String) {
+    NAME("name"),
+    GROUP("group"),
+    WIDTH("widthDp"),
+    HEIGHT("heightDp"),
 }

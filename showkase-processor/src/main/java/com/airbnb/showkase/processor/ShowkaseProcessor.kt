@@ -10,6 +10,7 @@ import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.showkase.processor.models.getShowkaseMetadata
+import com.airbnb.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.showkase.processor.models.toModel
 import com.airbnb.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.showkase.processor.writer.ShowkaseComponentsWriter
@@ -50,9 +51,11 @@ class ShowkaseProcessor: AbstractProcessor() {
             .asType()
     }
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(Showkase::class.java.name, ShowkaseRoot::class.java.name)
-    }
+    override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
+        Showkase::class.java.name,
+        ShowkaseRoot::class.java.name,
+        PREVIEW_CLASS_NAME
+    )
 
     override fun getSupportedOptions(): MutableSet<String> {
         return mutableSetOf(KAPT_KOTLIN_DIR_PATH)
@@ -61,12 +64,16 @@ class ShowkaseProcessor: AbstractProcessor() {
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         try {
             val showkaseMetadataList = processShowkaseAnnotation(p1)
-            
-            processShowkaseMetadata(showkaseMetadataList, p1)
+            val previewMetadataList = processPreviewAnnotation(p1)
+            val combinedMetadataList = 
+                dedupeList(showkaseMetadataList, previewMetadataList)
+            ShowkaseCodegenMetadataWriter(processingEnv).apply {
+                generateShowkaseCodegenFunctions(combinedMetadataList, typeUtils)
+            }
+            processShowkaseMetadata(combinedMetadataList, p1)
         } catch (exception: ShowkaseProcessorException) {
             logger.logErrorMessage("${exception.message}")
         }
-        
 
         if (p1?.processingOver() == true) {
             logger.publishMessages(messager)
@@ -82,12 +89,29 @@ class ShowkaseProcessor: AbstractProcessor() {
                 element = element, elementUtil = elementUtils)
             showkaseMetadataList += showkaseMetadata
         }
+        return showkaseMetadataList
+    }
 
-        ShowkaseCodegenMetadataWriter(processingEnv).apply {
-            generateShowkaseCodegenFunctions(showkaseMetadataList, typeUtils)
+    private fun processPreviewAnnotation(p1: RoundEnvironment?): List<ShowkaseMetadata> {
+        val showkaseMetadataList = mutableListOf<ShowkaseMetadata>()
+        val previewClass = (Class.forName(PREVIEW_CLASS_NAME) as Class<out Annotation>)
+        val previewTypeMirror = elementUtils
+            .getTypeElement(Class.forName(PREVIEW_CLASS_NAME).canonicalName)
+            .asType()
+        p1?.getElementsAnnotatedWith(previewClass)
+            ?.forEach { element ->
+//            showkaseValidator.validateElement(element, composableTypeMirror, typeUtils)
+            val showkaseMetadata = getShowkaseMetadataFromPreview(
+                element, elementUtils, typeUtils, previewTypeMirror)
+            showkaseMetadataList += showkaseMetadata
         }
         return showkaseMetadataList
     }
+    
+    private fun dedupeList(
+        showcaseMetadatList: List<ShowkaseMetadata>, 
+        previewMetadataList: List<ShowkaseMetadata>
+    ) = showcaseMetadatList + previewMetadataList
     
     private fun processShowkaseMetadata(
         currentShowkaseMetadataList: List<ShowkaseMetadata>,
@@ -123,6 +147,7 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.Composable"
+        const val PREVIEW_CLASS_NAME = "androidx.ui.tooling.preview.Preview"
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
         const val KAPT_KOTLIN_DIR_PATH = "kapt.kotlin.generated"
