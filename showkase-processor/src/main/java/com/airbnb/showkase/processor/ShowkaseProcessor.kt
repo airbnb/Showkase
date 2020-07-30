@@ -23,6 +23,7 @@ import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedOptions
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
@@ -61,52 +62,55 @@ class ShowkaseProcessor: AbstractProcessor() {
         return mutableSetOf(KAPT_KOTLIN_DIR_PATH)
     }
 
-    override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
+    override fun process(
+        annotations: MutableSet<out TypeElement>, 
+        roundEnvironment: RoundEnvironment
+    ): Boolean {
         try {
-            val showkaseComposablesMetadata = processShowkaseAnnotation(p1)
-            val previewComposablesMetadata = processPreviewAnnotation(p1)
+            val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
+            val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
             val uniqueComposablesMetadata = dedupePreviewAndShowkaseAnnotationComponents(
                 showkaseComposablesMetadata,
                 previewComposablesMetadata
             )
             writeMetadataFile(uniqueComposablesMetadata)
-            processMetadata(uniqueComposablesMetadata, p1)
+            processMetadata(uniqueComposablesMetadata, roundEnvironment)
         } catch (exception: ShowkaseProcessorException) {
             logger.logErrorMessage("${exception.message}")
         }
 
-        if (p1?.processingOver() == true) {
+        if (roundEnvironment?.processingOver() == true) {
             logger.publishMessages(messager)
         }
-        return true
+        return false
     }
 
-    private fun processShowkaseAnnotation(p1: RoundEnvironment?) =
-        p1?.getElementsAnnotatedWith(Showkase::class.java)?.map { element ->
+    private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment) =
+        roundEnvironment.getElementsAnnotatedWith(Showkase::class.java).map { element ->
             showkaseValidator.validateElement(
                 element, composableTypeMirror, typeUtils,
                 Showkase::class.java.simpleName
             )
             val showkaseMetadata = getShowkaseMetadata(
-                element = element, elementUtil = elementUtils
+                element = element as ExecutableElement, elementUtil = elementUtils
             )
             showkaseMetadata
-        }?.toSet() ?: setOf()
+        }.toSet()
 
-    private fun processPreviewAnnotation(p1: RoundEnvironment?): Set<ShowkaseMetadata> {
+    private fun processPreviewAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
         val previewClass = Class.forName(PREVIEW_CLASS_NAME)
         val previewClassAnnotation = (previewClass as Class<out Annotation>)
         val previewTypeMirror = elementUtils
             .getTypeElement(previewClass.canonicalName)
             .asType()
-        return p1?.getElementsAnnotatedWith(previewClassAnnotation)?.map { element ->
+        return roundEnvironment.getElementsAnnotatedWith(previewClassAnnotation).map { element ->
             showkaseValidator.validateElement(element, composableTypeMirror, typeUtils, 
                 previewClass.simpleName)
             val showkaseMetadata = getShowkaseMetadataFromPreview(
-                element, elementUtils, typeUtils, previewTypeMirror
+                element as ExecutableElement, elementUtils, typeUtils, previewTypeMirror
             )
             showkaseMetadata
-        }?.toSet() ?: setOf()
+        }.toSet()
     }
 
     private fun dedupePreviewAndShowkaseAnnotationComponents(
@@ -137,11 +141,11 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun processMetadata(
         currentComposableMetadataSet: Set<ShowkaseMetadata>,
-        p1: RoundEnvironment?
+        roundEnvironment: RoundEnvironment
     ) {
         if (currentComposableMetadataSet.isEmpty()) return
         val showkaseRootElements = 
-            p1?.getElementsAnnotatedWith(ShowkaseRoot::class.java) ?: setOf()
+            roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class.java)
 
         showkaseRootElements.forEach {
             showkaseValidator.validateShowkaseRootElement(
@@ -158,8 +162,7 @@ class ShowkaseProcessor: AbstractProcessor() {
 
             ShowkaseComponentsWriter(processingEnv).apply {
                 generateShowkaseBrowserComponents(
-                    allShowkaseMetadataList, rootModulePackageName,
-                    rootModuleClassName
+                    allShowkaseMetadataList, rootModulePackageName, rootModuleClassName
                 )
             }
         }

@@ -157,7 +157,7 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
 
 private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(16.dp)
-    if (metadata.heightDp > 0 || metadata.widthDp > 0) {
+    if (metadata.heightDp != null && metadata.widthDp != null) {
         return baseModifier +
                 Modifier.size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
     }

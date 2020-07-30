@@ -40,20 +40,18 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
             val annotation = AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
                 .addMember("showkaseComposableName = %S", showkaseMetadata.showkaseComponentName)
                 .addMember("showkaseComposableGroup = %S", showkaseMetadata.showkaseComponentGroup)
-                .addMember(
-                    "showkaseComposableWidthDp = %L",
-                    showkaseMetadata.showkaseComponentWidthDp
-                )
-                .addMember(
-                    "showkaseComposableHeightDp = %L",
-                    showkaseMetadata.showkaseComponentHeightDp
-                )
                 .addMember("packageName = %S", showkaseMetadata.packageName)
                 .addMember("moduleName = %S", showkaseMetadata.moduleName)
                 .addMember("composableMethodName = %S", showkaseMetadata.methodName)
 
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
+            }
+            showkaseMetadata.showkaseComponentWidthDp?.let {
+                annotation.addMember("showkaseComposableWidthDp = %L", it) 
+            }
+            showkaseMetadata.showkaseComponentHeightDp?.let {
+                annotation.addMember("showkaseComposableHeightDp = %L", it)
             }
 
             val composableFunction = FunSpec.builder(methodName)
