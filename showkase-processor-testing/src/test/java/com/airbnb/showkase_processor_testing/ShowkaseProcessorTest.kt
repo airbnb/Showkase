@@ -858,6 +858,109 @@ class ShowkaseProcessorTest {
             )
         }
     }
+
+    @Test
+    fun `multiple composable functions with preview and showkase annotations generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.Showkase
+        
+        @Preview("name1", "group1")
+        @Composable
+        fun TestComposable1() {
+            
+        }
+        
+        @Showkase("name2", "group1")
+        @Composable
+        fun TestComposable2() {
+            
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name2",
+                    showkaseComposableGroup = "group1",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable2"
+                  )
+                  fun TestComposable2() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name1",
+                    showkaseComposableGroup = "group1",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable1"
+                  )
+                  fun TestComposable1() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function with both annotations gives priority to showkase annotation` () {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.Showkase
+        
+        @Preview("name1", "group1")
+        @Showkase("name2", "group2")
+        @Composable
+        fun TestComposable1() {
+            
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name2",
+                    showkaseComposableGroup = "group2",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable1"
+                  )
+                  fun TestComposable1() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
     
     private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
         return KotlinCompilation().apply {
