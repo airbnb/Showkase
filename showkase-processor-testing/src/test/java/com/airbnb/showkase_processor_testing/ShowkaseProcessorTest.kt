@@ -273,8 +273,6 @@ class ShowkaseProcessorTest {
                   @ShowkaseCodegenMetadata(
                     showkaseComposableName = "group",
                     showkaseComposableGroup = "name",
-                    showkaseComposableWidthDp = -1,
-                    showkaseComposableHeightDp = -1,
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable"
@@ -340,8 +338,6 @@ class ShowkaseProcessorTest {
                   @ShowkaseCodegenMetadata(
                     showkaseComposableName = "group",
                     showkaseComposableGroup = "name",
-                    showkaseComposableWidthDp = -1,
-                    showkaseComposableHeightDp = -1,
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable"
@@ -411,8 +407,6 @@ class ShowkaseProcessorTest {
                   @ShowkaseCodegenMetadata(
                     showkaseComposableName = "group",
                     showkaseComposableGroup = "name",
-                    showkaseComposableWidthDp = -1,
-                    showkaseComposableHeightDp = -1,
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable",
@@ -461,8 +455,6 @@ class ShowkaseProcessorTest {
                   @ShowkaseCodegenMetadata(
                     showkaseComposableName = "group1",
                     showkaseComposableGroup = "name1",
-                    showkaseComposableWidthDp = -1,
-                    showkaseComposableHeightDp = -1,
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable1"
@@ -473,8 +465,6 @@ class ShowkaseProcessorTest {
                   @ShowkaseCodegenMetadata(
                     showkaseComposableName = "group1",
                     showkaseComposableGroup = "name2",
-                    showkaseComposableWidthDp = -1,
-                    showkaseComposableHeightDp = -1,
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable2"
