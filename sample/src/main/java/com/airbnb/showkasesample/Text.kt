@@ -15,8 +15,8 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
-//@Showkase(name = "Cursive Text Style", group = "Text")
-//@Preview
+@Showkase(name = "Cursive Text Style", group = "Text")
+@Preview
 @Composable
 fun CursiveTextComponentPreview() {
     val context = ContextAmbient.current
@@ -32,8 +32,8 @@ fun CursiveTextComponentPreview() {
     }
 }
 
-//@Showkase(name = "Serif Text Style", group = "Text")
-//@Preview
+@Showkase(name = "Serif Text Style", group = "Text")
+@Preview
 @Composable
 fun SerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -49,28 +49,10 @@ fun SerifTextComponentPreview() {
     }
 }
 
-//@Showkase(name = "Sans Serif Text Style", group = "Text")
-//@Preview
-//@Composable
-//fun SansSerifTextComponentPreview() {
-//    val context = ContextAmbient.current
-//    val string = context.getString(R.string.app_name)
-//
-//    ShowkaseTheme {
-//        Card {
-//            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
-//                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-//                    fontFamily = FontFamily.SansSerif)
-//            )
-//        }
-//    }
-//}
-
-
-
-@Showkase("TopLevel","Group")
+@Showkase(name = "Sans Serif Text Style", group = "Text")
+@Preview
 @Composable
-fun TopLevelComponentPreview() {
+fun SansSerifTextComponentPreview() {
     val context = ContextAmbient.current
     val string = context.getString(R.string.app_name)
 
@@ -80,62 +62,6 @@ fun TopLevelComponentPreview() {
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif)
             )
-        }
-    }
-}
-
-class WrapperCompanionClass {
-    companion object {
-        @Showkase(name = "WrapperClass Style", group = "Text")
-        @Composable
-        fun CompanionObjectPreview() {
-            val context = ContextAmbient.current
-            val string = context.getString(R.string.app_name)
-
-            ShowkaseTheme {
-                Card {
-                    Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Serif)
-                    )
-                }
-            }
-        }
-    }
-}
-
-class EnclosingClass {
-    @Showkase(name = "EnclosingClass Style", group = "Text")
-    @Composable
-    fun CursiveTextComponentPreview() {
-        val context = ContextAmbient.current
-        val string = context.getString(R.string.app_name)
-
-        ShowkaseTheme {
-            Card {
-                Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Cursive)
-                )
-            }
-        }
-    }
-}
-
-object ObjectEnclosingClass {
-    @Showkase(name = "ObjectEnclosingClass Style", group = "Text")
-    @Composable
-    fun ObjectEnclosingClassPreview() {
-        val context = ContextAmbient.current
-        val string = context.getString(R.string.app_name)
-
-        ShowkaseTheme {
-            Card {
-                Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Cursive)
-                )
-            }
         }
     }
 }

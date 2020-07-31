@@ -135,6 +135,13 @@ internal fun getShowkaseMetadataFromPreview(
 
     val numParameters = element.parameters.size
     if (numParameters > 0) {
+        // We don't support @Composable preview functions that take in a parameter. So @Showkase 
+        // annotation throws an error to notify the user. However, for the @Preview annotation, they 
+        // recently added support for functions that acccept a parameter(in their case, its a 
+        // data provider for showing some combinations in the preview. Since it's new, I want the
+        // API to stabilize a bit before I try to add support for it. Until then, I return early 
+        // to skip this composable. 
+        // TODO(vinaygaba): Maybe notify the user that we are skipping this Preview.
         return null
     }
     return ShowkaseMetadata(
@@ -170,9 +177,7 @@ private fun ExecutableElement.getShowkaseFunctionType() =
                 else -> ShowkaseFunctionType.UNKNOWN
             }
         }
-        FILE_FACADE_KIND -> {
-            ShowkaseFunctionType.TOP_LEVEL
-        }
+        FILE_FACADE_KIND -> ShowkaseFunctionType.TOP_LEVEL
         else -> ShowkaseFunctionType.UNKNOWN
     }
 

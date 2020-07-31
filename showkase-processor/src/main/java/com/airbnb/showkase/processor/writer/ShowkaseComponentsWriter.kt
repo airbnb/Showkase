@@ -109,10 +109,11 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         enclosingClass: TypeMirror? = null,
         composeFunctionName: String,
         insideWrapperClass: Boolean,
-        insideCompanionObject: Boolean
-    ): CodeBlock {
-        // IF enclosingClass is null, it denotes that the method was a top-level method declaration.
-        return if (enclosingClass == null) {
+        insideObject: Boolean
+    ) = when {
+        // When enclosingClass is null, it denotes that the method was a top-level method 
+        // declaration.
+        enclosingClass == null -> {
             val composeMember = MemberName(functionPackageName, composeFunctionName)
             CodeBlock.Builder()
                 .add(
@@ -120,26 +121,28 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
                     COMPOSE_CLASS_NAME, composeMember
                 )
                 .build()
-        } else {
-            if (insideWrapperClass) {
-                // Otherwise it was declared inside a class.
-                CodeBlock.Builder()
-                    .add(
-                    "component = @%T { %T().${composeFunctionName}() }",
-                        COMPOSE_CLASS_NAME, enclosingClass
-                    )
-                    .build()
-            } else if (insideCompanionObject) {
-                CodeBlock.Builder()
-                    .add(
-                        "component = @%T { %T.${composeFunctionName}() }",
-                        COMPOSE_CLASS_NAME, enclosingClass
-                    )
-                    .build()
-            } else {
-                throw ShowkaseProcessorException("")
-            }
         }
+        // It was declared inside a class.
+        insideWrapperClass -> {
+            CodeBlock.Builder()
+                .add(
+                    "component = @%T { %T().${composeFunctionName}() }",
+                    COMPOSE_CLASS_NAME, enclosingClass
+                )
+                .build()
+        }
+        // It was declared inside an object or a companion object.
+        insideObject -> {
+            CodeBlock.Builder()
+                .add(
+                    "component = @%T { %T.${composeFunctionName}() }",
+                    COMPOSE_CLASS_NAME, enclosingClass
+                )
+                .build()
+        }
+        else -> throw ShowkaseProcessorException("Your @Showkase/@Preview " +
+                "function:${composeFunctionName} is declared in a way that is not supported by " +
+                "Showkase")
     }
 
     companion object {
