@@ -186,6 +186,17 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
     }
 }
 
+@Showkase("Bottom Label Row", "Rows")
+@Preview
+@Composable
+fun BottomLabelRowPreview() {
+    BottomLabelRow(
+        "This is a title",
+        "This is a longer subtitle that can span multiple lines",
+        "Label Text"
+    )
+}
+
 @Showkase("Product Card", "Rows")
 @Preview
 @Composable

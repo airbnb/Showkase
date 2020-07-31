@@ -40,7 +40,6 @@ private enum class ShowkaseFunctionType {
     INSIDE_CLASS,
     INSIDE_OBJECT,
     INSIDE_COMPANION_OBJECT,
-    UNKNOWN
 }
 
 internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
@@ -174,11 +173,15 @@ private fun ExecutableElement.getShowkaseFunctionType() =
                 Flag.Class.IS_OBJECT(kmClass.flags) -> {
                     ShowkaseFunctionType.INSIDE_OBJECT
                 }
-                else -> ShowkaseFunctionType.UNKNOWN
+                else -> throw ShowkaseProcessorException("Your @Showkase/@Preview " +
+                        "function:${this.simpleName} is declared in a way that is not supported by " +
+                        "Showkase.")
             }
         }
         FILE_FACADE_KIND -> ShowkaseFunctionType.TOP_LEVEL
-        else -> ShowkaseFunctionType.UNKNOWN
+        else -> throw ShowkaseProcessorException("Your @Showkase/@Preview " +
+                "function:${this.simpleName} is declared in a way that is not supported by " +
+                "Showkase.")
     }
 
 private fun Element.kotlinMetadata(): KotlinClassMetadata? {
@@ -205,5 +208,4 @@ private fun ExecutableElement.getEnclosingClassType(
     ShowkaseFunctionType.INSIDE_CLASS -> enclosingElement.asType()
     ShowkaseFunctionType.INSIDE_OBJECT -> enclosingElement.asType()
     ShowkaseFunctionType.INSIDE_COMPANION_OBJECT -> enclosingElement.enclosingElement.asType()
-    else -> null
 }
