@@ -1,5 +1,6 @@
 package com.airbnb.showkase.processor.writer
 
+import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -59,7 +60,9 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showkaseMetadata.packageName,
                 showkaseMetadata.enclosingClass,
-                showkaseMetadata.methodName
+                showkaseMetadata.methodName,
+                showkaseMetadata.insideWrapperClass,
+                showkaseMetadata.insideObject
             )
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.indent().indent()
@@ -100,7 +103,9 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
         enclosingClass: TypeMirror? = null,
-        composeFunctionName: String
+        composeFunctionName: String,
+        insideWrapperClass: Boolean,
+        insideCompanionObject: Boolean
     ): CodeBlock {
         // IF enclosingClass is null, it denotes that the method was a top-level method declaration.
         return if (enclosingClass == null) {
@@ -112,13 +117,24 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
                 )
                 .build()
         } else {
-            // Otherwise it was declared inside a class.
-            CodeBlock.Builder()
-                .add(
-                    "@%T { %T().${composeFunctionName}() }",
-                    COMPOSE_CLASS_NAME, enclosingClass
-                )
-                .build()
+            if (insideWrapperClass) {
+                // Otherwise it was declared inside a class.
+                CodeBlock.Builder()
+                    .add(
+                        "@%T { %T().${composeFunctionName}() }",
+                        COMPOSE_CLASS_NAME, enclosingClass
+                    )
+                    .build()
+            } else if (insideCompanionObject) {
+                CodeBlock.Builder()
+                    .add(
+                        "@%T { %T.${composeFunctionName}() }",
+                        COMPOSE_CLASS_NAME, enclosingClass
+                    )
+                    .build()
+            } else {
+                throw ShowkaseProcessorException("")
+            }
         }
     }
 
