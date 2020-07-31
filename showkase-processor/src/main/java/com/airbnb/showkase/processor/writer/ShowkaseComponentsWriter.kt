@@ -50,13 +50,17 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.add(
-                "%T(%S, %S, %L, %L,",
+                "%T(group = %S, componentName = %S,",
                 SHOWKASE_BROWSER_COMPONENT_CLASS_NAME,
                 showkaseMetadata.showkaseComponentGroup,
-                showkaseMetadata.showkaseComponentName,
-                showkaseMetadata.showkaseComponentWidthDp,
-                showkaseMetadata.showkaseComponentHeightDp
+                showkaseMetadata.showkaseComponentName
             )
+            showkaseMetadata.showkaseComponentWidthDp?.let { 
+                componentListInitializerCodeBlock.add(" widthDp = %L,", it)
+            }
+            showkaseMetadata.showkaseComponentHeightDp?.let {
+                componentListInitializerCodeBlock.add(" heightDp = %L,", it)
+            }
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showkaseMetadata.packageName,
                 showkaseMetadata.enclosingClass,
@@ -112,7 +116,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
             val composeMember = MemberName(functionPackageName, composeFunctionName)
             CodeBlock.Builder()
                 .add(
-                    "@%T { %M() }",
+                    "component = @%T { %M() }",
                     COMPOSE_CLASS_NAME, composeMember
                 )
                 .build()
@@ -121,14 +125,14 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
                 // Otherwise it was declared inside a class.
                 CodeBlock.Builder()
                     .add(
-                        "@%T { %T().${composeFunctionName}() }",
+                    "component = @%T { %T().${composeFunctionName}() }",
                         COMPOSE_CLASS_NAME, enclosingClass
                     )
                     .build()
             } else if (insideCompanionObject) {
                 CodeBlock.Builder()
                     .add(
-                        "@%T { %T.${composeFunctionName}() }",
+                        "component = @%T { %T.${composeFunctionName}() }",
                         COMPOSE_CLASS_NAME, enclosingClass
                     )
                     .build()

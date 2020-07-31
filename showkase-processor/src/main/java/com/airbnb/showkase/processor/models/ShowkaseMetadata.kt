@@ -13,6 +13,7 @@ import javax.lang.model.element.ExecutableElement
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal data class ShowkaseMetadata(
     val moduleName: String,
@@ -21,11 +22,18 @@ internal data class ShowkaseMetadata(
     val methodName: String,
     val showkaseComponentName: String,
     val showkaseComponentGroup: String,
-    val showkaseComponentWidthDp: Int,
-    val showkaseComponentHeightDp: Int,
+    val showkaseComponentWidthDp: Int? = null,
+    val showkaseComponentHeightDp: Int? = null,
     val insideWrapperClass: Boolean = false,
     val insideObject: Boolean = false
 )
+
+private enum class ShowkaseAnnotationProperty {
+    NAME,
+    GROUP,
+    WIDTHDP,
+    HEIGHTDP,
+}
 
 private enum class ShowkaseFunctionType {
     TOP_LEVEL,
@@ -50,26 +58,31 @@ internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
         methodName = composableMethodName,
         showkaseComponentName = showkaseComposableName,
         showkaseComponentGroup = showkaseComposableGroup,
-        showkaseComponentWidthDp = showkaseComposableWidthDp,
-        showkaseComponentHeightDp = showkaseComposableHeightDp,
+        showkaseComponentWidthDp = showkaseComposableWidthDp.parseAnnotationProperty(),
+        showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
         insideObject = insideObject
     )
 }
 
+private fun Int.parseAnnotationProperty() = when(this) {
+    -1 -> null
+    else -> this
+}
+
 internal fun getShowkaseMetadata(
-    element: Element,
+    element: ExecutableElement,
     elementUtil: Elements
 ): ShowkaseMetadata {
-    val executableElement = element as ExecutableElement
-    val showkaseAnnotation = executableElement.getAnnotation(Showkase::class.java)
-    val moduleName = elementUtil.getPackageOf(executableElement).simpleName.toString()
-    val packageName = element.enclosingElement.enclosingElement.asType().toString()
-    val methodName = executableElement.simpleName.toString()
-    val showkaseFunctionType = executableElement.getShowkaseFunctionType()
+    val showkaseAnnotation = element.getAnnotation(Showkase::class.java)
+    val packageElement = elementUtil.getPackageOf(element)
+    val moduleName = packageElement.simpleName.toString()
+    val packageName = packageElement.qualifiedName.toString()
+    val methodName = element.simpleName.toString()
+    val showkaseFunctionType = element.getShowkaseFunctionType()
 
-    val noOfParameters = executableElement.parameters.size
-    if (noOfParameters > 0) {
+    val numParameters = element.parameters.size
+    if (numParameters > 0) {
         throw ShowkaseProcessorException(
             "Make sure that the @Composable functions that you " +
                     "annotate with the @Showkase annotation do not take in any parameters"
@@ -79,20 +92,68 @@ internal fun getShowkaseMetadata(
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
-        enclosingClass = executableElement.getEnclosingClassType(showkaseFunctionType),
+        enclosingClass = element.getEnclosingClassType(showkaseFunctionType),
         methodName = methodName,
         showkaseComponentName = showkaseAnnotation.name,
         showkaseComponentGroup = showkaseAnnotation.group,
-        showkaseComponentWidthDp = showkaseAnnotation.widthDp,
-        showkaseComponentHeightDp = showkaseAnnotation.heightDp,
+        showkaseComponentWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
+        showkaseComponentHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT || 
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS
     )
 }
 
+internal fun getShowkaseMetadataFromPreview(
+    element: ExecutableElement,
+    elementUtil: Elements,
+    typeUtils: Types,
+    previewTypeMirror: TypeMirror
+): ShowkaseMetadata? {
+    val previewAnnotationMirror = element.annotationMirrors.find {
+        typeUtils.isSameType(it.annotationType, previewTypeMirror)
+    }
+
+    val map = mutableMapOf<ShowkaseAnnotationProperty, Any>()
+    previewAnnotationMirror?.elementValues?.map { entry ->
+        val key = entry.key.simpleName.toString().toUpperCase()
+        val value = entry.value.value
+        // Only store the properties that we currently support in the annotation
+        if (ShowkaseAnnotationProperty.values().any { it.name == key }) {
+            // All the supported types are safe to serialize as a String in order to store in the
+            // map.
+            val annotationProperty = 
+                ShowkaseAnnotationProperty.valueOf(key)
+            map[annotationProperty] =  value
+        }
+    }
+    val packageElement = elementUtil.getPackageOf(element)
+    val moduleName = packageElement.simpleName.toString()
+    val packageName = packageElement.qualifiedName.toString()
+    val methodName = element.simpleName.toString()
+    val showkaseFunctionType = element.getShowkaseFunctionType()
+
+    val numParameters = element.parameters.size
+    if (numParameters > 0) {
+        return null
+    }
+    return ShowkaseMetadata(
+        moduleName = moduleName,
+        packageName = packageName,
+        enclosingClass = element.getEnclosingClassType(showkaseFunctionType),
+        methodName = methodName,
+        showkaseComponentName = map[ShowkaseAnnotationProperty.NAME]?.let { it as String }.orEmpty(),
+        showkaseComponentGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
+        showkaseComponentWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
+        showkaseComponentHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
+        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
+                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS
+    )
+}
+
 private fun ExecutableElement.getShowkaseFunctionType() =
-    when (enclosingElement.kotlinMetadata()?.header?.kind) {
+    when (enclosingElement?.kotlinMetadata()?.header?.kind) {
         CLASS_KIND -> {
             val kmClass =
                 (enclosingElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
