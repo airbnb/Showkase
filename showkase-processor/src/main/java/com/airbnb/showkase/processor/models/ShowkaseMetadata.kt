@@ -201,5 +201,7 @@ private fun ExecutableElement.getEnclosingClassType(
     ShowkaseFunctionType.TOP_LEVEL -> null
     ShowkaseFunctionType.INSIDE_CLASS -> enclosingElement.asType()
     ShowkaseFunctionType.INSIDE_OBJECT -> enclosingElement.asType()
+    // Get the class that holds the companion object instead of using the intermediate element 
+    // that's used to represent the companion object.
     ShowkaseFunctionType.INSIDE_COMPANION_OBJECT -> enclosingElement.enclosingElement.asType()
 }
