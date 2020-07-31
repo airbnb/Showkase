@@ -424,7 +424,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -465,7 +467,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -530,7 +534,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -620,7 +626,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -690,6 +698,8 @@ class ShowkaseProcessorTest {
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
                     enclosingClass = [WrapperClass::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -735,6 +745,8 @@ class ShowkaseProcessorTest {
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
                     enclosingClass = [WrapperClass::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -782,7 +794,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
@@ -792,7 +806,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2"
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable2() {
                   }
@@ -839,7 +855,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
@@ -849,7 +867,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2"
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable2() {
                   }
@@ -898,7 +918,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2"
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable2() {
                   }
@@ -908,7 +930,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
@@ -952,7 +976,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group2",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }

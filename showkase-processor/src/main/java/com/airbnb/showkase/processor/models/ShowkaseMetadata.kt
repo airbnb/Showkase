@@ -164,18 +164,12 @@ private fun ExecutableElement.getShowkaseFunctionType() =
             val kmClass =
                 (enclosingElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
             when {
-                Flag.Class.IS_CLASS(kmClass.flags) -> {
-                    ShowkaseFunctionType.INSIDE_CLASS
-                }
-                Flag.Class.IS_COMPANION_OBJECT(kmClass.flags) -> {
-                    ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
-                }
-                Flag.Class.IS_OBJECT(kmClass.flags) -> {
-                    ShowkaseFunctionType.INSIDE_OBJECT
-                }
-                else -> throw ShowkaseProcessorException("Your @Showkase/@Preview " +
-                        "function:${this.simpleName} is declared in a way that is not supported by " +
-                        "Showkase.")
+                Flag.Class.IS_CLASS(kmClass.flags) -> ShowkaseFunctionType.INSIDE_CLASS
+                Flag.Class.IS_COMPANION_OBJECT(kmClass.flags) -> ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
+                Flag.Class.IS_OBJECT(kmClass.flags) -> ShowkaseFunctionType.INSIDE_OBJECT
+                else -> throw ShowkaseProcessorException(
+                    "Your @Showkase/@Preview function:${this.simpleName} is declared in a way " + 
+                            "that is not supported by Showkase.")
             }
         }
         FILE_FACADE_KIND -> ShowkaseFunctionType.TOP_LEVEL
