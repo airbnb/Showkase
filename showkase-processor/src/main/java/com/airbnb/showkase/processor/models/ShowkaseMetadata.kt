@@ -158,7 +158,7 @@ internal fun getShowkaseMetadataFromPreview(
     )
 }
 
-private fun ExecutableElement.getShowkaseFunctionType() =
+private fun ExecutableElement.getShowkaseFunctionType(): ShowkaseFunctionType =
     when (enclosingElement?.kotlinMetadata()?.header?.kind) {
         CLASS_KIND -> {
             val kmClass =
