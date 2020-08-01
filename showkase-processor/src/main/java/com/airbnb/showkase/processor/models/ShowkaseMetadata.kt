@@ -10,12 +10,14 @@ import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
+import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal data class ShowkaseMetadata(
+    val element: ExecutableElement? = null,
     val moduleName: String,
     val packageName: String,
     val enclosingClass: TypeMirror? = null,
@@ -42,14 +44,20 @@ private enum class ShowkaseFunctionType {
     INSIDE_COMPANION_OBJECT,
 }
 
-internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
+internal fun ShowkaseCodegenMetadata.toModel(elementUtils: Elements, typeUtils: Types): ShowkaseMetadata {
     val enclosingClassArray = try {
         enclosingClass
         listOf<TypeMirror>()
     } catch (mte: MirroredTypesException) {
         mte.typeMirrors
     }
-
+    
+//    val elementMirror: TypeMirror = try {
+//        element as TypeMirror
+//    } catch (mte: MirroredTypeException) {
+//        mte.typeMirror
+//    }
+    
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
@@ -61,6 +69,7 @@ internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
         insideObject = insideObject
+//        element = typeUtils.asElement(elementMirror)
     )
 }
 
@@ -87,7 +96,7 @@ internal fun getShowkaseMetadata(
                     "annotate with the @Showkase annotation do not take in any parameters"
         )
     }
-
+    
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
@@ -99,7 +108,8 @@ internal fun getShowkaseMetadata(
         showkaseComponentHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT || 
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
-        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+        element = element
     )
 }
 
@@ -152,9 +162,10 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseComponentGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
         showkaseComponentWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
         showkaseComponentHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
-        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS
+        element = element
     )
 }
 

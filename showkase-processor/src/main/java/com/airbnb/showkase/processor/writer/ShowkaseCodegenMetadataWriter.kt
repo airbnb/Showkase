@@ -8,12 +8,16 @@ import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.TypeSpec
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
+import com.squareup.kotlinpoet.asTypeName
+import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
+import kotlin.math.abs
 
 internal class ShowkaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
 
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
+        elementUtils: Elements,
         typeUtil: Types
     ) {
         if (showkaseMetadataSet.isEmpty()) return
@@ -29,11 +33,11 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
         showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             val methodName = when {
-                showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
+                showkaseMetadata.enclosingClass == null -> "${showkaseMetadata.methodName}_${abs(showkaseMetadata.hashCode())}"
                 else -> {
                     val enclosingClassName =
                         typeUtil.asElement(showkaseMetadata.enclosingClass).simpleName
-                    "${enclosingClassName}_${showkaseMetadata.methodName}"
+                    "${enclosingClassName}_${showkaseMetadata.methodName}_${abs(showkaseMetadata.hashCode())}"
                 }
             }
 
@@ -45,7 +49,8 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 .addMember("composableMethodName = %S", showkaseMetadata.methodName)
                 .addMember("insideObject = ${showkaseMetadata.insideObject}")
                 .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
-
+//                .addMember("element = %T::class", showkaseMetadata.element)
+                
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
             }
@@ -58,9 +63,12 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
             val composableFunction = FunSpec.builder(methodName)
                 .addAnnotation(annotation.build())
-                .build()
 
-            autogenClass.addFunction(composableFunction)
+            showkaseMetadata.element?.let {
+                composableFunction
+            }
+            
+            autogenClass.addFunction(composableFunction.build())
         }
 
         fileBuilder.addType(autogenClass.build())
