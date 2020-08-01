@@ -91,10 +91,9 @@ class ShowkaseProcessor: AbstractProcessor() {
                 element, composableTypeMirror, typeUtils,
                 Showkase::class.java.simpleName
             )
-            val showkaseMetadata = getShowkaseMetadata(
+            getShowkaseMetadata(
                 element = element as ExecutableElement, elementUtil = elementUtils
             )
-            showkaseMetadata
         }.toSet()
 
     private fun processPreviewAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {

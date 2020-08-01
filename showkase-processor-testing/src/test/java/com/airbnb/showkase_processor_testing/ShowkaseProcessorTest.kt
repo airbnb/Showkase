@@ -117,7 +117,6 @@ class ShowkaseProcessorTest {
     @Test
     fun `private composable with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        c
         import androidx.compose.Composable
         
         class GeneratedTestComposables {
