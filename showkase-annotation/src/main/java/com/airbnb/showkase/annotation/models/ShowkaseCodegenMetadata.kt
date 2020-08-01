@@ -30,5 +30,7 @@ annotation class ShowkaseCodegenMetadata(
     val showkaseComposableGroup: String,
     val enclosingClass: Array<KClass<*>> = [],
     val showkaseComposableWidthDp: Int = -1,
-    val showkaseComposableHeightDp: Int = -1
+    val showkaseComposableHeightDp: Int = -1,
+    val insideWrapperClass: Boolean = false,
+    val insideObject: Boolean = false
 )

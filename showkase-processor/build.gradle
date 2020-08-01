@@ -43,10 +43,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     compileOnly project(':showkase-annotation')
-    
+
+    implementation deps.autoService
     implementation deps.kotlinStdLib
     implementation deps.kotlinPoet
-    implementation deps.autoService
+    implementation deps.kotlinXMetadata
     
     kapt deps.autoService
 }
