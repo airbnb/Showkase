@@ -102,7 +102,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         val previewTypeMirror = elementUtils
             .getTypeElement(previewClass.canonicalName)
             .asType()
-        return roundEnvironment.getElementsAnnotatedWith(previewClassAnnotation).map { element ->
+        return roundEnvironment.getElementsAnnotatedWith(previewClassAnnotation).mapNotNull { element ->
             showkaseValidator.validateElement(element, composableTypeMirror, typeUtils, 
                 previewClass.simpleName)
             val showkaseMetadata = getShowkaseMetadataFromPreview(

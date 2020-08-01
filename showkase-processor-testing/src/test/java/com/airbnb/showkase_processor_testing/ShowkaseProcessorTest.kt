@@ -92,6 +92,98 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `composable function inside object with showkase annotation compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        
+        object ShowkaseObject {
+            @Showkase("name", "group")
+            @Composable
+            fun TestComposable() {
+                
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `composable function inside object with preview annotation compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        
+        object ShowkaseObject {
+            @Preview("name", "group")
+            @Composable
+            fun TestComposable() {
+                
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `composable function inside companion object with showkase annotation compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        
+        class ShowkaseClass {
+            companion object {
+                @Showkase("name", "group")
+                @Composable
+                fun TestComposable() {
+                    
+                }
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `composable function inside companion object with preview annotation compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        
+        class ShowkaseClass {
+            companion object {
+                @Preview("name", "group")
+                @Composable
+                fun TestComposable() {
+                    
+                }
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
     fun `private composable with showkase annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import com.airbnb.showkase.annotation.models.Showkase
@@ -117,7 +209,6 @@ class ShowkaseProcessorTest {
     @Test
     fun `private composable with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        c
         import androidx.compose.Composable
         
         class GeneratedTestComposables {
@@ -424,7 +515,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -465,7 +558,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -530,7 +625,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -620,7 +717,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable"
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable() {
                   }
@@ -646,6 +745,302 @@ class ShowkaseProcessorTest {
                 
                         ShowkaseBrowserComponent("group", "name", -1, -1,
                             @Composable { TestComposable() })
+                        )
+                
+                    override fun getShowkaseComponents() = componentList
+                  }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside class with showkase annotation and showkaseroot generates 2 files`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        
+        class WrapperClass {
+            @Showkase("name", "group")
+            @Composable
+            fun TestComposable() {
+                
+            }
+        }
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegenComponents.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    enclosingClass = [WrapperClass::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseCodegenComponents.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import androidx.compose.Composable
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseComponentsProvider
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                import com.airbnb.showkase_processor_testing.TestComposable
+                import kotlin.collections.List
+                
+                class ShowkaseCodegenComponents : ShowkaseComponentsProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                
+                        ShowkaseBrowserComponent("group", "name", -1, -1,
+                            @Composable { WrapperClass().TestComposable() })
+                        )
+                
+                    override fun getShowkaseComponents() = componentList
+                  }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside object with showkase annotation and showkaseroot generates 2 files`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        
+        object WrapperClass {
+            @Showkase("name", "group")
+            @Composable
+            fun TestComposable() {
+                
+            }
+        }
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegenComponents.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    enclosingClass = [WrapperClass::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseCodegenComponents.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import androidx.compose.Composable
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseComponentsProvider
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                import com.airbnb.showkase_processor_testing.TestComposable
+                import kotlin.collections.List
+                
+                class ShowkaseCodegenComponents : ShowkaseComponentsProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                
+                        ShowkaseBrowserComponent("group", "name", -1, -1,
+                            @Composable { WrapperClass.TestComposable() })
+                        )
+                
+                    override fun getShowkaseComponents() = componentList
+                  }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside companion object with showkase annotation and showkaseroot generates 2 files`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        
+        class WrapperClass {
+            companion object {
+                @Showkase("name", "group")
+                @Composable
+                fun TestComposable() {
+                    
+                }
+            }
+        }
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegenComponents.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    enclosingClass = [WrapperClass::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseCodegenComponents.kt"
+        }?.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import androidx.compose.Composable
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseComponentsProvider
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                import com.airbnb.showkase_processor_testing.TestComposable
+                import kotlin.collections.List
+                
+                class ShowkaseCodegenComponents : ShowkaseComponentsProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                
+                        ShowkaseBrowserComponent("group", "name", -1, -1,
+                            @Composable { WrapperClass.TestComposable() })
                         )
                 
                     override fun getShowkaseComponents() = componentList
@@ -690,6 +1085,8 @@ class ShowkaseProcessorTest {
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
                     enclosingClass = [WrapperClass::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -735,6 +1132,202 @@ class ShowkaseProcessorTest {
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
                     composableMethodName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    enclosingClass = [WrapperClass::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside object with showkase annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.Showkase
+        
+        object WrapperObject {
+            @Showkase("name", "group")
+            @Composable
+            fun TestComposable() {
+            
+            }
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperObject
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    enclosingClass = [WrapperObject::class]
+                  )
+                  fun WrapperObject_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside object with preview annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        
+        object WrapperObject {
+            @Preview("name", "group")
+            @Composable
+            fun TestComposable() {
+            
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperObject
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    enclosingClass = [WrapperObject::class]
+                  )
+                  fun WrapperObject_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside companion object with showkase annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.Composable
+        import com.airbnb.showkase.annotation.models.Showkase
+        
+        class WrapperClass {
+            companion object {
+                @Showkase("name", "group")
+                @Composable
+                fun TestComposable() {
+                
+                }
+            }
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    enclosingClass = [WrapperClass::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `composable function inside companion object with preview annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.Composable
+        
+        class WrapperClass {
+            companion object {
+                @Preview("name", "group")
+                @Composable
+                fun TestComposable() {
+                
+                }
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name",
+                    showkaseComposableGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
                     enclosingClass = [WrapperClass::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -782,7 +1375,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
@@ -792,7 +1387,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2"
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable2() {
                   }
@@ -839,7 +1436,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
@@ -849,7 +1448,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2"
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable2() {
                   }
@@ -898,7 +1499,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2"
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable2() {
                   }
@@ -908,7 +1511,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
@@ -952,7 +1557,9 @@ class ShowkaseProcessorTest {
                     showkaseComposableGroup = "group2",
                     packageName = "com.airbnb.showkase_processor_testing",
                     moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable1"
+                    composableMethodName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false
                   )
                   fun TestComposable1() {
                   }
