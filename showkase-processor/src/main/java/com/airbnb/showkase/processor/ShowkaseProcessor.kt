@@ -131,7 +131,8 @@ class ShowkaseProcessor: AbstractProcessor() {
         // the customizations that they offer). In that scenario, its important to dedupe the
         // composables as they will be processed across both the rounds. We first ensure that
         // only distict method's are passed onto the next round. We do this by deduping on 
-        // the methodName.
+        // the combination of packageName, the wrapper class when available(otherwise it 
+        // will be null) & the methodName.
         "${it.packageName}_${it.enclosingClass}_${it.methodName}"
     }
         .distinctBy {
@@ -160,7 +161,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             val rootModuleClassName = it.simpleName.toString()
             val rootModulePackageName = elementUtils.getPackageOf(it).qualifiedName.toString()
             val generatedShowkaseMetadataOnClasspath =
-                getShowkaseCodegenMetadataOnClassPath(elementUtils, typeUtils)
+                getShowkaseCodegenMetadataOnClassPath(elementUtils)
             val allShowkaseMetadataList = currentComposableMetadataSet
                 .plus(generatedShowkaseMetadataOnClasspath)
                 .dedupeAndSort()
@@ -173,14 +174,12 @@ class ShowkaseProcessor: AbstractProcessor() {
         }
     }
 
-    private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements, typesUtils: Types): Set<ShowkaseMetadata> {
+    private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
         val showkaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
         return showkaseGeneratedPackageElement.enclosedElements
             .flatMap { it.enclosedElements }
             .mapNotNull { element -> element.getAnnotation(ShowkaseCodegenMetadata::class.java) }
-            .map {
-                it.toModel(elementUtils, typesUtils)
-            }
+            .map { it.toModel() }
             .toSet()
     }
 

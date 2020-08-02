@@ -44,14 +44,14 @@ private enum class ShowkaseFunctionType {
     INSIDE_COMPANION_OBJECT,
 }
 
-internal fun ShowkaseCodegenMetadata.toModel(elementUtils: Elements, typeUtils: Types): ShowkaseMetadata {
+internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
     val enclosingClassArray = try {
         enclosingClass
         listOf<TypeMirror>()
     } catch (mte: MirroredTypesException) {
         mte.typeMirrors
     }
-    
+
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
@@ -155,9 +155,9 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseComponentGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
         showkaseComponentWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
         showkaseComponentHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
-        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element
     )
 }

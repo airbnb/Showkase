@@ -48,7 +48,6 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 .addMember("composableMethodName = %S", showkaseMetadata.methodName)
                 .addMember("insideObject = ${showkaseMetadata.insideObject}")
                 .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
-                
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
             }
