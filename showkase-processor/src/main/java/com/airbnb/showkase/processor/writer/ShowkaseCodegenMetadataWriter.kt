@@ -8,10 +8,7 @@ import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.TypeSpec
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
-import com.squareup.kotlinpoet.asTypeName
-import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import kotlin.math.abs
 
 internal class ShowkaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
 
