@@ -52,12 +52,6 @@ internal fun ShowkaseCodegenMetadata.toModel(elementUtils: Elements, typeUtils: 
         mte.typeMirrors
     }
     
-//    val elementMirror: TypeMirror = try {
-//        element as TypeMirror
-//    } catch (mte: MirroredTypeException) {
-//        mte.typeMirror
-//    }
-    
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
@@ -69,7 +63,6 @@ internal fun ShowkaseCodegenMetadata.toModel(elementUtils: Elements, typeUtils: 
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
         insideObject = insideObject
-//        element = typeUtils.asElement(elementMirror)
     )
 }
 

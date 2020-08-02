@@ -26,7 +26,7 @@ internal fun ShowkaseAllGroupsScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     val filteredList = getFilteredSearchList(
-        groupedComponentMap.keys.toList(),
+        groupedComponentMap.keys.sorted(),
         showkaseBrowserScreenMetadata
     )
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)

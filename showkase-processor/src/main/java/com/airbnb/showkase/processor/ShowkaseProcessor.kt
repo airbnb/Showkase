@@ -79,7 +79,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             logger.logErrorMessage("${exception.message}")
         }
 
-        if (roundEnvironment?.processingOver() == true) {
+        if (roundEnvironment.processingOver() == true) {
             logger.publishMessages(messager)
         }
         return false
@@ -116,16 +116,16 @@ class ShowkaseProcessor: AbstractProcessor() {
         showcaseMetadataList: Set<ShowkaseMetadata>,
         previewMetadataList: Set<ShowkaseMetadata>
     ) = (showcaseMetadataList + previewMetadataList)
-        .dedupe()
+        .dedupeAndSort()
         .toSet()
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
         ShowkaseCodegenMetadataWriter(processingEnv).apply {
-            generateShowkaseCodegenFunctions(uniqueComposablesMetadata, elementUtils, typeUtils)
+            generateShowkaseCodegenFunctions(uniqueComposablesMetadata, typeUtils)
         }
     }
 
-    private fun Collection<ShowkaseMetadata>.dedupe() = this.distinctBy {
+    private fun Collection<ShowkaseMetadata>.dedupeAndSort() = this.distinctBy {
         // It's possible that a composable annotation is annotated with both Preview & 
         // Showkase(especially if we add more functionality to Showkase and they diverge in 
         // the customizations that they offer). In that scenario, its important to dedupe the
@@ -138,6 +138,9 @@ class ShowkaseProcessor: AbstractProcessor() {
             // We also ensure that the component groupName and the component name are unique so 
             // that they don't show up twice in the browser app. 
             "${it.showkaseComponentName}_${it.showkaseComponentGroup}"
+        }
+        .sortedBy {
+            "${it.packageName}_${it.enclosingClass}_${it.methodName}"
         }
 
     private fun processMetadata(
@@ -160,7 +163,7 @@ class ShowkaseProcessor: AbstractProcessor() {
                 getShowkaseCodegenMetadataOnClassPath(elementUtils, typeUtils)
             val allShowkaseMetadataList = currentComposableMetadataSet
                 .plus(generatedShowkaseMetadataOnClasspath)
-                .dedupe()
+                .dedupeAndSort()
 
             ShowkaseComponentsWriter(processingEnv).apply {
                 generateShowkaseBrowserComponents(

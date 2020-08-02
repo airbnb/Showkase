@@ -17,7 +17,6 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
-        elementUtils: Elements,
         typeUtil: Types
     ) {
         if (showkaseMetadataSet.isEmpty()) return
@@ -33,11 +32,11 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
         showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             val methodName = when {
-                showkaseMetadata.enclosingClass == null -> "${showkaseMetadata.methodName}_${abs(showkaseMetadata.hashCode())}"
+                showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
                 else -> {
                     val enclosingClassName =
                         typeUtil.asElement(showkaseMetadata.enclosingClass).simpleName
-                    "${enclosingClassName}_${showkaseMetadata.methodName}_${abs(showkaseMetadata.hashCode())}"
+                    "${enclosingClassName}_${showkaseMetadata.methodName}"
                 }
             }
 
@@ -49,7 +48,6 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 .addMember("composableMethodName = %S", showkaseMetadata.methodName)
                 .addMember("insideObject = ${showkaseMetadata.insideObject}")
                 .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
-//                .addMember("element = %T::class", showkaseMetadata.element)
                 
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
@@ -65,7 +63,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 .addAnnotation(annotation.build())
 
             showkaseMetadata.element?.let {
-                composableFunction
+                composableFunction.addOriginatingElement(it)
             }
             
             autogenClass.addFunction(composableFunction.build())
