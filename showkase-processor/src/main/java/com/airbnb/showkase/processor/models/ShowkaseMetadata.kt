@@ -10,7 +10,6 @@ import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
-import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
@@ -64,7 +63,7 @@ internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
         insideObject = insideObject,
-        showkaseComponentKDoc = showkaseComponentKDoc
+        showkaseComponentKDoc = showkaseComposableKDoc
     )
 }
 
