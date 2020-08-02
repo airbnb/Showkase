@@ -79,7 +79,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             logger.logErrorMessage("${exception.message}")
         }
 
-        if (roundEnvironment?.processingOver() == true) {
+        if (roundEnvironment.processingOver() == true) {
             logger.publishMessages(messager)
         }
         return false
@@ -116,20 +116,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         showcaseMetadataList: Set<ShowkaseMetadata>,
         previewMetadataList: Set<ShowkaseMetadata>
     ) = (showcaseMetadataList + previewMetadataList)
-        .distinctBy {
-            // It's possible that a composable annotation is annotated with both Preview & 
-            // Showkase(especially if we add more functionality to Showkase and they diverge in 
-            // the customizations that they offer). In that scenario, its important to dedupe the
-            // composables as they will be processed across both the rounds. We first ensure that
-            // only distict method's are passed onto the next round. We do this by deduping on 
-            // the methodName.
-            it.methodName
-        }
-        .distinctBy {
-            // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app. 
-            it.showkaseComponentName + it.showkaseComponentGroup
-        }
+        .dedupeAndSort()
         .toSet()
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
@@ -137,6 +124,25 @@ class ShowkaseProcessor: AbstractProcessor() {
             generateShowkaseCodegenFunctions(uniqueComposablesMetadata, typeUtils)
         }
     }
+
+    private fun Collection<ShowkaseMetadata>.dedupeAndSort() = this.distinctBy {
+        // It's possible that a composable annotation is annotated with both Preview & 
+        // Showkase(especially if we add more functionality to Showkase and they diverge in 
+        // the customizations that they offer). In that scenario, its important to dedupe the
+        // composables as they will be processed across both the rounds. We first ensure that
+        // only distict method's are passed onto the next round. We do this by deduping on 
+        // the combination of packageName, the wrapper class when available(otherwise it 
+        // will be null) & the methodName.
+        "${it.packageName}_${it.enclosingClass}_${it.methodName}"
+    }
+        .distinctBy {
+            // We also ensure that the component groupName and the component name are unique so 
+            // that they don't show up twice in the browser app. 
+            "${it.showkaseComponentName}_${it.showkaseComponentGroup}"
+        }
+        .sortedBy {
+            "${it.packageName}_${it.enclosingClass}_${it.methodName}"
+        }
 
     private fun processMetadata(
         currentComposableMetadataSet: Set<ShowkaseMetadata>,
@@ -156,8 +162,9 @@ class ShowkaseProcessor: AbstractProcessor() {
             val rootModulePackageName = elementUtils.getPackageOf(it).qualifiedName.toString()
             val generatedShowkaseMetadataOnClasspath =
                 getShowkaseCodegenMetadataOnClassPath(elementUtils)
-            val allShowkaseMetadataList = generatedShowkaseMetadataOnClasspath
-                .plus(currentComposableMetadataSet)
+            val allShowkaseMetadataList = currentComposableMetadataSet
+                .plus(generatedShowkaseMetadataOnClasspath)
+                .dedupeAndSort()
 
             ShowkaseComponentsWriter(processingEnv).apply {
                 generateShowkaseBrowserComponents(
@@ -167,14 +174,13 @@ class ShowkaseProcessor: AbstractProcessor() {
         }
     }
 
-    private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): List<ShowkaseMetadata> {
+    private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
         val showkaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
         return showkaseGeneratedPackageElement.enclosedElements
             .flatMap { it.enclosedElements }
             .mapNotNull { element -> element.getAnnotation(ShowkaseCodegenMetadata::class.java) }
-            .map {
-                it.toModel()
-            }
+            .map { it.toModel() }
+            .toSet()
     }
 
     companion object {

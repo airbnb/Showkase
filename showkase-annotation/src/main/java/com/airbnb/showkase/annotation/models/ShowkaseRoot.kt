@@ -20,6 +20,6 @@ package com.airbnb.showkase.annotation.models
  * startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class ShowkaseRoot

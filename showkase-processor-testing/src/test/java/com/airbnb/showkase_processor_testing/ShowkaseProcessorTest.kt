@@ -1474,7 +1474,7 @@ class ShowkaseProcessorTest {
         fun TestComposable1() {
             
         }
-        
+
         @Showkase("name2", "group1")
         @Composable
         fun TestComposable2() {
@@ -1495,18 +1495,6 @@ class ShowkaseProcessorTest {
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
-                    showkaseComposableName = "name2",
-                    showkaseComposableGroup = "group1",
-                    packageName = "com.airbnb.showkase_processor_testing",
-                    moduleName = "showkase_processor_testing",
-                    composableMethodName = "TestComposable2",
-                    insideObject = false,
-                    insideWrapperClass = false
-                  )
-                  fun TestComposable2() {
-                  }
-
-                  @ShowkaseCodegenMetadata(
                     showkaseComposableName = "name1",
                     showkaseComposableGroup = "group1",
                     packageName = "com.airbnb.showkase_processor_testing",
@@ -1516,6 +1504,18 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false
                   )
                   fun TestComposable1() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseComposableName = "name2",
+                    showkaseComposableGroup = "group1",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    moduleName = "showkase_processor_testing",
+                    composableMethodName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false
+                  )
+                  fun TestComposable2() {
                   }
                 }
             """.trimIndent()

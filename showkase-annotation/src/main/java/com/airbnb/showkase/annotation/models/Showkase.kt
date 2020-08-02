@@ -44,7 +44,7 @@ package com.airbnb.showkase.annotation.models
  * Use this to restrict the size of your preview inside the Showkase browser.
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
 annotation class Showkase(
     val name: String,

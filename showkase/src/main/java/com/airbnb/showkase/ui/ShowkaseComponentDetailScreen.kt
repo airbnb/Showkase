@@ -115,7 +115,7 @@ private fun DocumentationPanel(kDoc: String) {
         showDocumentationText, hideDocumentationText)
     if (showDocumentation) {
         Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
             text = kDoc,
             style = TextStyle(
                 color = Color.DarkGray,
@@ -126,7 +126,7 @@ private fun DocumentationPanel(kDoc: String) {
         )
     }
     TextButton(
-        modifier = Modifier.padding(start = 10.dp, end = 16.dp),
+        modifier = Modifier.padding(start = 10.dp, end = 16.dp, top = 8.dp),
         onClick = {
             showDocumentation = !showDocumentation
         }
