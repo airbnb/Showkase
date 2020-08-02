@@ -18,10 +18,11 @@ import javax.lang.model.util.Types
 internal data class ShowkaseMetadata(
     val moduleName: String,
     val packageName: String,
-    val enclosingClass: TypeMirror? = null,
     val methodName: String,
     val showkaseComponentName: String,
     val showkaseComponentGroup: String,
+    val showkaseComponentKDoc: String,
+    val enclosingClass: TypeMirror? = null,
     val showkaseComponentWidthDp: Int? = null,
     val showkaseComponentHeightDp: Int? = null,
     val insideWrapperClass: Boolean = false,
@@ -60,7 +61,8 @@ internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
         showkaseComponentWidthDp = showkaseComposableWidthDp.parseAnnotationProperty(),
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
-        insideObject = insideObject
+        insideObject = insideObject,
+        showkaseComponentKDoc = showkaseComponentKDoc
     )
 }
 
@@ -79,6 +81,7 @@ internal fun getShowkaseMetadata(
     val packageName = packageElement.qualifiedName.toString()
     val methodName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
+    val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
 
     val numParameters = element.parameters.size
     if (numParameters > 0) {
@@ -99,7 +102,8 @@ internal fun getShowkaseMetadata(
         showkaseComponentHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT || 
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
-        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+        showkaseComponentKDoc = kDoc
     )
 }
 
@@ -131,6 +135,7 @@ internal fun getShowkaseMetadataFromPreview(
     val packageName = packageElement.qualifiedName.toString()
     val methodName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
+    val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
 
     val numParameters = element.parameters.size
     if (numParameters > 0) {
@@ -148,13 +153,14 @@ internal fun getShowkaseMetadataFromPreview(
         packageName = packageName,
         enclosingClass = element.getEnclosingClassType(showkaseFunctionType),
         methodName = methodName,
+        showkaseComponentKDoc = kDoc,
         showkaseComponentName = map[ShowkaseAnnotationProperty.NAME]?.let { it as String }.orEmpty(),
         showkaseComponentGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
         showkaseComponentWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
         showkaseComponentHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
-        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS
+                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
     )
 }
 

@@ -4,6 +4,9 @@ import android.content.res.Configuration
 import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.compose.Providers
+import androidx.compose.getValue
+import androidx.compose.setValue
+import androidx.compose.state
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
@@ -12,18 +15,21 @@ import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
+import androidx.ui.graphics.Color
 import androidx.ui.layout.Stack
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.rtl
 import androidx.ui.layout.size
 import androidx.ui.material.Card
+import androidx.ui.material.TextButton
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
 import androidx.ui.text.font.FontWeight
 import androidx.ui.unit.Density
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
+import com.airbnb.showkase.R
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
@@ -42,7 +48,12 @@ internal fun ShowkaseComponentDetailScreen(
     LazyColumnItems(items = listOf(componentMetadata), itemContent = { metadata ->
         ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
             when (showkaseComponentCardType) {
-                ShowkaseComponentCardType.BASIC -> BasicComponentCard(metadata)
+                ShowkaseComponentCardType.BASIC -> {
+                    if (!metadata.componentKDoc.isNullOrBlank()) {
+                        DocumentationPanel(metadata.componentKDoc)
+                    }
+                    BasicComponentCard(metadata)
+                }
                 ShowkaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(metadata)
                 ShowkaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(metadata)
                 ShowkaseComponentCardType.RTL -> RTLComponentCard(metadata)
@@ -91,6 +102,47 @@ internal fun ComponentCard(
             )
         }
         
+    }
+}
+
+@Composable
+private fun DocumentationPanel(kDoc: String) {
+    var showDocumentation by state { false }
+    val context = ContextAmbient.current
+    val showDocumentationText = context.getString(R.string.showkase_browser_show_documentation)
+    val hideDocumentationText = context.getString(R.string.showkase_browser_hide_documentation)
+    val buttonText = getDocumentationButtonText(showDocumentation, 
+        showDocumentationText, hideDocumentationText)
+    if (showDocumentation) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
+            text = kDoc,
+            style = TextStyle(
+                color = Color.DarkGray,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.W300
+            )
+        )
+    }
+    TextButton(
+        modifier = Modifier.padding(start = 10.dp, end = 16.dp),
+        onClick = {
+            showDocumentation = !showDocumentation
+        }
+    ) {
+        Text(text = buttonText)
+    }
+}
+
+private fun getDocumentationButtonText(
+    showDocumentation: Boolean,
+    showDocumentationText: String,
+    hideDocumentationText: String
+): String {
+    return when(showDocumentation) {
+        true -> hideDocumentationText
+        false -> showDocumentationText
     }
 }
 

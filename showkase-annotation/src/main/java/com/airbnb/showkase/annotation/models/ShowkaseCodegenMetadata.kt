@@ -28,6 +28,7 @@ annotation class ShowkaseCodegenMetadata(
     val composableMethodName: String,
     val showkaseComposableName: String,
     val showkaseComposableGroup: String,
+    val showkaseComponentKDoc: String,
     val enclosingClass: Array<KClass<*>> = [],
     val showkaseComposableWidthDp: Int = -1,
     val showkaseComposableHeightDp: Int = -1,

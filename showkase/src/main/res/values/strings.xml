@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Showkase</string>
     <string name="search_label">Search</string>
+    <string name="showkase_browser_show_documentation">Show Documentation</string>
+    <string name="showkase_browser_hide_documentation">Hide Documentation</string>
 </resources>

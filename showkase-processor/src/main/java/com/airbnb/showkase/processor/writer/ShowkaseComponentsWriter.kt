@@ -50,10 +50,11 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.add(
-                "%T(group = %S, componentName = %S,",
+                "%T(group = %S, componentName = %S, componentKDoc = %S,",
                 SHOWKASE_BROWSER_COMPONENT_CLASS_NAME,
                 showkaseMetadata.showkaseComponentGroup,
-                showkaseMetadata.showkaseComponentName
+                showkaseMetadata.showkaseComponentName,
+                showkaseMetadata.showkaseComponentKDoc
             )
             showkaseMetadata.showkaseComponentWidthDp?.let { 
                 componentListInitializerCodeBlock.add(" widthDp = %L,", it)
