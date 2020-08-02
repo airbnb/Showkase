@@ -1,5 +1,6 @@
 package com.airbnb.showkase.ui
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.Composable
 import androidx.compose.MutableState
@@ -7,15 +8,19 @@ import androidx.compose.Providers
 import androidx.compose.getValue
 import androidx.compose.setValue
 import androidx.compose.state
+import androidx.ui.core.Alignment
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
+import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.graphics.Color
+import androidx.ui.layout.Arrangement
+import androidx.ui.layout.Row
 import androidx.ui.layout.Stack
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
@@ -23,6 +28,9 @@ import androidx.ui.layout.rtl
 import androidx.ui.layout.size
 import androidx.ui.material.Card
 import androidx.ui.material.TextButton
+import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.KeyboardArrowDown
+import androidx.ui.material.icons.filled.KeyboardArrowUp
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
 import androidx.ui.text.font.FontWeight
@@ -109,10 +117,7 @@ internal fun ComponentCard(
 private fun DocumentationPanel(kDoc: String) {
     var showDocumentation by state { false }
     val context = ContextAmbient.current
-    val showDocumentationText = context.getString(R.string.showkase_browser_show_documentation)
-    val hideDocumentationText = context.getString(R.string.showkase_browser_hide_documentation)
-    val buttonText = getDocumentationButtonText(showDocumentation, 
-        showDocumentationText, hideDocumentationText)
+    val (buttonText, icon) = getCollabsableTextAndIcon(context, showDocumentation)
     if (showDocumentation) {
         Text(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
@@ -125,25 +130,29 @@ private fun DocumentationPanel(kDoc: String) {
             )
         )
     }
-    TextButton(
-        modifier = Modifier.padding(start = 10.dp, end = 16.dp, top = 8.dp),
-        onClick = {
-            showDocumentation = !showDocumentation
-        }
+    Row(
+        modifier = Modifier.padding(start = 10.dp, end = 16.dp, top = 8.dp) + Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalGravity = Alignment.CenterVertically
     ) {
-        Text(text = buttonText)
+        TextButton(
+            onClick = {
+                showDocumentation = !showDocumentation
+            }
+        ) {
+            Text(text = buttonText)
+        }
+        Icon(asset = icon)
     }
+    
 }
 
-private fun getDocumentationButtonText(
-    showDocumentation: Boolean,
-    showDocumentationText: String,
-    hideDocumentationText: String
-): String {
-    return when(showDocumentation) {
-        true -> hideDocumentationText
-        false -> showDocumentationText
-    }
+private fun getCollabsableTextAndIcon(
+    context: Context,
+    showDocumentation: Boolean
+) = when (showDocumentation) {
+    true -> context.getString(R.string.showkase_browser_hide_documentation) to Icons.Filled.KeyboardArrowUp
+    false -> context.getString(R.string.showkase_browser_show_documentation) to Icons.Filled.KeyboardArrowDown
 }
 
 @Composable
