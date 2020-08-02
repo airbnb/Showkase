@@ -15,6 +15,7 @@ import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Icon
+import androidx.ui.foundation.ProvideTextStyle
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
@@ -27,7 +28,7 @@ import androidx.ui.layout.padding
 import androidx.ui.layout.rtl
 import androidx.ui.layout.size
 import androidx.ui.material.Card
-import androidx.ui.material.TextButton
+import androidx.ui.material.MaterialTheme
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.KeyboardArrowDown
 import androidx.ui.material.icons.filled.KeyboardArrowUp
@@ -118,6 +119,7 @@ private fun DocumentationPanel(kDoc: String) {
     var showDocumentation by state { false }
     val context = ContextAmbient.current
     val (buttonText, icon) = getCollabsableTextAndIcon(context, showDocumentation)
+    val onClick = { showDocumentation = !showDocumentation }
     if (showDocumentation) {
         Text(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
@@ -131,20 +133,20 @@ private fun DocumentationPanel(kDoc: String) {
         )
     }
     Row(
-        modifier = Modifier.padding(start = 10.dp, end = 16.dp, top = 8.dp) + Modifier.fillMaxWidth(),
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp) +
+                Modifier.fillMaxWidth() + 
+                Modifier.clickable(onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalGravity = Alignment.CenterVertically
     ) {
-        TextButton(
-            onClick = {
-                showDocumentation = !showDocumentation
-            }
-        ) {
-            Text(text = buttonText)
+        ProvideTextStyle(value = MaterialTheme.typography.button) {
+            Text(
+                text = buttonText,
+                color = MaterialTheme.colors.primary
+            )
         }
         Icon(asset = icon)
     }
-    
 }
 
 private fun getCollabsableTextAndIcon(
