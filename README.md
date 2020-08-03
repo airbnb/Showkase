@@ -40,6 +40,8 @@ mode, RTL layouts, font scaled, etc.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
   Scaled, Display Scaled. Look in the gif above for examples)'. More to be added in the future!
   - Support for searching a `@Composable` component by name or group.
+  - KDoc support that shows the documentation that you added for a component in the 
+  Showkase browser. 
   - Multi-module support for showcasing composables across multiple modules.
   - Support for constraining a component with a custom height/width using additional parameters in 
   the annotation.
