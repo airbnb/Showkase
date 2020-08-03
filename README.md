@@ -6,7 +6,7 @@ effort. In addition, it also helps you visualize your components in common situa
 mode, RTL layouts, font scaled, etc.  
 
 <p align="center">
-    <img height="700" src="assets/showkase_features.png">
+    <img src="assets/showkase_features.png">
 </p>
  
  ## Why should you use Showkase?
