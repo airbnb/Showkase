@@ -12,6 +12,10 @@ mode, RTL layouts, font scaled, etc.
 <p align="center">
     <img src="assets/showkase_permutations.png">
 </p>
+
+<p align="center">
+    <img height="600" src="assets/showkase_demo.gif">
+</p>
  
  ## Why should you use Showkase?
  - Showkase eliminates the manual work needed in maintaining a UI component preview/browser app that 
@@ -25,7 +29,7 @@ mode, RTL layouts, font scaled, etc.
  - Showkase aids in catching common UI issues early with the help of auto-generated permutations 
  of your components.
  
-  ## Features
+ ## Features
   - [Super simple setup](#Installation)
   - Support for top level functions and class functions to be annotated with the `@Showkase` annotation.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
@@ -50,10 +54,15 @@ implementation "com.airbnb.android:showkase:0.1.0-alpha"
 kapt "com.airbnb.android:showkcase-processor:0.1.0-alpha"
 ```
 
-**Step 2**: Add the @Showkase annotation to every `@Composable` function/component that should 
-be a part of the Showkase browser. 
+**Step 2**: Add the `@Preview` or `@Showkase` annotation to every `@Composable` function/component 
+that should be a part of the Showkase browser. Showkase currently supports the following 
+properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
 
 ```kotlin
+@Preview(name="Name of component", group="Group Name")
+
+or
+
 @Showkase(name="Name of component", group="Group Name")
 ```
 
@@ -82,8 +91,6 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
-- KDoc support so that the KDoc that you added to your `@Composable` functions is also available in
- the Showkase browser activity.
 - Support for representing more aspects of your design system. Think `@ShowkaseColor`, 
 `@ShowkaseTypography`, etc.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
