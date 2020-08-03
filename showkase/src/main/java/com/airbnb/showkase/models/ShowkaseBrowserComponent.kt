@@ -7,7 +7,7 @@ import androidx.compose.Composable
 data class ShowkaseBrowserComponent(
     val group: String,
     val componentName: String,
-    val widthDp: Int,
-    val heightDp: Int,
+    val widthDp: Int? = null,
+    val heightDp: Int? = null,
     val component: @Composable () -> Unit
 )

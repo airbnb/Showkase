@@ -1,5 +1,6 @@
 package com.airbnb.showkase.processor.writer
 
+import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -49,17 +50,23 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.add(
-                "%T(%S, %S, %L, %L,",
+                "%T(group = %S, componentName = %S,",
                 SHOWKASE_BROWSER_COMPONENT_CLASS_NAME,
                 showkaseMetadata.showkaseComponentGroup,
-                showkaseMetadata.showkaseComponentName,
-                showkaseMetadata.showkaseComponentWidthDp,
-                showkaseMetadata.showkaseComponentHeightDp
+                showkaseMetadata.showkaseComponentName
             )
+            showkaseMetadata.showkaseComponentWidthDp?.let { 
+                componentListInitializerCodeBlock.add(" widthDp = %L,", it)
+            }
+            showkaseMetadata.showkaseComponentHeightDp?.let {
+                componentListInitializerCodeBlock.add(" heightDp = %L,", it)
+            }
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showkaseMetadata.packageName,
                 showkaseMetadata.enclosingClass,
-                showkaseMetadata.methodName
+                showkaseMetadata.methodName,
+                showkaseMetadata.insideWrapperClass,
+                showkaseMetadata.insideObject
             )
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.indent().indent()
@@ -100,26 +107,42 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
         enclosingClass: TypeMirror? = null,
-        composeFunctionName: String
-    ): CodeBlock {
-        // IF enclosingClass is null, it denotes that the method was a top-level method declaration.
-        return if (enclosingClass == null) {
+        composeFunctionName: String,
+        insideWrapperClass: Boolean,
+        insideObject: Boolean
+    ) = when {
+        // When enclosingClass is null, it denotes that the method was a top-level method 
+        // declaration.
+        enclosingClass == null -> {
             val composeMember = MemberName(functionPackageName, composeFunctionName)
             CodeBlock.Builder()
                 .add(
-                    "@%T { %M() }",
+                    "component = @%T { %M() }",
                     COMPOSE_CLASS_NAME, composeMember
                 )
                 .build()
-        } else {
-            // Otherwise it was declared inside a class.
+        }
+        // It was declared inside a class.
+        insideWrapperClass -> {
             CodeBlock.Builder()
                 .add(
-                    "@%T { %T().${composeFunctionName}() }",
+                    "component = @%T { %T().${composeFunctionName}() }",
                     COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()
         }
+        // It was declared inside an object or a companion object.
+        insideObject -> {
+            CodeBlock.Builder()
+                .add(
+                    "component = @%T { %T.${composeFunctionName}() }",
+                    COMPOSE_CLASS_NAME, enclosingClass
+                )
+                .build()
+        }
+        else -> throw ShowkaseProcessorException("Your @Showkase/@Preview " +
+                "function:${composeFunctionName} is declared in a way that is not supported by " +
+                "Showkase")
     }
 
     companion object {

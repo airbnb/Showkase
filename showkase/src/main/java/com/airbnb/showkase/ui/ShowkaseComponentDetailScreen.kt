@@ -10,7 +10,9 @@ import androidx.ui.core.DensityAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Text
+import androidx.ui.foundation.clickable
 import androidx.ui.foundation.lazy.LazyColumnItems
+import androidx.ui.layout.Stack
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
 import androidx.ui.layout.rtl
@@ -57,9 +59,11 @@ internal fun ShowkaseComponentDetailScreen(
 @Composable
 internal fun ComponentCardTitle(componentName: String) {
     Text(
-        text = componentName, modifier = Modifier.padding(16.dp),
+        text = componentName, 
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 4.dp),
         style = TextStyle(
-            fontSize = 20.sp, fontFamily = FontFamily.Serif,
+            fontSize = 16.sp, 
+            fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold
         )
     )
@@ -68,13 +72,25 @@ internal fun ComponentCardTitle(componentName: String) {
 @Composable
 internal fun ComponentCard(
     metadata: ShowkaseBrowserComponent,
-    cardModifier: Modifier = Modifier.fillMaxWidth()
+    onClick: (() -> Unit)? = null
 ) {
-    val updatedModifier = generateDimensionModifier(metadata)
-    Card(modifier = cardModifier) {
-        Box(modifier = updatedModifier) {
-            metadata.component()
+    val composableModifier = generateComposableModifier(metadata)
+    val composableContainerModifier = generateContainerModifier(onClick)
+    Card() {
+        Stack() {
+            Box(modifier = composableModifier) {
+                metadata.component()
+            }
+            // Need to add this as part of the stack so that we can intercept the touch of the 
+            // component when we are on the "Group components" screen. If 
+            // composableContainerModifier does not have any clickable modifiers, this box has no
+            // impact and the touches go through to the component(this happens in the "Component 
+            // Detail" screen.
+            Box(
+                modifier = Modifier.matchParentSize() + composableContainerModifier
+            )
         }
+        
     }
 }
 
@@ -116,7 +132,7 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
     val customContext = ContextAmbient.current.createConfigurationContext(customConfiguration)
     ComponentCardTitle("${metadata.componentName} [RTL]")
     Providers(ContextAmbient provides customContext) {
-        val updatedModifier = generateDimensionModifier(metadata)
+        val updatedModifier = generateComposableModifier(metadata)
         Card(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.rtl) {
                 Box(modifier = updatedModifier) {
@@ -139,18 +155,25 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
 }
 
-private fun generateDimensionModifier(metadata: ShowkaseBrowserComponent): Modifier {
+private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(16.dp)
-    if (metadata.heightDp > 0 || metadata.widthDp > 0) {
+    if (metadata.heightDp != null && metadata.widthDp != null) {
         return baseModifier +
                 Modifier.size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
     }
     return baseModifier + Modifier.fillMaxWidth()
 }
 
+@Composable
+private fun generateContainerModifier(onClick: (() -> Unit)?): Modifier = onClick?.let {
+    Modifier.fillMaxWidth() + Modifier.clickable(onClick = onClick)
+} ?: Modifier.fillMaxWidth()
+
 private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
         currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
-        currentComponent = null
+        currentComponent = null,
+        isSearchActive = false,
+        searchQuery = null
     )
 }

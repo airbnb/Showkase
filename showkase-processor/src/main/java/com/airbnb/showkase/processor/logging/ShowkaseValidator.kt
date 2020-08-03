@@ -16,15 +16,15 @@ class ShowkaseValidator {
     internal fun validateElement(
         element: Element,
         composableTypeMirror: TypeMirror?,
-        typeUtils: Types?
+        typeUtils: Types?,
+        annotationName: String 
     ) {
         val errorPrefix = "Error in ${element.simpleName}:"
-        val showkaseAnnotationName = Showkase::class.java.simpleName
         when {
             element.kind != ElementKind.METHOD -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Only composable methods can be " +
-                            "annotated with $showkaseAnnotationName"
+                            "annotated with $annotationName"
                 )
             }
             element.annotationMirrors.find {
@@ -32,18 +32,17 @@ class ShowkaseValidator {
             } == null -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Only composable methods can be " +
-                            "annotated with $showkaseAnnotationName"
+                            "annotated with $annotationName"
                 )
             }
             element.modifiers.contains(Modifier.PRIVATE) -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix The methods annotated with " +
-                            "$showkaseAnnotationName can't be private " +
+                            "$annotationName can't be private " +
                             "as the library won't be able to access them otherwise."
                 )
             }
-            else -> {
-            }
+            else -> { }
         }
     }
 

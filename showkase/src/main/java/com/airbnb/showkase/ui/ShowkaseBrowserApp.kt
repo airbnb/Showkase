@@ -7,10 +7,12 @@ import androidx.compose.getValue
 import androidx.compose.setValue
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Modifier
+import androidx.ui.foundation.Box
 import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Text
 import androidx.ui.graphics.Color
 import androidx.ui.input.TextFieldValue
+import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.material.FilledTextField
 import androidx.ui.material.IconButton
@@ -21,6 +23,7 @@ import androidx.ui.material.icons.filled.Search
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
 import androidx.ui.text.font.FontWeight
+import androidx.ui.unit.sp
 import com.airbnb.showkase.R
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
@@ -37,7 +40,12 @@ internal fun ShowkaseBrowserApp(
             ShowkaseAppBar(showkaseBrowserScreenMetadata)
         },
         bodyContent = {
-            ShowkaseBodyContent(groupedComponentMap, showkaseBrowserScreenMetadata)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                backgroundColor = SHOWKASE_COLOR_BACKGROUND
+            ) {
+                ShowkaseBodyContent(groupedComponentMap, showkaseBrowserScreenMetadata)
+            }
         }
     )
 }
@@ -50,7 +58,8 @@ internal fun ShowkaseAppBar(showkaseBrowserScreenMetadata: MutableState<Showkase
         },
         actions = {
             ShowkaseAppBarActions(showkaseBrowserScreenMetadata)
-        }
+        },
+        backgroundColor = Color.White
     )
 }
 
@@ -74,30 +83,26 @@ private fun ShowkaseAppBarTitle(metadata: MutableState<ShowkaseBrowserScreenMeta
 
 @Composable
 internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMetadata>) {
-    // Needed to create another field to due a crash I was seeing when I 
-    // directly used the search query field inside the 
-    // ShowkaseBrowserScreenMetadata model
-    // java.lang.IllegalStateException: Expected a group start
-    var searchQuery by state { TextFieldValue("") }
     FilledTextField(
-        value = searchQuery,
+        value = metadata.value.searchQuery.orEmpty(),
         // Update value of textValue with the latest value of the text field
         onValueChange = {
-            searchQuery = it
-            metadata.value = metadata.value.copy(searchQuery = it.text)
+            metadata.value = metadata.value.copy(searchQuery = it)
         },
         label = {
             Text(text = ContextAmbient.current.getString(R.string.search_label))
         },
         textStyle = TextStyle(
-            color = Color.White,
-            fontFamily = FontFamily.Serif,
+            color = Color.Black,
+            fontFamily = FontFamily.Default,
+            fontSize = 18.sp,
             fontWeight = FontWeight.W500
         ),
         modifier = Modifier.fillMaxWidth(),
         leadingIcon = {
             Icon(asset = Icons.Filled.Search)
-        }
+        },
+        backgroundColor = Color.White
     )
 }
 

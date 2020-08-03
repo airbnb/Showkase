@@ -13,6 +13,7 @@ buildscript {
             'kotlinCompilerVersion': '1.4.0-dev-withExperimentalGoogleExtensions-20200720',
             'kotlinCompileTesting': '1.2.8',
             'kotlinPoet': '1.6.0',
+            'kotlinXMetadata': '0.1.0',
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
             'picasso': '2.71828',
@@ -38,6 +39,7 @@ buildscript {
             'kotlinStdLib': "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
             'kotlinCompileTesting': "com.github.tschuchortdev:kotlin-compile-testing:${versions.kotlinCompileTesting}",
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
+            'kotlinXMetadata': "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
             'imageLoading': [
                     'picasso': "com.squareup.picasso:picasso:${versions.picasso}",
                     'glideCore': "com.github.bumptech.glide:glide:${versions.glide}",
