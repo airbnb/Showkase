@@ -8,6 +8,10 @@ mode, RTL layouts, font scaled, etc.
 <p align="center">
     <img src="assets/showkase_features.png">
 </p>
+
+<p align="center">
+    <img src="assets/showkase_permutations.png">
+</p>
  
  ## Why should you use Showkase?
  - Showkase eliminates the manual work needed in maintaining a UI component preview/browser app that 
