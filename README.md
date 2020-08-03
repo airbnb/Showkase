@@ -31,13 +31,18 @@ mode, RTL layouts, font scaled, etc.
  
  ## Features
   - [Super simple setup](#Installation)
-  - Support for top level functions and class functions to be annotated with the `@Showkase` annotation.
+  - First class support for `@Preview` annotation, in additon to having a custom `@Showkase` 
+  annotation with similar properties. If you are already using `@Preview` for previews in 
+  Android Studio, using Showkase is even easier as all those components are included in the 
+  Showkase browser.  
+  - Support for top level, class, object & companion object functions to be annotated 
+  with the `@Showkase`(or `@Preview`) annotation.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
   Scaled, Display Scaled. Look in the gif above for examples)'. More to be added in the future!
   - Support for searching a `@Composable` component by name or group.
   - Multi-module support for showcasing composables across multiple modules.
   - Support for constraining a component with a custom height/width using additional parameters in 
-  the `@Showkase` annotation.
+  the annotation.
   - Descriptive error messages so that the users of the library can fix any incorrect setup.
   - Incremental annotation processor that makes the code-gen more performant. 
 
