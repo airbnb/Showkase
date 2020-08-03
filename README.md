@@ -61,7 +61,7 @@ properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
 ```kotlin
 @Preview(name="Name of component", group="Group Name")
 
-or
+// or
 
 @Showkase(name="Name of component", group="Group Name")
 ```
