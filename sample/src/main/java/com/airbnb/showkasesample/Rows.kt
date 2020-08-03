@@ -197,6 +197,18 @@ fun BottomLabelRowPreview() {
     )
 }
 
+/**
+ * Use this card when you want to render a product with a hero image at the top. 
+ *
+ * Example usage:
+ *
+ * ```
+ * @Composable
+ * fun MyComposable() {
+ *     ProductCardRow()
+ * }
+ * ```
+ */
 @Showkase("Product Card", "Rows")
 @Preview
 @Composable
