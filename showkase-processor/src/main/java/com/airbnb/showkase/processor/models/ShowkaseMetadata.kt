@@ -3,6 +3,7 @@ package com.airbnb.showkase.processor.models
 import com.airbnb.showkase.annotation.models.Showkase
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
+import com.airbnb.showkase.processor.logging.ShowkaseValidator
 import kotlinx.metadata.Flag
 import kotlinx.metadata.jvm.KotlinClassHeader
 import kotlinx.metadata.jvm.KotlinClassHeader.Companion.CLASS_KIND
@@ -71,7 +72,9 @@ private fun Int.parseAnnotationProperty() = when(this) {
 
 internal fun getShowkaseMetadata(
     element: ExecutableElement,
-    elementUtil: Elements
+    elementUtil: Elements,
+    typeUtils: Types,
+    showkaseValidator: ShowkaseValidator
 ): ShowkaseMetadata {
     val showkaseAnnotation = element.getAnnotation(Showkase::class.java)
     val packageElement = elementUtil.getPackageOf(element)
@@ -79,19 +82,14 @@ internal fun getShowkaseMetadata(
     val packageName = packageElement.qualifiedName.toString()
     val methodName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
-
-    val numParameters = element.parameters.size
-    if (numParameters > 0) {
-        throw ShowkaseProcessorException(
-            "Make sure that the @Composable functions that you " +
-                    "annotate with the @Showkase annotation do not take in any parameters"
-        )
-    }
+    val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
+    
+    showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
 
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
-        enclosingClass = element.getEnclosingClassType(showkaseFunctionType),
+        enclosingClass = enclosingClassTypeMirror,
         methodName = methodName,
         showkaseComponentName = showkaseAnnotation.name,
         showkaseComponentGroup = showkaseAnnotation.group,
@@ -107,7 +105,8 @@ internal fun getShowkaseMetadataFromPreview(
     element: ExecutableElement,
     elementUtil: Elements,
     typeUtils: Types,
-    previewTypeMirror: TypeMirror
+    previewTypeMirror: TypeMirror,
+    showkaseValidator: ShowkaseValidator
 ): ShowkaseMetadata? {
     val previewAnnotationMirror = element.annotationMirrors.find {
         typeUtils.isSameType(it.annotationType, previewTypeMirror)
@@ -131,6 +130,9 @@ internal fun getShowkaseMetadataFromPreview(
     val packageName = packageElement.qualifiedName.toString()
     val methodName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
+    val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
+
+    showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
 
     val numParameters = element.parameters.size
     if (numParameters > 0) {
@@ -143,10 +145,11 @@ internal fun getShowkaseMetadataFromPreview(
         // TODO(vinaygaba): Maybe notify the user that we are skipping this Preview.
         return null
     }
+    
     return ShowkaseMetadata(
         moduleName = moduleName,
         packageName = packageName,
-        enclosingClass = element.getEnclosingClassType(showkaseFunctionType),
+        enclosingClass = enclosingClassTypeMirror,
         methodName = methodName,
         showkaseComponentName = map[ShowkaseAnnotationProperty.NAME]?.let { it as String }.orEmpty(),
         showkaseComponentGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
@@ -178,7 +181,7 @@ private fun ExecutableElement.getShowkaseFunctionType(): ShowkaseFunctionType =
                 "Showkase.")
     }
 
-private fun Element.kotlinMetadata(): KotlinClassMetadata? {
+internal fun Element.kotlinMetadata(): KotlinClassMetadata? {
     // https://github.com/JetBrains/kotlin/tree/master/libraries/kotlinx-metadata/jvm
     val kotlinMetadataAnnotation = getAnnotation(Metadata::class.java) ?: return null
     val header = KotlinClassHeader(

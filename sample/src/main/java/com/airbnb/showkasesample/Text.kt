@@ -49,19 +49,21 @@ fun SerifTextComponentPreview() {
     }
 }
 
-@Showkase(name = "Sans Serif Text Style", group = "Text")
-@Preview
-@Composable
-fun SansSerifTextComponentPreview() {
-    val context = ContextAmbient.current
-    val string = context.getString(R.string.app_name)
+class Text {
+    @Showkase(name = "Sans Serif Text Style", group = "Text")
+    @Composable
+    fun SansSerifTextComponentPreview() {
+        val context = ContextAmbient.current
+        val string = context.getString(R.string.app_name)
 
-    ShowkaseTheme {
-        Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.SansSerif)
-            )
+        ShowkaseTheme {
+            Card {
+                Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.SansSerif)
+                )
+            }
         }
     }
+    
 }
