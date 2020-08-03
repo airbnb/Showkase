@@ -376,25 +376,24 @@ class ShowkaseProcessorTest {
     }
 
     @Test
-    fun `composable function that has parameters with preview annotation throws compilation error`() {
+    fun `composable function that has parameters with preview annotation compiles ok but skips the composable`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import androidx.ui.tooling.preview.Preview
         import androidx.compose.Composable
-        
-        @Preview("name", "group")
+
         class GeneratedTestComposables {
+            @Preview("name", "group")
+            @Composable
             fun TestComposable(name: String, age: Int) {
                 
             }
         }
-    """)
+    """
+        )
         val result = compileKotlinSource(listOf(kotlinSource))
 
-        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Make sure that the @Composable functions that you annotate with the " +
-                "@Showkase annotation do not take in any parameters"
-        assertThat(result.messages.contains(error))
     }
 
     @Test
@@ -418,7 +417,7 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only classes that don't accept any constructor parameters can " +
         "hold a @Composable function that's annotated with the @Showkase/@Preview annotation"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -442,7 +441,7 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only classes that don't accept any constructor parameters can " +
                 "hold a @Composable function that's annotated with the @Showkase/@Preview annotation"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test

@@ -87,13 +87,12 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment) =
         roundEnvironment.getElementsAnnotatedWith(Showkase::class.java).map { element ->
-            val executableElement = element as ExecutableElement
             showkaseValidator.validateElement(
-                executableElement, composableTypeMirror, typeUtils,
+                element, composableTypeMirror, typeUtils,
                 Showkase::class.java.simpleName
             )
             getShowkaseMetadata(
-                element = executableElement, elementUtil = elementUtils, typeUtils = typeUtils,
+                element = element as ExecutableElement, elementUtil = elementUtils, typeUtils = typeUtils,
                 showkaseValidator = showkaseValidator
             )
         }.toSet()
@@ -105,11 +104,10 @@ class ShowkaseProcessor: AbstractProcessor() {
             .getTypeElement(previewClass.canonicalName)
             .asType()
         return roundEnvironment.getElementsAnnotatedWith(previewClassAnnotation).mapNotNull { element ->
-            val executableElement = element as ExecutableElement
-            showkaseValidator.validateElement(executableElement, composableTypeMirror, typeUtils, 
+            showkaseValidator.validateElement(element, composableTypeMirror, typeUtils, 
                 previewClass.simpleName)
             val showkaseMetadata = getShowkaseMetadataFromPreview(
-                executableElement, elementUtils, typeUtils, previewTypeMirror, showkaseValidator
+                element as ExecutableElement, elementUtils, typeUtils, previewTypeMirror, showkaseValidator
             )
             showkaseMetadata
         }.toSet()

@@ -50,6 +50,7 @@ fun SerifTextComponentPreview() {
 }
 
 @Showkase(name = "Sans Serif Text Style", group = "Text")
+@Preview
 @Composable
 fun SansSerifTextComponentPreview() {
     val context = ContextAmbient.current

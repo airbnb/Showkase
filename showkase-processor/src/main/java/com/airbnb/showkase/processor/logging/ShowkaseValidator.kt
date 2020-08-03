@@ -20,7 +20,7 @@ import javax.lang.model.util.Types
 class ShowkaseValidator {
     @Suppress("ThrowsCount")
     internal fun validateElement(
-        element: ExecutableElement,
+        element: Element,
         composableTypeMirror: TypeMirror?,
         typeUtils: Types?,
         annotationName: String 
@@ -50,7 +50,8 @@ class ShowkaseValidator {
             }
             // We only want to throw an error if the user used the Showkase annotation. For 
             // @Preview annotations with parameter, we simply want to skip those. 
-            annotationName == Showkase::class.java.simpleName && element.parameters.size > 0 -> {
+            annotationName == Showkase::class.java.simpleName && 
+                    (element as ExecutableElement).parameters.size > 0 -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Make sure that the @Composable functions that you " +
                             "annotate with the $annotationName annotation do not take in any parameters"
