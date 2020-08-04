@@ -204,13 +204,14 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "The methods annotated with Showkase can't be private as the library won't be " +
                 "able to access them otherwise."
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
     fun `private composable with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import androidx.compose.Composable
+        import androidx.ui.tooling.preview.Preview
         
         class GeneratedTestComposables {
             @Preview("name", "group")
@@ -226,7 +227,7 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "The methods annotated with Preview can't be private as the library won't be " +
                 "able to access them otherwise."
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -246,7 +247,7 @@ class ShowkaseProcessorTest {
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Showkase"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -266,7 +267,7 @@ class ShowkaseProcessorTest {
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Preview"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -287,7 +288,7 @@ class ShowkaseProcessorTest {
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Showkase"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -329,7 +330,7 @@ class ShowkaseProcessorTest {
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Showkase"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -350,7 +351,7 @@ class ShowkaseProcessorTest {
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only composable methods can be annotated with Preview"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
     
     @Test
@@ -358,9 +359,9 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import com.airbnb.showkase.annotation.models.Showkase
         import androidx.compose.Composable
-        
-        @Showkase("name", "group")
+
         class GeneratedTestComposables {
+            @Showkase("name", "group")
             fun TestComposable(name: String, age: Int) {
                 
             }
@@ -451,10 +452,11 @@ class ShowkaseProcessorTest {
         import androidx.compose.Composable
         import com.airbnb.showkase.annotation.models.ShowkaseRoot
         import com.airbnb.showkase.annotation.models.ShowkaseRootModule
-        
-        @Showkase("name", "group")
+
         class GeneratedTestComposables {
-            fun TestComposable(name: String, age: Int) {
+            @Showkase("name", "group")
+            @Composable
+            fun TestComposable() {
                 
             }
         }
@@ -469,9 +471,9 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only one class in a module can be annotated with @ShowkaseRoot"
-        assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        val error = "Only one class in a module can be annotated with ShowkaseRoot"
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -481,10 +483,11 @@ class ShowkaseProcessorTest {
         import androidx.compose.Composable
         import com.airbnb.showkase.annotation.models.ShowkaseRoot
         import com.airbnb.showkase.annotation.models.ShowkaseRootModule
-        
-        @Showkase("name", "group")
+
         class GeneratedTestComposables {
-            fun TestComposable(name: String, age: Int) {
+            @Showkase("name", "group")
+            @Composable
+            fun TestComposable() {
                 
             }
         }
@@ -498,9 +501,9 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
         val error = "Only classes can be annotated with @ShowkaseRoot"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -510,12 +513,11 @@ class ShowkaseProcessorTest {
         import androidx.compose.Composable
         import com.airbnb.showkase.annotation.models.ShowkaseRoot
         import com.airbnb.showkase.annotation.models.ShowkaseRootModule
-        
+
         @Showkase("name", "group")
-        class GeneratedTestComposables {
-            fun TestComposable(name: String, age: Int) {
-                
-            }
+        @Composable
+        fun TestComposable() {
+            
         }
         
         @ShowkaseRoot
@@ -527,9 +529,10 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only an implementation of ShowkaseRootModule can be annotated @ShowkaseRoot"
-        assertThat(result.messages.contains(error))
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        val error = "Only an implementation of ShowkaseRootModule can be annotated with " +
+                "@ShowkaseRoot"
+        assertThat(result.messages).contains(error)
     }
 
     @Test
