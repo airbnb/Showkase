@@ -122,19 +122,17 @@ class ShowkaseValidator {
         enclosingClassTypeMirror: TypeMirror?,
         typeUtils: Types
     ) {
-        enclosingClassTypeMirror?.let { 
-            val enclosingClassElement = typeUtils.asElement(it)
-            val kmClass =
-                (enclosingClassElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
-            val errorPrefix = "Error in ${enclosingClassElement.simpleName}:"
-            kmClass.constructors.forEach {
-                if (it.valueParameters.isNotEmpty()) {
-                    throw ShowkaseProcessorException(
-                        "$errorPrefix Only classes that don't accept any constructor parameters can " +
-                                "hold a @Composable function that's annotated with the " +
-                                "@${Showkase::class.java.simpleName}/@Preview annotation"
-                    )
-                }
+        val enclosingClassElement = enclosingClassTypeMirror?.let { typeUtils.asElement(it) } ?: return
+        val kmClass =
+            (enclosingClassElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
+        val errorPrefix = "Error in ${enclosingClassElement.simpleName}:"
+        kmClass.constructors.forEach { constructor ->
+            if (constructor.valueParameters.isNotEmpty()) {
+                throw ShowkaseProcessorException(
+                    "$errorPrefix Only classes that don't accept any constructor parameters can " +
+                            "hold a @Composable function that's annotated with the " +
+                            "@${Showkase::class.java.simpleName}/@Preview annotation"
+                )
             }
         }
     }
