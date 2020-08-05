@@ -164,11 +164,10 @@ class ShowkaseProcessor: AbstractProcessor() {
                 getShowkaseCodegenMetadataOnClassPath(elementUtils)
             val allShowkaseMetadataList = currentComposableMetadataSet
                 .plus(generatedShowkaseMetadataOnClasspath)
-                .dedupeAndSort()
 
             ShowkaseComponentsWriter(processingEnv).apply {
                 generateShowkaseBrowserComponents(
-                    allShowkaseMetadataList, rootModulePackageName, rootModuleClassName
+                    allShowkaseMetadataList.toList(), rootModulePackageName, rootModuleClassName
                 )
             }
         }
@@ -178,8 +177,15 @@ class ShowkaseProcessor: AbstractProcessor() {
         val showkaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
         return showkaseGeneratedPackageElement.enclosedElements
             .flatMap { it.enclosedElements }
-            .mapNotNull { element -> element.getAnnotation(ShowkaseCodegenMetadata::class.java) }
-            .map { it.toModel() }
+            .mapNotNull { element -> 
+                val codegenAnnotation = element.getAnnotation(ShowkaseCodegenMetadata::class.java)
+                if (codegenAnnotation == null) {
+                    null
+                } else {
+                    element to codegenAnnotation
+                }
+            }
+            .map { it.second.toModel(it.first) }
             .toSet()
     }
 

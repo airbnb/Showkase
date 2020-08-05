@@ -10,14 +10,13 @@ import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
-import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal data class ShowkaseMetadata(
-    val element: ExecutableElement? = null,
+    val element: Element? = null,
     val moduleName: String,
     val packageName: String,
     val enclosingClass: TypeMirror? = null,
@@ -44,7 +43,7 @@ private enum class ShowkaseFunctionType {
     INSIDE_COMPANION_OBJECT,
 }
 
-internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
+internal fun ShowkaseCodegenMetadata.toModel(first: Element): ShowkaseMetadata {
     val enclosingClassArray = try {
         enclosingClass
         listOf<TypeMirror>()
@@ -62,7 +61,8 @@ internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
         showkaseComponentWidthDp = showkaseComposableWidthDp.parseAnnotationProperty(),
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
-        insideObject = insideObject
+        insideObject = insideObject,
+        element = first as ExecutableElement
     )
 }
 

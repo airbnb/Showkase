@@ -92,9 +92,9 @@ val creditCardOffsetMap = object : OffsetMap {
     override fun transformedToOriginal(offset: Int) = offset - (offset / 4)
 }
 
-@Showkase("Credit Card Component", "Payments")
-@Preview
-@Composable
-fun CreditCardComponentPreview() {
-    CreditCardComponent("John Doe")
-}
+//@Showkase("Credit Card Component", "Payments")
+//@Preview
+//@Composable
+//fun CreditCardComponentPreview() {
+//    CreditCardComponent("John Doe")
+//}

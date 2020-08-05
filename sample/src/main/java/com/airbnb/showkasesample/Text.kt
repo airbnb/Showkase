@@ -15,10 +15,10 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
-@Showkase(name = "Cursive Text Style", group = "Text")
+@Showkase(name = "New Text Style28", group = "Text")
 @Preview
 @Composable
-fun CursiveTextComponentPreview() {
+fun SonaliTextComponentPreview() {
     val context = ContextAmbient.current
     val string = context.getString(R.string.app_name)
 

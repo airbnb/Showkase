@@ -186,43 +186,43 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
     }
 }
 
-@Showkase("Bottom Label Row", "Rows")
-@Preview
-@Composable
-fun BottomLabelRowPreview() {
-    BottomLabelRow(
-        "This is a title",
-        "This is a longer subtitle that can span multiple lines",
-        "Label Text"
-    )
-}
-
-@Showkase("Product Card", "Rows")
-@Preview
-@Composable
-fun ProductCardRowPreview() {
-    ProductCardRow(
-        "http://a0.muscache.com/im/pictures/ef0ee86b-feba-47f8-8882-014b2a7b6926.jpg?im_w=1200",
-        "Title",
-        LoremIpsum(4).values.joinToString()
-    )
-}
-
-@Showkase("Simple Row", "Rows")
-@Preview
-@Composable
-fun SimpleRowPreview() {
-    SimpleRow(
-        "Iron Man",
-        "Age: 43"
-    )
-}
-
-@Showkase("Title Subtitle with Thumbnail", "Rows")
-@Preview
-@Composable
-fun TitleSubtitleThumbnailRowPreview() {
-    Column {
-        TitleSubtitleThumbnailRow()
-    }
-}
+//@Showkase("Bottom Label Row", "Rows")
+//@Preview
+//@Composable
+//fun BottomLabelRowPreview() {
+//    BottomLabelRow(
+//        "This is a title",
+//        "This is a longer subtitle that can span multiple lines",
+//        "Label Text"
+//    )
+//}
+//
+//@Showkase("Product Card", "Rows")
+//@Preview
+//@Composable
+//fun ProductCardRowPreview() {
+//    ProductCardRow(
+//        "http://a0.muscache.com/im/pictures/ef0ee86b-feba-47f8-8882-014b2a7b6926.jpg?im_w=1200",
+//        "Title",
+//        LoremIpsum(4).values.joinToString()
+//    )
+//}
+//
+//@Showkase("Simple Row", "Rows")
+//@Preview
+//@Composable
+//fun SimpleRowPreview() {
+//    SimpleRow(
+//        "Iron Man",
+//        "Age: 43"
+//    )
+//}
+//
+//@Showkase("Title Subtitle with Thumbnail", "Rows")
+//@Preview
+//@Composable
+//fun TitleSubtitleThumbnailRowPreview() {
+//    Column {
+//        TitleSubtitleThumbnailRow()
+//    }
+//}
