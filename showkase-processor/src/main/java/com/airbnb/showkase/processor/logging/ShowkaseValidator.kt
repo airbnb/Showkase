@@ -94,7 +94,7 @@ class ShowkaseValidator {
     ) {
         if (element.kind != ElementKind.CLASS) {
             throw ShowkaseProcessorException(
-                "$errorPrefix Only classes can be annotated with $showkaseRootAnnotationName"
+                "$errorPrefix Only classes can be annotated with @$showkaseRootAnnotationName"
             )
         }
     }
@@ -113,7 +113,7 @@ class ShowkaseValidator {
         if (!typeUtils.isAssignable(element.asType(), showkaseRootInterfaceElement.asType())) {
             throw ShowkaseProcessorException(
                 "$errorPrefix Only an implementation of $showkaseRootModuleName can be annotated " +
-                        "with $showkaseRootAnnotationName"
+                        "with @$showkaseRootAnnotationName"
             )
         }
     }
