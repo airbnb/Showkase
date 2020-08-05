@@ -4,9 +4,15 @@ import com.airbnb.showkase.annotation.models.Showkase
 import com.airbnb.showkase.annotation.models.ShowkaseRoot
 import com.airbnb.showkase.annotation.models.ShowkaseRootModule
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
+import com.airbnb.showkase.processor.models.kotlinMetadata
+import com.sun.javaws.jnl.XMLUtils
+import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ElementVisitor
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -40,6 +46,15 @@ class ShowkaseValidator {
                     "$errorPrefix The methods annotated with " +
                             "$annotationName can't be private " +
                             "as the library won't be able to access them otherwise."
+                )
+            }
+            // We only want to throw an error if the user used the Showkase annotation. For 
+            // @Preview annotations with parameter, we simply want to skip those. 
+            annotationName == Showkase::class.java.simpleName && 
+                    (element as ExecutableElement).parameters.size > 0 -> {
+                throw ShowkaseProcessorException(
+                    "$errorPrefix Make sure that the @Composable functions that you " +
+                            "annotate with the $annotationName annotation do not take in any parameters"
                 )
             }
             else -> { }
@@ -100,6 +115,25 @@ class ShowkaseValidator {
                 "$errorPrefix Only an implementation of $showkaseRootModuleName can be annotated " +
                         "with $showkaseRootAnnotationName"
             )
+        }
+    }
+
+    fun validateEnclosingClass(
+        enclosingClassTypeMirror: TypeMirror?,
+        typeUtils: Types
+    ) {
+        val enclosingClassElement = enclosingClassTypeMirror?.let { typeUtils.asElement(it) } ?: return
+        val kmClass =
+            (enclosingClassElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
+        val errorPrefix = "Error in ${enclosingClassElement.simpleName}:"
+        kmClass.constructors.forEach { constructor ->
+            if (constructor.valueParameters.isNotEmpty()) {
+                throw ShowkaseProcessorException(
+                    "$errorPrefix Only classes that don't accept any constructor parameters can " +
+                            "hold a @Composable function that's annotated with the " +
+                            "@${Showkase::class.java.simpleName}/@Preview annotation"
+                )
+            }
         }
     }
 }
