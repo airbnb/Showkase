@@ -8,13 +8,15 @@ import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.TypeSpec
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
+import com.airbnb.showkase.processor.logging.ShowkaseExceptionLogger
 import javax.lang.model.util.Types
 
 internal class ShowkaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
 
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
-        typeUtil: Types
+        typeUtil: Types,
+        logger: ShowkaseExceptionLogger
     ) {
         if (showkaseMetadataSet.isEmpty()) return
         val moduleName = showkaseMetadataSet.first().moduleName
@@ -28,12 +30,13 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
+            val componentName = showkaseMetadata.showkaseComponentName.replace("\\s".toRegex(),"")
             val methodName = when {
-                showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
+                showkaseMetadata.enclosingClass == null -> "${showkaseMetadata.methodName}_${componentName}"
                 else -> {
                     val enclosingClassName =
                         typeUtil.asElement(showkaseMetadata.enclosingClass).simpleName
-                    "${enclosingClassName}_${showkaseMetadata.methodName}"
+                    "${enclosingClassName}_${showkaseMetadata.methodName}_${componentName}"
                 }
             }
 
@@ -57,15 +60,18 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
             val composableFunction = FunSpec.builder(methodName)
                 .addAnnotation(annotation.build())
-
-            showkaseMetadata.element?.let {
-                composableFunction.addOriginatingElement(it)
-            }
+//                .addOriginatingElement(showkaseMetadata.element)
             
             autogenClass.addFunction(composableFunction.build())
         }
 
-        fileBuilder.addType(autogenClass.build())
+        fileBuilder.addType(
+            with(autogenClass) {
+                showkaseMetadataSet.forEach { addOriginatingElement(it.element) }
+                build()
+            }
+        
+        )
 
         fileBuilder.build().writeTo(processingEnv.filer)
     }

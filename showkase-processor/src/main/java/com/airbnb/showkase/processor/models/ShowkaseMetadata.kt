@@ -16,7 +16,7 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal data class ShowkaseMetadata(
-    val element: Element? = null,
+    val element: Element,
     val moduleName: String,
     val packageName: String,
     val enclosingClass: TypeMirror? = null,
@@ -62,7 +62,7 @@ internal fun ShowkaseCodegenMetadata.toModel(first: Element): ShowkaseMetadata {
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
         insideObject = insideObject,
-        element = first as ExecutableElement
+        element = first
     )
 }
 

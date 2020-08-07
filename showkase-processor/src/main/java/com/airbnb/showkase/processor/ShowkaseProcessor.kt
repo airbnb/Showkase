@@ -31,7 +31,7 @@ import javax.lang.model.util.Types
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
-@SupportedOptions(KAPT_KOTLIN_DIR_PATH)
+//@SupportedOptions(KAPT_KOTLIN_DIR_PATH)
 class ShowkaseProcessor: AbstractProcessor() {
     private lateinit var typeUtils: Types
     private lateinit var elementUtils: Elements
@@ -58,9 +58,9 @@ class ShowkaseProcessor: AbstractProcessor() {
         PREVIEW_CLASS_NAME
     )
 
-    override fun getSupportedOptions(): MutableSet<String> {
-        return mutableSetOf(KAPT_KOTLIN_DIR_PATH)
-    }
+//    override fun getSupportedOptions(): MutableSet<String> {
+//        return mutableSetOf(KAPT_KOTLIN_DIR_PATH)
+//    }
 
     override fun process(
         annotations: MutableSet<out TypeElement>, 
@@ -73,6 +73,9 @@ class ShowkaseProcessor: AbstractProcessor() {
                 showkaseComposablesMetadata,
                 previewComposablesMetadata
             )
+            logger.logInfoMessage("showkase + preview ${uniqueComposablesMetadata.joinToString
+                (separator =
+            ",", transform = { it.showkaseComponentName }) }")
             writeMetadataFile(uniqueComposablesMetadata)
             processMetadata(uniqueComposablesMetadata, roundEnvironment)
         } catch (exception: ShowkaseProcessorException) {
@@ -121,7 +124,7 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
         ShowkaseCodegenMetadataWriter(processingEnv).apply {
-            generateShowkaseCodegenFunctions(uniqueComposablesMetadata, typeUtils)
+            generateShowkaseCodegenFunctions(uniqueComposablesMetadata, typeUtils, logger)
         }
     }
 
@@ -162,8 +165,19 @@ class ShowkaseProcessor: AbstractProcessor() {
             val rootModulePackageName = elementUtils.getPackageOf(it).qualifiedName.toString()
             val generatedShowkaseMetadataOnClasspath =
                 getShowkaseCodegenMetadataOnClassPath(elementUtils)
+
+            logger.logInfoMessage("Classpath elements  ${generatedShowkaseMetadataOnClasspath.joinToString
+                (separator =
+            ",", transform = { it.showkaseComponentName }) }")
+            
             val allShowkaseMetadataList = currentComposableMetadataSet
                 .plus(generatedShowkaseMetadataOnClasspath)
+
+            logger.logInfoMessage("Combined with class path elements  " +
+                    "${allShowkaseMetadataList.joinToString
+                (separator =
+            ",", transform = { it.showkaseComponentName }) }")
+            
 
             ShowkaseComponentsWriter(processingEnv).apply {
                 generateShowkaseBrowserComponents(
@@ -182,6 +196,8 @@ class ShowkaseProcessor: AbstractProcessor() {
                 if (codegenAnnotation == null) {
                     null
                 } else {
+                    logger.logInfoMessage("Element in class path  " +
+                            "${element.simpleName}")
                     element to codegenAnnotation
                 }
             }

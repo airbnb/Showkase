@@ -12,6 +12,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.airbnb.showkase.processor.models.ShowkaseMetadata
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.asTypeName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
@@ -22,7 +24,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         rootModulePackageName: String,
         rootModuleClassName: String
     ) {
-        if (showkaseMetadataList.isEmpty()) return
+        //if (showkaseMetadataList.isEmpty()) return
         val showkaseComponentsListClassName = "$rootModuleClassName$AUTOGEN_CLASS_NAME"
         val fileBuilder = FileSpec.builder(
             rootModulePackageName,
@@ -49,6 +51,19 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
 
         showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
             componentListInitializerCodeBlock.add("\n")
+//            val classBuilder = TypeSpec.classBuilder(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME)
+//                .addModifiers(KModifier.DATA)
+//                .primaryConstructor(FunSpec.constructorBuilder()
+//                    .addParameter(
+//                        ParameterSpec("group", String::class.asTypeName())
+//                    )
+//                    .build()
+//                )
+//                .addOriginatingElement(showkaseMetadata.element)
+//                .build()
+//
+//            fileBuilder.addType(classBuilder)
+            
             componentListInitializerCodeBlock.add(
                 "%T(group = %S, componentName = %S,",
                 SHOWKASE_BROWSER_COMPONENT_CLASS_NAME,
@@ -83,16 +98,17 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
 
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
 
-
         fileBuilder
             .addType(
-                TypeSpec.classBuilder(showkaseComponentsListClassName)
-                    .addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
-                    .addFunction(
+                with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
+                    addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
+                    addFunction(
                         getShowkaseComponentsProviderInterfaceFunction()
                     )
-                    .addProperty(componentListProperty.build())
-                    .build()
+                    addProperty(componentListProperty.build())
+                    showkaseMetadataList.map { addOriginatingElement(it.element) }
+                    build()
+                }
             )
 
         fileBuilder.build().writeTo(processingEnv.filer)

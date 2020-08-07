@@ -15,8 +15,8 @@ import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
-@Showkase(name = "New Text Style28", group = "Text")
-@Preview
+@Showkase(name = "New Test 60", group = "Text")
+//@Preview
 @Composable
 fun SonaliTextComponentPreview() {
     val context = ContextAmbient.current
@@ -33,7 +33,7 @@ fun SonaliTextComponentPreview() {
 }
 
 @Showkase(name = "Serif Text Style", group = "Text")
-@Preview
+//@Preview
 @Composable
 fun SerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -50,7 +50,7 @@ fun SerifTextComponentPreview() {
 }
 
 @Showkase(name = "Sans Serif Text Style", group = "Text")
-@Preview
+//@Preview
 @Composable
 fun SansSerifTextComponentPreview() {
     val context = ContextAmbient.current
