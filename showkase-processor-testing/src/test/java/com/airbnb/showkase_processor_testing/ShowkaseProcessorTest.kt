@@ -471,7 +471,7 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only one class in a module can be annotated with ShowkaseRoot"
         assertThat(result.messages).contains(error)
     }
@@ -501,7 +501,7 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only classes can be annotated with @ShowkaseRoot"
         assertThat(result.messages).contains(error)
     }
@@ -529,7 +529,7 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Only an implementation of ShowkaseRootModule can be annotated with " +
                 "@ShowkaseRoot"
         assertThat(result.messages).contains(error)

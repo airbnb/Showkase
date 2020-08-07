@@ -87,7 +87,8 @@ class ShowkaseProcessor: AbstractProcessor() {
     ) {
         val showkaseRootElements =
             roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class.java)
-        val rootElement = showkaseRootElements?.singleOrNull()
+        showkaseValidator.validateShowkaseRootElement(showkaseRootElements, elementUtils, typeUtils)
+        val rootElement = showkaseRootElements.singleOrNull()
         when (rootElement) {
             // If root element is not present in this module, it means that we only need to write
             // the metadata file for this module so that the root module can use this info to 
@@ -96,10 +97,6 @@ class ShowkaseProcessor: AbstractProcessor() {
             // Else, this is the module that should aggregate all the other metadata files and 
             // also use the showkaseMetadata set from the current round to write the final file.
             else -> {
-                showkaseValidator.validateShowkaseRootElement(
-                    showkaseRootElements, elementUtils,
-                    typeUtils
-                )
                 val generatedShowkaseMetadataOnClasspath =
                     getShowkaseCodegenMetadataOnClassPath(elementUtils)
                 val combinedShowkaseMetadata = uniqueComposablesMetadata +
