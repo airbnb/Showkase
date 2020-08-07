@@ -54,18 +54,19 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
             showkaseMetadata.showkaseComponentHeightDp?.let {
                 annotation.addMember("showkaseComposableHeightDp = %L", it)
             }
-
-            val composableFunction = FunSpec.builder(methodName)
-                .addAnnotation(annotation.build())
-
-            showkaseMetadata.element?.let {
-                composableFunction.addOriginatingElement(it)
-            }
-            
-            autogenClass.addFunction(composableFunction.build())
+            autogenClass.addFunction(
+                FunSpec.builder(methodName)
+                    .addAnnotation(annotation.build())
+                    .build()
+            )
         }
 
-        fileBuilder.addType(autogenClass.build())
+        fileBuilder.addType(
+            with(autogenClass) {
+                showkaseMetadataSet.forEach { addOriginatingElement(it.element) }
+                build()
+            }
+        )
 
         fileBuilder.build().writeTo(processingEnv.filer)
     }

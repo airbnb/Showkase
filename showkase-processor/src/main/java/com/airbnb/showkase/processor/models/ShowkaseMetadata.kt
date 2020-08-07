@@ -17,7 +17,7 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal data class ShowkaseMetadata(
-    val element: ExecutableElement? = null,
+    val element: Element,
     val moduleName: String,
     val packageName: String,
     val enclosingClass: TypeMirror? = null,
@@ -44,7 +44,7 @@ private enum class ShowkaseFunctionType {
     INSIDE_COMPANION_OBJECT,
 }
 
-internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
+internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata {
     val enclosingClassArray = try {
         enclosingClass
         listOf<TypeMirror>()
@@ -62,7 +62,8 @@ internal fun ShowkaseCodegenMetadata.toModel(): ShowkaseMetadata {
         showkaseComponentWidthDp = showkaseComposableWidthDp.parseAnnotationProperty(),
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
-        insideObject = insideObject
+        insideObject = insideObject,
+        element = element
     )
 }
 

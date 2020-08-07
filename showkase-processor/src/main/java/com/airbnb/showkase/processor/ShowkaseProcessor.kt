@@ -1,19 +1,19 @@
 package com.airbnb.showkase.processor
 
-import com.google.auto.service.AutoService
 import com.airbnb.showkase.annotation.models.Showkase
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
 import com.airbnb.showkase.annotation.models.ShowkaseRoot
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
-import com.airbnb.showkase.processor.logging.ShowkaseExceptionLogger
-import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
+import com.airbnb.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.showkase.processor.logging.ShowkaseValidator
+import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.showkase.processor.models.toModel
 import com.airbnb.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.showkase.processor.writer.ShowkaseComponentsWriter
+import com.google.auto.service.AutoService
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -187,8 +187,15 @@ class ShowkaseProcessor: AbstractProcessor() {
         val showkaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
         return showkaseGeneratedPackageElement.enclosedElements
             .flatMap { it.enclosedElements }
-            .mapNotNull { element -> element.getAnnotation(ShowkaseCodegenMetadata::class.java) }
-            .map { it.toModel() }
+            .mapNotNull { element ->
+                val codegenMetadataAnnotation =
+                    element.getAnnotation(ShowkaseCodegenMetadata::class.java)
+                when {
+                    codegenMetadataAnnotation == null -> null
+                    else -> element to codegenMetadataAnnotation
+                }
+            }
+            .map { it.second.toModel(it.first) }
             .toSet()
     }
 
