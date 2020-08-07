@@ -116,7 +116,8 @@ class ShowkaseProcessor: AbstractProcessor() {
                 Showkase::class.java.simpleName
             )
             getShowkaseMetadata(
-                element = element as ExecutableElement, elementUtil = elementUtils
+                element = element as ExecutableElement, elementUtil = elementUtils, typeUtils = typeUtils,
+                showkaseValidator = showkaseValidator
             )
         }.toSet()
 
@@ -130,7 +131,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             showkaseValidator.validateElement(element, composableTypeMirror, typeUtils, 
                 previewClass.simpleName)
             val showkaseMetadata = getShowkaseMetadataFromPreview(
-                element as ExecutableElement, elementUtils, typeUtils, previewTypeMirror
+                element as ExecutableElement, elementUtils, typeUtils, previewTypeMirror, showkaseValidator
             )
             showkaseMetadata
         }.toSet()

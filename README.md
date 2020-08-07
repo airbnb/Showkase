@@ -6,7 +6,15 @@ effort. In addition, it also helps you visualize your components in common situa
 mode, RTL layouts, font scaled, etc.  
 
 <p align="center">
-    <img height="600" src="https://github.com/airbnb/Showkase/blob/master/assets/showkase_demo.gif">
+    <img src="assets/showkase_features.png">
+</p>
+
+<p align="center">
+    <img src="assets/showkase_permutations.png">
+</p>
+
+<p align="center">
+    <img height="600" src="assets/showkase_demo.gif">
 </p>
  
  ## Why should you use Showkase?
@@ -21,15 +29,22 @@ mode, RTL layouts, font scaled, etc.
  - Showkase aids in catching common UI issues early with the help of auto-generated permutations 
  of your components.
  
-  ## Features
+ ## Features
   - [Super simple setup](#Installation)
-  - Support for top level functions and class functions to be annotated with the `@Showkase` annotation.
+  - First class support for `@Preview` annotation, in additon to having a custom `@Showkase` 
+  annotation with similar properties. If you are already using `@Preview` for previews in 
+  Android Studio, using Showkase is even easier as all those components are included in the 
+  Showkase browser.  
+  - Support for top level, class, object & companion object functions to be annotated 
+  with the `@Showkase`(or `@Preview`) annotation.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
   Scaled, Display Scaled. Look in the gif above for examples)'. More to be added in the future!
   - Support for searching a `@Composable` component by name or group.
+  - KDoc support that shows the documentation that you added for a component in the 
+  Showkase browser. 
   - Multi-module support for showcasing composables across multiple modules.
   - Support for constraining a component with a custom height/width using additional parameters in 
-  the `@Showkase` annotation.
+  the annotation.
   - Descriptive error messages so that the users of the library can fix any incorrect setup.
   - Incremental annotation processor that makes the code-gen more performant. 
 
@@ -46,10 +61,15 @@ implementation "com.airbnb.android:showkase:0.1.0-alpha"
 kapt "com.airbnb.android:showkcase-processor:0.1.0-alpha"
 ```
 
-**Step 2**: Add the @Showkase annotation to every `@Composable` function/component that should 
-be a part of the Showkase browser. 
+**Step 2**: Add the `@Preview` or `@Showkase` annotation to every `@Composable` function/component 
+that should be a part of the Showkase browser. Showkase currently supports the following 
+properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
 
 ```kotlin
+@Preview(name="Name of component", group="Group Name")
+
+// or
+
 @Showkase(name="Name of component", group="Group Name")
 ```
 
@@ -78,8 +98,6 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
-- KDoc support so that the KDoc that you added to your `@Composable` functions is also available in
- the Showkase browser activity.
 - Support for representing more aspects of your design system. Think `@ShowkaseColor`, 
 `@ShowkaseTypography`, etc.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
