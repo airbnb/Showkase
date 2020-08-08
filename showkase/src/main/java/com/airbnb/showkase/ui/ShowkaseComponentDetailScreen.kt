@@ -1,29 +1,30 @@
 package com.airbnb.showkase.ui
 
 import android.content.res.Configuration
-import androidx.compose.Composable
-import androidx.compose.MutableState
-import androidx.compose.Providers
-import androidx.ui.core.ConfigurationAmbient
-import androidx.ui.core.ContextAmbient
-import androidx.ui.core.DensityAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.clickable
-import androidx.ui.foundation.lazy.LazyColumnItems
-import androidx.ui.layout.Stack
-import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
-import androidx.ui.layout.rtl
-import androidx.ui.layout.size
-import androidx.ui.material.Card
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontFamily
-import androidx.ui.text.font.FontWeight
-import androidx.ui.unit.Density
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.runtime.Composable
+import androidx.compose.foundation.Box
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Stack
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.material.Card
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Providers
+import androidx.compose.ui.platform.ConfigurationAmbient
+import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.DensityAmbient
+import androidx.compose.ui.platform.LayoutDirectionAmbient
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
@@ -39,7 +40,7 @@ internal fun ShowkaseComponentDetailScreen(
     val componentMetadata = componentMetadataList.find {
         it.componentName == showkaseBrowserScreenMetadata.value.currentComponent
     } ?: return
-    LazyColumnItems(items = listOf(componentMetadata), itemContent = { metadata ->
+    LazyColumnFor(items = listOf(componentMetadata), itemContent = { metadata ->
         ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
             when (showkaseComponentCardType) {
                 ShowkaseComponentCardType.BASIC -> BasicComponentCard(metadata)
@@ -134,7 +135,7 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
     Providers(ContextAmbient provides customContext) {
         val updatedModifier = generateComposableModifier(metadata)
         Card(modifier = Modifier.fillMaxWidth()) {
-            Box(modifier = Modifier.rtl) {
+            Providers(LayoutDirectionAmbient provides LayoutDirection.Rtl) {
                 Box(modifier = updatedModifier) {
                     metadata.component()
                 }

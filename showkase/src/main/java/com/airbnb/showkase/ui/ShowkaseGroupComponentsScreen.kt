@@ -1,15 +1,8 @@
 package com.airbnb.showkase.ui
 
-import androidx.compose.Composable
-import androidx.compose.MutableState
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.clickable
-import androidx.ui.foundation.lazy.LazyColumnItems
-import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
-import androidx.ui.layout.wrapContentHeight
-import androidx.ui.unit.dp
+import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.runtime.MutableState
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
@@ -23,7 +16,7 @@ internal fun ShowkaseGroupComponentsScreen(
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
     val filteredList =
         getFilteredSearchList(groupComponentsList, showkaseBrowserScreenMetadata)
-    LazyColumnItems(
+    LazyColumnFor(
         items = filteredList,
         itemContent = { groupComponent ->
             ComponentCardTitle(groupComponent.componentName)

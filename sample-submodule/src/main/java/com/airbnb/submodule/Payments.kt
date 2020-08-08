@@ -1,35 +1,36 @@
 package com.airbnb.submodule
 
-import androidx.compose.Composable
-import androidx.compose.getValue
-import androidx.compose.setValue
-import androidx.compose.state
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.ContentGravity
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.TextField
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.input.KeyboardType
-import androidx.ui.input.OffsetMap
-import androidx.ui.input.TextFieldValue
-import androidx.ui.input.TransformedText
-import androidx.ui.input.VisualTransformation
-import androidx.ui.layout.Arrangement
-import androidx.ui.layout.Column
-import androidx.ui.layout.aspectRatio
-import androidx.ui.layout.fillMaxSize
-import androidx.ui.layout.padding
-import androidx.ui.layout.preferredWidth
-import androidx.ui.material.Card
-import androidx.ui.material.MaterialTheme
-import androidx.ui.text.AnnotatedString
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontFamily
-import androidx.ui.text.font.FontWeight
+import androidx.compose.foundation.Box
+import androidx.compose.foundation.ContentGravity
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.CoreTextField
+import androidx.compose.runtime.Composable
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.TextField
+import androidx.compose.runtime.state
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMap
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
 @Composable
@@ -38,12 +39,12 @@ fun CreditCardComponent(cardName: String) {
         Box(modifier = Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             Card(
                 shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.preferredWidth(300.dp) + Modifier.aspectRatio(16 / 9f),
+                modifier = Modifier.preferredWidth(300.dp).aspectRatio(16 / 9f),
                 color = MaterialTheme.colors.primary
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
                     var textValue by state { "1234567812345678" }
-                    TextField(value = TextFieldValue(textValue),
+                    CoreTextField(value = TextFieldValue(textValue),
                         modifier = Modifier.padding(16.dp),
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.onPrimary,

@@ -2,21 +2,22 @@ package com.airbnb.showkasesample
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import androidx.compose.Composable
-import androidx.compose.getValue
-import androidx.compose.onCommit
-import androidx.compose.setValue
-import androidx.compose.state
-import androidx.ui.core.Modifier
-import androidx.ui.core.WithConstraints
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.Canvas
-import androidx.ui.foundation.ContentGravity
-import androidx.ui.foundation.Image
-import androidx.ui.graphics.ImageAsset
-import androidx.ui.graphics.asImageAsset
-import androidx.ui.graphics.drawscope.drawCanvas
-import androidx.ui.layout.fillMaxWidth
+import androidx.compose.foundation.Box
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ContentGravity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.onCommit
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.state
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.WithConstraints
+import androidx.compose.ui.graphics.ImageAsset
+import androidx.compose.ui.graphics.asImageAsset
+import androidx.compose.ui.graphics.drawscope.drawCanvas
+import androidx.compose.ui.graphics.nativeCanvas
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 
