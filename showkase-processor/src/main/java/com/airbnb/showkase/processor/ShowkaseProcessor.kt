@@ -198,7 +198,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     companion object {
-        const val COMPOSABLE_CLASS_NAME = "androidx.compose.Composable"
+        const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
         const val PREVIEW_CLASS_NAME = "androidx.ui.tooling.preview.Preview"
 
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
