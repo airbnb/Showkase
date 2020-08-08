@@ -88,7 +88,7 @@ internal fun ComponentCard(
             // impact and the touches go through to the component(this happens in the "Component 
             // Detail" screen.
             Box(
-                modifier = Modifier.matchParentSize() + composableContainerModifier
+                modifier = Modifier.matchParentSize().then(composableContainerModifier)
             )
         }
         
@@ -159,15 +159,16 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
 private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(16.dp)
     if (metadata.heightDp != null && metadata.widthDp != null) {
-        return baseModifier +
-                Modifier.size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
+        return baseModifier
+            .size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
     }
-    return baseModifier + Modifier.fillMaxWidth()
+    return baseModifier.fillMaxWidth()
 }
 
 @Composable
 private fun generateContainerModifier(onClick: (() -> Unit)?): Modifier = onClick?.let {
-    Modifier.fillMaxWidth() + Modifier.clickable(onClick = onClick)
+    Modifier.fillMaxWidth()
+        .clickable(onClick = onClick)
 } ?: Modifier.fillMaxWidth()
 
 private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {

@@ -1,14 +1,14 @@
 package com.airbnb.showkase.ui
 
 import androidx.activity.ComponentActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.Card
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -32,19 +32,19 @@ internal fun ShowkaseAllGroupsScreen(
 
     LazyColumnFor(items = filteredList, itemContent = { group ->
         Card(
-            modifier = Modifier.fillParentMaxWidth() +
-                    Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp) +
-                    Modifier.clickable(
-                        onClick = {
-                            showkaseBrowserScreenMetadata.value =
-                                showkaseBrowserScreenMetadata.value.copy(
-                                    currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
-                                    currentGroup = group,
-                                    isSearchActive = false,
-                                    searchQuery = null
-                                )
-                        }
-                    )
+            modifier = Modifier.fillParentMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                .clickable(
+                    onClick = {
+                        showkaseBrowserScreenMetadata.value =
+                            showkaseBrowserScreenMetadata.value.copy(
+                                currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
+                                currentGroup = group,
+                                isSearchActive = false,
+                                searchQuery = null
+                            )
+                    }
+                )
         ) {
             Text(
                 text = group, modifier = Modifier.padding(16.dp),

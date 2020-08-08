@@ -24,7 +24,7 @@ fun CursiveTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Cursive)
             )
@@ -41,7 +41,7 @@ fun SerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Serif)
             )
@@ -58,7 +58,7 @@ fun SansSerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif)
             )

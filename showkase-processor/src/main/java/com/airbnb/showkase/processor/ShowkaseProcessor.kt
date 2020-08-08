@@ -79,7 +79,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             logger.logErrorMessage("${exception.message}")
         }
 
-        if (roundEnvironment?.processingOver() == true) {
+        if (roundEnvironment.processingOver() == true) {
             logger.publishMessages(messager)
         }
         return false
