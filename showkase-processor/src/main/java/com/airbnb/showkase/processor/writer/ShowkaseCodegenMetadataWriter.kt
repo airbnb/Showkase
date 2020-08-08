@@ -27,7 +27,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
-        showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
+        showkaseMetadataSet.forEach { showkaseMetadata ->
             val methodName = when {
                 showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
                 else -> {

@@ -1,21 +1,20 @@
 package com.airbnb.showkase.ui
 
 import androidx.activity.ComponentActivity
-import androidx.compose.Composable
-import androidx.compose.MutableState
-import androidx.ui.core.LifecycleOwnerAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.clickable
-import androidx.ui.foundation.lazy.LazyColumnItems
-import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
-import androidx.ui.material.Card
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontFamily
-import androidx.ui.text.font.FontWeight
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.material.Card
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LifecycleOwnerAmbient
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
@@ -31,21 +30,21 @@ internal fun ShowkaseAllGroupsScreen(
     )
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)
 
-    LazyColumnItems(items = filteredList, itemContent = { group ->
+    LazyColumnFor(items = filteredList, itemContent = { group ->
         Card(
-            modifier = Modifier.fillMaxWidth() +
-                    Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp) +
-                    Modifier.clickable(
-                        onClick = {
-                            showkaseBrowserScreenMetadata.value =
-                                showkaseBrowserScreenMetadata.value.copy(
-                                    currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
-                                    currentGroup = group,
-                                    isSearchActive = false,
-                                    searchQuery = null
-                                )
-                        }
-                    )
+            modifier = Modifier.fillParentMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                .clickable(
+                    onClick = {
+                        showkaseBrowserScreenMetadata.value =
+                            showkaseBrowserScreenMetadata.value.copy(
+                                currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
+                                currentGroup = group,
+                                isSearchActive = false,
+                                searchQuery = null
+                            )
+                    }
+                )
         ) {
             Text(
                 text = group, modifier = Modifier.padding(16.dp),

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.state
-import androidx.ui.core.setContent
+import androidx.compose.runtime.state
+import androidx.compose.ui.platform.setContent
 import com.airbnb.showkase.exceptions.ShowkaseException
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
