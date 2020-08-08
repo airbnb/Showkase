@@ -93,8 +93,7 @@ allprojects {
             freeCompilerArgs += [
                     "-Xallow-jvm-ir-dependencies", 
                     "-Xskip-prerelease-check",
-                    "-XXLanguage:+NonParenthesizedAnnotationsOnFunctionalTypes",
-                    "-Xskip-metadata-version-check"
+                    "-XXLanguage:+NonParenthesizedAnnotationsOnFunctionalTypes"
             ]
         }
     }
