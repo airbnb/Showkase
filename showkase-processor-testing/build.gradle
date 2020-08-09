@@ -12,6 +12,7 @@ android {
     // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
     packagingOptions {
         exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude("META-INF/*.kotlin_module")
     }
     defaultConfig {
         minSdkVersion 21
@@ -28,7 +29,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerVersion "1.3.70-dev-withExperimentalGoogleExtensions-20200424"
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
         kotlinCompilerExtensionVersion "${versions.compose}"
     }
 }

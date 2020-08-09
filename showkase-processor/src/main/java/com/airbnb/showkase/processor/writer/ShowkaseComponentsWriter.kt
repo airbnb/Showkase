@@ -85,19 +85,19 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         }
         componentListInitializerCodeBlock.unindent()
         componentListInitializerCodeBlock.add(")")
-
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
-
 
         fileBuilder
             .addType(
-                TypeSpec.classBuilder(showkaseComponentsListClassName)
-                    .addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
-                    .addFunction(
+                with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
+                    addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
+                    addFunction(
                         getShowkaseComponentsProviderInterfaceFunction()
                     )
-                    .addProperty(componentListProperty.build())
-                    .build()
+                    addProperty(componentListProperty.build())
+                    showkaseMetadataList.forEach { addOriginatingElement(it.element) }
+                    build()
+                }
             )
 
         fileBuilder.build().writeTo(processingEnv.filer)
@@ -154,7 +154,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
         private const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.showkase.models"
 
-        val COMPOSE_CLASS_NAME = ClassName("androidx.compose", "Composable")
+        val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
         val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponent")
         val SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME =

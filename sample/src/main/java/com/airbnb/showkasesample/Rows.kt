@@ -1,31 +1,31 @@
 package com.airbnb.showkasesample
 
-import androidx.compose.Composable
-import androidx.ui.core.ContextAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.drawBackground
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
-import androidx.ui.layout.Column
-import androidx.ui.layout.ConstraintLayout
-import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
-import androidx.ui.layout.preferredHeight
-import androidx.ui.layout.preferredWidth
-import androidx.ui.material.Card
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.Surface
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontFamily
-import androidx.ui.text.font.FontWeight
-import androidx.ui.text.style.TextOverflow
+import androidx.compose.foundation.Box
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.drawBackground
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ConstraintLayout
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.material.ListItem
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.datasource.LoremIpsum
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
 @Composable
@@ -33,7 +33,8 @@ fun SimpleRow(title: String, subtitle: String) {
     ShowkaseTheme {
         Card(
             shape = RoundedCornerShape(4.dp),
-            modifier = Modifier.fillMaxWidth() + Modifier.padding(8.dp)
+            modifier = Modifier.fillMaxWidth()
+                .padding(8.dp)
         ) {
             ListItem(text = {
                 Text(
@@ -53,9 +54,9 @@ fun SimpleRow(title: String, subtitle: String) {
                 )
             }, icon = {
                 Box(
-                    modifier = Modifier.preferredWidth(60.dp) +
-                            Modifier.preferredHeight(60.dp) +
-                            Modifier.drawBackground(Color.Gray)
+                    modifier = Modifier.preferredWidth(60.dp)
+                        .preferredHeight(60.dp)
+                        .background(color = Color.Gray)
                 )
             })
         }
@@ -66,9 +67,9 @@ fun SimpleRow(title: String, subtitle: String) {
 fun TitleSubtitleThumbnailRow() {
     ShowkaseTheme {
         Card(
-            modifier = Modifier.preferredHeight(120.dp) + Modifier.fillMaxWidth() + Modifier.padding(
-                8.dp
-            ),
+            modifier = Modifier.preferredHeight(120.dp)
+                .fillMaxWidth()
+                .padding(8.dp),
             shape = RoundedCornerShape(4.dp)
         ) {
             ConstraintLayout {
@@ -90,15 +91,14 @@ fun TitleSubtitleThumbnailRow() {
                     start.linkTo(image.end, margin = 16.dp)
                 })
 
-                Box(modifier = Modifier.preferredHeight(72.dp) + Modifier.preferredWidth(72.dp) +
-                        Modifier.drawBackground(Color.Gray) +
-                        Modifier.constrainAs(image) {
-                            centerVerticallyTo(parent)
-                            start.linkTo(parent.start, margin = 16.dp)
-                        }) {
-
-                }
-
+                Box(modifier = Modifier.preferredHeight(72.dp)
+                    .preferredWidth(72.dp)
+                    .background(color = Color.Gray)
+                    .constrainAs(image) {
+                        centerVerticallyTo(parent)
+                        start.linkTo(parent.start, margin = 16.dp)
+                    }
+                )
             }
         }
     }
@@ -108,9 +108,9 @@ fun TitleSubtitleThumbnailRow() {
 fun BottomLabelRow(title: String, subtitle: String, label: String) {
     ShowkaseTheme {
         Column(
-            modifier = Modifier.fillMaxWidth() +
-                    Modifier.drawBackground(MaterialTheme.colors.surface) +
-                    Modifier.padding(16.dp)
+            modifier = Modifier.fillMaxWidth()
+                .background(color = MaterialTheme.colors.surface)
+                .padding(16.dp)
         ) {
             Text(
                 text = title,
@@ -154,12 +154,11 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
 fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
     ShowkaseTheme {
         Column(
-            modifier = Modifier.fillMaxWidth() +
-                    Modifier.drawBackground(MaterialTheme.colors.surface)
+            modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colors.surface)
         ) {
             NetworkImage(
                 imageUrl = imageUrl,
-                modifier = Modifier.fillMaxWidth() + Modifier.preferredHeight(200.dp)
+                modifier = Modifier.fillMaxWidth().preferredHeight(200.dp)
             )
             Text(
                 text = title,

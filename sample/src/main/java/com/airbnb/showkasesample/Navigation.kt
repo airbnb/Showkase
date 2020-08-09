@@ -1,19 +1,19 @@
 package com.airbnb.showkasesample
 
-import androidx.compose.Composable
-import androidx.compose.getValue
-import androidx.compose.setValue
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Icon
-import androidx.ui.foundation.Text
-import androidx.ui.layout.padding
-import androidx.ui.material.BottomNavigation
-import androidx.ui.material.BottomNavigationItem
-import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.Favorite
-import androidx.ui.savedinstancestate.savedInstanceState
+import androidx.compose.foundation.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.savedinstancestate.savedInstanceState
+import androidx.compose.runtime.setValue
 import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
+import androidx.compose.ui.unit.dp
 import com.airbnb.showkase.annotation.models.Showkase
 
 val listItems = listOf("Games", "Apps", "Movies", "Books")
@@ -29,11 +29,11 @@ fun BottomNavigationAlwaysShowLabelComponent() {
                     icon = {
                         Icon(asset = Icons.Filled.Favorite)
                     },
-                    text = {
+                    label = {
                         Text(text = label)
                     },
                     selected = selectedIndex == index,
-                    onSelected = { selectedIndex = index }
+                    onSelect = { selectedIndex = index }
                 )
             }
         }

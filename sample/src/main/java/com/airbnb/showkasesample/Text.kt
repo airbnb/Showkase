@@ -1,18 +1,18 @@
 package com.airbnb.showkasesample
 
-import androidx.compose.Composable
-import androidx.ui.core.ContextAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Text
-import androidx.ui.layout.fillMaxWidth
-import androidx.ui.layout.padding
-import androidx.ui.material.Card
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontFamily
-import androidx.ui.text.font.FontWeight
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Card
+import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
 /**
@@ -36,7 +36,7 @@ fun CursiveTextComponent() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Cursive)
             )
@@ -53,7 +53,7 @@ fun SerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Serif)
             )
@@ -70,7 +70,7 @@ fun SansSerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth() + Modifier.padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif)
             )
