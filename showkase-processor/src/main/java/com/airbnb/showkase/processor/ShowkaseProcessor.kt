@@ -2,11 +2,13 @@ package com.airbnb.showkase.processor
 
 import com.airbnb.showkase.annotation.models.Showkase
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+import com.airbnb.showkase.annotation.models.ShowkaseColor
 import com.airbnb.showkase.annotation.models.ShowkaseRoot
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.showkase.processor.logging.ShowkaseValidator
+import com.airbnb.showkase.processor.models.ShowkaseColorMetadata
 import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadataFromPreview
@@ -56,6 +58,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
         Showkase::class.java.name,
         ShowkaseRoot::class.java.name,
+        ShowkaseColor::class.java.name,
         PREVIEW_CLASS_NAME
     )
 
@@ -71,6 +74,10 @@ class ShowkaseProcessor: AbstractProcessor() {
                 previewComposablesMetadata
             )
             processShowkaseMetadata(roundEnvironment, uniqueComposablesMetadata)
+            
+            
+            // Colors stuff
+            val showcaseColorMetadata = processShowkaseColorAnnotation(roundEnvironment)
         } catch (exception: ShowkaseProcessorException) {
             logger.logErrorMessage("${exception.message}")
         }
@@ -195,6 +202,13 @@ class ShowkaseProcessor: AbstractProcessor() {
             }
             .map { it.second.toModel(it.first) }
             .toSet()
+    }
+
+    private fun processShowkaseColorAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseColorMetadata> {
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class.java).map { element ->
+            val showkaseColorAnnotation = element.getAnnotation(ShowkaseColor::class.java)
+            ShowkaseColorMetadata("",1)
+        }.toSet()
     }
 
     companion object {

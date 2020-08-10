@@ -1581,6 +1581,24 @@ class ShowkaseProcessorTest {
             )
         }
     }
+
+    @Test
+    fun `showkase color`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        import androidx.compose.runtime.Composable
+        import androidx.compose.ui.graphics.Color
+        
+        @ShowkaseColor
+        val redColor = 5
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+    }
     
     private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
         return KotlinCompilation().apply {
