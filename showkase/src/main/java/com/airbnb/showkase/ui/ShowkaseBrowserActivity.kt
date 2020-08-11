@@ -45,9 +45,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
 
-            val componentList =
-                (showkaseComponentProvider as ShowkaseComponentsProvider).getShowkaseComponents()
-            componentList.groupBy { it.group }
+            (showkaseComponentProvider as ShowkaseComponentsProvider).getShowkaseComponents()
+                .groupBy { it.group }
+                
         } catch (exception: ClassNotFoundException) {
             mapOf()
         }

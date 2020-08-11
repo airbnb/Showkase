@@ -66,6 +66,8 @@ class ShowkaseValidator {
         elementUtils: Elements,
         typeUtils: Types
     ) {
+        if (elementSet.isEmpty()) return
+        
         val showkaseRootAnnotationName = ShowkaseRoot::class.java.simpleName
         val showkaseRootModuleName = ShowkaseRootModule::class.java.simpleName
 

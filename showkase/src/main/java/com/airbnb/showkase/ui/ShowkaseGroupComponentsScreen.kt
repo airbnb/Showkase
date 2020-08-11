@@ -13,7 +13,8 @@ internal fun ShowkaseGroupComponentsScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     val groupComponentsList =
-        groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
+        groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
+            ?.sortedBy { it.componentName } ?: return
     val filteredList =
         getFilteredSearchList(groupComponentsList, showkaseBrowserScreenMetadata)
     LazyColumnFor(

@@ -80,19 +80,19 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
             }
         }
         componentListInitializerCodeBlock.add("\n)")
-
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
-
 
         fileBuilder
             .addType(
-                TypeSpec.classBuilder(showkaseComponentsListClassName)
-                    .addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
-                    .addFunction(
+                with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
+                    addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
+                    addFunction(
                         getShowkaseComponentsProviderInterfaceFunction()
                     )
-                    .addProperty(componentListProperty.build())
-                    .build()
+                    addProperty(componentListProperty.build())
+                    showkaseMetadataList.forEach { addOriginatingElement(it.element) }
+                    build()
+                }
             )
 
         fileBuilder.build().writeTo(processingEnv.filer)

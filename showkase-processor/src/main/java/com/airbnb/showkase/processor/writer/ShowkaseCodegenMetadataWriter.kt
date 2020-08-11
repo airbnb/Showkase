@@ -45,7 +45,6 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 .addMember("composableMethodName = %S", showkaseMetadata.methodName)
                 .addMember("insideObject = ${showkaseMetadata.insideObject}")
                 .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
-
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
             }
@@ -55,15 +54,19 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
             showkaseMetadata.showkaseComponentHeightDp?.let {
                 annotation.addMember("showkaseComposableHeightDp = %L", it)
             }
-
-            val composableFunction = FunSpec.builder(methodName)
-                .addAnnotation(annotation.build())
-                .build()
-
-            autogenClass.addFunction(composableFunction)
+            autogenClass.addFunction(
+                FunSpec.builder(methodName)
+                    .addAnnotation(annotation.build())
+                    .build()
+            )
         }
 
-        fileBuilder.addType(autogenClass.build())
+        fileBuilder.addType(
+            with(autogenClass) {
+                showkaseMetadataSet.forEach { addOriginatingElement(it.element) }
+                build()
+            }
+        )
 
         fileBuilder.build().writeTo(processingEnv.filer)
     }
