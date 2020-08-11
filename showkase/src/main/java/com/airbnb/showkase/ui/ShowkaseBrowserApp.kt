@@ -105,8 +105,8 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
 @Composable
 private fun ShowkaseAppBarActions(metadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     when {
-        metadata.value.isSearchActive -> {
-        }
+        metadata.value.isSearchActive -> { }
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL -> { }
         else -> {
             IconButton(onClick = {
                 metadata.value = metadata.value.copy(isSearchActive = true)

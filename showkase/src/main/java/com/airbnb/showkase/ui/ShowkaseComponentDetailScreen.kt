@@ -1,19 +1,33 @@
 package com.airbnb.showkase.ui
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Box
+import androidx.compose.foundation.Icon
+import androidx.compose.foundation.ProvideTextStyle
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Stack
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Providers
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.state
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ConfigurationAmbient
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.platform.DensityAmbient
@@ -25,6 +39,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.showkase.R
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
@@ -43,7 +58,12 @@ internal fun ShowkaseComponentDetailScreen(
     LazyColumnFor(items = listOf(componentMetadata), itemContent = { metadata ->
         ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
             when (showkaseComponentCardType) {
-                ShowkaseComponentCardType.BASIC -> BasicComponentCard(metadata)
+                ShowkaseComponentCardType.BASIC -> {
+                    if (!metadata.componentKDoc.isNullOrBlank()) {
+                        DocumentationPanel(metadata.componentKDoc)
+                    }
+                    BasicComponentCard(metadata)
+                }
                 ShowkaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(metadata)
                 ShowkaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(metadata)
                 ShowkaseComponentCardType.RTL -> RTLComponentCard(metadata)
@@ -93,6 +113,49 @@ internal fun ComponentCard(
         }
         
     }
+}
+
+@Composable
+private fun DocumentationPanel(kDoc: String) {
+    var showDocumentation by state { false }
+    val context = ContextAmbient.current
+    val (buttonText, icon) = getCollabsableTextAndIcon(context, showDocumentation)
+    val onClick = { showDocumentation = !showDocumentation }
+    if (showDocumentation) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+            text = kDoc,
+            style = TextStyle(
+                color = Color.DarkGray,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.W300
+            )
+        )
+    }
+    Row(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp) +
+                Modifier.fillMaxWidth() + 
+                Modifier.clickable(onClick = onClick),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalGravity = Alignment.CenterVertically
+    ) {
+        ProvideTextStyle(value = MaterialTheme.typography.button) {
+            Text(
+                text = buttonText,
+                color = MaterialTheme.colors.primary
+            )
+        }
+        Icon(asset = icon)
+    }
+}
+
+private fun getCollabsableTextAndIcon(
+    context: Context,
+    showDocumentation: Boolean
+) = when (showDocumentation) {
+    true -> context.getString(R.string.showkase_browser_hide_documentation) to Icons.Filled.KeyboardArrowUp
+    false -> context.getString(R.string.showkase_browser_show_documentation) to Icons.Filled.KeyboardArrowDown
 }
 
 @Composable

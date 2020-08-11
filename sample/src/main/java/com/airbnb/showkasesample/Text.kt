@@ -15,10 +15,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
 
+/**
+ * This component shows some static text in cursive text style. 
+ * 
+ * Example usage:
+ *
+ * ```
+ * @Composable
+ * fun MyComposable() {
+ *     CursiveTextComponentPreview()
+ * }
+ * ```
+ */
 @Showkase(name = "Cursive Text Style", group = "Text")
 @Preview
 @Composable
-fun CursiveTextComponentPreview() {
+fun CursiveTextComponent() {
     val context = ContextAmbient.current
     val string = context.getString(R.string.app_name)
 

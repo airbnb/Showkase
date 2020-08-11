@@ -21,10 +21,11 @@ internal data class ShowkaseMetadata(
     val element: Element,
     val moduleName: String,
     val packageName: String,
-    val enclosingClass: TypeMirror? = null,
     val methodName: String,
     val showkaseComponentName: String,
     val showkaseComponentGroup: String,
+    val showkaseComponentKDoc: String,
+    val enclosingClass: TypeMirror? = null,
     val showkaseComponentWidthDp: Int? = null,
     val showkaseComponentHeightDp: Int? = null,
     val insideWrapperClass: Boolean = false,
@@ -64,6 +65,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
         showkaseComponentHeightDp = showkaseComposableHeightDp.parseAnnotationProperty(),
         insideWrapperClass = insideWrapperClass,
         insideObject = insideObject,
+        showkaseComponentKDoc = showkaseComposableKDoc,
         element = element
     )
 }
@@ -85,6 +87,7 @@ internal fun getShowkaseMetadata(
     val packageName = packageElement.qualifiedName.toString()
     val methodName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
+    val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
     
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
@@ -101,7 +104,8 @@ internal fun getShowkaseMetadata(
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT || 
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        element = element
+        element = element,
+        showkaseComponentKDoc = kDoc
     )
 }
 
@@ -134,6 +138,7 @@ internal fun getShowkaseMetadataFromPreview(
     val packageName = packageElement.qualifiedName.toString()
     val methodName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
+    val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
 
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
@@ -155,13 +160,14 @@ internal fun getShowkaseMetadataFromPreview(
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
         methodName = methodName,
+        showkaseComponentKDoc = kDoc,
         showkaseComponentName = map[ShowkaseAnnotationProperty.NAME]?.let { it as String }.orEmpty(),
         showkaseComponentGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
         showkaseComponentWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
         showkaseComponentHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT || 
+                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
         element = element
     )
 }

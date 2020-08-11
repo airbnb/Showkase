@@ -42,7 +42,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
 
         val componentListInitializerCodeBlock = CodeBlock.Builder()
             .add(
-                "listOf<%T>(\n",
+                "listOf<%T>(",
                 SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
             )
             .indent()
@@ -50,17 +50,23 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
             componentListInitializerCodeBlock.add("\n")
             componentListInitializerCodeBlock.add(
-                "%T(group = %S, componentName = %S,",
-                SHOWKASE_BROWSER_COMPONENT_CLASS_NAME,
+                "%T(\n",
+                SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
+            )
+            componentListInitializerCodeBlock.indent().indent()
+            componentListInitializerCodeBlock.add(
+                "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,",
                 showkaseMetadata.showkaseComponentGroup,
-                showkaseMetadata.showkaseComponentName
+                showkaseMetadata.showkaseComponentName,
+                showkaseMetadata.showkaseComponentKDoc
             )
             showkaseMetadata.showkaseComponentWidthDp?.let { 
-                componentListInitializerCodeBlock.add(" widthDp = %L,", it)
+                componentListInitializerCodeBlock.add("\nwidthDp = %L,", it)
             }
             showkaseMetadata.showkaseComponentHeightDp?.let {
-                componentListInitializerCodeBlock.add(" heightDp = %L,", it)
+                componentListInitializerCodeBlock.add("\nheightDp = %L,", it)
             }
+            
             val composableLambdaCodeBlock = composePreviewFunctionLambda(
                 showkaseMetadata.packageName,
                 showkaseMetadata.enclosingClass,
@@ -68,18 +74,17 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
                 showkaseMetadata.insideWrapperClass,
                 showkaseMetadata.insideObject
             )
-            componentListInitializerCodeBlock.add("\n")
-            componentListInitializerCodeBlock.indent().indent()
             componentListInitializerCodeBlock.add(composableLambdaCodeBlock)
             componentListInitializerCodeBlock.unindent().unindent()
 
             if (index == showkaseMetadataList.lastIndex) {
-                componentListInitializerCodeBlock.add(")")
+                componentListInitializerCodeBlock.add(")\n")
             } else {
                 componentListInitializerCodeBlock.add("),")
             }
         }
-        componentListInitializerCodeBlock.add("\n)")
+        componentListInitializerCodeBlock.unindent()
+        componentListInitializerCodeBlock.add(")")
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
 
         fileBuilder
@@ -117,7 +122,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
             val composeMember = MemberName(functionPackageName, composeFunctionName)
             CodeBlock.Builder()
                 .add(
-                    "component = @%T { %M() }",
+                    "\ncomponent = @%T { %M() }",
                     COMPOSE_CLASS_NAME, composeMember
                 )
                 .build()
@@ -126,7 +131,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         insideWrapperClass -> {
             CodeBlock.Builder()
                 .add(
-                    "component = @%T { %T().${composeFunctionName}() }",
+                    "\ncomponent = @%T { %T().${composeFunctionName}() }",
                     COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()
@@ -135,7 +140,7 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         insideObject -> {
             CodeBlock.Builder()
                 .add(
-                    "component = @%T { %T.${composeFunctionName}() }",
+                    "\ncomponent = @%T { %T.${composeFunctionName}() }",
                     COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()
