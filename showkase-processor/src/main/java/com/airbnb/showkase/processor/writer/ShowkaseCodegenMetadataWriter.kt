@@ -29,31 +29,32 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
             val methodName = when {
-                showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
+                showkaseMetadata.enclosingClass == null -> showkaseMetadata.showkaseElementName
                 else -> {
                     val enclosingClassName =
                         typeUtil.asElement(showkaseMetadata.enclosingClass).simpleName
-                    "${enclosingClassName}_${showkaseMetadata.methodName}"
+                    "${enclosingClassName}_${showkaseMetadata.showkaseElementName}"
                 }
             }
 
             val annotation = AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
-                .addMember("showkaseComposableName = %S", showkaseMetadata.showkaseComponentName)
-                .addMember("showkaseComposableGroup = %S", showkaseMetadata.showkaseComponentGroup)
+                .addMember("showkaseName = %S", showkaseMetadata.showkaseName)
+                .addMember("showkaseGroup = %S", showkaseMetadata.showkaseGroup)
                 .addMember("packageName = %S", showkaseMetadata.packageName)
                 .addMember("moduleName = %S", showkaseMetadata.moduleName)
-                .addMember("composableMethodName = %S", showkaseMetadata.methodName)
+                .addMember("showkaseElementName = %S", showkaseMetadata.showkaseElementName)
                 .addMember("insideObject = ${showkaseMetadata.insideObject}")
                 .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
-                .addMember("showkaseComposableKDoc = %S", showkaseMetadata.showkaseComponentKDoc)
+                .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
+                .addMember("showkaseMetadataType = %S", showkaseMetadata.showkaseMetadataType.name)
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
             }
-            showkaseMetadata.showkaseComponentWidthDp?.let {
-                annotation.addMember("showkaseComposableWidthDp = %L", it) 
+            showkaseMetadata.showkaseWidthDp?.let {
+                annotation.addMember("showkaseWidthDp = %L", it) 
             }
-            showkaseMetadata.showkaseComponentHeightDp?.let {
-                annotation.addMember("showkaseComposableHeightDp = %L", it)
+            showkaseMetadata.showkaseHeightDp?.let {
+                annotation.addMember("showkaseHeightDp = %L", it)
             }
             autogenClass.addFunction(
                 FunSpec.builder(methodName)

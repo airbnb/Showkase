@@ -1,6 +1,17 @@
 package com.airbnb.showkase.processor.models
 
-internal data class ShowkaseColorMetadata(
-    val colorHex: String,
-    val colorInt: Int,
-)
+import javax.lang.model.element.Element
+import javax.lang.model.type.TypeMirror
+
+//internal data class ShowkaseColorMetadata(
+//    val element: Element,
+//    val showkaseColorName: String,
+//    val showkaseColorGroup: String,
+//    val showkasekDoc: String, 
+//    val colorFieldName: String,
+//    val moduleName: String,
+//    val packageName: String,
+//    val enclosingClass: TypeMirror? = null,
+//    val insideWrapperClass: Boolean = false,
+//    val insideObject: Boolean = false
+//)

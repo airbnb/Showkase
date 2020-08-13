@@ -1,17 +1,10 @@
 package com.airbnb.showkase.processor.writer
 
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
+import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
-import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
@@ -23,91 +16,68 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
         rootModuleClassName: String
     ) {
         if (showkaseMetadataList.isEmpty()) return
-        val showkaseComponentsListClassName = "$rootModuleClassName$AUTOGEN_CLASS_NAME"
-        val fileBuilder = FileSpec.builder(
-            rootModulePackageName,
-            showkaseComponentsListClassName
-        )
-            .addComment("This is an auto-generated file. Please do not edit/modify this file.")
-
-        // List<ShowkaseCodegenMetadata>
-        val showkaseCodegenMetadataParameterizedList =
-            List::class.asClassName().parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME)
+        val showkaseComponentsListClassName = "$rootModuleClassName$CODEGEN_AUTOGEN_CLASS_NAME"
+        val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 
         // val componentList: List<ShowkaseCodegenMetadata>
-        val componentListProperty = PropertySpec.builder(
-            "componentList",
-            showkaseCodegenMetadataParameterizedList
-        )
+        val componentListProperty = 
+            getPropertyList(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME, COMPONENT_PROPERTY_NAME)
 
-        val componentListInitializerCodeBlock = CodeBlock.Builder()
-            .add(
-                "listOf<%T>(",
-                SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
-            )
-            .indent()
+        val componentListInitializerCodeBlock = 
+            SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.listInitializerCodeBlock()
 
         showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
-            componentListInitializerCodeBlock.add("\n")
-            componentListInitializerCodeBlock.add(
-                "%T(\n",
-                SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
-            )
-            componentListInitializerCodeBlock.indent().indent()
-            componentListInitializerCodeBlock.add(
-                "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,",
-                showkaseMetadata.showkaseComponentGroup,
-                showkaseMetadata.showkaseComponentName,
-                showkaseMetadata.showkaseComponentKDoc
-            )
-            showkaseMetadata.showkaseComponentWidthDp?.let { 
-                componentListInitializerCodeBlock.add("\nwidthDp = %L,", it)
-            }
-            showkaseMetadata.showkaseComponentHeightDp?.let {
-                componentListInitializerCodeBlock.add("\nheightDp = %L,", it)
-            }
-            
-            val composableLambdaCodeBlock = composePreviewFunctionLambda(
-                showkaseMetadata.packageName,
-                showkaseMetadata.enclosingClass,
-                showkaseMetadata.methodName,
-                showkaseMetadata.insideWrapperClass,
-                showkaseMetadata.insideObject
-            )
-            componentListInitializerCodeBlock.add(composableLambdaCodeBlock)
-            componentListInitializerCodeBlock.unindent().unindent()
-
-            if (index == showkaseMetadataList.lastIndex) {
-                componentListInitializerCodeBlock.add(")\n")
-            } else {
-                componentListInitializerCodeBlock.add("),")
+            componentListInitializerCodeBlock.apply {
+                add("\n")
+                add(
+                    "%T(\n",
+                    SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
+                )
+                doubleIndent()
+                add(
+                    "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,",
+                    showkaseMetadata.showkaseGroup,
+                    showkaseMetadata.showkaseName,
+                    showkaseMetadata.showkaseKDoc
+                )
+                showkaseMetadata.showkaseWidthDp?.let {
+                    add("\nwidthDp = %L,", it)
+                }
+                showkaseMetadata.showkaseHeightDp?.let { 
+                    add("\nheightDp = %L,", it)
+                }
+                add(
+                    composePreviewFunctionLambda(
+                        showkaseMetadata.packageName,
+                        showkaseMetadata.enclosingClass,
+                        showkaseMetadata.showkaseElementName,
+                        showkaseMetadata.insideWrapperClass,
+                        showkaseMetadata.insideObject
+                    )
+                )
+                doubleUnindent()
+                closeOrContinueListCodeBlock(index, showkaseMetadataList.lastIndex)
             }
         }
-        componentListInitializerCodeBlock.unindent()
-        componentListInitializerCodeBlock.add(")")
+        componentListInitializerCodeBlock.apply {
+            unindent()
+            add(")")
+        }
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
 
-        fileBuilder
-            .addType(
-                with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
-                    addSuperinterface(SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME)
-                    addFunction(
-                        getShowkaseComponentsProviderInterfaceFunction()
-                    )
-                    addProperty(componentListProperty.build())
-                    showkaseMetadataList.forEach { addOriginatingElement(it.element) }
-                    build()
-                }
+        writeFile(
+            processingEnv,
+            fileBuilder,
+            SHOWKASE_COMPONENTS_PROVIDER_CLASS_NAME,
+            showkaseComponentsListClassName,
+            componentListProperty.build(),
+            showkaseMetadataList,
+            getShowkaseProviderInterfaceFunction(
+                COMPONENT_INTERFACE_METHOD_NAME,
+                COMPONENT_PROPERTY_NAME
             )
-
-        fileBuilder.build().writeTo(processingEnv.filer)
+        )
     }
-
-    private fun getShowkaseComponentsProviderInterfaceFunction() =
-        FunSpec.builder("getShowkaseComponents")
-            .addModifiers(KModifier.OVERRIDE)
-            .addStatement("return componentList")
-            .build()
 
     private fun composePreviewFunctionLambda(
         functionPackageName: String,
@@ -151,8 +121,10 @@ internal class ShowkaseComponentsWriter(private val processingEnv: ProcessingEnv
     }
 
     companion object {
-        private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
-        private const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.showkase.models"
+        private const val CODEGEN_AUTOGEN_CLASS_NAME = "CodegenComponents"
+        private const val COMPONENT_PROPERTY_NAME = "componentList"
+        private const val COMPONENT_INTERFACE_METHOD_NAME = "getShowkaseComponents"
+        internal const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.showkase.models"
 
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
         val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
