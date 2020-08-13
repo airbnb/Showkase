@@ -1582,43 +1582,6 @@ class ShowkaseProcessorTest {
         }
     }
     
-    @Test
-    fun `showkase color`() {
-        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        package com.airbnb.showkase_processor_testing
-        
-        import com.airbnb.showkase.annotation.models.ShowkaseColor
-        import androidx.compose.runtime.Composable
-        import androidx.compose.ui.graphics.Color
-        
-        class WrapperClass {
-            @ShowkaseColor("name", "group")
-            val redColor = Color(0xffff0000)
-        }
-    """
-        )
-
-        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
-        package com.airbnb.showkase_processor_testing
-        
-        import com.airbnb.showkase.annotation.models.Showkase
-        import androidx.compose.runtime.Composable
-        import com.airbnb.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
-        
-        @ShowkaseRoot
-        class TestShowkaseRoot: ShowkaseRootModule {
-        
-        }
-    """
-        )
-        
-        
-        val result = compileKotlinSource(listOf(kotlinSource, kotlinShowkaseRootSource))
-
-        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-    }
-    
     private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = kotlinSourceFiles

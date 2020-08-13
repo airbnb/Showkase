@@ -6,7 +6,6 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -15,8 +14,6 @@ import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.annotation.models.Showkase
-import com.airbnb.showkase.annotation.models.ShowkaseColor
-import org.w3c.dom.Text
 
 /**
  * This component shows some static text in cursive text style. 
