@@ -11,6 +11,7 @@ import com.airbnb.showkase.models.ShowkaseBrowserColor
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseProvider
+import com.airbnb.showkase.models.ShowkaseProviderElements
 
 /**
  * The activity that's responsible for showing all the @Composable components that were annotated
@@ -25,7 +26,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         )
         setContent {
             val (groupedComponentsMap, groupedColorsMap) 
-                    = getGroupedComponentsMap(classKey)
+                    = getShowkaseProviderElements(classKey)
             var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
             when {
                 groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
@@ -43,9 +44,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun getGroupedComponentsMap(
+    private fun getShowkaseProviderElements(
         classKey: String
-    ): Pair<Map<String, List<ShowkaseBrowserComponent>>, Map<String, List<ShowkaseBrowserColor>>> {
+    ): ShowkaseProviderElements {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
@@ -59,17 +60,19 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 (showkaseComponentProvider as ShowkaseProvider)
                     .getShowkaseColors()
                     .groupBy { it.colorGroup }
-            
-            componentsMap to colorsMap
+
+            ShowkaseProviderElements(
+                components = componentsMap,
+                colors = colorsMap
+            )
         } catch (exception: ClassNotFoundException) {
-            mapOf<String, List<ShowkaseBrowserComponent>>() to mapOf()
+            ShowkaseProviderElements()
         }
     }
 
     companion object {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
         private const val AUTOGEN_CLASS_NAME = "Codegen"
-        private const val COLOR_AUTOGEN_CLASS_NAME = "CodegenColors"
 
         /**
          * Returns the intent that the users of this library need to use for starting the
