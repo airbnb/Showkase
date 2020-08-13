@@ -193,6 +193,9 @@ internal fun getShowkaseColorMetadata(
     val moduleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
     val fieldName = element.simpleName.toString()
+    // TODO(vinaygaba): Color propertie's aren't working properly with companion objects. This is
+    // because the properties are generated outside the companion object in java land(as opposed to 
+    // inside the companion class for functions). Need to investigate more.
     val showkaseFunctionType = element.getShowkaseFunctionType()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
     val kDoc = elementUtils.getDocComment(element).orEmpty().trim()

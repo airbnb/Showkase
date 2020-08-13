@@ -10,8 +10,7 @@ import com.airbnb.showkase.exceptions.ShowkaseException
 import com.airbnb.showkase.models.ShowkaseBrowserColor
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
-import com.airbnb.showkase.models.ShowkaseColorsProvider
-import com.airbnb.showkase.models.ShowkaseComponentsProvider
+import com.airbnb.showkase.models.ShowkaseProvider
 
 /**
  * The activity that's responsible for showing all the @Composable components that were annotated
@@ -25,8 +24,8 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     "the ShowkaseBrowserActivity.getIntent() method."
         )
         setContent {
-            val groupedComponentsMap = getGroupedComponentsMap(classKey)
-            val groupedColorsMap = getGroupedColorsMap(classKey)
+            val (groupedComponentsMap, groupedColorsMap) 
+                    = getGroupedComponentsMap(classKey)
             var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
             when {
                 groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
@@ -44,35 +43,32 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun getGroupedComponentsMap(classKey: String): Map<String, List<ShowkaseBrowserComponent>> {
+    private fun getGroupedComponentsMap(
+        classKey: String
+    ): Pair<Map<String, List<ShowkaseBrowserComponent>>, Map<String, List<ShowkaseBrowserColor>>> {
         return try {
             val showkaseComponentProvider =
-                Class.forName("$classKey$COMPONENT_AUTOGEN_CLASS_NAME").newInstance()
+                Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
 
-            (showkaseComponentProvider as ShowkaseComponentsProvider).getShowkaseComponents()
-                .groupBy { it.group }
-                
+            val componentsMap =
+                (showkaseComponentProvider as ShowkaseProvider)
+                    .getShowkaseComponents()
+                    .groupBy { it.group }
+            
+            val colorsMap = 
+                (showkaseComponentProvider as ShowkaseProvider)
+                    .getShowkaseColors()
+                    .groupBy { it.colorGroup }
+            
+            componentsMap to colorsMap
         } catch (exception: ClassNotFoundException) {
-            mapOf()
-        }
-    }
-
-    private fun getGroupedColorsMap(classKey: String): Map<String, List<ShowkaseBrowserColor>> {
-        return try {
-            val showkaseColorProvider =
-                Class.forName("$classKey$COLOR_AUTOGEN_CLASS_NAME").newInstance()
-
-            (showkaseColorProvider as ShowkaseColorsProvider).getShowkaseColors()
-                .groupBy { it.colorGroup }
-
-        } catch (exception: ClassNotFoundException) {
-            mapOf()
+            mapOf<String, List<ShowkaseBrowserComponent>>() to mapOf()
         }
     }
 
     companion object {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
-        private const val COMPONENT_AUTOGEN_CLASS_NAME = "CodegenComponents"
+        private const val AUTOGEN_CLASS_NAME = "Codegen"
         private const val COLOR_AUTOGEN_CLASS_NAME = "CodegenColors"
 
         /**

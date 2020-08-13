@@ -15,8 +15,7 @@ import com.airbnb.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.showkase.processor.models.toModel
 import com.airbnb.showkase.processor.writer.ShowkaseCodegenMetadataWriter
-import com.airbnb.showkase.processor.writer.ShowkaseColorsWriter
-import com.airbnb.showkase.processor.writer.ShowkaseComponentsWriter
+import com.airbnb.showkase.processor.writer.ShowkaseBrowserWriter
 import com.google.auto.service.AutoService
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
@@ -193,8 +192,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         val combinedColorMetadata = colorMetadata +
                 metadataGroupByType[ShowkaseMetadataType.COLOR].orEmpty()
 
-        writeComponentsFile(rootElement, combinedComponentMetadata)
-        writeColorsFile(rootElement, combinedColorMetadata)
+        writeShowkaseBrowserFile(rootElement, combinedComponentMetadata, combinedColorMetadata)
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
@@ -213,32 +211,21 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
-    private fun writeComponentsFile(
+    private fun writeShowkaseBrowserFile(
         rootElement: Element,
-        componentsMetadata: Set<ShowkaseMetadata>
+        componentsMetadata: Set<ShowkaseMetadata>,
+        combinedColorMetadata: Set<ShowkaseMetadata>
     ) {
         if (componentsMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.simpleName.toString()
         val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
 
-        ShowkaseComponentsWriter(processingEnv).apply {
-            generateShowkaseBrowserComponents(
-                componentsMetadata.toList(), rootModulePackageName, rootModuleClassName
-            )
-        }
-    }
-
-    private fun writeColorsFile(
-        rootElement: Element,
-        colorsMetadata: Set<ShowkaseMetadata>
-    ) {
-        if (colorsMetadata.isEmpty()) return
-        val rootModuleClassName = rootElement.simpleName.toString()
-        val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
-
-        ShowkaseColorsWriter(processingEnv).apply {
-            generateShowkaseBrowserColors(
-                colorsMetadata.toList(), rootModulePackageName, rootModuleClassName
+        ShowkaseBrowserWriter(processingEnv).apply {
+            generateShowkaseBrowserFile(
+                componentsMetadata.toList(), 
+                combinedColorMetadata.toList(), 
+                rootModulePackageName, 
+                rootModuleClassName
             )
         }
     }
