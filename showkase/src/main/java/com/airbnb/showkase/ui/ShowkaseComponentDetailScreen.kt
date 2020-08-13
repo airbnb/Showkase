@@ -72,47 +72,9 @@ internal fun ShowkaseComponentDetailScreen(
         }
     })
     BackButtonHandler {
-        goBack(showkaseBrowserScreenMetadata)
+        back(showkaseBrowserScreenMetadata)
     }
     
-}
-
-@Composable
-internal fun ComponentCardTitle(componentName: String) {
-    Text(
-        text = componentName, 
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 4.dp),
-        style = TextStyle(
-            fontSize = 16.sp, 
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Bold
-        )
-    )
-}
-
-@Composable
-internal fun ComponentCard(
-    metadata: ShowkaseBrowserComponent,
-    onClick: (() -> Unit)? = null
-) {
-    val composableModifier = generateComposableModifier(metadata)
-    val composableContainerModifier = generateContainerModifier(onClick)
-    Card() {
-        Stack() {
-            Box(modifier = composableModifier) {
-                metadata.component()
-            }
-            // Need to add this as part of the stack so that we can intercept the touch of the 
-            // component when we are on the "Group components" screen. If 
-            // composableContainerModifier does not have any clickable modifiers, this box has no
-            // impact and the touches go through to the component(this happens in the "Component 
-            // Detail" screen.
-            Box(
-                modifier = Modifier.matchParentSize().then(composableContainerModifier)
-            )
-        }
-        
-    }
 }
 
 @Composable
@@ -219,7 +181,7 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
 }
 
-private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
+internal fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(16.dp)
     if (metadata.heightDp != null && metadata.widthDp != null) {
         return baseModifier
@@ -228,15 +190,9 @@ private fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modi
     return baseModifier.fillMaxWidth()
 }
 
-@Composable
-private fun generateContainerModifier(onClick: (() -> Unit)?): Modifier = onClick?.let {
-    Modifier.fillMaxWidth()
-        .clickable(onClick = onClick)
-} ?: Modifier.fillMaxWidth()
-
-private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
+private fun back(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-        currentScreen = ShowkaseCurrentScreen.GROUP_COMPONENTS,
+        currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
         currentComponent = null,
         isSearchActive = false,
         searchQuery = null

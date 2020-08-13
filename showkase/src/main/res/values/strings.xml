@@ -4,4 +4,6 @@
     <string name="search_label">Search</string>
     <string name="showkase_browser_show_documentation">Show Documentation</string>
     <string name="showkase_browser_hide_documentation">Hide Documentation</string>
+    <string name="components_category">Components</string>
+    <string name="colors_category">Colors</string>
 </resources>

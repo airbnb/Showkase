@@ -5,7 +5,7 @@ import com.airbnb.showkase.annotation.models.ShowkaseColor
 
 class CompanionObjectClass {
     companion object {
-        @ShowkaseColor("Pink", "Default Colors")
-        val Yellow = Color(android.graphics.Color.parseColor("#FFD7D7"))
+//        @ShowkaseColor("Pink", "Default Colors")
+//        val Yellow = Color(android.graphics.Color.parseColor("#FFD7D7"))
     }
 }

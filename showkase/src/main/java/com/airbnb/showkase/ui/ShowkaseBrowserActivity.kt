@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.state
 import androidx.compose.ui.platform.setContent
 import com.airbnb.showkase.exceptions.ShowkaseException
+import com.airbnb.showkase.models.ShowkaseBrowserColor
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
+import com.airbnb.showkase.models.ShowkaseColorsProvider
 import com.airbnb.showkase.models.ShowkaseComponentsProvider
 
 /**
@@ -24,10 +26,12 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         )
         setContent {
             val groupedComponentsMap = getGroupedComponentsMap(classKey)
+            val groupedColorsMap = getGroupedColorsMap(classKey)
             var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
             when {
-                groupedComponentsMap.isNotEmpty() -> {
-                    ShowkaseBrowserApp(groupedComponentsMap, showkaseBrowserScreenMetadata)
+                groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
+                    ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap,
+                        showkaseBrowserScreenMetadata)
                 }
                 else -> {
                     ShowkaseErrorScreen(
@@ -43,7 +47,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
     private fun getGroupedComponentsMap(classKey: String): Map<String, List<ShowkaseBrowserComponent>> {
         return try {
             val showkaseComponentProvider =
-                Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
+                Class.forName("$classKey$COMPONENT_AUTOGEN_CLASS_NAME").newInstance()
 
             (showkaseComponentProvider as ShowkaseComponentsProvider).getShowkaseComponents()
                 .groupBy { it.group }
@@ -53,9 +57,23 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         }
     }
 
+    private fun getGroupedColorsMap(classKey: String): Map<String, List<ShowkaseBrowserColor>> {
+        return try {
+            val showkaseColorProvider =
+                Class.forName("$classKey$COLOR_AUTOGEN_CLASS_NAME").newInstance()
+
+            (showkaseColorProvider as ShowkaseColorsProvider).getShowkaseColors()
+                .groupBy { it.colorGroup }
+
+        } catch (exception: ClassNotFoundException) {
+            mapOf()
+        }
+    }
+
     companion object {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
-        private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
+        private const val COMPONENT_AUTOGEN_CLASS_NAME = "CodegenComponents"
+        private const val COLOR_AUTOGEN_CLASS_NAME = "CodegenColors"
 
         /**
          * Returns the intent that the users of this library need to use for starting the

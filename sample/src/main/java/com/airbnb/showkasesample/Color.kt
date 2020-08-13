@@ -5,14 +5,26 @@ import com.airbnb.showkase.annotation.models.ShowkaseColor
 
 
 class WrapperClass {
-    @ShowkaseColor("Red", "Default Colors")
-    val redColor = Color(0xffff0000)
+    @ShowkaseColor("Primary", "Light Colors")
+    val primary = Color(0xFF6200EE)
 }
 
 object WrapperObjet {
-    @ShowkaseColor("Blue", "Default Colors")
-    val redColor = Color(0xff0000ff)
+    @ShowkaseColor("Primary Variant", "Light Colors")
+    val primaryVariant = Color(0xFF3700B3)
 }
 
-@ShowkaseColor("Green", "Default Colors")
-val green = Color.Green
+@ShowkaseColor("Secondary", "Light Colors")
+val secondary = Color(0xFF03DAC6)
+
+@ShowkaseColor("Secondary Variant", "Light Colors")
+val secondaryVariant = Color(0xFF018786)
+
+@ShowkaseColor("Background", "Light Colors")
+val background = Color.White
+
+@ShowkaseColor("Surface", "Light Colors")
+val surfacce = Color.White
+
+@ShowkaseColor("Error", "Light Colors")
+val error = Color(0xFFB00020)
