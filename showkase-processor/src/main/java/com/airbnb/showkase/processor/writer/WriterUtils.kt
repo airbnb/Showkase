@@ -40,16 +40,20 @@ internal fun writeFile(
     fileBuilder: FileSpec.Builder,
     superInterfaceClassName: ClassName,
     showkaseComponentsListClassName: String,
-    property: PropertySpec,
+    componentListProperty: PropertySpec,
+    colorListProperty: PropertySpec,
     showkaseMetadataList: List<ShowkaseMetadata>,
-    interfaceFunction: FunSpec
+    componentInterfaceFunction: FunSpec,
+    colorInterfaceFunction: FunSpec
 ) {
     fileBuilder
         .addType(
             with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
                 addSuperinterface(superInterfaceClassName)
-                addFunction(interfaceFunction)
-                addProperty(property)
+                addFunction(componentInterfaceFunction)
+                addFunction(colorInterfaceFunction)
+                addProperty(componentListProperty)
+                addProperty(colorListProperty)
                 showkaseMetadataList.forEach { addOriginatingElement(it.element) }
                 build()
             }
