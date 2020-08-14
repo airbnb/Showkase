@@ -1581,4 +1581,13 @@ class ShowkaseProcessorTest {
             )
         }
     }
+
+    private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
+        return KotlinCompilation().apply {
+            sources = kotlinSourceFiles
+            annotationProcessors = listOf(ShowkaseProcessor())
+            inheritClassPath = true
+            messageOutputStream = System.out // see diagnostics in real time
+        }.compile()
+    }
 }
