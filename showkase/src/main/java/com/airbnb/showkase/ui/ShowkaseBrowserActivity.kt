@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.setContent
 import com.airbnb.showkase.exceptions.ShowkaseException
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
-import com.airbnb.showkase.models.ShowkaseComponentsProvider
+import com.airbnb.showkase.models.ShowkaseProvider
 
 /**
  * The activity that's responsible for showing all the @Composable components that were annotated
@@ -45,7 +45,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
 
-            (showkaseComponentProvider as ShowkaseComponentsProvider).getShowkaseComponents()
+            (showkaseComponentProvider as ShowkaseProvider).getShowkaseComponents()
                 .groupBy { it.group }
                 
         } catch (exception: ClassNotFoundException) {
@@ -55,7 +55,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
 
     companion object {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
-        private const val AUTOGEN_CLASS_NAME = "CodegenComponents"
+        private const val AUTOGEN_CLASS_NAME = "Codegen"
 
         /**
          * Returns the intent that the users of this library need to use for starting the

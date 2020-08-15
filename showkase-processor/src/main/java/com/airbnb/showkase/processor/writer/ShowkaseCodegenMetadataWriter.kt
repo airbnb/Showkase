@@ -3,11 +3,12 @@ package com.airbnb.showkase.processor.writer
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
-import com.airbnb.showkase.processor.models.ShowkaseMetadata
 import javax.annotation.processing.ProcessingEnvironment
 import com.squareup.kotlinpoet.TypeSpec
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
+import com.airbnb.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.showkase.processor.models.ShowkaseMetadataType
 import javax.lang.model.util.Types
 
 internal class ShowkaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
@@ -17,7 +18,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
         typeUtil: Types
     ) {
         if (showkaseMetadataSet.isEmpty()) return
-        val moduleName = showkaseMetadataSet.first().moduleName
+        val moduleName = showkaseMetadataSet.first().packageSimpleName
         val generatedClassName = "ShowkaseMetadata${moduleName.capitalize()}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
@@ -29,31 +30,41 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
             val methodName = when {
-                showkaseMetadata.enclosingClass == null -> showkaseMetadata.methodName
+                showkaseMetadata.enclosingClass == null -> showkaseMetadata.elementName
                 else -> {
                     val enclosingClassName =
                         typeUtil.asElement(showkaseMetadata.enclosingClass).simpleName
-                    "${enclosingClassName}_${showkaseMetadata.methodName}"
+                    "${enclosingClassName}_${showkaseMetadata.elementName}"
                 }
             }
 
             val annotation = AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
-                .addMember("showkaseComposableName = %S", showkaseMetadata.showkaseComponentName)
-                .addMember("showkaseComposableGroup = %S", showkaseMetadata.showkaseComponentGroup)
+                .addMember("showkaseName = %S", showkaseMetadata.showkaseName)
+                .addMember("showkaseGroup = %S", showkaseMetadata.showkaseGroup)
                 .addMember("packageName = %S", showkaseMetadata.packageName)
-                .addMember("moduleName = %S", showkaseMetadata.moduleName)
-                .addMember("composableMethodName = %S", showkaseMetadata.methodName)
+                .addMember("packageSimpleName = %S", showkaseMetadata.packageSimpleName)
+                .addMember("showkaseElementName = %S", showkaseMetadata.elementName)
                 .addMember("insideObject = ${showkaseMetadata.insideObject}")
                 .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
-                .addMember("showkaseComposableKDoc = %S", showkaseMetadata.showkaseComponentKDoc)
+                .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
             showkaseMetadata.enclosingClass?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
             }
-            showkaseMetadata.showkaseComponentWidthDp?.let {
-                annotation.addMember("showkaseComposableWidthDp = %L", it) 
-            }
-            showkaseMetadata.showkaseComponentHeightDp?.let {
-                annotation.addMember("showkaseComposableHeightDp = %L", it)
+            when (showkaseMetadata) {
+                is ShowkaseMetadata.Component -> {
+                    annotation.apply {
+                        addMember("showkaseMetadataType = %S", ShowkaseMetadataType.COMPONENT.name)
+                        showkaseMetadata.showkaseWidthDp?.let {
+                            addMember("showkaseWidthDp = %L", it)
+                        }
+                        showkaseMetadata.showkaseHeightDp?.let { 
+                            addMember("showkaseHeightDp = %L", it)
+                        }
+                    }
+                }
+                is ShowkaseMetadata.Color -> {
+                    annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.COLOR.name)
+                }
             }
             autogenClass.addFunction(
                 FunSpec.builder(methodName)

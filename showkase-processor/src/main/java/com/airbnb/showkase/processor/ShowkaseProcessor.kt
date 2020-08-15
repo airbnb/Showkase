@@ -2,17 +2,19 @@ package com.airbnb.showkase.processor
 
 import com.airbnb.showkase.annotation.models.Showkase
 import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+import com.airbnb.showkase.annotation.models.ShowkaseColor
 import com.airbnb.showkase.annotation.models.ShowkaseRoot
 import com.airbnb.showkase.processor.ShowkaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
 import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.showkase.processor.models.toModel
+import com.airbnb.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.showkase.processor.writer.ShowkaseCodegenMetadataWriter
-import com.airbnb.showkase.processor.writer.ShowkaseComponentsWriter
 import com.google.auto.service.AutoService
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
@@ -56,6 +58,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
         Showkase::class.java.name,
         ShowkaseRoot::class.java.name,
+        ShowkaseColor::class.java.name,
         PREVIEW_CLASS_NAME
     )
 
@@ -64,51 +67,36 @@ class ShowkaseProcessor: AbstractProcessor() {
         roundEnvironment: RoundEnvironment
     ): Boolean {
         try {
-            val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
-            val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
-            val uniqueComposablesMetadata = dedupePreviewAndShowkaseAnnotationComponents(
-                showkaseComposablesMetadata,
-                previewComposablesMetadata
+            val componentMetadata = processComponentAnnotation(roundEnvironment)
+            val colorMetadata = processColorAnnotation(roundEnvironment)
+            
+            processShowkaseMetadata(
+                roundEnvironment = roundEnvironment, 
+                componentMetadata = componentMetadata, 
+                colorMetadata = colorMetadata
             )
-            processShowkaseMetadata(roundEnvironment, uniqueComposablesMetadata)
         } catch (exception: ShowkaseProcessorException) {
             logger.logErrorMessage("${exception.message}")
         }
 
-        if (roundEnvironment.processingOver() == true) {
+        if (roundEnvironment.processingOver()) {
             logger.publishMessages(messager)
         }
         return false
     }
 
-    private fun processShowkaseMetadata(
-        roundEnvironment: RoundEnvironment,
-        uniqueComposablesMetadata: Set<ShowkaseMetadata>
-    ) {
-        val showkaseRootElements =
-            roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class.java)
-        showkaseValidator.validateShowkaseRootElement(showkaseRootElements, elementUtils, typeUtils)
-        val rootElement = showkaseRootElements.singleOrNull()
-        when (rootElement) {
-            // If root element is not present in this module, it means that we only need to write
-            // the metadata file for this module so that the root module can use this info to 
-            // include the composables from this module into the final codegen file. 
-            null -> writeMetadataFile(uniqueComposablesMetadata)
-            // Else, this is the module that should aggregate all the other metadata files and 
-            // also use the showkaseMetadata set from the current round to write the final file.
-            else -> {
-                val generatedShowkaseMetadataOnClasspath =
-                    getShowkaseCodegenMetadataOnClassPath(elementUtils)
-                val combinedShowkaseMetadata = uniqueComposablesMetadata +
-                        generatedShowkaseMetadataOnClasspath
-                processMetadata(rootElement, combinedShowkaseMetadata)
-            }
-        }
+    private fun processComponentAnnotation(roundEnvironment: RoundEnvironment)
+            : Set<ShowkaseMetadata> {
+        val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
+        val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
+        return (showkaseComposablesMetadata + previewComposablesMetadata)
+            .dedupeAndSort()
+            .toSet()
     }
 
     private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment) =
         roundEnvironment.getElementsAnnotatedWith(Showkase::class.java).map { element ->
-            showkaseValidator.validateElement(
+            showkaseValidator.validateComponentElement(
                 element, composableTypeMirror, typeUtils,
                 Showkase::class.java.simpleName
             )
@@ -125,7 +113,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             .getTypeElement(previewClass.canonicalName)
             .asType()
         return roundEnvironment.getElementsAnnotatedWith(previewClassAnnotation).mapNotNull { element ->
-            showkaseValidator.validateElement(element, composableTypeMirror, typeUtils, 
+            showkaseValidator.validateComponentElement(element, composableTypeMirror, typeUtils, 
                 previewClass.simpleName)
             val showkaseMetadata = getShowkaseMetadataFromPreview(
                 element as ExecutableElement, elementUtils, typeUtils, previewTypeMirror, showkaseValidator
@@ -133,13 +121,6 @@ class ShowkaseProcessor: AbstractProcessor() {
             showkaseMetadata
         }.toSet()
     }
-
-    private fun dedupePreviewAndShowkaseAnnotationComponents(
-        showcaseMetadataList: Set<ShowkaseMetadata>,
-        previewMetadataList: Set<ShowkaseMetadata>
-    ) = (showcaseMetadataList + previewMetadataList)
-        .dedupeAndSort()
-        .toSet()
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
         ShowkaseCodegenMetadataWriter(processingEnv).apply {
@@ -155,30 +136,62 @@ class ShowkaseProcessor: AbstractProcessor() {
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 
         // will be null) & the methodName.
-        "${it.packageName}_${it.enclosingClass}_${it.methodName}"
+        "${it.packageName}_${it.enclosingClass}_${it.elementName}"
     }
         .distinctBy {
             // We also ensure that the component groupName and the component name are unique so 
             // that they don't show up twice in the browser app. 
-            "${it.showkaseComponentName}_${it.showkaseComponentGroup}"
+            "${it.showkaseName}_${it.showkaseGroup}"
         }
         .sortedBy {
-            "${it.packageName}_${it.enclosingClass}_${it.methodName}"
+            "${it.packageName}_${it.enclosingClass}_${it.elementName}"
         }
 
-    private fun processMetadata(
-        rootElement: Element,
-        combinedMetadataList: Set<ShowkaseMetadata>
+    private fun processColorAnnotation(roundEnvironment: RoundEnvironment) =
+        roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class.java).map { element ->
+            showkaseValidator.validateColorElement(element, ShowkaseColor::class.java.simpleName)
+            getShowkaseColorMetadata(element, elementUtils, typeUtils, 
+                showkaseValidator)
+        }.toSet()
+
+    private fun processShowkaseMetadata(
+        roundEnvironment: RoundEnvironment,
+        componentMetadata: Set<ShowkaseMetadata>,
+        colorMetadata: Set<ShowkaseMetadata>
     ) {
-        if (combinedMetadataList.isEmpty()) return
-        val rootModuleClassName = rootElement.simpleName.toString()
-        val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
-
-        ShowkaseComponentsWriter(processingEnv).apply {
-            generateShowkaseBrowserComponents(
-                combinedMetadataList.toList(), rootModulePackageName, rootModuleClassName
-            )
+        val showkaseRootElements =
+            roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class.java)
+        showkaseValidator.validateShowkaseRootElement(showkaseRootElements, elementUtils, typeUtils)
+        val rootElement = showkaseRootElements.singleOrNull()
+        when (rootElement) {
+            // If root element is not present in this module, it means that we only need to write
+            // the metadata file for this module so that the root module can use this info to 
+            // include the composables from this module into the final codegen file. 
+            null -> writeMetadataFile(componentMetadata + colorMetadata)
+            // Else, this is the module that should aggregate all the other metadata files and 
+            // also use the showkaseMetadata set from the current round to write the final file.
+            else -> {
+                writeShowkaseFiles(rootElement, componentMetadata, colorMetadata)
+            }
         }
+    }
+
+    private fun writeShowkaseFiles(
+        rootElement: Element,
+        componentMetadata: Set<ShowkaseMetadata>,
+        colorMetadata: Set<ShowkaseMetadata>
+    ) {
+        val generatedShowkaseMetadataOnClasspath =
+            getShowkaseCodegenMetadataOnClassPath(elementUtils)
+        val classpathComponentMetadata =
+            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Component>()
+        val classpathColorMetadata =
+            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Color>()
+
+        writeShowkaseBrowserFile(
+            rootElement, 
+            componentMetadata + classpathComponentMetadata, 
+            colorMetadata + classpathColorMetadata)
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
@@ -197,9 +210,29 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
+    private fun writeShowkaseBrowserFile(
+        rootElement: Element,
+        componentsMetadata: Set<ShowkaseMetadata>,
+        colorsMetadata: Set<ShowkaseMetadata>
+    ) {
+        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty()) return
+        val rootModuleClassName = rootElement.simpleName.toString()
+        val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
+
+        ShowkaseBrowserWriter(processingEnv).apply {
+            generateShowkaseBrowserFile(
+                componentsMetadata.toList(), 
+                colorsMetadata.toList(), 
+                rootModulePackageName, 
+                rootModuleClassName
+            )
+        }
+    }
+
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
         const val PREVIEW_CLASS_NAME = "androidx.ui.tooling.preview.Preview"
+        const val COLOR_CLASS_NAME = "androidx.compose.ui.graphics.Color"
 
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt
