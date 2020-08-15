@@ -9,7 +9,7 @@ class WrapperClass {
     val redColor = Color(0xffff0000)
 }
 
-object WrapperObjet {
+object WrapperObject {
     @ShowkaseColor("Blue", "Default Colors")
     val redColor = Color(0xff0000ff)
 }
