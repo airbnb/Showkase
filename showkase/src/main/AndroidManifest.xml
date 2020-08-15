@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.airbnb.showkase">
+    package="com.airbnb.android.showkase">
 
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity
-            android:name="com.airbnb.showkase.ui.ShowkaseBrowserActivity"
+            android:name="com.airbnb.android.showkase.ui.ShowkaseBrowserActivity"
             android:label="ShowkaseBrowserActivity"
             android:theme="@style/Theme.App.NoActionBar">
             <!-- TODO(vinaygaba): Figure out product flavor stuff -->
