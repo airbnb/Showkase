@@ -13,7 +13,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.airbnb.showkasesample"
+        applicationId "com.airbnb.android.showkasesample"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
