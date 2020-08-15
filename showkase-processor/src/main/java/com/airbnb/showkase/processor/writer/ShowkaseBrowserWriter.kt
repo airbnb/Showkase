@@ -17,7 +17,6 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         rootModulePackageName: String,
         rootModuleClassName: String
     ) {
-        if (showkaseComponentMetadataList.isEmpty()) return
         val showkaseComponentsListClassName = "$rootModuleClassName$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 

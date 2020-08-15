@@ -213,16 +213,16 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun writeShowkaseBrowserFile(
         rootElement: Element,
         componentsMetadata: Set<ShowkaseMetadata>,
-        combinedColorMetadata: Set<ShowkaseMetadata>
+        colorsMetadata: Set<ShowkaseMetadata>
     ) {
-        if (componentsMetadata.isEmpty()) return
+        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.simpleName.toString()
         val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
 
         ShowkaseBrowserWriter(processingEnv).apply {
             generateShowkaseBrowserFile(
                 componentsMetadata.toList(), 
-                combinedColorMetadata.toList(), 
+                colorsMetadata.toList(), 
                 rootModulePackageName, 
                 rootModuleClassName
             )

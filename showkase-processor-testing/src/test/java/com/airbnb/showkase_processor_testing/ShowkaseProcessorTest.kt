@@ -53,6 +53,27 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `color with showkase color annotation inside class compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("Composables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        
+        class Composables {
+            @ShowkaseColor("name", "group")
+            val red = Color(0xffff0000)
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
     fun `top level composable function with showkase annotation compiles ok`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.showkase_processor_testing
@@ -86,6 +107,24 @@ class ShowkaseProcessorTest {
             
         }
     """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `top level color property with ShowkaseColor annotation compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        @ShowkaseColor("name", "group")
+        val red = Color(0xffff0000)
+    """
+        )
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
@@ -130,6 +169,26 @@ class ShowkaseProcessorTest {
             }
         }
     """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `color property inside object with ShowkaseColor annotation compiles ok`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        object ShowkaseObject {
+            @ShowkaseColor("name", "group")
+            val color = Color(0xffff0000)
+        }
+    """
+        )
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
@@ -446,6 +505,25 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `non-long value annotated with ShowkaseColor annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        class GeneratedTestComposables {
+            @ShowkaseColor("name", "group")
+            val red = "Hello"
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Only \"Color\" fields can be annotated with ShowkaseColor"
+        assertThat(result.messages).contains(error)
+    }
+
+    @Test
     fun `multiple classes with showkaseroot annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import com.airbnb.showkase.annotation.models.Showkase
@@ -626,6 +704,118 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `top level color property with ShowkaseColor annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        @ShowkaseColor("name", "group")
+        val red = Color(0xffff0000)
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level composable with wrapped color property with ShowkaseColor annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        @Showkase("name", "group")
+        @Composable
+        fun TestComposable() {
+            
+        }
+        
+        class WrapperClass {
+            @ShowkaseColor("name", "group")
+            val red = Color(0xffff0000)
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase
+                
+                import com.airbnb.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun WrapperClass_red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
     fun `top level composable function with showkase and showkaseroot generates 1 file`() {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.showkase_processor_testing
@@ -758,6 +948,155 @@ class ShowkaseProcessorTest {
 
                   override fun getShowkaseComponents() = componentList
 
+                  override fun getShowkaseColors() = colorList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level color property with showkasecolor and showkaseroot generates 1 file`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        @ShowkaseColor("name", "group")
+        val red = Color(0xffff0000)
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase_processor_testing
+                
+                import com.airbnb.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+                        ShowkaseBrowserColor(
+                            colorGroup = "group",
+                            colorName = "name",
+                            colorKDoc = "",
+                            color = red)
+                      )
+                
+                  override fun getShowkaseComponents() = componentList
+                
+                  override fun getShowkaseColors() = colorList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level color property and composable function generates 1 file`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        
+        @Showkase("name", "group")
+        @Composable
+        fun TestComposable() {
+            
+        }
+        
+        @ShowkaseColor("name", "group")
+        val red = Color(0xffff0000)
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase_processor_testing
+                
+                import androidx.compose.runtime.Composable
+                import com.airbnb.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                        ShowkaseBrowserComponent(
+                            group = "group",
+                            componentName = "name",
+                            componentKDoc = "",
+                            component = @Composable { TestComposable() })
+                      )
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+                        ShowkaseBrowserColor(
+                            colorGroup = "group",
+                            colorName = "name",
+                            colorKDoc = "",
+                            color = red)
+                      )
+                
+                  override fun getShowkaseComponents() = componentList
+                
                   override fun getShowkaseColors() = colorList
                 }
             """.trimIndent()
@@ -904,6 +1243,148 @@ class ShowkaseProcessorTest {
 
                   override fun getShowkaseComponents() = componentList
 
+                  override fun getShowkaseColors() = colorList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `color property inside class with showkasecolor annotation and showkaseroot generates 1 file`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        class WrapperClass {
+            @ShowkaseColor("name", "group")
+            val color = Color(0xffff0000)
+        }
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase_processor_testing
+                
+                import com.airbnb.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+                        ShowkaseBrowserColor(
+                            colorGroup = "group",
+                            colorName = "name",
+                            colorKDoc = "",
+                            color = WrapperClass().color)
+                      )
+                
+                  override fun getShowkaseComponents() = componentList
+                
+                  override fun getShowkaseColors() = colorList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `color property inside object with showkasecolor annotation and showkaseroot generates 1 file`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.showkase.annotation.models.ShowkaseColor
+        
+        object WrapperClass {
+            @ShowkaseColor("name", "group")
+            val color = Color(0xffff0000)
+        }
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.showkase_processor_testing
+        
+        import com.airbnb.showkase.annotation.models.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.showkase.annotation.models.ShowkaseRoot
+        import com.airbnb.showkase.annotation.models.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.showkase_processor_testing
+                
+                import com.airbnb.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+                        ShowkaseBrowserColor(
+                            colorGroup = "group",
+                            colorName = "name",
+                            colorKDoc = "",
+                            color = WrapperClass.color)
+                      )
+                
+                  override fun getShowkaseComponents() = componentList
+                
                   override fun getShowkaseColors() = colorList
                 }
             """.trimIndent()
