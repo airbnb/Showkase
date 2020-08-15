@@ -35,6 +35,7 @@ internal fun getShowkaseProviderInterfaceFunction(
     .addStatement("return $returnPropertyName")
     .build()
 
+@Suppress("LongParameterList")
 internal fun writeFile(
     processingEnv: ProcessingEnvironment,
     fileBuilder: FileSpec.Builder,
