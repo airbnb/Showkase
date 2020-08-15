@@ -24,7 +24,7 @@ val secondaryVariant = Color(0xFF018786)
 val background = Color.White
 
 @ShowkaseColor("Surface", "Light Colors")
-val surfacce = Color.White
+val surface = Color.White
 
 @ShowkaseColor("Error", "Light Colors")
 val error = Color(0xFFB00020)
