@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
  * Used by the annotation processor internally to generate metadata files. This won't ever be 
  * needed by any users of Showkase. 
  * 
- * @param moduleName Name of the module that the @Composable function belongs to
+ * @param packageSimpleName Name of the module that the @Composable function belongs to
  * @param packageName Name of the package that the @Composable function was declared in
  * @param showkaseElementName Method name of the @Composable function
  * @param showkaseName User defined name for the @Composable component to render inside
@@ -23,7 +23,7 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 @Suppress("LongParameterList")
 annotation class ShowkaseCodegenMetadata(
-    val moduleName: String,
+    val packageSimpleName: String,
     val packageName: String,
     val showkaseElementName: String,
     val showkaseName: String,

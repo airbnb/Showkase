@@ -9,7 +9,7 @@ class WrapperClass {
     val primary = Color(0xFF6200EE)
 }
 
-object WrapperObjet {
+object WrapperObject {
     @ShowkaseColor("Primary Variant", "Light Colors")
     val primaryVariant = Color(0xFF3700B3)
 }

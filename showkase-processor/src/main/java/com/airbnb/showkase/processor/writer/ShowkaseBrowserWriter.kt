@@ -17,7 +17,6 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         rootModulePackageName: String,
         rootModuleClassName: String
     ) {
-        if (showkaseComponentMetadataList.isEmpty()) return
         val showkaseComponentsListClassName = "$rootModuleClassName$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 
@@ -66,17 +65,22 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     showkaseMetadata.showkaseName,
                     showkaseMetadata.showkaseKDoc
                 )
-                showkaseMetadata.showkaseWidthDp?.let {
-                    add("\nwidthDp = %L,", it)
+                if (showkaseMetadata is ShowkaseMetadata.Component) {
+                    showkaseMetadata.apply {
+                        showkaseWidthDp?.let {
+                            add("\nwidthDp = %L,", it)
+                        }
+                        showkaseHeightDp?.let {
+                            add("\nheightDp = %L,", it)
+                        }
+                    }
                 }
-                showkaseMetadata.showkaseHeightDp?.let {
-                    add("\nheightDp = %L,", it)
-                }
+                
                 add(
                     composePreviewFunctionLambda(
                         showkaseMetadata.packageName,
                         showkaseMetadata.enclosingClass,
-                        showkaseMetadata.showkaseElementName,
+                        showkaseMetadata.elementName,
                         showkaseMetadata.insideWrapperClass,
                         showkaseMetadata.insideObject
                     )
@@ -123,7 +127,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     colorPropertyValue(
                         showkaseMetadata.packageName,
                         showkaseMetadata.enclosingClass,
-                        showkaseMetadata.showkaseElementName,
+                        showkaseMetadata.elementName,
                         showkaseMetadata.insideWrapperClass,
                         showkaseMetadata.insideObject
                     )

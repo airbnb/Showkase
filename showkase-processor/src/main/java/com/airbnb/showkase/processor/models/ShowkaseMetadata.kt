@@ -17,21 +17,48 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-internal data class ShowkaseMetadata(
-    val element: Element,
-    val moduleName: String,
-    val packageName: String,
-    val showkaseElementName: String,
-    val showkaseName: String,
-    val showkaseGroup: String,
-    val showkaseKDoc: String,
-    val showkaseMetadataType: ShowkaseMetadataType,
-    val enclosingClass: TypeMirror? = null,
-    val showkaseWidthDp: Int? = null,
-    val showkaseHeightDp: Int? = null,
-    val insideWrapperClass: Boolean = false,
-    val insideObject: Boolean = false
-)
+internal sealed class ShowkaseMetadata(
+    open val element: Element,
+    open val packageName: String,
+    open val packageSimpleName: String,
+    open val elementName: String,
+    open val showkaseName: String,
+    open val showkaseGroup: String,
+    open val showkaseKDoc: String,
+    open val enclosingClass: TypeMirror? = null,
+    open val insideWrapperClass: Boolean = false,
+    open val insideObject: Boolean = false,
+) { 
+    data class Component(
+        override val element: Element,
+        override val packageName: String,
+        override val packageSimpleName: String,
+        override val elementName: String,
+        override val showkaseName: String,
+        override val showkaseGroup: String,
+        override val showkaseKDoc: String,
+        override val enclosingClass: TypeMirror? = null,
+        override val insideWrapperClass: Boolean = false,
+        override val insideObject: Boolean = false,
+        val showkaseWidthDp: Int? = null,
+        val showkaseHeightDp: Int? = null,
+    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName, 
+        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+
+    data class Color(
+        override val element: Element,
+        override val packageSimpleName: String,
+        override val packageName: String,
+        override val elementName: String,
+        override val showkaseName: String,
+        override val showkaseGroup: String,
+        override val showkaseKDoc: String,
+        override val enclosingClass: TypeMirror? = null,
+        override val insideWrapperClass: Boolean = false,
+        override val insideObject: Boolean = false
+    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName,
+        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+}
 
 private enum class ShowkaseAnnotationProperty {
     NAME,
@@ -61,21 +88,41 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
         mte.typeMirrors
     }
 
-    return ShowkaseMetadata(
-        moduleName = moduleName,
-        packageName = packageName,
-        enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
-        showkaseElementName = showkaseElementName,
-        showkaseName = showkaseName,
-        showkaseGroup = showkaseGroup,
-        showkaseWidthDp = showkaseWidthDp.parseAnnotationProperty(),
-        showkaseHeightDp = showkaseHeightDp.parseAnnotationProperty(),
-        insideWrapperClass = insideWrapperClass,
-        insideObject = insideObject,
-        showkaseKDoc = showkaseKDoc,
-        element = element,
-        showkaseMetadataType = ShowkaseMetadataType.valueOf(showkaseMetadataType)
-    )
+    return when(ShowkaseMetadataType.valueOf(showkaseMetadataType)) {
+        ShowkaseMetadataType.COMPONENT -> {
+            ShowkaseMetadata.Component(
+                packageSimpleName = packageSimpleName,
+                packageName = packageName,
+                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                elementName = showkaseElementName,
+                showkaseName = showkaseName,
+                showkaseGroup = showkaseGroup,
+                showkaseWidthDp = showkaseWidthDp.parseAnnotationProperty(),
+                showkaseHeightDp = showkaseHeightDp.parseAnnotationProperty(),
+                insideWrapperClass = insideWrapperClass,
+                insideObject = insideObject,
+                showkaseKDoc = showkaseKDoc,
+                element = element
+            )
+        }
+        ShowkaseMetadataType.COLOR -> {
+            ShowkaseMetadata.Color(
+                packageSimpleName = packageSimpleName,
+                packageName = packageName,
+                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                elementName = showkaseElementName,
+                showkaseName = showkaseName,
+                showkaseGroup = showkaseGroup,
+                insideWrapperClass = insideWrapperClass,
+                insideObject = insideObject,
+                showkaseKDoc = showkaseKDoc,
+                element = element
+            )
+        }
+        else -> {
+            throw ShowkaseProcessorException("Not a supported type")
+        }
+    }
 }
 
 private fun Int.parseAnnotationProperty() = when(this) {
@@ -93,18 +140,18 @@ internal fun getShowkaseMetadata(
     val packageElement = elementUtil.getPackageOf(element)
     val moduleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
-    val methodName = element.simpleName.toString()
+    val elementName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
     val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
     
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
     
-    return ShowkaseMetadata(
-        moduleName = moduleName,
+    return ShowkaseMetadata.Component(
+        packageSimpleName = moduleName,
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
-        showkaseElementName = methodName,
+        elementName = elementName,
         showkaseName = showkaseAnnotation.name,
         showkaseGroup = showkaseAnnotation.group,
         showkaseWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
@@ -113,8 +160,7 @@ internal fun getShowkaseMetadata(
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
-        showkaseKDoc = kDoc,
-        showkaseMetadataType = ShowkaseMetadataType.COMPONENT
+        showkaseKDoc = kDoc
     )
 }
 
@@ -145,7 +191,7 @@ internal fun getShowkaseMetadataFromPreview(
     val packageElement = elementUtil.getPackageOf(element)
     val moduleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
-    val methodName = element.simpleName.toString()
+    val elementName = element.simpleName.toString()
     val showkaseFunctionType = element.getShowkaseFunctionType()
     val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
@@ -164,11 +210,11 @@ internal fun getShowkaseMetadataFromPreview(
         return null
     }
     
-    return ShowkaseMetadata(
-        moduleName = moduleName,
+    return ShowkaseMetadata.Component(
+        packageSimpleName = moduleName,
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
-        showkaseElementName = methodName,
+        elementName = elementName,
         showkaseKDoc = kDoc,
         showkaseName = map[ShowkaseAnnotationProperty.NAME]?.let { it as String }.orEmpty(),
         showkaseGroup = map[ShowkaseAnnotationProperty.GROUP]?.let { it as String }.orEmpty(),
@@ -177,8 +223,7 @@ internal fun getShowkaseMetadataFromPreview(
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
                 showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
-        element = element,
-        showkaseMetadataType = ShowkaseMetadataType.COMPONENT
+        element = element
     )
 }
 
@@ -190,9 +235,9 @@ internal fun getShowkaseColorMetadata(
 ): ShowkaseMetadata {
     val showkaseColorAnnotation = element.getAnnotation(ShowkaseColor::class.java)
     val packageElement = elementUtils.getPackageOf(element)
-    val moduleName = packageElement.simpleName.toString()
+    val packageSimpleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
-    val fieldName = element.simpleName.toString()
+    val elementName = element.simpleName.toString()
     // TODO(vinaygaba): Color propertie's aren't working properly with companion objects. This is
     // because the properties are generated outside the companion object in java land(as opposed to 
     // inside the companion class for functions). Need to investigate more.
@@ -202,19 +247,18 @@ internal fun getShowkaseColorMetadata(
 
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
 
-    return ShowkaseMetadata(
+    return ShowkaseMetadata.Color(
         element = element,
         showkaseName = showkaseColorAnnotation.name,
         showkaseGroup = showkaseColorAnnotation.group,
         showkaseKDoc = kDoc,
-        showkaseElementName = fieldName,
-        moduleName = moduleName,
+        elementName = elementName,
+        packageSimpleName = packageSimpleName,
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
-        showkaseMetadataType = ShowkaseMetadataType.COLOR
+                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
     )
 }
 

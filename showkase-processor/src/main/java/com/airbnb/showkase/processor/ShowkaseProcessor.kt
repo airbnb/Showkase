@@ -9,13 +9,12 @@ import com.airbnb.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.showkase.processor.models.ShowkaseMetadata
-import com.airbnb.showkase.processor.models.ShowkaseMetadataType
 import com.airbnb.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.showkase.processor.models.toModel
-import com.airbnb.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.showkase.processor.writer.ShowkaseBrowserWriter
+import com.airbnb.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.google.auto.service.AutoService
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
@@ -86,7 +85,8 @@ class ShowkaseProcessor: AbstractProcessor() {
         return false
     }
 
-    private fun processComponentAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
+    private fun processComponentAnnotation(roundEnvironment: RoundEnvironment)
+            : Set<ShowkaseMetadata> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata)
@@ -136,7 +136,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 
         // will be null) & the methodName.
-        "${it.packageName}_${it.enclosingClass}_${it.showkaseElementName}"
+        "${it.packageName}_${it.enclosingClass}_${it.elementName}"
     }
         .distinctBy {
             // We also ensure that the component groupName and the component name are unique so 
@@ -144,7 +144,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             "${it.showkaseName}_${it.showkaseGroup}"
         }
         .sortedBy {
-            "${it.packageName}_${it.enclosingClass}_${it.showkaseElementName}"
+            "${it.packageName}_${it.enclosingClass}_${it.elementName}"
         }
 
     private fun processColorAnnotation(roundEnvironment: RoundEnvironment) =
@@ -183,16 +183,15 @@ class ShowkaseProcessor: AbstractProcessor() {
     ) {
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(elementUtils)
-        val metadataGroupByType = generatedShowkaseMetadataOnClasspath.groupBy {
-            it.showkaseMetadataType
-        }
-        
-        val combinedComponentMetadata = componentMetadata + 
-                metadataGroupByType[ShowkaseMetadataType.COMPONENT].orEmpty()
-        val combinedColorMetadata = colorMetadata +
-                metadataGroupByType[ShowkaseMetadataType.COLOR].orEmpty()
+        val classpathComponentMetadata =
+            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Component>()
+        val classpathColorMetadata =
+            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Color>()
 
-        writeShowkaseBrowserFile(rootElement, combinedComponentMetadata, combinedColorMetadata)
+        writeShowkaseBrowserFile(
+            rootElement, 
+            componentMetadata + classpathComponentMetadata, 
+            colorMetadata + classpathColorMetadata)
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
@@ -214,16 +213,16 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun writeShowkaseBrowserFile(
         rootElement: Element,
         componentsMetadata: Set<ShowkaseMetadata>,
-        combinedColorMetadata: Set<ShowkaseMetadata>
+        colorsMetadata: Set<ShowkaseMetadata>
     ) {
-        if (componentsMetadata.isEmpty()) return
+        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.simpleName.toString()
         val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
 
         ShowkaseBrowserWriter(processingEnv).apply {
             generateShowkaseBrowserFile(
                 componentsMetadata.toList(), 
-                combinedColorMetadata.toList(), 
+                colorsMetadata.toList(), 
                 rootModulePackageName, 
                 rootModuleClassName
             )
