@@ -6,13 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
+import com.airbnb.showkase.models.ShowkaseCategory
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
 import java.util.Locale
-
-enum class ShowkaseCategories {
-    COMPONENTS,
-    COLORS,
-}
 
 @Composable
 internal fun ShowkaseCategoriesScreen(
@@ -20,7 +16,7 @@ internal fun ShowkaseCategoriesScreen(
 ) {
     val activity = (LifecycleOwnerAmbient.current as ComponentActivity)
     
-    LazyColumnFor(items = ShowkaseCategories.values().toList()) { category ->
+    LazyColumnFor(items = ShowkaseCategory.values().toList()) { category ->
         val defaultlLocale = Locale.getDefault()
         SimpleTextCard(
             text = category.name.toLowerCase(defaultlLocale).capitalize(defaultlLocale),
@@ -28,8 +24,8 @@ internal fun ShowkaseCategoriesScreen(
                 showkaseBrowserScreenMetadata.value =
                     showkaseBrowserScreenMetadata.value.copy(
                         currentScreen = when(category) {
-                            ShowkaseCategories.COMPONENTS -> ShowkaseCurrentScreen.COMPONENT_GROUPS
-                            ShowkaseCategories.COLORS -> ShowkaseCurrentScreen.COLOR_GROUPS
+                            ShowkaseCategory.COMPONENTS -> ShowkaseCurrentScreen.COMPONENT_GROUPS
+                            ShowkaseCategory.COLORS -> ShowkaseCurrentScreen.COLOR_GROUPS
                         },
                         currentGroup = null,
                         isSearchActive = false,
