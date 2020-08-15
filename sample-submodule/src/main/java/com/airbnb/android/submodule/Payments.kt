@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.airbnb.android.showkase.annotation.models.Showkase
+import com.airbnb.android.showkase.annotation.Showkase
 
 @Composable
 fun CreditCardComponent(cardName: String) {

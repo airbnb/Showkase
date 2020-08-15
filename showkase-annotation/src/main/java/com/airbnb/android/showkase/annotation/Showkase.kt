@@ -1,4 +1,4 @@
-package com.airbnb.android.showkase.annotation.models
+package com.airbnb.android.showkase.annotation
 
 /**
  * Used to annotate @Composable functions that should be displayed inside the 

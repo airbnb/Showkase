@@ -14,7 +14,7 @@ import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.runtime.setValue
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.android.showkase.annotation.models.Showkase
+import com.airbnb.android.showkase.annotation.Showkase
 
 val listItems = listOf("Games", "Apps", "Movies", "Books")
 

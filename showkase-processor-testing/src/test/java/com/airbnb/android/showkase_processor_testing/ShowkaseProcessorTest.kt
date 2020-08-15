@@ -12,7 +12,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("Composables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         class Composables {
@@ -57,7 +57,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         
         class Composables {
@@ -77,7 +77,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name", "group")
@@ -118,7 +118,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         @ShowkaseColor("name", "group")
         val red = Color(0xffff0000)
@@ -135,7 +135,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         object ShowkaseObject {
@@ -180,7 +180,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         object ShowkaseObject {
             @ShowkaseColor("name", "group")
@@ -199,7 +199,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         class ShowkaseClass {
@@ -245,7 +245,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `private composable with showkase annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         class GeneratedTestComposables {
@@ -291,7 +291,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `basic function annotated with showkase annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         
         class GeneratedTestComposables {
             @Showkase("name", "group")
@@ -331,7 +331,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `class annotated with showkase annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name", "group")
@@ -373,7 +373,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `object annotated with showkase annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name", "group")
@@ -415,7 +415,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `composable function that has parameters with showkase annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
 
         class GeneratedTestComposables {
@@ -458,7 +458,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `composable function with showkase annotation inside class with parameters throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
 
         class GeneratedTestComposables(name: String) {
@@ -506,7 +506,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `non-long value annotated with ShowkaseColor annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         class GeneratedTestComposables {
             @ShowkaseColor("name", "group")
@@ -525,10 +525,10 @@ class ShowkaseProcessorTest {
     @Test
     fun `multiple classes with showkaseroot annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 
         class GeneratedTestComposables {
             @Showkase("name", "group")
@@ -556,10 +556,10 @@ class ShowkaseProcessorTest {
     @Test
     fun `method with showkaseroot annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 
         class GeneratedTestComposables {
             @Showkase("name", "group")
@@ -586,10 +586,10 @@ class ShowkaseProcessorTest {
     @Test
     fun `class with no interface but showkaseroot annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 
         @Showkase("name", "group")
         @Composable
@@ -617,7 +617,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name", "group")
@@ -635,7 +635,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -680,7 +680,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -708,7 +708,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         @ShowkaseColor("name", "group")
         val red = Color(0xffff0000)
@@ -723,7 +723,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -751,9 +751,9 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         @Showkase("name", "group")
         @Composable
@@ -776,7 +776,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperClass
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -819,7 +819,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name", "group")
@@ -832,10 +832,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -902,10 +902,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -960,7 +960,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         @ShowkaseColor("name", "group")
         val red = Color(0xffff0000)
@@ -970,10 +970,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1027,8 +1027,8 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name", "group")
@@ -1045,10 +1045,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1108,7 +1108,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -1124,10 +1124,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1181,7 +1181,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         object WrapperClass {
@@ -1197,10 +1197,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1254,10 +1254,10 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         class WrapperClass {
             @ShowkaseColor("name", "group")
@@ -1269,10 +1269,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1325,10 +1325,10 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         import androidx.compose.ui.graphics.Color
-        import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
         
         object WrapperClass {
             @ShowkaseColor("name", "group")
@@ -1340,10 +1340,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1396,7 +1396,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -1414,10 +1414,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {
@@ -1471,7 +1471,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -1491,7 +1491,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperClass
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -1540,7 +1540,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperClass
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -1570,7 +1570,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         
         object WrapperObject {
             @Showkase("name", "group")
@@ -1590,7 +1590,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperObject
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -1639,7 +1639,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperObject
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -1669,7 +1669,7 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         
         class WrapperClass {
             companion object {
@@ -1691,7 +1691,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperClass
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -1742,7 +1742,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 import com.airbnb.android.showkase_processor_testing.WrapperClass
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -1771,7 +1771,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         @Showkase("name1", "group1")
@@ -1795,7 +1795,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -1860,7 +1860,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -1903,7 +1903,7 @@ class ShowkaseProcessorTest {
         
         import androidx.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         
         @Preview("name1", "group1")
         @Composable
@@ -1927,7 +1927,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -1970,7 +1970,7 @@ class ShowkaseProcessorTest {
         
         import androidx.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         
         @Preview("name1", "group1")
         @Showkase("name2", "group2")
@@ -1989,7 +1989,7 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase
                 
-                import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
                 
                 class ShowkaseMetadataShowkase_processor_testing {
                   @ShowkaseCodegenMetadata(
@@ -2016,7 +2016,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
         
         object WrapperClass {
@@ -2044,10 +2044,10 @@ class ShowkaseProcessorTest {
         val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import com.airbnb.android.showkase.annotation.models.Showkase
+        import com.airbnb.android.showkase.annotation.Showkase
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-        import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
         
         @ShowkaseRoot
         class TestShowkaseRoot: ShowkaseRootModule {

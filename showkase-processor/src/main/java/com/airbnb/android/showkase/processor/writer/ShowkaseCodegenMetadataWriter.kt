@@ -1,6 +1,6 @@
 package com.airbnb.android.showkase.processor.writer
 
-import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadataType

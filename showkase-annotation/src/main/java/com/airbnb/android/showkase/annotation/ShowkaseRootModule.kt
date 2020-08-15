@@ -1,4 +1,4 @@
-package com.airbnb.android.showkase.annotation.models
+package com.airbnb.android.showkase.annotation
 
 /**
  * Interface used to declare the root class for a module. This is needed to let Showkase

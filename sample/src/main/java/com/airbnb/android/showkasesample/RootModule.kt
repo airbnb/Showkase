@@ -1,7 +1,7 @@
 package com.airbnb.android.showkasesample
 
-import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+import com.airbnb.android.showkase.annotation.ShowkaseRoot
+import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 
 @ShowkaseRoot
 class RootModule: ShowkaseRootModule

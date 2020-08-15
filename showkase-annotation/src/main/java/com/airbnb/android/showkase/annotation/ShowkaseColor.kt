@@ -1,4 +1,4 @@
-package com.airbnb.android.showkase.annotation.models
+package com.airbnb.android.showkase.annotation
 
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)

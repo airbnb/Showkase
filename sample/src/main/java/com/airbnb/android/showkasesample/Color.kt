@@ -1,7 +1,7 @@
 package com.airbnb.android.showkasesample
 
 import androidx.compose.ui.graphics.Color
-import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+import com.airbnb.android.showkase.annotation.ShowkaseColor
 
 
 class WrapperClass {

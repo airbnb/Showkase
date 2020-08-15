@@ -1,8 +1,8 @@
 package com.airbnb.android.showkase.processor.logging
 
-import com.airbnb.android.showkase.annotation.models.Showkase
-import com.airbnb.android.showkase.annotation.models.ShowkaseRoot
-import com.airbnb.android.showkase.annotation.models.ShowkaseRootModule
+import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseRoot
+import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.kotlinMetadata
 import kotlinx.metadata.jvm.KotlinClassMetadata

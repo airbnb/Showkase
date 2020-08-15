@@ -1,8 +1,8 @@
 package com.airbnb.android.showkase.processor.models
 
-import com.airbnb.android.showkase.annotation.models.Showkase
-import com.airbnb.android.showkase.annotation.models.ShowkaseCodegenMetadata
-import com.airbnb.android.showkase.annotation.models.ShowkaseColor
+import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import kotlinx.metadata.Flag

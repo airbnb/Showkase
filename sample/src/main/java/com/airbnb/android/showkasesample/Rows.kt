@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.datasource.LoremIpsum
-import com.airbnb.android.showkase.annotation.models.Showkase
+import com.airbnb.android.showkase.annotation.Showkase
 
 @Composable
 fun SimpleRow(title: String, subtitle: String) {

@@ -1,4 +1,4 @@
-package com.airbnb.android.showkase.annotation.models
+package com.airbnb.android.showkase.annotation
 
 /**
  * Used to annotate the [ShowkaseRootModule] implementation class. This is needed to let Showkase
