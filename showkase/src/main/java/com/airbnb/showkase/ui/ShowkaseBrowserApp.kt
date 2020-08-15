@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.airbnb.showkase.R
+import com.airbnb.showkase.models.ShowkaseBrowserColor
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
@@ -28,6 +29,7 @@ import com.airbnb.showkase.models.ShowkaseCurrentScreen
 @Composable
 internal fun ShowkaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     Scaffold(
@@ -40,7 +42,8 @@ internal fun ShowkaseBrowserApp(
                 modifier = Modifier.fillMaxSize(),
                 backgroundColor = SHOWKASE_COLOR_BACKGROUND
             ) {
-                ShowkaseBodyContent(groupedComponentMap, showkaseBrowserScreenMetadata)
+                ShowkaseBodyContent(groupedComponentMap, groupedColorsMap,
+                    showkaseBrowserScreenMetadata)
             }
         }
     )
@@ -65,10 +68,17 @@ private fun ShowkaseAppBarTitle(metadata: MutableState<ShowkaseBrowserScreenMeta
         metadata.value.isSearchActive -> {
             ShowkaseSearchField(metadata)
         }
-        metadata.value.currentScreen == ShowkaseCurrentScreen.GROUPS -> {
+        metadata.value.currentScreen == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
             Text(ContextAmbient.current.getString(R.string.app_name))
         }
-        metadata.value.currentScreen == ShowkaseCurrentScreen.GROUP_COMPONENTS -> {
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_GROUPS -> {
+            Text(ContextAmbient.current.getString(R.string.components_category))
+        }
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COLOR_GROUPS -> {
+            Text(ContextAmbient.current.getString(R.string.colors_category))
+        }
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP || 
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
             Text(metadata.value.currentGroup.orEmpty())
         }
         metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
@@ -106,7 +116,8 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
 private fun ShowkaseAppBarActions(metadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     when {
         metadata.value.isSearchActive -> { }
-        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL -> { }
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL ||  
+        metadata.value.currentScreen == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> { }
         else -> {
             IconButton(onClick = {
                 metadata.value = metadata.value.copy(isSearchActive = true)
@@ -120,17 +131,21 @@ private fun ShowkaseAppBarActions(metadata: MutableState<ShowkaseBrowserScreenMe
 @Composable
 internal fun ShowkaseBodyContent(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     when (showkaseBrowserScreenMetadata.value.currentScreen) {
-        ShowkaseCurrentScreen.GROUPS -> {
-            ShowkaseAllGroupsScreen(
-                groupedComponentMap, 
+        ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
+            ShowkaseCategoriesScreen(showkaseBrowserScreenMetadata)
+        }
+        ShowkaseCurrentScreen.COMPONENT_GROUPS -> {
+            ShowkaseComponentGroupsScreen(
+                groupedComponentMap,
                 showkaseBrowserScreenMetadata
             )
         }
-        ShowkaseCurrentScreen.GROUP_COMPONENTS -> {
-            ShowkaseGroupComponentsScreen(
+        ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP -> {
+            ShowkaseComponentsInAGroupScreen(
                 groupedComponentMap,
                 showkaseBrowserScreenMetadata
             )
@@ -138,6 +153,18 @@ internal fun ShowkaseBodyContent(
         ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
             ShowkaseComponentDetailScreen(
                 groupedComponentMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.COLOR_GROUPS -> {
+            ShowkaseColorGroupsScreen(
+                groupedColorsMap, 
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
+            ShowkaseColorsInAGroupScreen(
+                groupedColorsMap,
                 showkaseBrowserScreenMetadata
             )
         }

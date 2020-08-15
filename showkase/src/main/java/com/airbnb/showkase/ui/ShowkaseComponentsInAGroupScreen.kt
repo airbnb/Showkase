@@ -8,7 +8,7 @@ import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseCurrentScreen
 
 @Composable
-internal fun ShowkaseGroupComponentsScreen(
+internal fun ShowkaseComponentsInAGroupScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
@@ -35,11 +35,13 @@ internal fun ShowkaseGroupComponentsScreen(
         }
     )
     BackButtonHandler {
-        goBack(showkaseBrowserScreenMetadata)
+        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata)
     }
 }
 
-private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
+private fun goBackFromComponentsInAGroupScreen(
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> {
@@ -50,7 +52,7 @@ private fun goBack(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserSc
         }
         else -> {
             showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                currentScreen = ShowkaseCurrentScreen.GROUPS,
+                currentScreen = ShowkaseCurrentScreen.COMPONENT_GROUPS,
                 currentGroup = null,
                 currentComponent = null,
                 isSearchActive = false,

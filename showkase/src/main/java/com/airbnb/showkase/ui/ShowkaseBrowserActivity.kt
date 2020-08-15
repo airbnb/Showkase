@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.state
 import androidx.compose.ui.platform.setContent
 import com.airbnb.showkase.exceptions.ShowkaseException
+import com.airbnb.showkase.models.ShowkaseBrowserColor
 import com.airbnb.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.showkase.models.ShowkaseProvider
+import com.airbnb.showkase.models.ShowkaseProviderElements
 
 /**
  * The activity that's responsible for showing all the @Composable components that were annotated
@@ -23,11 +25,13 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     "the ShowkaseBrowserActivity.getIntent() method."
         )
         setContent {
-            val groupedComponentsMap = getGroupedComponentsMap(classKey)
+            val (groupedComponentsMap, groupedColorsMap) 
+                    = getShowkaseProviderElements(classKey)
             var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
             when {
-                groupedComponentsMap.isNotEmpty() -> {
-                    ShowkaseBrowserApp(groupedComponentsMap, showkaseBrowserScreenMetadata)
+                groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
+                    ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap,
+                        showkaseBrowserScreenMetadata)
                 }
                 else -> {
                     ShowkaseErrorScreen(
@@ -40,16 +44,29 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun getGroupedComponentsMap(classKey: String): Map<String, List<ShowkaseBrowserComponent>> {
+    private fun getShowkaseProviderElements(
+        classKey: String
+    ): ShowkaseProviderElements {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
 
-            (showkaseComponentProvider as ShowkaseProvider).getShowkaseComponents()
-                .groupBy { it.group }
-                
+            val componentsMap =
+                (showkaseComponentProvider as ShowkaseProvider)
+                    .getShowkaseComponents()
+                    .groupBy { it.group }
+            
+            val colorsMap = 
+                (showkaseComponentProvider as ShowkaseProvider)
+                    .getShowkaseColors()
+                    .groupBy { it.colorGroup }
+
+            ShowkaseProviderElements(
+                components = componentsMap,
+                colors = colorsMap
+            )
         } catch (exception: ClassNotFoundException) {
-            mapOf()
+            ShowkaseProviderElements()
         }
     }
 
