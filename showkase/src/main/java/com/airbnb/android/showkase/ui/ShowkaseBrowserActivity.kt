@@ -62,7 +62,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     .getShowkaseColors()
                     .groupBy { it.colorGroup }
 
-            val textStyleMap =
+            val typographyMap =
                 showkaseComponentProvider
                     .getShowkaseTypography()
                     .groupBy { it.typographyGroup }
@@ -70,7 +70,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
             ShowkaseProviderElements(
                 components = componentsMap,
                 colors = colorsMap,
-                textStyle = textStyleMap
+                typographyMap = typographyMap
             )
         } catch (exception: ClassNotFoundException) {
             ShowkaseProviderElements()
