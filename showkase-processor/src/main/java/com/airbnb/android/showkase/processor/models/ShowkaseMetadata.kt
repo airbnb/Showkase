@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor.models
 import com.airbnb.android.showkase.annotation.Showkase
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
+import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import kotlinx.metadata.Flag
@@ -47,6 +48,20 @@ internal sealed class ShowkaseMetadata(
         showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
 
     data class Color(
+        override val element: Element,
+        override val packageSimpleName: String,
+        override val packageName: String,
+        override val elementName: String,
+        override val showkaseName: String,
+        override val showkaseGroup: String,
+        override val showkaseKDoc: String,
+        override val enclosingClass: TypeMirror? = null,
+        override val insideWrapperClass: Boolean = false,
+        override val insideObject: Boolean = false
+    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName,
+        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+
+    data class Typography(
         override val element: Element,
         override val packageSimpleName: String,
         override val packageName: String,
@@ -108,6 +123,20 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
         }
         ShowkaseMetadataType.COLOR -> {
             ShowkaseMetadata.Color(
+                packageSimpleName = packageSimpleName,
+                packageName = packageName,
+                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                elementName = showkaseElementName,
+                showkaseName = showkaseName,
+                showkaseGroup = showkaseGroup,
+                insideWrapperClass = insideWrapperClass,
+                insideObject = insideObject,
+                showkaseKDoc = showkaseKDoc,
+                element = element
+            )
+        }
+        ShowkaseMetadataType.TYPOGRAPHY -> {
+            ShowkaseMetadata.Typography(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
                 enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
@@ -252,6 +281,42 @@ internal fun getShowkaseColorMetadata(
         element = element,
         showkaseName = showkaseColorAnnotation.name,
         showkaseGroup = showkaseColorAnnotation.group,
+        showkaseKDoc = kDoc,
+        elementName = elementName,
+        packageSimpleName = packageSimpleName,
+        packageName = packageName,
+        enclosingClass = enclosingClassTypeMirror,
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
+                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
+    )
+}
+
+internal fun getShowkaseTypographyMetadata(
+    element: Element,
+    elementUtils: Elements,
+    typeUtils: Types,
+    showkaseValidator: ShowkaseValidator
+): ShowkaseMetadata {
+    val showkaseTypographyAnnotation = 
+        element.getAnnotation(ShowkaseTypography::class.java)
+    val packageElement = elementUtils.getPackageOf(element)
+    val packageSimpleName = packageElement.simpleName.toString()
+    val packageName = packageElement.qualifiedName.toString()
+    val elementName = element.simpleName.toString()
+    // TODO(vinaygaba): Typography properties aren't working properly with companion objects. 
+    // This is because the properties are generated outside the companion object in java land(as
+    // opposed to inside the companion class for functions). Need to investigate more.
+    val showkaseFunctionType = element.getShowkaseFunctionType()
+    val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
+    val kDoc = elementUtils.getDocComment(element).orEmpty().trim()
+
+    showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
+
+    return ShowkaseMetadata.Typography(
+        element = element,
+        showkaseName = showkaseTypographyAnnotation.name,
+        showkaseGroup = showkaseTypographyAnnotation.group,
         showkaseKDoc = kDoc,
         elementName = elementName,
         packageSimpleName = packageSimpleName,

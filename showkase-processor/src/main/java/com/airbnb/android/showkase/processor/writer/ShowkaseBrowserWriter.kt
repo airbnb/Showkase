@@ -12,16 +12,18 @@ import javax.lang.model.type.TypeMirror
 internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnvironment) {
     @Suppress("LongMethod")
     internal fun generateShowkaseBrowserFile(
-        showkaseComponentMetadataList: List<ShowkaseMetadata>,
-        showkaseColorMetadataList: List<ShowkaseMetadata>,
+        showkaseComponentMetadata: Set<ShowkaseMetadata>,
+        showkaseColorMetadata: Set<ShowkaseMetadata>,
+        showkaseTypographyMetadata: Set<ShowkaseMetadata>,
         rootModulePackageName: String,
         rootModuleClassName: String
     ) {
         val showkaseComponentsListClassName = "$rootModuleClassName$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 
-        val componentListProperty = initializeComponentProperty(showkaseComponentMetadataList)
-        val colorListProperty = initializeColorProperty(showkaseColorMetadataList)
+        val componentListProperty = initializeComponentProperty(showkaseComponentMetadata)
+        val colorListProperty = initializeColorProperty(showkaseColorMetadata)
+        val typographyProperty = initializeTypographyProperty(showkaseTypographyMetadata)
 
         writeFile(
             processingEnv,
@@ -30,7 +32,8 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             showkaseComponentsListClassName,
             componentListProperty.build(),
             colorListProperty.build(),
-            showkaseComponentMetadataList + showkaseColorMetadataList,
+            typographyProperty.build(),
+            showkaseComponentMetadata + showkaseColorMetadata + showkaseTypographyMetadata,
             getShowkaseProviderInterfaceFunction(
                 COMPONENT_INTERFACE_METHOD_NAME,
                 COMPONENT_PROPERTY_NAME
@@ -38,12 +41,16 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             getShowkaseProviderInterfaceFunction(
                 COLOR_INTERFACE_METHOD_NAME,
                 COLOR_PROPERTY_NAME
+            ),
+            getShowkaseProviderInterfaceFunction(
+                TYPOGRAPHY_INTERFACE_METHOD_NAME,
+                TYPOGRAPHY_PROPERTY_NAME
             )
         )
     }
 
     private fun initializeComponentProperty(
-        showkaseMetadataList: List<ShowkaseMetadata>
+        showkaseMetadataSet: Set<ShowkaseMetadata>
     ): PropertySpec.Builder {
         val componentListProperty =
             getPropertyList(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME, COMPONENT_PROPERTY_NAME)
@@ -51,7 +58,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         val componentListInitializerCodeBlock =
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.listInitializerCodeBlock()
 
-        showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
+        showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             componentListInitializerCodeBlock.apply {
                 add("\n")
                 add(
@@ -86,7 +93,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     )
                 )
                 doubleUnindent()
-                closeOrContinueListCodeBlock(index, showkaseMetadataList.lastIndex)
+                closeOrContinueListCodeBlock(index, showkaseMetadataSet.size - 1)
             }
         }
         componentListInitializerCodeBlock.apply {
@@ -98,7 +105,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
     }
 
     private fun initializeColorProperty(
-        showkaseMetadataList: List<ShowkaseMetadata>
+        showkaseMetadataSet: Set<ShowkaseMetadata>
     ): PropertySpec.Builder {
         val colorListProperty =
             getPropertyList(
@@ -109,7 +116,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         val colorListInitializerCodeBlock =
             SHOWKASE_BROWSER_COLOR_CLASS_NAME.listInitializerCodeBlock()
 
-        showkaseMetadataList.forEachIndexed { index, showkaseMetadata ->
+        showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             colorListInitializerCodeBlock.apply {
                 add("\n")
                 add(
@@ -124,16 +131,17 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     showkaseMetadata.showkaseKDoc
                 )
                 add(
-                    colorPropertyValue(
+                    showkaseBrowserPropertyValue(
                         showkaseMetadata.packageName,
                         showkaseMetadata.enclosingClass,
+                        "color",
                         showkaseMetadata.elementName,
                         showkaseMetadata.insideWrapperClass,
                         showkaseMetadata.insideObject
                     )
                 )
                 doubleUnindent()
-                closeOrContinueListCodeBlock(index, showkaseMetadataList.lastIndex)
+                closeOrContinueListCodeBlock(index, showkaseMetadataSet.size - 1)
             }
         }
         colorListInitializerCodeBlock.apply {
@@ -142,6 +150,53 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         }
         colorListProperty.initializer(colorListInitializerCodeBlock.build())
         return colorListProperty
+    }
+
+    private fun initializeTypographyProperty(
+        showkaseMetadataSet: Set<ShowkaseMetadata>
+    ): PropertySpec.Builder {
+        val typographyListProperty =
+            getPropertyList(
+                SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME,
+                TYPOGRAPHY_PROPERTY_NAME
+            )
+
+        val typographyListInitializerCodeBlock =
+            SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME.listInitializerCodeBlock()
+
+        showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
+            typographyListInitializerCodeBlock.apply {
+                add("\n")
+                add(
+                    "%T(\n",
+                    SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME
+                )
+                doubleIndent()
+                add(
+                    "typographyGroup = %S,\ntypographyName = %S,\ntypographyKDoc = %S,",
+                    showkaseMetadata.showkaseGroup,
+                    showkaseMetadata.showkaseName,
+                    showkaseMetadata.showkaseKDoc
+                )
+                add(
+                    showkaseBrowserPropertyValue(
+                        showkaseMetadata.packageName,
+                        showkaseMetadata.enclosingClass,
+                        "textStyle",
+                        showkaseMetadata.elementName,
+                        showkaseMetadata.insideWrapperClass,
+                        showkaseMetadata.insideObject
+                    )
+                )
+                doubleUnindent()
+                closeOrContinueListCodeBlock(index, showkaseMetadataSet.size - 1)
+            }
+        }
+        typographyListInitializerCodeBlock.apply {
+            unindent()
+            add(")")
+        }
+        return typographyListProperty.initializer(typographyListInitializerCodeBlock.build())
     }
 
     private fun composePreviewFunctionLambda(
@@ -185,51 +240,55 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 "Showkase")
     }
 
-    private fun colorPropertyValue(
+    private fun showkaseBrowserPropertyValue(
         functionPackageName: String,
         enclosingClass: TypeMirror? = null,
-        colorFieldName: String,
+        fieldPropertyName: String,
+        fieldName: String,
         insideWrapperClass: Boolean,
         insideObject: Boolean
     ) = when {
         // When enclosingClass is null, it denotes that the method was a top-level method 
         // declaration.
         enclosingClass == null -> {
-            val composeMember = MemberName(functionPackageName, colorFieldName)
+            val composeMember = MemberName(functionPackageName, fieldName)
             CodeBlock.Builder()
-                .add("\ncolor = %M", composeMember)
+                .add("\n$fieldPropertyName = %M", composeMember)
                 .build()
         }
         // It was declared inside a class.
         insideWrapperClass -> {
             CodeBlock.Builder()
-                .add("\ncolor = %T().${colorFieldName}", enclosingClass)
+                .add("\n$fieldPropertyName = %T().${fieldName}", enclosingClass)
                 .build()
         }
         // It was declared inside an object or a companion object.
         insideObject -> {
             CodeBlock.Builder()
-                .add("\ncolor = %T.${colorFieldName}", enclosingClass)
+                .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
                 .build()
         }
-        else -> throw ShowkaseProcessorException("Your @ShowkaseColor " +
-                "field:${colorFieldName} is declared in a way that is not supported by " +
-                "Showkase")
+        else -> throw ShowkaseProcessorException("Your field:${fieldName} is declared in a way that " +
+                "is not supported by Showkase")
     }
 
     companion object {
         private const val CODEGEN_AUTOGEN_CLASS_NAME = "Codegen"
-        private const val COMPONENT_PROPERTY_NAME = "componentList"
         private const val COMPONENT_INTERFACE_METHOD_NAME = "getShowkaseComponents"
-        internal const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.android.showkase.models"
-        private const val COLOR_PROPERTY_NAME = "colorList"
         private const val COLOR_INTERFACE_METHOD_NAME = "getShowkaseColors"
+        private const val TYPOGRAPHY_INTERFACE_METHOD_NAME = "getShowkaseTypography"
+        internal const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.android.showkase.models"
+        private const val COMPONENT_PROPERTY_NAME = "componentList"
+        private const val COLOR_PROPERTY_NAME = "colorList"
+        private const val TYPOGRAPHY_PROPERTY_NAME = "typographyList"
 
         val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
         val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponent")
         val SHOWKASE_BROWSER_COLOR_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserColor")
+        val SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME =
+            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserTypography")
         val SHOWKASE_PROVIDER_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseProvider")
     }
