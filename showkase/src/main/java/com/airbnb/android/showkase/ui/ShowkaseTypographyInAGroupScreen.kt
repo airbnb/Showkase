@@ -1,0 +1,83 @@
+package com.airbnb.android.showkase.ui
+
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.material.Divider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
+import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import java.util.Locale
+
+@Composable
+internal fun ShowkaseTypographyInAGroupScreen(
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    val groupTypographyList =
+        groupedTypographyMap[showkaseBrowserScreenMetadata.value.currentGroup]
+            ?.sortedBy { it.typographyName } ?: return
+    val filteredList =
+        getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata)
+    LazyColumnFor(
+        items = filteredList,
+        modifier = Modifier.background(Color.White).fillMaxSize(),
+        itemContent = { groupTypographyMetadata ->
+            Text(
+                text = groupTypographyMetadata.typographyName.capitalize(Locale.getDefault()),
+                modifier = Modifier.fillParentMaxWidth().padding(16.dp),
+                style = groupTypographyMetadata.textStyle
+            )
+            Divider()
+        }
+    )
+    BackButtonHandler {
+        goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata)
+    }
+}
+
+private fun goBackFromTypographyInAGroupScreen(
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
+    when {
+        isSearchActive -> {
+            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+                isSearchActive = false,
+                searchQuery = null
+            )
+        }
+        else -> {
+            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+                currentScreen = ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS,
+                currentGroup = null,
+                currentComponent = null,
+                isSearchActive = false,
+                searchQuery = null
+            )
+        }
+    }
+}
+
+
+private fun getFilteredSearchList(
+    list: List<ShowkaseBrowserTypography>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) =
+    when (showkaseBrowserScreenMetadata.value.isSearchActive) {
+        false -> list
+        !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
+            list.filter {
+                it.typographyName.toLowerCase()
+                    .contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
+            }
+        }
+        else -> list
+    }

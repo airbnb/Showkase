@@ -77,3 +77,19 @@ fun SansSerifTextComponentPreview() {
         }
     }
 }
+
+@Showkase(name = "H4 Text Row", group = "Text")
+@Composable
+fun H4TextRowComponentPreview() {
+    val context = ContextAmbient.current
+    val string = context.getString(R.string.app_name)
+
+    ShowkaseTheme {
+        Card {
+            Text(text = string, 
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                style = h4
+            )
+        }
+    }
+}

@@ -6,7 +6,9 @@ internal enum class ShowkaseCurrentScreen {
     COMPONENT_DETAIL,
     SHOWKASE_CATEGORIES,
     COLOR_GROUPS,
-    COLORS_IN_A_GROUP
+    COLORS_IN_A_GROUP,
+    TYPOGRAPHY_GROUPS,
+    TYPOGRAPHY_IN_A_GROUP,
 }
 
 internal data class ShowkaseBrowserScreenMetadata(

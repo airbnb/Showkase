@@ -26,6 +26,7 @@ internal fun ShowkaseCategoriesScreen(
                         currentScreen = when(category) {
                             ShowkaseCategory.COMPONENTS -> ShowkaseCurrentScreen.COMPONENT_GROUPS
                             ShowkaseCategory.COLORS -> ShowkaseCurrentScreen.COLOR_GROUPS
+                            ShowkaseCategory.TYPOGRAPHY -> ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS
                         },
                         currentGroup = null,
                         isSearchActive = false,
@@ -52,5 +53,28 @@ private fun goBackFromCategoriesScreen(
             )
         }
         else -> activity.finish()
+    }
+}
+
+internal fun goBackToCategoriesScreen(
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
+    when {
+        isSearchActive -> {
+            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+                isSearchActive = false,
+                searchQuery = null
+            )
+        }
+        else -> {
+            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+                currentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
+                currentComponent = null,
+                isSearchActive = false,
+                searchQuery = null,
+                currentGroup = null
+            )
+        }
     }
 }

@@ -23,12 +23,15 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     "the ShowkaseBrowserActivity.getIntent() method."
         )
         setContent {
-            val (groupedComponentsMap, groupedColorsMap) 
-                    = getShowkaseProviderElements(classKey)
+            val (
+                groupedComponentsMap,
+                groupedColorsMap,
+                groupedTypographyMap
+            ) = getShowkaseProviderElements(classKey)
             var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
             when {
                 groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
-                    ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap,
+                    ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap, groupedTypographyMap,
                         showkaseBrowserScreenMetadata)
                 }
                 else -> {
@@ -59,9 +62,15 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     .getShowkaseColors()
                     .groupBy { it.colorGroup }
 
+            val textStyleMap =
+                showkaseComponentProvider
+                    .getShowkaseTypography()
+                    .groupBy { it.typographyGroup }
+
             ShowkaseProviderElements(
                 components = componentsMap,
-                colors = colorsMap
+                colors = colorsMap,
+                textStyle = textStyleMap
             )
         } catch (exception: ClassNotFoundException) {
             ShowkaseProviderElements()
