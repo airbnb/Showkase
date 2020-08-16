@@ -19,18 +19,18 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 @Suppress("LongParameterList")
-internal sealed class ShowkaseMetadata(
-    open val element: Element,
-    open val packageName: String,
-    open val packageSimpleName: String,
-    open val elementName: String,
-    open val showkaseName: String,
-    open val showkaseGroup: String,
-    open val showkaseKDoc: String,
-    open val enclosingClass: TypeMirror? = null,
-    open val insideWrapperClass: Boolean = false,
-    open val insideObject: Boolean = false,
-) { 
+internal sealed class ShowkaseMetadata {
+    abstract val element: Element
+    abstract val packageName: String
+    abstract val packageSimpleName: String
+    abstract val elementName: String
+    abstract val showkaseName: String
+    abstract val showkaseGroup: String
+    abstract val showkaseKDoc: String
+    abstract val enclosingClass: TypeMirror?
+    abstract val insideWrapperClass: Boolean
+    abstract val insideObject: Boolean
+    
     data class Component(
         override val element: Element,
         override val packageName: String,
@@ -44,8 +44,7 @@ internal sealed class ShowkaseMetadata(
         override val insideObject: Boolean = false,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
-    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName, 
-        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+    ): ShowkaseMetadata()
 
     data class Color(
         override val element: Element,
@@ -58,8 +57,7 @@ internal sealed class ShowkaseMetadata(
         override val enclosingClass: TypeMirror? = null,
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false
-    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName,
-        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+    ): ShowkaseMetadata()
 
     data class Typography(
         override val element: Element,
@@ -72,8 +70,7 @@ internal sealed class ShowkaseMetadata(
         override val enclosingClass: TypeMirror? = null,
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false
-    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName,
-        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+    ): ShowkaseMetadata()
 }
 
 private enum class ShowkaseAnnotationProperty {
