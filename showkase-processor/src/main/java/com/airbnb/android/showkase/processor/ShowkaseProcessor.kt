@@ -235,7 +235,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         colorsMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>
     ) {
-        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty()) return
+        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.simpleName.toString()
         val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
 
