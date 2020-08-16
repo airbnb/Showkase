@@ -98,8 +98,6 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
-- Support for representing more aspects of your design system. Think `@ShowkaseColor`, 
-`@ShowkaseTypography`, etc.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
 
