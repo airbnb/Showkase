@@ -43,9 +43,11 @@ internal fun writeFile(
     showkaseComponentsListClassName: String,
     componentListProperty: PropertySpec,
     colorListProperty: PropertySpec,
-    showkaseMetadataList: List<ShowkaseMetadata>,
+    typographyListProperty: PropertySpec,
+    showkaseMetadata: Set<ShowkaseMetadata>,
     componentInterfaceFunction: FunSpec,
-    colorInterfaceFunction: FunSpec
+    colorInterfaceFunction: FunSpec,
+    typographyInterfaceFunction: FunSpec
 ) {
     fileBuilder
         .addType(
@@ -53,9 +55,11 @@ internal fun writeFile(
                 addSuperinterface(superInterfaceClassName)
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
+                addFunction(typographyInterfaceFunction)
                 addProperty(componentListProperty)
                 addProperty(colorListProperty)
-                showkaseMetadataList.forEach { addOriginatingElement(it.element) }
+                addProperty(typographyListProperty)
+                showkaseMetadata.forEach { addOriginatingElement(it.element) }
                 build()
             }
         )

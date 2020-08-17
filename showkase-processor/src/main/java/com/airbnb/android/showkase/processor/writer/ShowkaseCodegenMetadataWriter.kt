@@ -89,5 +89,8 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
         is ShowkaseMetadata.Color -> {
             annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.COLOR.name)
         }
+        is ShowkaseMetadata.Typography -> {
+            annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.TYPOGRAPHY.name)
+        }
     }
 }

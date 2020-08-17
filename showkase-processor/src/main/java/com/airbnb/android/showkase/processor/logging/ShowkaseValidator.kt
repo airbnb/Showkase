@@ -82,6 +82,31 @@ class ShowkaseValidator {
         }
     }
 
+    internal fun validateTypographyElement(
+        element: Element,
+        annotationName: String,
+        textStyleTypeMirror: TypeMirror,
+        typeUtils: Types
+    ) {
+        val errorPrefix = "Error in ${element.simpleName}:"
+        when {
+            element.kind != ElementKind.FIELD -> {
+                throw ShowkaseProcessorException(
+                    "$errorPrefix Only \"TextStyle\" fields can be annotated with $annotationName"
+                )
+            }
+            !typeUtils.isSameType(element.asType(), textStyleTypeMirror) -> {
+                throw ShowkaseProcessorException(
+                    "$errorPrefix Only \"TextStyle\" fields can be annotated with $annotationName"
+                )
+            }
+            // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
+            //  for this element adds a private modifier since it's a field. Potentially use 
+            //  kotlinMetadata to enforce this check. 
+            else -> { }
+        }
+    }
+
     internal fun validateShowkaseRootElement(
         elementSet: Set<Element>,
         elementUtils: Elements,

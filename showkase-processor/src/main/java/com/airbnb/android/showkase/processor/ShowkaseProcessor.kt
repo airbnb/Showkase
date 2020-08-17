@@ -4,6 +4,7 @@ import com.airbnb.android.showkase.annotation.Showkase
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
+import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
@@ -12,6 +13,7 @@ import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
+import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.models.toModel
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
@@ -43,6 +45,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     private val logger = ShowkaseExceptionLogger()
     private val showkaseValidator = ShowkaseValidator()
     private lateinit var composableTypeMirror: TypeMirror
+    private lateinit var textStyleTypeMirror: TypeMirror
 
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
@@ -53,12 +56,16 @@ class ShowkaseProcessor: AbstractProcessor() {
         composableTypeMirror = elementUtils
             .getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
             .asType()
+        textStyleTypeMirror = elementUtils
+            .getTypeElement(Class.forName(TYPE_STYLE_CLASS_NAME).canonicalName)
+            .asType()
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
         Showkase::class.java.name,
         ShowkaseRoot::class.java.name,
         ShowkaseColor::class.java.name,
+        ShowkaseTypography::class.java.name,
         PREVIEW_CLASS_NAME
     )
 
@@ -69,11 +76,13 @@ class ShowkaseProcessor: AbstractProcessor() {
         try {
             val componentMetadata = processComponentAnnotation(roundEnvironment)
             val colorMetadata = processColorAnnotation(roundEnvironment)
+            val typographyMetadata = processTypographyAnnotation(roundEnvironment)
             
             processShowkaseMetadata(
                 roundEnvironment = roundEnvironment, 
                 componentMetadata = componentMetadata, 
-                colorMetadata = colorMetadata
+                colorMetadata = colorMetadata,
+                typographyMetadata = typographyMetadata
             )
         } catch (exception: ShowkaseProcessorException) {
             logger.logErrorMessage("${exception.message}")
@@ -150,14 +159,21 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun processColorAnnotation(roundEnvironment: RoundEnvironment) =
         roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class.java).map { element ->
             showkaseValidator.validateColorElement(element, ShowkaseColor::class.java.simpleName)
-            getShowkaseColorMetadata(element, elementUtils, typeUtils, 
-                showkaseValidator)
+            getShowkaseColorMetadata(element, elementUtils, typeUtils, showkaseValidator)
+        }.toSet()
+    
+    private fun processTypographyAnnotation(roundEnvironment: RoundEnvironment) = 
+        roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class.java).map { element ->
+            showkaseValidator.validateTypographyElement(element, 
+                ShowkaseTypography::class.java.simpleName, textStyleTypeMirror, typeUtils)
+            getShowkaseTypographyMetadata(element, elementUtils, typeUtils, showkaseValidator)
         }.toSet()
 
     private fun processShowkaseMetadata(
         roundEnvironment: RoundEnvironment,
         componentMetadata: Set<ShowkaseMetadata>,
-        colorMetadata: Set<ShowkaseMetadata>
+        colorMetadata: Set<ShowkaseMetadata>,
+        typographyMetadata: Set<ShowkaseMetadata>
     ) {
         val showkaseRootElements =
             roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class.java)
@@ -167,11 +183,11 @@ class ShowkaseProcessor: AbstractProcessor() {
             // If root element is not present in this module, it means that we only need to write
             // the metadata file for this module so that the root module can use this info to 
             // include the composables from this module into the final codegen file. 
-            null -> writeMetadataFile(componentMetadata + colorMetadata)
+            null -> writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
             // Else, this is the module that should aggregate all the other metadata files and 
             // also use the showkaseMetadata set from the current round to write the final file.
             else -> {
-                writeShowkaseFiles(rootElement, componentMetadata, colorMetadata)
+                writeShowkaseFiles(rootElement, componentMetadata, colorMetadata, typographyMetadata)
             }
         }
     }
@@ -179,7 +195,8 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun writeShowkaseFiles(
         rootElement: Element,
         componentMetadata: Set<ShowkaseMetadata>,
-        colorMetadata: Set<ShowkaseMetadata>
+        colorMetadata: Set<ShowkaseMetadata>,
+        typographyMetadata: Set<ShowkaseMetadata>
     ) {
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(elementUtils)
@@ -187,11 +204,14 @@ class ShowkaseProcessor: AbstractProcessor() {
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Component>()
         val classpathColorMetadata =
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Color>()
+        val classpathTypographyMetadata =
+            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
 
         writeShowkaseBrowserFile(
             rootElement, 
             componentMetadata + classpathComponentMetadata, 
-            colorMetadata + classpathColorMetadata)
+            colorMetadata + classpathColorMetadata,
+        typographyMetadata + classpathTypographyMetadata)
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
@@ -213,16 +233,18 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun writeShowkaseBrowserFile(
         rootElement: Element,
         componentsMetadata: Set<ShowkaseMetadata>,
-        colorsMetadata: Set<ShowkaseMetadata>
+        colorsMetadata: Set<ShowkaseMetadata>,
+        typographyMetadata: Set<ShowkaseMetadata>
     ) {
-        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty()) return
+        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.simpleName.toString()
         val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
 
         ShowkaseBrowserWriter(processingEnv).apply {
             generateShowkaseBrowserFile(
-                componentsMetadata.toList(), 
-                colorsMetadata.toList(), 
+                componentsMetadata, 
+                colorsMetadata, 
+                typographyMetadata,
                 rootModulePackageName, 
                 rootModuleClassName
             )
@@ -232,7 +254,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
         const val PREVIEW_CLASS_NAME = "androidx.ui.tooling.preview.Preview"
-        const val COLOR_CLASS_NAME = "androidx.compose.ui.graphics.Color"
+        const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
 
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
         // annotation-processor/src/main/java/TestAnnotationProcessor.kt

@@ -8,4 +8,6 @@ interface ShowkaseProvider {
     fun getShowkaseComponents(): List<ShowkaseBrowserComponent>
 
     fun getShowkaseColors(): List<ShowkaseBrowserColor>
+    
+    fun getShowkaseTypography(): List<ShowkaseBrowserTypography>
 }

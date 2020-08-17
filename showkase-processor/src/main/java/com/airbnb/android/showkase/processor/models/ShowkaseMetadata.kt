@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor.models
 import com.airbnb.android.showkase.annotation.Showkase
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
+import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import kotlinx.metadata.Flag
@@ -18,18 +19,18 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 @Suppress("LongParameterList")
-internal sealed class ShowkaseMetadata(
-    open val element: Element,
-    open val packageName: String,
-    open val packageSimpleName: String,
-    open val elementName: String,
-    open val showkaseName: String,
-    open val showkaseGroup: String,
-    open val showkaseKDoc: String,
-    open val enclosingClass: TypeMirror? = null,
-    open val insideWrapperClass: Boolean = false,
-    open val insideObject: Boolean = false,
-) { 
+internal sealed class ShowkaseMetadata {
+    abstract val element: Element
+    abstract val packageName: String
+    abstract val packageSimpleName: String
+    abstract val elementName: String
+    abstract val showkaseName: String
+    abstract val showkaseGroup: String
+    abstract val showkaseKDoc: String
+    abstract val enclosingClass: TypeMirror?
+    abstract val insideWrapperClass: Boolean
+    abstract val insideObject: Boolean
+    
     data class Component(
         override val element: Element,
         override val packageName: String,
@@ -43,8 +44,7 @@ internal sealed class ShowkaseMetadata(
         override val insideObject: Boolean = false,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
-    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName, 
-        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+    ): ShowkaseMetadata()
 
     data class Color(
         override val element: Element,
@@ -57,8 +57,20 @@ internal sealed class ShowkaseMetadata(
         override val enclosingClass: TypeMirror? = null,
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false
-    ): ShowkaseMetadata(element, packageName, packageSimpleName, elementName, showkaseName,
-        showkaseGroup, showkaseKDoc, enclosingClass, insideWrapperClass, insideObject)
+    ): ShowkaseMetadata()
+
+    data class Typography(
+        override val element: Element,
+        override val packageSimpleName: String,
+        override val packageName: String,
+        override val elementName: String,
+        override val showkaseName: String,
+        override val showkaseGroup: String,
+        override val showkaseKDoc: String,
+        override val enclosingClass: TypeMirror? = null,
+        override val insideWrapperClass: Boolean = false,
+        override val insideObject: Boolean = false
+    ): ShowkaseMetadata()
 }
 
 private enum class ShowkaseAnnotationProperty {
@@ -74,6 +86,9 @@ internal enum class ShowkaseFunctionType {
     INSIDE_OBJECT,
     INSIDE_COMPANION_OBJECT,
 }
+
+internal fun ShowkaseFunctionType.insideObject() = this == ShowkaseFunctionType.INSIDE_OBJECT || 
+        this == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
 
 internal enum class ShowkaseMetadataType {
     COMPONENT,
@@ -94,7 +109,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Component(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                enclosingClass = enclosingClassArray.firstOrNull(),
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -110,7 +125,21 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Color(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                enclosingClass = enclosingClassArray.firstOrNull(),
+                elementName = showkaseElementName,
+                showkaseName = showkaseName,
+                showkaseGroup = showkaseGroup,
+                insideWrapperClass = insideWrapperClass,
+                insideObject = insideObject,
+                showkaseKDoc = showkaseKDoc,
+                element = element
+            )
+        }
+        ShowkaseMetadataType.TYPOGRAPHY -> {
+            ShowkaseMetadata.Typography(
+                packageSimpleName = packageSimpleName,
+                packageName = packageName,
+                enclosingClass = enclosingClassArray.firstOrNull(),
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -157,8 +186,7 @@ internal fun getShowkaseMetadata(
         showkaseGroup = showkaseAnnotation.group,
         showkaseWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
         showkaseHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
+        insideObject = showkaseFunctionType.insideObject(),
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
         showkaseKDoc = kDoc
@@ -222,8 +250,7 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
         showkaseHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
+        insideObject = showkaseFunctionType.insideObject(),
         element = element
     )
 }
@@ -258,8 +285,42 @@ internal fun getShowkaseColorMetadata(
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
+        insideObject = showkaseFunctionType.insideObject()
+    )
+}
+
+internal fun getShowkaseTypographyMetadata(
+    element: Element,
+    elementUtils: Elements,
+    typeUtils: Types,
+    showkaseValidator: ShowkaseValidator
+): ShowkaseMetadata {
+    val showkaseTypographyAnnotation = 
+        element.getAnnotation(ShowkaseTypography::class.java)
+    val packageElement = elementUtils.getPackageOf(element)
+    val packageSimpleName = packageElement.simpleName.toString()
+    val packageName = packageElement.qualifiedName.toString()
+    val elementName = element.simpleName.toString()
+    // TODO(vinaygaba): Typography properties aren't working properly with companion objects. 
+    // This is because the properties are generated outside the companion object in java land(as
+    // opposed to inside the companion class for functions). Need to investigate more.
+    val showkaseFunctionType = element.getShowkaseFunctionType()
+    val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
+    val kDoc = elementUtils.getDocComment(element).orEmpty().trim()
+
+    showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
+
+    return ShowkaseMetadata.Typography(
+        element = element,
+        showkaseName = showkaseTypographyAnnotation.name,
+        showkaseGroup = showkaseTypographyAnnotation.group,
+        showkaseKDoc = kDoc,
+        elementName = elementName,
+        packageSimpleName = packageSimpleName,
+        packageName = packageName,
+        enclosingClass = enclosingClassTypeMirror,
+        insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+        insideObject = showkaseFunctionType.insideObject()
     )
 }
 
