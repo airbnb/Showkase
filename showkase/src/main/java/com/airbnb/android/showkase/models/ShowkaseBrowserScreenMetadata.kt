@@ -2,7 +2,7 @@ package com.airbnb.android.showkase.models
 
 import androidx.compose.runtime.MutableState
 
-internal enum class ShowkaseCurrentScreen() {
+internal enum class ShowkaseCurrentScreen {
     COMPONENT_GROUPS,
     COMPONENTS_IN_A_GROUP,
     COMPONENT_DETAIL,

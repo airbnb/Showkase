@@ -149,23 +149,6 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 element = element
             )
         }
-        ShowkaseMetadataType.TYPOGRAPHY -> {
-            ShowkaseMetadata.Typography(
-                packageSimpleName = packageSimpleName,
-                packageName = packageName,
-                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
-                elementName = showkaseElementName,
-                showkaseName = showkaseName,
-                showkaseGroup = showkaseGroup,
-                insideWrapperClass = insideWrapperClass,
-                insideObject = insideObject,
-                showkaseKDoc = showkaseKDoc,
-                element = element
-            )
-        }
-        else -> {
-            throw ShowkaseProcessorException("Not a supported type")
-        }
     }
 }
 
