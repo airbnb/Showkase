@@ -65,6 +65,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         Showkase::class.java.name,
         ShowkaseRoot::class.java.name,
         ShowkaseColor::class.java.name,
+        ShowkaseTypography::class.java.name,
         PREVIEW_CLASS_NAME
     )
 

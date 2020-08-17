@@ -87,6 +87,9 @@ internal enum class ShowkaseFunctionType {
     INSIDE_COMPANION_OBJECT,
 }
 
+internal fun ShowkaseFunctionType.insideObject() = this == ShowkaseFunctionType.INSIDE_OBJECT || 
+        this == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
+
 internal enum class ShowkaseMetadataType {
     COMPONENT,
     COLOR,
@@ -106,7 +109,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Component(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                enclosingClass = enclosingClassArray.firstOrNull(),
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -122,7 +125,21 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Color(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = if (enclosingClassArray.isEmpty()) null else enclosingClassArray.first(),
+                enclosingClass = enclosingClassArray.firstOrNull(),
+                elementName = showkaseElementName,
+                showkaseName = showkaseName,
+                showkaseGroup = showkaseGroup,
+                insideWrapperClass = insideWrapperClass,
+                insideObject = insideObject,
+                showkaseKDoc = showkaseKDoc,
+                element = element
+            )
+        }
+        ShowkaseMetadataType.TYPOGRAPHY -> {
+            ShowkaseMetadata.Typography(
+                packageSimpleName = packageSimpleName,
+                packageName = packageName,
+                enclosingClass = enclosingClassArray.firstOrNull(),
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -183,8 +200,7 @@ internal fun getShowkaseMetadata(
         showkaseGroup = showkaseAnnotation.group,
         showkaseWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
         showkaseHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
+        insideObject = showkaseFunctionType.insideObject(),
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
         showkaseKDoc = kDoc
@@ -248,8 +264,7 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseWidthDp = map[ShowkaseAnnotationProperty.WIDTHDP]?.let { it as Int },
         showkaseHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT,
+        insideObject = showkaseFunctionType.insideObject(),
         element = element
     )
 }
@@ -320,8 +335,7 @@ internal fun getShowkaseTypographyMetadata(
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
-                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
+        insideObject = showkaseFunctionType.insideObject()
     )
 }
 
