@@ -240,6 +240,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 "Showkase")
     }
 
+    @Suppress("LongParameterList")
     private fun showkaseBrowserPropertyValue(
         functionPackageName: String,
         enclosingClass: TypeMirror? = null,

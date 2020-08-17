@@ -861,6 +861,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -875,9 +876,13 @@ class ShowkaseProcessorTest {
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -931,6 +936,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -945,9 +951,13 @@ class ShowkaseProcessorTest {
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -998,6 +1008,7 @@ class ShowkaseProcessorTest {
                 
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1012,9 +1023,13 @@ class ShowkaseProcessorTest {
                             color = red)
                       )
                 
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
                 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -1074,6 +1089,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1085,7 +1101,7 @@ class ShowkaseProcessorTest {
                             componentKDoc = "",
                             component = @Composable { TestComposable() })
                       )
-                
+
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
                         ShowkaseBrowserColor(
                             colorGroup = "group",
@@ -1093,10 +1109,14 @@ class ShowkaseProcessorTest {
                             colorKDoc = "",
                             color = red)
                       )
-                
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
                 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -1153,6 +1173,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1166,10 +1187,14 @@ class ShowkaseProcessorTest {
                       )
 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-                
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -1226,6 +1251,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1240,9 +1266,13 @@ class ShowkaseProcessorTest {
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -1297,6 +1327,7 @@ class ShowkaseProcessorTest {
                 
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1310,10 +1341,14 @@ class ShowkaseProcessorTest {
                             colorKDoc = "",
                             color = WrapperClass().color)
                       )
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
                 
                   override fun getShowkaseComponents() = componentList
                 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -1368,6 +1403,7 @@ class ShowkaseProcessorTest {
                 
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1381,10 +1417,14 @@ class ShowkaseProcessorTest {
                             colorKDoc = "",
                             color = WrapperClass.color)
                       )
-                
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
                 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -1443,6 +1483,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -1457,9 +1498,13 @@ class ShowkaseProcessorTest {
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
@@ -2073,6 +2118,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
@@ -2098,9 +2144,13 @@ class ShowkaseProcessorTest {
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
                   override fun getShowkaseComponents() = componentList
 
                   override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
             )
