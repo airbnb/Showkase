@@ -27,7 +27,7 @@ internal fun ShowkaseTypographyInAGroupScreen(
         groupedTypographyMap[showkaseBrowserScreenMetadata.value.currentGroup]
             ?.sortedBy { it.typographyName } ?: return
     val filteredList =
-        getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata)
+        getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata.value)
     LazyColumnFor(
         items = filteredList,
         modifier = Modifier.background(Color.White).fillMaxSize(),
@@ -66,14 +66,14 @@ private fun goBackFromTypographyInAGroupScreen(
 
 private fun getFilteredSearchList(
     list: List<ShowkaseBrowserTypography>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata
 ) =
-    when (showkaseBrowserScreenMetadata.value.isSearchActive) {
+    when (showkaseBrowserScreenMetadata.isSearchActive) {
         false -> list
-        !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
+        !showkaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
             list.filter {
                 it.typographyName.toLowerCase()
-                    .contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
+                    .contains(showkaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
             }
         }
         else -> list
