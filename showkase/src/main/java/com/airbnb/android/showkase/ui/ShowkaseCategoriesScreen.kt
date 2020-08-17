@@ -9,6 +9,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clearActiveSearch
+import com.airbnb.android.showkase.models.update
 import java.util.Locale
 
 @Composable
@@ -22,8 +23,8 @@ internal fun ShowkaseCategoriesScreen(
         SimpleTextCard(
             text = category.name.toLowerCase(defaultlLocale).capitalize(defaultlLocale),
             onClick = {
-                showkaseBrowserScreenMetadata.value =
-                    showkaseBrowserScreenMetadata.value.copy(
+                showkaseBrowserScreenMetadata.update {
+                    copy(
                         currentScreen = when(category) {
                             ShowkaseCategory.COMPONENTS -> ShowkaseCurrentScreen.COMPONENT_GROUPS
                             ShowkaseCategory.COLORS -> ShowkaseCurrentScreen.COLOR_GROUPS
@@ -33,6 +34,7 @@ internal fun ShowkaseCategoriesScreen(
                         isSearchActive = false,
                         searchQuery = null
                     )
+                }
             }
         )
     }
@@ -58,8 +60,8 @@ internal fun goBackToCategoriesScreen(
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+        else -> showkaseBrowserScreenMetadata.update {
+            copy(
                 currentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
                 currentComponent = null,
                 isSearchActive = false,

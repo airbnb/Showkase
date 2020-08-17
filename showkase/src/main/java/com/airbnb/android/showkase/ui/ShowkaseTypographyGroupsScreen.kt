@@ -6,6 +6,7 @@ import androidx.compose.runtime.MutableState
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseTypographyGroupsScreen(
@@ -21,13 +22,14 @@ internal fun ShowkaseTypographyGroupsScreen(
         SimpleTextCard(
             text = group,
             onClick = {
-                showkaseBrowserScreenMetadata.value =
-                    showkaseBrowserScreenMetadata.value.copy(
+                showkaseBrowserScreenMetadata.update {
+                    copy(
                         currentScreen = ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP,
                         currentGroup = group,
                         isSearchActive = false,
                         searchQuery = null
                     )
+                }
             }
         )
     })

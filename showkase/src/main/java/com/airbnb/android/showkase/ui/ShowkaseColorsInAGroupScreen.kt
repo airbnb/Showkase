@@ -22,6 +22,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clearActiveSearch
+import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
@@ -75,8 +76,8 @@ private fun  goBackFromColorsInAGroupScreen(
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+        else -> showkaseBrowserScreenMetadata.update {
+            copy(
                 currentScreen = ShowkaseCurrentScreen.COLOR_GROUPS,
                 currentComponent = null,
                 isSearchActive = false,

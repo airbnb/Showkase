@@ -42,6 +42,7 @@ import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.update
 import java.util.Locale
 
 @Composable
@@ -58,7 +59,7 @@ internal fun ShowkaseComponentDetailScreen(
         ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
             when (showkaseComponentCardType) {
                 ShowkaseComponentCardType.BASIC -> {
-                    if (!metadata.componentKDoc.isNullOrBlank()) {
+                    if (!metadata.componentKDoc.isBlank()) {
                         DocumentationPanel(metadata.componentKDoc)
                     }
                     BasicComponentCard(metadata)
@@ -190,10 +191,12 @@ internal fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Mod
 }
 
 private fun back(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
-    showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-        currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
-        currentComponent = null,
-        isSearchActive = false,
-        searchQuery = null
-    )
+    showkaseBrowserScreenMetadata.update {
+        copy(
+            currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
+            currentComponent = null,
+            isSearchActive = false,
+            searchQuery = null
+        )
+    }
 }

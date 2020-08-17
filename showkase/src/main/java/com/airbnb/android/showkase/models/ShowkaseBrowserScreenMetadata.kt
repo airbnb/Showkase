@@ -27,10 +27,12 @@ internal data class ShowkaseBrowserScreenMetadata(
 )
 
 internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
-    value = value.copy(
-        isSearchActive = false,
-        searchQuery = null
-    )
+    update {
+        copy(
+            isSearchActive = false,
+            searchQuery = null
+        )
+    }
 }
 
 internal fun <T> MutableState<T>.update(block: T.() -> T) {

@@ -50,14 +50,9 @@ private fun goBackFromTypographyInAGroupScreen(
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
-        isSearchActive -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                isSearchActive = false,
-                searchQuery = null
-            )
-        }
-        else -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
+        else -> showkaseBrowserScreenMetadata.update {
+            copy(
                 currentScreen = ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS,
                 currentGroup = null,
                 currentComponent = null,
