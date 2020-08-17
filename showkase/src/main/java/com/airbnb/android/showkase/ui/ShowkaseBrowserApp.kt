@@ -26,6 +26,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.insideGroup
 
 @Composable
 internal fun ShowkaseBrowserApp(
@@ -82,9 +83,7 @@ private fun ShowkaseAppBarTitle(metadata: MutableState<ShowkaseBrowserScreenMeta
         metadata.value.currentScreen == ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
             Text(ContextAmbient.current.getString(R.string.typography_category))
         }
-        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP ||
-                metadata.value.currentScreen == ShowkaseCurrentScreen.COLORS_IN_A_GROUP ||
-                metadata.value.currentScreen == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP -> {
+        metadata.value.currentScreen.insideGroup() -> {
             Text(metadata.value.currentGroup.orEmpty())
         }
         metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL -> {

@@ -6,6 +6,7 @@ import androidx.compose.runtime.MutableState
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clearActiveSearch
 
 @Composable
 internal fun ShowkaseComponentsInAGroupScreen(
@@ -44,12 +45,7 @@ private fun goBackFromComponentsInAGroupScreen(
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
-        isSearchActive -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                isSearchActive = false,
-                searchQuery = null
-            )
-        }
+        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
             showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
                 currentScreen = ShowkaseCurrentScreen.COMPONENT_GROUPS,

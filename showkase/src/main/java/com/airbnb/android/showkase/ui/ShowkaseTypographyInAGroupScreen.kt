@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clearActiveSearch
+import com.airbnb.android.showkase.models.update
 import java.util.Locale
 
 @Composable

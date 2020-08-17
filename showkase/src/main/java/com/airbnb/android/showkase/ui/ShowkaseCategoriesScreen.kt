@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clearActiveSearch
 import java.util.Locale
 
 @Composable
@@ -46,12 +47,7 @@ private fun goBackFromCategoriesScreen(
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
-        isSearchActive -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                isSearchActive = false,
-                searchQuery = null
-            )
-        }
+        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> activity.finish()
     }
 }
@@ -61,12 +57,7 @@ internal fun goBackToCategoriesScreen(
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
-        isSearchActive -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                isSearchActive = false,
-                searchQuery = null
-            )
-        }
+        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
             showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
                 currentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
