@@ -8,6 +8,8 @@ import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clearActiveSearch
+import com.airbnb.android.showkase.models.update
 import java.util.Locale
 
 @Composable
@@ -21,16 +23,18 @@ internal fun ShowkaseCategoriesScreen(
         SimpleTextCard(
             text = category.name.toLowerCase(defaultlLocale).capitalize(defaultlLocale),
             onClick = {
-                showkaseBrowserScreenMetadata.value =
-                    showkaseBrowserScreenMetadata.value.copy(
+                showkaseBrowserScreenMetadata.update {
+                    copy(
                         currentScreen = when(category) {
                             ShowkaseCategory.COMPONENTS -> ShowkaseCurrentScreen.COMPONENT_GROUPS
                             ShowkaseCategory.COLORS -> ShowkaseCurrentScreen.COLOR_GROUPS
+                            ShowkaseCategory.TYPOGRAPHY -> ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS
                         },
                         currentGroup = null,
                         isSearchActive = false,
                         searchQuery = null
                     )
+                }
             }
         )
     }
@@ -45,12 +49,25 @@ private fun goBackFromCategoriesScreen(
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
-        isSearchActive -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
+        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
+        else -> activity.finish()
+    }
+}
+
+internal fun goBackToCategoriesScreen(
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
+    when {
+        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
+        else -> showkaseBrowserScreenMetadata.update {
+            copy(
+                currentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
+                currentComponent = null,
                 isSearchActive = false,
-                searchQuery = null
+                searchQuery = null,
+                currentGroup = null
             )
         }
-        else -> activity.finish()
     }
 }

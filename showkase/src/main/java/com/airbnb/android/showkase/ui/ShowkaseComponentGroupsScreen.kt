@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseComponentGroupsScreen(
@@ -23,41 +24,19 @@ internal fun ShowkaseComponentGroupsScreen(
         SimpleTextCard(
             text = group, 
             onClick = {
-                showkaseBrowserScreenMetadata.value =
-                    showkaseBrowserScreenMetadata.value.copy(
+                showkaseBrowserScreenMetadata.update {
+                    copy(
                         currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
                         currentGroup = group,
                         isSearchActive = false,
                         searchQuery = null
                     )
+                }
             }
         )
     })
     BackButtonHandler {
-        goBackFromComponentGroupsScreen(showkaseBrowserScreenMetadata)
-    }
-}
-
-private fun goBackFromComponentGroupsScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
-) {
-    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
-    when {
-        isSearchActive -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                isSearchActive = false,
-                searchQuery = null
-            )
-        }
-        else -> {
-            showkaseBrowserScreenMetadata.value = showkaseBrowserScreenMetadata.value.copy(
-                currentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
-                currentComponent = null,
-                isSearchActive = false,
-                searchQuery = null,
-                currentGroup = null
-            )
-        }
+        goBackToCategoriesScreen(showkaseBrowserScreenMetadata)
     }
 }
 

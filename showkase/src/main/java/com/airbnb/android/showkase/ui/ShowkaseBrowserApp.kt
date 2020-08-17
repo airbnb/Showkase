@@ -1,9 +1,7 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +11,9 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.text.TextStyle
@@ -24,12 +24,15 @@ import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
+import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.insideGroup
 
 @Composable
 internal fun ShowkaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     Scaffold(
@@ -42,7 +45,7 @@ internal fun ShowkaseBrowserApp(
                 modifier = Modifier.fillMaxSize(),
                 backgroundColor = SHOWKASE_COLOR_BACKGROUND
             ) {
-                ShowkaseBodyContent(groupedComponentMap, groupedColorsMap,
+                ShowkaseBodyContent(groupedComponentMap, groupedColorsMap, groupedTypographyMap,
                     showkaseBrowserScreenMetadata)
             }
         }
@@ -77,8 +80,10 @@ private fun ShowkaseAppBarTitle(metadata: MutableState<ShowkaseBrowserScreenMeta
         metadata.value.currentScreen == ShowkaseCurrentScreen.COLOR_GROUPS -> {
             Text(ContextAmbient.current.getString(R.string.colors_category))
         }
-        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP || 
-        metadata.value.currentScreen == ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
+        metadata.value.currentScreen == ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
+            Text(ContextAmbient.current.getString(R.string.typography_category))
+        }
+        metadata.value.currentScreen.insideGroup() -> {
             Text(metadata.value.currentGroup.orEmpty())
         }
         metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
@@ -132,6 +137,7 @@ private fun ShowkaseAppBarActions(metadata: MutableState<ShowkaseBrowserScreenMe
 internal fun ShowkaseBodyContent(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     when (showkaseBrowserScreenMetadata.value.currentScreen) {
@@ -165,6 +171,18 @@ internal fun ShowkaseBodyContent(
         ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
             ShowkaseColorsInAGroupScreen(
                 groupedColorsMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
+            ShowkaseTypographyGroupsScreen(
+                groupedTypographyMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP -> {
+            ShowkaseTypographyInAGroupScreen(
+                groupedTypographyMap,
                 showkaseBrowserScreenMetadata
             )
         }

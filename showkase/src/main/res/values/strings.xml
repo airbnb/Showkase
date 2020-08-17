@@ -6,4 +6,5 @@
     <string name="showkase_browser_hide_documentation">Hide Documentation</string>
     <string name="components_category">Components</string>
     <string name="colors_category">Colors</string>
+    <string name="typography_category">Typography</string>
 </resources>

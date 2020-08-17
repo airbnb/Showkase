@@ -149,9 +149,6 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 element = element
             )
         }
-        else -> {
-            throw ShowkaseProcessorException("Not a supported type")
-        }
     }
 }
 
@@ -285,7 +282,8 @@ internal fun getShowkaseColorMetadata(
         packageName = packageName,
         enclosingClass = enclosingClassTypeMirror,
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        insideObject = showkaseFunctionType.insideObject()
+        insideObject = showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT ||
+                showkaseFunctionType == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
     )
 }
 
