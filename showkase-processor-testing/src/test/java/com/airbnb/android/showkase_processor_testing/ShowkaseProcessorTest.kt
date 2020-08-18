@@ -2683,6 +2683,1054 @@ class ShowkaseProcessorTest {
         }
     }
 
+    @Test
+    fun `top level function with showkase annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        
+        @Showkase
+        @Composable
+        fun testComposable() {
+            
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level function with preview annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.runtime.Composable
+        
+        @Preview
+        @Composable
+        fun testComposable() {
+            
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level property with showkase color annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
+        
+        @ShowkaseColor
+        val red = Color(0xffff0000)
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Red",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level property with showkase typography annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.text.TextStyle
+        import androidx.compose.ui.text.font.FontFamily
+        import com.airbnb.android.showkase.annotation.ShowkaseTypography
+        
+        @ShowkaseTypography
+        val title = TextStyle(
+            fontFamily = FontFamily.Cursive
+        )
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Title",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `function inside class with showkase annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        
+        class WrapperClass {
+            @Showkase
+            @Composable
+            fun testComposable() {
+                
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `function inside class with preview annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.runtime.Composable
+        
+        class WrapperClass {
+            @Preview
+            @Composable
+            fun testComposable() {
+                
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `property inside class with showkase color annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
+        
+        class WrapperClass {
+            @ShowkaseColor
+            val red = Color(0xffff0000)
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Red",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun WrapperClass_red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `property inside class with showkase typography annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.text.TextStyle
+        import androidx.compose.ui.text.font.FontFamily
+        import com.airbnb.android.showkase.annotation.ShowkaseTypography
+        
+        class WrapperClass {
+            @ShowkaseTypography
+            val title = TextStyle(
+                fontFamily = FontFamily.Cursive
+            )
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Title",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun WrapperClass_title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `function inside object with showkase annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        
+        object WrapperClass {
+            @Showkase
+            @Composable
+            fun testComposable() {
+                
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `function inside object with preview annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.runtime.Composable
+        
+        object WrapperClass {
+            @Preview
+            @Composable
+            fun testComposable() {
+                
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `property inside object with showkase color annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
+        
+        object WrapperClass {
+            @ShowkaseColor
+            val red = Color(0xffff0000)
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Red",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun WrapperClass_red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `property inside object with showkase typography annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.text.TextStyle
+        import androidx.compose.ui.text.font.FontFamily
+        import com.airbnb.android.showkase.annotation.ShowkaseTypography
+        
+        object WrapperClass {
+            @ShowkaseTypography
+            val title = TextStyle(
+                fontFamily = FontFamily.Cursive
+            )
+        }
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Title",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun WrapperClass_title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `function inside companion object with showkase annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        
+        class WrapperClass {
+            companion object {
+                @Showkase
+                @Composable
+                fun testComposable() {
+                    
+                }
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `function inside companion object with preview annotation and no name or group`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.runtime.Composable
+        
+        class WrapperClass {
+            companion object {
+                @Preview
+                @Composable
+                fun testComposable() {
+                    
+                }
+            }
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level function with showkase and showkaseroot and no name or group`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        
+        @Showkase
+        @Composable
+        fun TestComposable() {
+            
+        }
+    """)
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                        ShowkaseBrowserComponent(
+                            group = "Default Group",
+                            componentName = "TestComposable",
+                            componentKDoc = "",
+                            component = @Composable { TestComposable() })
+                      )
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
+                  override fun getShowkaseComponents() = componentList
+
+                  override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level function with showkase and showkaseroot and no name`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        
+        @Showkase(group = "group")
+        @Composable
+        fun testComposable() {
+            
+        }
+    """)
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                        ShowkaseBrowserComponent(
+                            group = "group",
+                            componentName = "TestComposable",
+                            componentKDoc = "",
+                            component = @Composable { testComposable() })
+                      )
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
+                  override fun getShowkaseComponents() = componentList
+
+                  override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level function with preview and showkaseroot and no name or group`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.runtime.Composable
+        
+        @Preview
+        @Composable
+        fun TestComposable() {
+            
+        }
+    """)
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                        ShowkaseBrowserComponent(
+                            group = "Default Group",
+                            componentName = "TestComposable",
+                            componentKDoc = "",
+                            component = @Composable { TestComposable() })
+                      )
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+
+                  override fun getShowkaseComponents() = componentList
+
+                  override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `color property inside class with showkasecolor annotation and showkaseroot with no group`() {
+    
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        import androidx.compose.ui.graphics.Color
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
+        
+        class WrapperClass {
+            @ShowkaseColor("name")
+            val color = Color(0xffff0000)
+        }
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+                        ShowkaseBrowserColor(
+                            colorGroup = "WrapperClass",
+                            colorName = "name",
+                            colorKDoc = "",
+                            color = WrapperClass().color)
+                      )
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+                
+                  override fun getShowkaseComponents() = componentList
+                
+                  override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level textstyle property with showkasetypography and showkaseroot with no name`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.ui.text.TextStyle
+        import androidx.compose.ui.text.font.FontFamily
+        import com.airbnb.android.showkase.annotation.ShowkaseTypography
+        
+        @ShowkaseTypography(group = "group")
+        val title = TextStyle(
+            fontFamily = FontFamily.Cursive
+        )
+    """
+        )
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.Showkase
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
+                        ShowkaseBrowserTypography(
+                            typographyGroup = "group",
+                            typographyName = "Title",
+                            typographyKDoc = "",
+                            textStyle = title)
+                      )
+
+                  override fun getShowkaseComponents() = componentList
+
+                  override fun getShowkaseColors() = colorList
+
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
     private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = kotlinSourceFiles
