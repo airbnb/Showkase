@@ -88,7 +88,7 @@ fun H4TextRowComponentPreview() {
         Card {
             Text(text = string, 
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                style = MaterialDesign.h4
+                style = Material.h4
             )
         }
     }
