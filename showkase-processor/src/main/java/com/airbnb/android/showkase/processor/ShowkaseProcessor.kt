@@ -139,8 +139,8 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun Collection<ShowkaseMetadata>.dedupeAndSort() = this.distinctBy {
         // It's possible that a composable annotation is annotated with both Preview & 
-        // Showkase(especially if we add more functionality to Showkase and they diverge in 
-        // the customizations that they offer). In that scenario, its important to dedupe the
+        // ShowkaseComposable(especially if we add more functionality to Showkase and they diverge
+        // in the customizations that they offer). In that scenario, its important to dedupe the
         // composables as they will be processed across both the rounds. We first ensure that
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 

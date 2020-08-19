@@ -350,7 +350,7 @@ class ShowkaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only composable methods can be annotated with Showkase"
+        val error = "Only composable methods can be annotated with ShowkaseComposable"
         assertThat(result.messages).contains(error)
     }
 
@@ -391,7 +391,7 @@ class ShowkaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only composable methods can be annotated with Showkase"
+        val error = "Only composable methods can be annotated with ShowkaseComposable"
         assertThat(result.messages).contains(error)
     }
 
@@ -433,7 +433,7 @@ class ShowkaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only composable methods can be annotated with Showkase"
+        val error = "Only composable methods can be annotated with ShowkaseComposable"
         assertThat(result.messages).contains(error)
     }
 
