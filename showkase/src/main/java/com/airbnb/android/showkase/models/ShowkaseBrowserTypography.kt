@@ -6,5 +6,5 @@ data class ShowkaseBrowserTypography(
     val typographyGroup: String,
     val typographyName: String,
     val typographyKDoc: String,
-    val textStyle: TextStyle
+    val textStyle: TextStyle,
 )

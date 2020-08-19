@@ -10,5 +10,5 @@ data class ShowkaseBrowserComponent(
     val componentKDoc: String,
     val component: @Composable () -> Unit,
     val widthDp: Int? = null,
-    val heightDp: Int? = null
+    val heightDp: Int? = null,
 )
