@@ -46,7 +46,7 @@ package com.airbnb.android.showkase.annotation
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
-annotation class ShowkaseComponent(
+annotation class ShowkaseComposable(
     val name: String = "",
     val group: String = "",
     val widthDp: Int = -1,

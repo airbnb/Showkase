@@ -1,6 +1,6 @@
 package com.airbnb.android.showkase.processor.models
 
-import com.airbnb.android.showkase.annotation.ShowkaseComponent
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
@@ -164,7 +164,7 @@ internal fun getShowkaseMetadata(
     typeUtils: Types,
     showkaseValidator: ShowkaseValidator
 ): ShowkaseMetadata {
-    val showkaseAnnotation = element.getAnnotation(ShowkaseComponent::class.java)
+    val showkaseAnnotation = element.getAnnotation(ShowkaseComposable::class.java)
     val packageElement = elementUtil.getPackageOf(element)
     val moduleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
@@ -239,7 +239,7 @@ internal fun getShowkaseMetadataFromPreview(
 
     val numParameters = element.parameters.size
     if (numParameters > 0) {
-        // We don't support @Composable preview functions that take in a parameter. So @ShowkaseComponent 
+        // We don't support @Composable preview functions that take in a parameter. So @ShowkaseComposable 
         // annotation throws an error to notify the user. However, for the @Preview annotation, they 
         // recently added support for functions that acccept a parameter(in their case, its a 
         // data provider for showing some combinations in the preview. Since it's new, I want the

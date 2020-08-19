@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.datasource.LoremIpsum
-import com.airbnb.android.showkase.annotation.ShowkaseComponent
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
 @Composable
 fun SimpleRow(title: String, subtitle: String) {
@@ -184,7 +184,7 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
     }
 }
 
-@ShowkaseComponent("Bottom Label Row", "Rows")
+@ShowkaseComposable("Bottom Label Row", "Rows")
 @Preview
 @Composable
 fun BottomLabelRowPreview() {
@@ -207,7 +207,7 @@ fun BottomLabelRowPreview() {
  * }
  * ```
  */
-@ShowkaseComponent("Product Card", "Rows")
+@ShowkaseComposable("Product Card", "Rows")
 @Preview
 @Composable
 fun ProductCardRowPreview() {
@@ -218,7 +218,7 @@ fun ProductCardRowPreview() {
     )
 }
 
-@ShowkaseComponent("Simple Row", "Rows")
+@ShowkaseComposable("Simple Row", "Rows")
 @Preview
 @Composable
 fun SimpleRowPreview() {
@@ -228,7 +228,7 @@ fun SimpleRowPreview() {
     )
 }
 
-@ShowkaseComponent("Title Subtitle with Thumbnail", "Rows")
+@ShowkaseComposable("Title Subtitle with Thumbnail", "Rows")
 @Preview
 @Composable
 fun TitleSubtitleThumbnailRowPreview() {

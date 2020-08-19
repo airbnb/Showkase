@@ -70,7 +70,7 @@ properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
 
 // or
 
-@ShowkaseComponent(name="Name of component", group="Group Name")
+@ShowkaseComposable(name="Name of component", group="Group Name")
 ```
 
 **Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your **root** module.

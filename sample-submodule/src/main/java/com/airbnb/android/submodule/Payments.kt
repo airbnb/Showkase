@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.airbnb.android.showkase.annotation.ShowkaseComponent
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
 @Composable
 fun CreditCardComponent(cardName: String) {
@@ -92,7 +92,7 @@ val creditCardOffsetMap = object : OffsetMap {
     override fun transformedToOriginal(offset: Int) = offset - (offset / 4)
 }
 
-@ShowkaseComponent("Credit Card Component", "Payments")
+@ShowkaseComposable("Credit Card Component", "Payments")
 @Preview
 @Composable
 fun CreditCardComponentPreview() {
