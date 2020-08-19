@@ -36,8 +36,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 }
                 else -> {
                     ShowkaseErrorScreen(
-                        errorText = "There were no @Composable functions that were annotated with " +
-                                "@ShowkaseX. If you think this is a mistake, file an issue at " +
+                        errorText = "There were no elements that were annotated with either " +
+                                "@ShowkaseComposable, @ShowkaseTypography or @ShowkaseColo. If " +
+                                "you think this is a mistake, file an issue at " +
                                 "https://github.com/airbnb/Showkase/issues"
                     )
                 }
