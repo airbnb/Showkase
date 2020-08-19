@@ -34,7 +34,7 @@ internal fun ShowkaseTypographyInAGroupScreen(
         itemContent = { groupTypographyMetadata ->
             Text(
                 text = groupTypographyMetadata.typographyName.capitalize(Locale.getDefault()),
-                modifier = Modifier.fillParentMaxWidth().padding(16.dp),
+                modifier = Modifier.fillParentMaxWidth().padding(padding4x),
                 style = groupTypographyMetadata.textStyle
             )
             Divider()

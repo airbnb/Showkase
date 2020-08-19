@@ -14,6 +14,7 @@ import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.ui.padding4x
 
 /**
  * This component shows some static text in cursive text style. 
@@ -36,7 +37,7 @@ fun CursiveTextComponent() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Cursive)
             )
@@ -53,7 +54,7 @@ fun SerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Serif)
             )
@@ -70,7 +71,7 @@ fun SansSerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(16.dp),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif)
             )
@@ -87,7 +88,7 @@ fun H4TextRowComponentPreview() {
     ShowkaseTheme {
         Card {
             Text(text = string, 
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = Material.h4
             )
         }

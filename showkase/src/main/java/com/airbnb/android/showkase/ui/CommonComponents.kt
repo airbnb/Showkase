@@ -23,14 +23,14 @@ fun SimpleTextCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            .padding(start = padding4x, end = padding4x, top = padding2x, bottom = padding2x)
             .clickable(
                 onClick = { onClick() }
             )
     ) {
         Text(
             text = text, 
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(padding4x),
             style = TextStyle(
                 fontSize = 20.sp, 
                 fontFamily = FontFamily.Serif,
@@ -44,7 +44,8 @@ fun SimpleTextCard(
 internal fun ComponentCardTitle(componentName: String) {
     Text(
         text = componentName,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 4.dp),
+        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding4x * 2, 
+            bottom = padding1x),
         style = TextStyle(
             fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
