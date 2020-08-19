@@ -4,7 +4,7 @@ package com.airbnb.android.showkase.annotation
  * Used to annotate @Composable functions that should be displayed inside the 
  * Showkase browser. Here's how you would use it with your @Composable function:
  * 
- * @ShowkaseComponent(name = "Name", group = "Group")
+ * @ShowkaseComposable(name = "Name", group = "Group")
  * @Composable
  * fun MyComposable() {
  *     .......
@@ -27,7 +27,7 @@ package com.airbnb.android.showkase.annotation
  * In order to make this function compatible with Showkase, you could further wrap this function 
  * inside a method that doesn't accept a parameters in the following way:
  * 
- * @ShowkaseComponent(name = "Name", group = "Group")
+ * @ShowkaseComposable(name = "Name", group = "Group")
  * @Composable
  * fun MyComposablePreview() {
  *     MyComposable("Name")
