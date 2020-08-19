@@ -14,7 +14,7 @@ import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.runtime.setValue
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseComponent
 
 val listItems = listOf("Games", "Apps", "Movies", "Books")
 
@@ -40,7 +40,7 @@ fun BottomNavigationAlwaysShowLabelComponent() {
     }
 }
 
-@Showkase(name = "Bottom Navigation Bar", group = "Navigation")
+@ShowkaseComponent(name = "Bottom Navigation Bar", group = "Navigation")
 @Preview
 @Composable
 fun BottomNavigationAlwaysShowLabelComponentPreview() {

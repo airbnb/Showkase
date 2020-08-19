@@ -1,6 +1,6 @@
 package com.airbnb.android.showkase.processor.logging
 
-import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseComponent
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -48,7 +48,7 @@ class ShowkaseValidator {
             }
             // We only want to throw an error if the user used the Showkase annotation. For 
             // @Preview annotations with parameter, we simply want to skip those. 
-            annotationName == Showkase::class.java.simpleName && 
+            annotationName == ShowkaseComponent::class.java.simpleName && 
                     (element as ExecutableElement).parameters.size > 0 -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Make sure that the @Composable functions that you " +
@@ -179,7 +179,7 @@ class ShowkaseValidator {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Only classes that don't accept any constructor parameters can " +
                             "hold a @Composable function that's annotated with the " +
-                            "@${Showkase::class.java.simpleName}/@Preview annotation"
+                            "@${ShowkaseComponent::class.java.simpleName}/@Preview annotation"
                 )
             }
         }

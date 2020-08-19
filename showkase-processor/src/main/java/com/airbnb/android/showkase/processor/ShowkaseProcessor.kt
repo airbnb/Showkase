@@ -1,6 +1,6 @@
 package com.airbnb.android.showkase.processor
 
-import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseComponent
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
@@ -62,11 +62,11 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
-        Showkase::class.java.name,
-        ShowkaseRoot::class.java.name,
+        ShowkaseComponent::class.java.name,
+        PREVIEW_CLASS_NAME,
         ShowkaseColor::class.java.name,
         ShowkaseTypography::class.java.name,
-        PREVIEW_CLASS_NAME
+        ShowkaseRoot::class.java.name,
     )
 
     override fun process(
@@ -104,10 +104,10 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment) =
-        roundEnvironment.getElementsAnnotatedWith(Showkase::class.java).map { element ->
+        roundEnvironment.getElementsAnnotatedWith(ShowkaseComponent::class.java).map { element ->
             showkaseValidator.validateComponentElement(
                 element, composableTypeMirror, typeUtils,
-                Showkase::class.java.simpleName
+                ShowkaseComponent::class.java.simpleName
             )
             getShowkaseMetadata(
                 element = element as ExecutableElement, elementUtil = elementUtils, typeUtils = typeUtils,

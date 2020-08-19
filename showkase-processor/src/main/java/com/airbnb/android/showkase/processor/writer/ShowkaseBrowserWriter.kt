@@ -235,7 +235,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 )
                 .build()
         }
-        else -> throw ShowkaseProcessorException("Your @Showkase/@Preview " +
+        else -> throw ShowkaseProcessorException("Your @ShowkaseComponent/@Preview " +
                 "function:${composeFunctionName} is declared in a way that is not supported by " +
                 "Showkase")
     }
