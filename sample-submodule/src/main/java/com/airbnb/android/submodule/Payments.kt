@@ -16,6 +16,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.state
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
@@ -40,10 +42,10 @@ fun CreditCardComponent(cardName: String) {
             Card(
                 shape = RoundedCornerShape(padding4x),
                 modifier = Modifier.preferredWidth(300.dp).aspectRatio(16 / 9f),
-                color = MaterialTheme.colors.primary
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
-                    var textValue by state { "1234567812345678" }
+                    var textValue by remember { mutableStateOf("1234567812345678") }
                     CoreTextField(value = TextFieldValue(textValue),
                         modifier = Modifier.padding(padding4x),
                         textStyle = TextStyle(
