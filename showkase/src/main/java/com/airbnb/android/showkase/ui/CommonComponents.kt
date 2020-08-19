@@ -44,7 +44,7 @@ fun SimpleTextCard(
 internal fun ComponentCardTitle(componentName: String) {
     Text(
         text = componentName,
-        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding4x * 2, 
+        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding8x, 
             bottom = padding1x),
         style = TextStyle(
             fontSize = 16.sp,
