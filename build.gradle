@@ -2,14 +2,14 @@
 buildscript {
     ext.versions = [
             'assertJ': '3.16.1',
-            'compose': '0.1.0-dev16',
+            'compose': '0.1.0-dev17',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
             'glide': '4.10.0',
             'gradle': '4.2.0-alpha07',
             'junit' : '4.12',
             'junitImplementation' : '1.1.1',
-            'kotlin': '1.4.0-rc',
+            'kotlin': '1.4.0',
             'kotlinCompilerVersion': '1.4.0-dev-withExperimentalGoogleExtensions-20200720',
             'kotlinCompileTesting': '1.2.8',
             'kotlinPoet': '1.6.0',

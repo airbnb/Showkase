@@ -9,7 +9,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.onCommit
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.state
 import androidx.compose.ui.Modifier
@@ -31,8 +33,8 @@ fun NetworkImage(imageUrl: String,
     ) {
         WithConstraints {
             val constrainScope = this
-            var image by state<ImageAsset?> { null }
-            var drawable by state<Drawable?> { null }
+            var image by remember { mutableStateOf<ImageAsset?>(null) }
+            var drawable by remember { mutableStateOf<Drawable?>(null) }
             onCommit(imageUrl) {
                 val picasso = Picasso.get()
                 val target = object : Target {

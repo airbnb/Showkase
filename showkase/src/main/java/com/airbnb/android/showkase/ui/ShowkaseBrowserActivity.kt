@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.state
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.setContent
 import com.airbnb.android.showkase.exceptions.ShowkaseException
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
@@ -28,7 +29,8 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 groupedColorsMap,
                 groupedTypographyMap
             ) = getShowkaseProviderElements(classKey)
-            var showkaseBrowserScreenMetadata = state { ShowkaseBrowserScreenMetadata() }
+            val showkaseBrowserScreenMetadata = 
+                remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
             when {
                 groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
                     ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap, groupedTypographyMap,

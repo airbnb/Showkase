@@ -2,11 +2,9 @@ package com.airbnb.android.showkase.ui
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.ProvideTextStyle
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,12 +18,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Providers
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.state
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ConfigurationAmbient
 import androidx.compose.ui.platform.ContextAmbient
@@ -79,7 +80,7 @@ internal fun ShowkaseComponentDetailScreen(
 
 @Composable
 private fun DocumentationPanel(kDoc: String) {
-    var showDocumentation by state { false }
+    var showDocumentation by remember { mutableStateOf(false) }
     val context = ContextAmbient.current
     val (buttonText, icon) = getCollabsableTextAndIcon(context, showDocumentation)
     val onClick = { showDocumentation = !showDocumentation }
@@ -96,9 +97,9 @@ private fun DocumentationPanel(kDoc: String) {
         )
     }
     Row(
-        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding2x) +
-                Modifier.fillMaxWidth() + 
-                Modifier.clickable(onClick = onClick),
+        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding2x)
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalGravity = Alignment.CenterVertically
     ) {

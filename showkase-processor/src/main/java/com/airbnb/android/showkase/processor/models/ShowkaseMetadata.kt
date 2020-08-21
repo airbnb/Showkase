@@ -57,7 +57,7 @@ internal sealed class ShowkaseMetadata {
         override val showkaseKDoc: String,
         override val enclosingClass: TypeMirror? = null,
         override val insideWrapperClass: Boolean = false,
-        override val insideObject: Boolean = false
+        override val insideObject: Boolean = false,
     ): ShowkaseMetadata()
 
     data class Typography(
@@ -70,7 +70,7 @@ internal sealed class ShowkaseMetadata {
         override val showkaseKDoc: String,
         override val enclosingClass: TypeMirror? = null,
         override val insideWrapperClass: Boolean = false,
-        override val insideObject: Boolean = false
+        override val insideObject: Boolean = false,
     ): ShowkaseMetadata()
 }
 
