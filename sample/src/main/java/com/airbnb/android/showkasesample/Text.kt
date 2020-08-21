@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
 /**
  * This component shows some static text in cursive text style. 
@@ -27,7 +27,7 @@ import com.airbnb.android.showkase.annotation.Showkase
  * }
  * ```
  */
-@Showkase(name = "Cursive Text Style", group = "Text")
+@ShowkaseComposable(name = "Cursive Text Style", group = "Text")
 @Preview
 @Composable
 fun CursiveTextComponent() {
@@ -44,7 +44,7 @@ fun CursiveTextComponent() {
     }
 }
 
-@Showkase(name = "Serif Text Style", group = "Text")
+@ShowkaseComposable(name = "Serif Text Style", group = "Text")
 @Preview
 @Composable
 fun SerifTextComponentPreview() {
@@ -61,7 +61,7 @@ fun SerifTextComponentPreview() {
     }
 }
 
-@Showkase(name = "Sans Serif Text Style", group = "Text")
+@ShowkaseComposable(name = "Sans Serif Text Style", group = "Text")
 @Preview
 @Composable
 fun SansSerifTextComponentPreview() {
@@ -78,7 +78,7 @@ fun SansSerifTextComponentPreview() {
     }
 }
 
-@Showkase(name = "H4 Text Row", group = "Text")
+@ShowkaseComposable(name = "H4 Text Row", group = "Text")
 @Composable
 fun H4TextRowComponentPreview() {
     val context = ContextAmbient.current

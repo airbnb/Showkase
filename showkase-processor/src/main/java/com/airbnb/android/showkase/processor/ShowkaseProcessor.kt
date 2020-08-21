@@ -1,6 +1,6 @@
 package com.airbnb.android.showkase.processor
 
-import com.airbnb.android.showkase.annotation.Showkase
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
@@ -62,11 +62,11 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
-        Showkase::class.java.name,
-        ShowkaseRoot::class.java.name,
+        ShowkaseComposable::class.java.name,
+        PREVIEW_CLASS_NAME,
         ShowkaseColor::class.java.name,
         ShowkaseTypography::class.java.name,
-        PREVIEW_CLASS_NAME
+        ShowkaseRoot::class.java.name,
     )
 
     override fun process(
@@ -104,10 +104,10 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment) =
-        roundEnvironment.getElementsAnnotatedWith(Showkase::class.java).map { element ->
+        roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java).map { element ->
             showkaseValidator.validateComponentElement(
                 element, composableTypeMirror, typeUtils,
-                Showkase::class.java.simpleName
+                ShowkaseComposable::class.java.simpleName
             )
             getShowkaseMetadata(
                 element = element as ExecutableElement, elementUtil = elementUtils, typeUtils = typeUtils,
@@ -139,8 +139,8 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun Collection<ShowkaseMetadata>.dedupeAndSort() = this.distinctBy {
         // It's possible that a composable annotation is annotated with both Preview & 
-        // Showkase(especially if we add more functionality to Showkase and they diverge in 
-        // the customizations that they offer). In that scenario, its important to dedupe the
+        // ShowkaseComposable(especially if we add more functionality to Showkase and they diverge
+        // in the customizations that they offer). In that scenario, its important to dedupe the
         // composables as they will be processed across both the rounds. We first ensure that
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 

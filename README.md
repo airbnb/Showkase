@@ -31,12 +31,12 @@ mode, RTL layouts, font scaled, etc.
  
  ## Features
   - [Super simple setup](#Installation)
-  - First class support for `@Preview` annotation, in additon to having a custom `@Showkase` 
-  annotation with similar properties. If you are already using `@Preview` for previews in 
-  Android Studio, using Showkase is even easier as all those components are included in the 
-  Showkase browser.  
+  - First class support for `@Preview` annotation, in additon to having a custom 
+  `@ShowkaseComposable` annotation with similar properties. If you are already using `@Preview` 
+  for previews in Android Studio, using Showkase is even easier as all those components are 
+  included in the Showkase browser.  
   - Support for top level, class, object & companion object functions to be annotated 
-  with the `@Showkase`(or `@Preview`) annotation.
+  with the `@ShowkaseComposable`(or `@Preview`) annotation.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
   Scaled, Display Scaled. Look in the gif above for examples)'. More to be added in the future!
   - Support for searching a `@Composable` component by name or group.
@@ -61,16 +61,16 @@ implementation "com.airbnb.android:showkase:0.1.0-alpha"
 kapt "com.airbnb.android:showkcase-processor:0.1.0-alpha"
 ```
 
-**Step 2**: Add the `@Preview` or `@Showkase` annotation to every `@Composable` function/component 
-that should be a part of the Showkase browser. Showkase currently supports the following 
-properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
+**Step 2**: Add the `@Preview` or `@ShowkaseComposable` annotation to every `@Composable` 
+function/component that should be a part of the Showkase browser. Showkase currently supports the 
+following properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
 
 ```kotlin
 @Preview(name="Name of component", group="Group Name")
 
 // or
 
-@Showkase(name="Name of component", group="Group Name")
+@ShowkaseComposable(name="Name of component", group="Group Name")
 ```
 
 **Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your **root** module.

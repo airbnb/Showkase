@@ -12,8 +12,8 @@ import com.airbnb.android.showkase.models.ShowkaseProvider
 import com.airbnb.android.showkase.models.ShowkaseProviderElements
 
 /**
- * The activity that's responsible for showing all the @Composable components that were annotated
- * with the @Showkase annotation.
+ * The activity that's responsible for showing all the UI elements that were annotated
+ * with the Showkase related annotations.
  */
 class ShowkaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +36,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 }
                 else -> {
                     ShowkaseErrorScreen(
-                        errorText = "There were no @Composable functions that were annotated with " +
-                                "@Showkase. If you think this is a mistake, file an issue at " +
+                        errorText = "There were no elements that were annotated with either " +
+                                "@ShowkaseComposable, @ShowkaseTypography or @ShowkaseColor. If " +
+                                "you think this is a mistake, file an issue at " +
                                 "https://github.com/airbnb/Showkase/issues"
                     )
                 }
