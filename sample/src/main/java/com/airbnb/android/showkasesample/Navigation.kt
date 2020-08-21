@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.ui.padding4x
 
 val listItems = listOf("Games", "Apps", "Movies", "Books")
 
@@ -23,7 +24,7 @@ fun BottomNavigationAlwaysShowLabelComponent() {
     var selectedIndex by savedInstanceState { 0 }
 
     ShowkaseTheme {
-        BottomNavigation(modifier = Modifier.padding(16.dp)) {
+        BottomNavigation(modifier = Modifier.padding(padding4x)) {
             listItems.forEachIndexed { index, label ->
                 BottomNavigationItem(
                     icon = {

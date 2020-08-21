@@ -26,14 +26,17 @@ import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.datasource.LoremIpsum
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.ui.padding1x
+import com.airbnb.android.showkase.ui.padding2x
+import com.airbnb.android.showkase.ui.padding4x
 
 @Composable
 fun SimpleRow(title: String, subtitle: String) {
     ShowkaseTheme {
         Card(
-            shape = RoundedCornerShape(4.dp),
+            shape = RoundedCornerShape(padding1x),
             modifier = Modifier.fillMaxWidth()
-                .padding(8.dp)
+                .padding(padding2x)
         ) {
             ListItem(text = {
                 Text(
@@ -68,8 +71,8 @@ fun TitleSubtitleThumbnailRow() {
         Card(
             modifier = Modifier.preferredHeight(120.dp)
                 .fillMaxWidth()
-                .padding(8.dp),
-            shape = RoundedCornerShape(4.dp)
+                .padding(padding2x),
+            shape = RoundedCornerShape(padding1x)
         ) {
             ConstraintLayout {
                 val (title, subtitle, image) = createRefs()
@@ -78,7 +81,7 @@ fun TitleSubtitleThumbnailRow() {
                     fontFamily = FontFamily.Serif, fontWeight =
                     FontWeight.W900, fontSize = 14.sp
                 ), modifier = Modifier.constrainAs(title) {
-                    start.linkTo(image.end, margin = 16.dp)
+                    start.linkTo(image.end, margin = padding4x)
                     top.linkTo(image.top)
                 })
 
@@ -87,7 +90,7 @@ fun TitleSubtitleThumbnailRow() {
                     FontWeight.W900, fontSize = 14.sp
                 ), modifier = Modifier.constrainAs(subtitle) {
                     bottom.linkTo(image.bottom)
-                    start.linkTo(image.end, margin = 16.dp)
+                    start.linkTo(image.end, margin = padding4x)
                 })
 
                 Box(modifier = Modifier.preferredHeight(72.dp)
@@ -95,7 +98,7 @@ fun TitleSubtitleThumbnailRow() {
                     .background(color = Color.Gray)
                     .constrainAs(image) {
                         centerVerticallyTo(parent)
-                        start.linkTo(parent.start, margin = 16.dp)
+                        start.linkTo(parent.start, margin = padding4x)
                     }
                 )
             }
@@ -109,11 +112,11 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
         Column(
             modifier = Modifier.fillMaxWidth()
                 .background(color = MaterialTheme.colors.surface)
-                .padding(16.dp)
+                .padding(padding4x)
         ) {
             Text(
                 text = title,
-                modifier = Modifier.padding(bottom = 4.dp),
+                modifier = Modifier.padding(bottom = padding1x),
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -124,7 +127,7 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
             )
             Text(
                 text = subtitle,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(bottom = padding2x),
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -132,12 +135,12 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
                 )
             )
             Surface(
-                shape = RoundedCornerShape(2.dp),
+                shape = RoundedCornerShape(padding1x/2),
                 color = MaterialTheme.colors.primary
             ) {
                 Text(
                     text = label.toUpperCase(),
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(padding2x),
                     style = TextStyle(
                         fontSize = 10.sp,
                         color = MaterialTheme.colors.onPrimary,
@@ -161,7 +164,7 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
             )
             Text(
                 text = title,
-                modifier = Modifier.padding(bottom = 4.dp, top = 4.dp),
+                modifier = Modifier.padding(bottom = padding1x, top = padding1x),
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -172,7 +175,7 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
             )
             Text(
                 text = subtitle,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(bottom = padding2x),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,

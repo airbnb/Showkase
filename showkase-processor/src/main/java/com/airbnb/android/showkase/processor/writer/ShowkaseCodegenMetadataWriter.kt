@@ -8,6 +8,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
+import java.util.Locale
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.util.Types
 
@@ -19,7 +20,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
     ) {
         if (showkaseMetadataSet.isEmpty()) return
         val moduleName = showkaseMetadataSet.first().packageSimpleName
-        val generatedClassName = "ShowkaseMetadata${moduleName.capitalize()}"
+        val generatedClassName = "ShowkaseMetadata${moduleName.capitalize(Locale.getDefault())}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
             generatedClassName

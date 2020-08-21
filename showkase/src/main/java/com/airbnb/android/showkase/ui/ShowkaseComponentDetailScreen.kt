@@ -85,7 +85,7 @@ private fun DocumentationPanel(kDoc: String) {
     val onClick = { showDocumentation = !showDocumentation }
     if (showDocumentation) {
         Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+            modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding2x),
             text = kDoc,
             style = TextStyle(
                 color = Color.DarkGray,
@@ -96,7 +96,7 @@ private fun DocumentationPanel(kDoc: String) {
         )
     }
     Row(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp) +
+        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding2x) +
                 Modifier.fillMaxWidth() + 
                 Modifier.clickable(onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -182,7 +182,7 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 internal fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
-    val baseModifier = Modifier.padding(16.dp)
+    val baseModifier = Modifier.padding(padding4x)
     if (metadata.heightDp != null && metadata.widthDp != null) {
         return baseModifier
             .size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)

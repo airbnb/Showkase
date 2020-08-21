@@ -31,20 +31,21 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.ui.padding4x
 
 @Composable
 fun CreditCardComponent(cardName: String) {
     MaterialTheme {
         Box(modifier = Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             Card(
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(padding4x),
                 modifier = Modifier.preferredWidth(300.dp).aspectRatio(16 / 9f),
                 color = MaterialTheme.colors.primary
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
                     var textValue by state { "1234567812345678" }
                     CoreTextField(value = TextFieldValue(textValue),
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(padding4x),
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.onPrimary,
                             fontFamily = FontFamily.Serif,
@@ -59,7 +60,7 @@ fun CreditCardComponent(cardName: String) {
                     )
                     Text(
                         text = cardName,
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(padding4x),
                         style = TextStyle(
                             color = MaterialTheme.colors.onPrimary,
                             fontSize = 25.sp,
