@@ -39,7 +39,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 else -> {
                     ShowkaseErrorScreen(
                         errorText = "There were no elements that were annotated with either " +
-                                "@ShowkaseComposable, @ShowkaseTypography or @ShowkaseColo. If " +
+                                "@ShowkaseComposable, @ShowkaseTypography or @ShowkaseColor. If " +
                                 "you think this is a mistake, file an issue at " +
                                 "https://github.com/airbnb/Showkase/issues"
                     )
