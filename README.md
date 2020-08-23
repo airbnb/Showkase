@@ -132,10 +132,12 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
+  <div style="color:gray;">
   Since Jetpack Compose is still super early, we haven't started using Compose just yet. However,
   given our history with declarative UI(we created <a href="https://github.com/airbnb/epoxy">Epoxy</a>)
   , we are super excited about Compose and are hoping to be able to use it once the API's are more 
   stable. 
+  </div>
 </details>
 
 <details>
@@ -181,7 +183,7 @@ to learn more about your use cases.
 
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
-- Support for other UI elements that are a part of your app (like `@ShowkaseIcons`, etc)
+- Support for other UI elements that are a part of your design system (like icons, spacing, etc)
 
 ## Contributing
 Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
