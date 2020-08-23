@@ -172,16 +172,10 @@ fun MyComposablePreview() {
 
 Property Name | Descrciption
 ------------- | -------------
-name| The name that should be used to describe your @Composable function. If you don't pass any 
-value, the name of the composable function is used as the name.
-group | The grouping key that will be used to group it with other @Composable functions. This is 
-useful for better organization and discoverability of your components. If you don't pass any 
-value for the group, the name of the class that wraps this function is used as the group name. If
-the function is a top level function, the composable is added to a "Default Group".
-widthDp | The width that your component will be rendered in inside the Showkase browser. Use this
-to restrict the size of your preview inside the Showkase browser.
-heightDp | The height that your component will be rendered in inside the Showkase browser. Use 
-this to restrict the size of your preview inside the Showkase browser.
+<b>name</b>| The name that should be used to describe your @Composable function. If you don't pass any value, the name of the composable function is used as the name.
+<b>group</b> | The grouping key that will be used to group it with other @Composable functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
+<b>widthDp</b> | The width that your component will be rendered in inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
+<b>heightDp</b> | The height that your component will be rendered in inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 
 
 ## Frequently Asked Questions
