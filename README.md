@@ -138,9 +138,9 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 **4. How do I provide feedback?**
 
-**5. Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you **
-**create a different annotation for each UI element(`@ShowkaseComposable` for composables, **
-**`@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?**
+<b>5. Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you 
+create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
+`@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?</b>
 
 ## Coming Soon!
 
