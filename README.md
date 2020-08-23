@@ -133,8 +133,8 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
   Since Jetpack Compose is still super early, we haven't started using Compose just yet. However,
-  given our history with declarative UI(we created [Epoxy](https://github.com/airbnb/epoxy)), we
-  are super excited about Compose and are hoping to be able to use it once the API's are more 
+  given our history with declarative UI(we created <a href="https://github.com/airbnb/epoxy">Epoxy</a>)
+  , we are super excited about Compose and are hoping to be able to use it once the API's are more 
   stable. 
 </details>
 
@@ -151,8 +151,8 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 <details>
   <summary>Can I contribute to this library?</summary>
   Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
-  open issues to look for things that need work. If you have a feature request or bug, please open 
-  a new issue so we can track it.
+  <a href="https://github.com/airbnb/Showkase/issues">open issues</a> to look for things that need 
+  work. If you have a feature request or bug, please open a new issue so we can track it.
 </details>
 
 <details>
