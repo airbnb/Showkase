@@ -132,18 +132,32 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
+  Since Jetpack Compose is still super early, we haven't started using Compose just yet. However,
+  given our history with declarative UI(we created [Epoxy](https://github.com/airbnb/epoxy)), we
+  are super excited about Compose and are hoping to be able to use it once the API's are more 
+  stable. 
 </details>
 
 <details>
   <summary>Why did you create this library if you aren't using Compose in production?</summary>
+  One of the biggest barriers to adopting new technology is the lack of tooling that you are 
+  otherwise used to having. We currently have an internal tool that works exactly like Showkase 
+  but for classic Android. We created Showkase to ensure that we have the tooling available to be
+  able to move to Compose in the future. Moreover, we think that this tool would benefit 
+  everyone who's using Compose so we decided to open source it. Hopefully we can learn along with
+  the community and add features that would benefit everyone. 
 </details>
 
 <details>
   <summary>Can I contribute to this library?</summary>
+  Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
+  open issues to look for things that need work. If you have a feature request or bug, please open 
+  a new issue so we can track it.
 </details>
 
 <details>
   <summary>How do I provide feedback?</summary>
+  The [issues](https://github.com/airbnb/Showkase/issues) tab is the best place to do that. 
 </details>
 
 <details>
@@ -152,6 +166,11 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
     create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
     `@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?
   </summary>
+  This was done mostly for future proofing. Even though these annotations have the same 
+  properties right now, it's possible that they will diverge as we add more features. Once more 
+  people start using this library, we will get a more clear idea about whether that needs to 
+  happen or not. If we find that it didn't evolve the way we expected, we will consider 
+  consildating these annotations. 
 </details>
 
 ## Coming Soon!
@@ -161,6 +180,7 @@ to learn more about your use cases.
 
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
+- Support for other UI elements that are a part of your app (like `@ShowkaseIcons`, etc)
 
 ## Contributing
 Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
