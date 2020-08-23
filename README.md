@@ -157,14 +157,15 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 <details>
   <summary>How do I provide feedback?</summary>
-  The [issues](https://github.com/airbnb/Showkase/issues) tab is the best place to do that. 
+  The <a href="https://github.com/airbnb/Showkase/issues">issues</a> tab is the best place to do 
+  that. 
 </details>
 
 <details>
   <summary>
     Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you 
-    create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
-    `@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?
+    create a different annotation for each UI element(@ShowkaseComposable for composables, 
+    @ShowkaseColor for colors & @ShowkaseTypography for text styles)?
   </summary>
   This was done mostly for future proofing. Even though these annotations have the same 
   properties right now, it's possible that they will diverge as we add more features. Once more 
