@@ -17,10 +17,12 @@ mode, RTL layouts, font scaled, etc.
     <img src="assets/showkase_design_system.png">
 </p>
 
-<p align="center">
-    <img height="500" src="assets/showkase_demo.gif">
-    <img height="500" src="assets/showkase_design_system.gif">
-</p>
+<table align="center" style="width:100%">
+    <tr>
+        <td><img height="400" src="assets/showkase_demo.gif"></td>
+        <td><img height="400" src="assets/showkase_design_system.gif"></td>
+    </tr>
+</table>
  
  ## Why should you use Showkase?
  - Showkase eliminates the manual work needed in maintaining a UI preview/browser app that 
@@ -74,7 +76,7 @@ For `@Composable` components, you can either use the `@Preview` annotation or th
 `@ShowkaseComposable` annotation: 
 
 ```kotlin
-@Preview(name="Name of component", group="Group Name")
+@Preview(name="Custom name for component", group="Custom group name")
 @Composable
 fun MyComponent() { ... }
 
@@ -96,7 +98,7 @@ For `TextStyle` properties that are useful for typography, you can add the `@Sho
 annotation to the field:
 
 ```kotlin
-@ShowkaseTypography
+@ShowkaseTypography(name="Custom name for style", group="Custom group name")
 val h1 = TextStyle(
     fontWeight = FontWeight.Light,
     fontSize = 96.sp,
@@ -124,7 +126,7 @@ module you created in `Step3`.
 startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
 ```
 
-## Docucmentation
+## Documentation
 
 ## Frequently Asked Questions
 1. Is Airbnb using Jetpack Compose in product?
