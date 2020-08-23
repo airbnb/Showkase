@@ -18,36 +18,37 @@ mode, RTL layouts, font scaled, etc.
 </p>
 
 <p align="center">
-    <img height="600" src="assets/showkase_demo.gif">
-    <img height="600" src="assets/showkase_design_system.gif">
+    <img height="500" src="assets/showkase_demo.gif">
+    <img height="500" src="assets/showkase_design_system.gif">
 </p>
  
  ## Why should you use Showkase?
- - Showkase eliminates the manual work needed in maintaining a UI component preview/browser app that 
- each company is forced to build
- - Since all the available UI components are now easily searchable and discoverable, there is better 
- reuse of the components in your repo. This makes it super useful for maintaining consistency across 
+ - Showkase eliminates the manual work needed in maintaining a UI preview/browser app that 
+ each company is forced to build in order to maintain their design system.
+ - Since all the available UI elements are now easily searchable and discoverable, there is better 
+ reuse of UI elements in your repo. This makes it super useful for maintaining consistency across 
  your app. The biggest problem for enforcing a design system is discoverability and Showkase 
  hopefully solves that problem for your team.
- - It allows you to quickly visualize `@Composable` components as you are building them. The goal is
-  to improve the turnaround time in creating a production-ready component.
+ - It allows you to quickly visualize `@Composable` components, `Color` properties and `TextStyle
+ (Typography)` as you are building them. The goal is to improve the turnaround time in creating a 
+  production-ready UI elements.
  - Showkase aids in catching common UI issues early with the help of auto-generated permutations 
  of your components.
  
  ## Features
   - [Super simple setup](#Installation)
-  - First class support for `@Preview` annotation, in additon to having a custom 
-  `@ShowkaseComposable` annotation with similar properties. If you are already using `@Preview` 
+  - Support for visualizing composables(`@ShowkaseComposable`), colors(`@ShowkaseColor`) & 
+  typography(`@ShowkaseTypography`). 
+  - First class support for `@Preview` annotation. If you are already using `@Preview` 
   for previews in Android Studio, using Showkase is even easier as all those components are 
   included in the Showkase browser.  
-  - Support for top level, class, object & companion object functions to be annotated 
-  with the `@ShowkaseComposable`(or `@Preview`) annotation.
+  - Support for top level, class, object & companion object functions and properties to be 
+  annotated with the Showkase annotations.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
   Scaled, Display Scaled. Look in the gif above for examples)'. More to be added in the future!
-  - Support for searching a `@Composable` component by name or group.
-  - KDoc support that shows the documentation that you added for a component in the 
-  Showkase browser. 
-  - Multi-module support for showcasing composables across multiple modules.
+  - Support for searching a Showkase UI element by name or group.
+  - KDoc support that shows the documentation that you added for a component in the Showkase browser. 
+  - Multi-module support for showcasing UI elements across multiple modules.
   - Support for constraining a component with a custom height/width using additional parameters in 
   the annotation.
   - Descriptive error messages so that the users of the library can fix any incorrect setup.
@@ -58,24 +59,49 @@ mode, RTL layouts, font scaled, etc.
 Using Showkase is really straightforward and takes less than a couple minutes to get started.
 
 **Step 1**: Add the dependency to your module's `build.gradle` file. If you have a multi-module 
-setup, add this dependency to all the modules which have a `@Composable` function that you want to 
-display inside the Showkase browser.
+setup, add this dependency to all the modules with UI elements that should be displayed inside the 
+Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:0.1.0-alpha"
-kapt "com.airbnb.android:showkcase-processor:0.1.0-alpha"
+implementation "com.airbnb.android:showkase:1.0.0-alpha"
+kapt "com.airbnb.android:showkcase-processor:1.0.0-alpha"
 ```
 
-**Step 2**: Add the `@Preview` or `@ShowkaseComposable` annotation to every `@Composable` 
-function/component that should be a part of the Showkase browser. Showkase currently supports the 
-following properties for both the annotations: `name`, `group`, `widthDp` & `heightDp`.
+**Step 2**: Add the relevant annotations for every UI element that should be a part of the 
+Showkase browser. 
+
+For `@Composable` components, you can either use the `@Preview` annotation or the 
+`@ShowkaseComposable` annotation: 
 
 ```kotlin
 @Preview(name="Name of component", group="Group Name")
+@Composable
+fun MyComponent() { ... }
 
 // or
 
 @ShowkaseComposable(name="Name of component", group="Group Name")
+@Composable
+fun MyComponent() { ... }
+```
+
+For `Color` properties, you can add the `@ShowkaseColor` annotation to the field:
+
+```kotlin
+@ShowkaseColor(name="Primary Color", group="Material Design")
+val primaryColor = Color(0xFF6200EE)
+```
+
+For `TextStyle` properties that are useful for typography, you can add the `@ShowkaseTypography` 
+annotation to the field:
+
+```kotlin
+@ShowkaseTypography
+val h1 = TextStyle(
+    fontWeight = FontWeight.Light,
+    fontSize = 96.sp,
+    letterSpacing = (-1.5).sp
+)
 ```
 
 **Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your **root** module.
@@ -97,6 +123,19 @@ module you created in `Step3`.
 ```kotlin
 startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
 ```
+
+## Docucmentation
+
+## Frequently Asked Questions
+1. Is Airbnb using Jetpack Compose in product?
+
+2. Why did you create this library if you aren't using Compose in production?
+
+3. Can I contribute to this library?
+
+4. How do I provide feedback?
+
+
 
 ## Coming Soon!
 
