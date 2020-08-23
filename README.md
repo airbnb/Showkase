@@ -1,9 +1,9 @@
 # Showkase
 
-Showkase is an Android library that helps you organize, discover, search and visualize Jetpack 
-Compose components(composables). It magically generates a UI component browser with very minimal 
-effort. In addition, it also helps you visualize your components in common situations like dark 
-mode, RTL layouts, font scaled, etc.  
+Showkase is a simple Android library that helps you organize, discover, search and visualize 
+Jetpack Compose UI elements. It magically generates a UI browser with very minimal effort. In 
+addition, it also helps you visualize your components in common situations like dark mode, 
+RTL layouts, font scaled, etc.  
 
 <p align="center">
     <img src="assets/showkase_features.png">
@@ -128,8 +128,9 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 ## Documentation
 
+
 ## Frequently Asked Questions
-1. Is Airbnb using Jetpack Compose in product?
+1. Is Airbnb using Jetpack Compose in their main app?
 
 2. Why did you create this library if you aren't using Compose in production?
 
@@ -137,7 +138,9 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 4. How do I provide feedback?
 
-
+5. Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you 
+create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
+`@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?
 
 ## Coming Soon!
 
