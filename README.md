@@ -128,16 +128,69 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 ## Documentation
 
+###### @ShowkaseComposable
+Used to annotate `@Composable` functions that should be displayed inside the Showkase browser. 
+Here's how you would use it with your @Composable function:
+
+```
+@ShowkaseComposable(name = "Name", group = "Group")
+@Composable
+fun MyComposable() {
+    .......
+    .......
+}
+```
+
+If you are using the `@Preview` annotation with your `@Composable` function already then you 
+don't need to use this annotation. Showkase has first class support for `@Preview`. 
+
+
+Note: Make sure that you add this annotation to only those functions that don't accept any 
+parameters. This is similar to how `@Preview` works in Compose as well. `@Preview` recently added
+support for parameters that are annotated with `@PreviewParameter` and Showkase will add support 
+for that soon. If your function accepts a parameters, wrap it inside another function that doesn't 
+accept any parameters. 
+
+For example, here is a @Composable function that requires parameters -
+
+@Composable
+fun MyComposable(name: String) {
+    .......
+    .......
+}
+
+In order to make this function compatible with Showkase, you could further wrap this function 
+inside a method that doesn't accept a parameters in the following way:
+
+@ShowkaseComposable(name = "Name", group = "Group")
+@Composable
+fun MyComposablePreview() {
+    MyComposable("Name")
+}
+
+`@ShowkaseComposable` currently supports the following properties:
+
+Property Name | Descrciption
+------------- | -------------
+name| The name that should be used to describe your @Composable function. If you don't pass any 
+value, the name of the composable function is used as the name.
+group | The grouping key that will be used to group it with other @Composable functions. This is 
+useful for better organization and discoverability of your components. If you don't pass any 
+value for the group, the name of the class that wraps this function is used as the group name. If
+the function is a top level function, the composable is added to a "Default Group".
+widthDp | The width that your component will be rendered in inside the Showkase browser. Use this
+to restrict the size of your preview inside the Showkase browser.
+heightDp | The height that your component will be rendered in inside the Showkase browser. Use 
+this to restrict the size of your preview inside the Showkase browser.
+
 
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
-  <div style="color:gray;">
   Since Jetpack Compose is still super early, we haven't started using Compose just yet. However,
-  given our history with declarative UI(we created <a href="https://github.com/airbnb/epoxy">Epoxy</a>)
-  , we are super excited about Compose and are hoping to be able to use it once the API's are more 
+  given our history with declarative UI(we created <a href="https://github.com/airbnb/epoxy">Epoxy</a>), 
+  we are super excited about Compose and are hoping to be able to use it once the API's are more 
   stable. 
-  </div>
 </details>
 
 <details>
