@@ -128,7 +128,7 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 ## Documentation
 
-###### @ShowkaseComposable
+##### 1. @ShowkaseComposable
 Used to annotate `@Composable` functions that should be displayed inside the Showkase browser. 
 Here's how you would use it with your @Composable function:
 
@@ -145,7 +145,7 @@ If you are using the `@Preview` annotation with your `@Composable` function alre
 don't need to use this annotation. Showkase has first class support for `@Preview`. 
 
 
-Note: Make sure that you add this annotation to only those functions that don't accept any 
+**Note:** Make sure that you add this annotation to only those functions that don't accept any 
 parameters. This is similar to how `@Preview` works in Compose as well. `@Preview` recently added
 support for parameters that are annotated with `@PreviewParameter` and Showkase will add support 
 for that soon. If your function accepts a parameters, wrap it inside another function that doesn't 
@@ -174,13 +174,51 @@ fun MyComposablePreview() {
 
 `@ShowkaseComposable` currently supports the following properties:
 
-Property Name | Descrciption
+Property Name | Description
 ------------- | -------------
-<b>name</b>| The name that should be used to describe your @Composable function. If you don't pass any value, the name of the composable function is used as the name.
-<b>group</b> | The grouping key that will be used to group it with other @Composable functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
+<b>name</b>| The name that should be used to describe your `@Composable` function. If you don't pass any value, the name of the composable function is used as the name.
+<b>group</b> | The grouping key that will be used to group it with other `@Composable` functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
 <b>widthDp</b> | The width that your component will be rendered in inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 <b>heightDp</b> | The height that your component will be rendered in inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 
+##### 2. @ShowkaseColor
+Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 
+how you would use it with your `Color` fields:
+
+```kotlin
+@ShowkaseColor(name = "Name", group = "Group")
+val redColor = Color.Red
+
+@ShowkaseColor("Primary", "Light Colors")
+val primaryColor = Color(0xFF6200EE)
+```
+
+`@ShowkaseColor` currently supports the following properties:
+
+Property Name | Description
+------------- | -------------
+<b>name</b> | The name that should be used to describe your `Color` fields. If you don't pass any value, the name of the color field is used as the name.
+<b>group</b> | The grouping key that will be used to group it with other `Color` fields. This is useful for better organization and discoverability of your colors. If you don't pass any value for the group, the name of the class that wraps this field is used as the group name. If the field is a top level field, the color is added to a "Default Group".
+
+##### 3. @ShowkaseTypography
+Used to annotate `TextStyle` properties that should be presented inside the Showkase browser. 
+Here's how you would use it with your `TextStyle` fields:
+
+```kotlin
+@ShowkaseTypography(name = "Name", group = "Group")
+val h1 = TextStyle(
+    fontWeight = FontWeight.Light,
+    fontSize = 96.sp,
+    letterSpacing = (-1.5).sp
+)
+```
+
+`@ShowkaseTypography` currently supports the following properties:
+
+Property Name | Description
+------------- | -------------
+<b>name</b> | The name that should be used to describe your `TextStyle` fields. If you don't pass any value, the name of the textStyle field is used as the name.
+<b>group</b> | The grouping key that will be used to group it with other `TextStyle` fields. This is useful for better organization and discoverability of your typography. If you don't pass any value for the group, the name of the class that wraps this field is used as the group name. If the field is a top level field, the textStyle is added to a "Default Group".
 
 ## Frequently Asked Questions
 <details>
