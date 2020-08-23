@@ -14,7 +14,12 @@ mode, RTL layouts, font scaled, etc.
 </p>
 
 <p align="center">
+    <img src="assets/showkase_design_system.png">
+</p>
+
+<p align="center">
     <img height="600" src="assets/showkase_demo.gif">
+    <img height="600" src="assets/showkase_design_system.gif">
 </p>
  
  ## Why should you use Showkase?
