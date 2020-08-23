@@ -1,8 +1,8 @@
 # Showkase
 
-Showkase is a simple Android library that helps you organize, discover, search and visualize 
-Jetpack Compose UI elements. It magically generates a UI browser with very minimal effort. In 
-addition, it also helps you visualize your components in common situations like dark mode, 
+Showkase is an annotation-processor based Android library that helps you organize, discover, search 
+and visualize Jetpack Compose UI elements. It magically generates a UI browser with very minimal 
+effort. In addition, it also helps you visualize your components in common situations like dark mode, 
 RTL layouts, font scaled, etc.  
 
 <p align="center">
@@ -76,13 +76,13 @@ For `@Composable` components, you can either use the `@Preview` annotation or th
 `@ShowkaseComposable` annotation: 
 
 ```kotlin
-@Preview(name="Custom name for component", group="Custom group name")
+@Preview(name = "Custom name for component", group = "Custom group name")
 @Composable
 fun MyComponent() { ... }
 
 // or
 
-@ShowkaseComposable(name="Name of component", group="Group Name")
+@ShowkaseComposable(name = "Name of component", group = "Group Name")
 @Composable
 fun MyComponent() { ... }
 ```
@@ -90,7 +90,7 @@ fun MyComponent() { ... }
 For `Color` properties, you can add the `@ShowkaseColor` annotation to the field:
 
 ```kotlin
-@ShowkaseColor(name="Primary Color", group="Material Design")
+@ShowkaseColor(name = "Primary Color", group = "Material Design")
 val primaryColor = Color(0xFF6200EE)
 ```
 
@@ -98,7 +98,7 @@ For `TextStyle` properties that are useful for typography, you can add the `@Sho
 annotation to the field:
 
 ```kotlin
-@ShowkaseTypography(name="Custom name for style", group="Custom group name")
+@ShowkaseTypography(name = "Custom name for style", group = "Custom group name")
 val h1 = TextStyle(
     fontWeight = FontWeight.Light,
     fontSize = 96.sp,
@@ -130,17 +130,17 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 
 ## Frequently Asked Questions
-1. Is Airbnb using Jetpack Compose in their main app?
+**1. Is Airbnb using Jetpack Compose in their main app?**
 
-2. Why did you create this library if you aren't using Compose in production?
+**2. Why did you create this library if you aren't using Compose in production?**
 
-3. Can I contribute to this library?
+**3. Can I contribute to this library?**
 
-4. How do I provide feedback?
+**4. How do I provide feedback?**
 
-5. Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you 
-create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
-`@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?
+**5. Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you **
+**create a different annotation for each UI element(`@ShowkaseComposable` for composables, **
+**`@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?**
 
 ## Coming Soon!
 
