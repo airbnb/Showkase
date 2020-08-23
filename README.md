@@ -132,7 +132,7 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 Used to annotate `@Composable` functions that should be displayed inside the Showkase browser. 
 Here's how you would use it with your @Composable function:
 
-```
+```kotlin
 @ShowkaseComposable(name = "Name", group = "Group")
 @Composable
 fun MyComposable() {
@@ -153,20 +153,24 @@ accept any parameters.
 
 For example, here is a @Composable function that requires parameters -
 
+```kotlin
 @Composable
 fun MyComposable(name: String) {
     .......
     .......
 }
+```
 
 In order to make this function compatible with Showkase, you could further wrap this function 
 inside a method that doesn't accept a parameters in the following way:
 
+```kotlin
 @ShowkaseComposable(name = "Name", group = "Group")
 @Composable
 fun MyComposablePreview() {
     MyComposable("Name")
 }
+```
 
 `@ShowkaseComposable` currently supports the following properties:
 
