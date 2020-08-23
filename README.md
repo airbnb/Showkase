@@ -130,17 +130,29 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 
 
 ## Frequently Asked Questions
-**1. Is Airbnb using Jetpack Compose in their main app?**
+<details>
+  <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
+</details>
 
-**2. Why did you create this library if you aren't using Compose in production?**
+<details>
+  <summary>Why did you create this library if you aren't using Compose in production?</summary>
+</details>
 
-**3. Can I contribute to this library?**
+<details>
+  <summary>Can I contribute to this library?</summary>
+</details>
 
-**4. How do I provide feedback?**
+<details>
+  <summary>How do I provide feedback?</summary>
+</details>
 
-<b>5. Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you 
-create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
-`@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?</b>
+<details>
+  <summary>
+    Why can't we have a single annotation like `Showkase` for all the UI elements? Why did you 
+    create a different annotation for each UI element(`@ShowkaseComposable` for composables, 
+    `@ShowkaseColor` for colors & @ShowkaseTypography` for text styles)?
+  </summary>
+</details>
 
 ## Coming Soon!
 
