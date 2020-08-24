@@ -5,7 +5,6 @@ buildscript {
             'compose': '0.1.0-dev17',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
-            'glide': '4.10.0',
             'gradle': '4.2.0-alpha07',
             'junit' : '4.12',
             'junitImplementation' : '1.1.1',
@@ -16,7 +15,7 @@ buildscript {
             'kotlinXMetadata': '0.1.0',
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
-            'picasso': '2.71828',
+            'picasso': '2.8',
             'supportLibrary': '1.1.0',
             'testRunner': '1.2.0',
             'googleTruth': '1.0.1',
@@ -41,9 +40,7 @@ buildscript {
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'kotlinXMetadata': "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
             'imageLoading': [
-                    'picasso': "com.squareup.picasso:picasso:${versions.picasso}",
-                    'glideCore': "com.github.bumptech.glide:glide:${versions.glide}",
-                    'glideCompiler': "com.github.bumptech.glide:compiler:${versions.glide}"
+                    'picasso': "com.squareup.picasso:picasso:${versions.picasso}"
             ],
             'support': [
                     'appCompat': "androidx.appcompat:appcompat:${versions.supportLibrary}",
