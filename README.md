@@ -142,7 +142,7 @@ fun MyComposable() {
     .......
 }
 ```
-Name and group are optional. Look at the [properties section](#@ShowkaseComposable currently supports the following properties:)
+Name and group are optional. Look at the [properties section](#showkasecomposable-currently-supports-the-following-properties)
 to understand what happens when you don't pass any properties.
 
 If you are using the `@Preview` annotation with your `@Composable` function already then you 
@@ -197,7 +197,10 @@ val redColor = Color.Red
 val primaryColor = Color(0xFF6200EE)
 ```
 
-`@ShowkaseColor` currently supports the following properties:
+Name and group are optional. Look at the properties section below to understand what happens when
+ you don't pass any properties.
+
+######@ShowkaseColor currently supports the following properties:
 
 Property Name | Description
 ------------- | -------------
@@ -217,7 +220,10 @@ val h1 = TextStyle(
 )
 ```
 
-`@ShowkaseTypography` currently supports the following properties:
+Name and group are optional. Look at the properties section below to understand what happens when
+ you don't pass any properties.
+ 
+######@ShowkaseTypography currently supports the following properties:
 
 Property Name | Description
 ------------- | -------------
