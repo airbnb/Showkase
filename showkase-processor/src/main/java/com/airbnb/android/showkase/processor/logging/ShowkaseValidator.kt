@@ -15,7 +15,7 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-class ShowkaseValidator {
+internal class ShowkaseValidator {
     @Suppress("ThrowsCount")
     internal fun validateComponentElement(
         element: Element,
