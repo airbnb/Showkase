@@ -200,7 +200,7 @@ val primaryColor = Color(0xFF6200EE)
 Name and group are optional. Look at the properties section below to understand what happens when
  you don't pass any properties.
 
-######@ShowkaseColor currently supports the following properties:
+###### @ShowkaseColor currently supports the following properties:
 
 Property Name | Description
 ------------- | -------------
@@ -223,7 +223,7 @@ val h1 = TextStyle(
 Name and group are optional. Look at the properties section below to understand what happens when
  you don't pass any properties.
  
-######@ShowkaseTypography currently supports the following properties:
+###### @ShowkaseTypography currently supports the following properties:
 
 Property Name | Description
 ------------- | -------------
