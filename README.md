@@ -220,6 +220,31 @@ Property Name | Description
 <b>name</b> | The name that should be used to describe your `TextStyle` fields. If you don't pass any value, the name of the textStyle field is used as the name.
 <b>group</b> | The grouping key that will be used to group it with other `TextStyle` fields. This is useful for better organization and discoverability of your typography. If you don't pass any value for the group, the name of the class that wraps this field is used as the group name. If the field is a top level field, the textStyle is added to a "Default Group".
 
+
+##### 4. @ShowkaseRoot
+Used to annotate the `ShowkaseRootModule` implementation class. This is needed to let Showkase
+know more about the module that is going to be the root module for aggregating all the Showkase 
+supported UI elements across all the different modules(if you are using a multi-module project). 
+If you are only using a single module in your project, add it to that module. You are allowed to 
+have only one @ShowkaseRoot per module.
+
+<p>
+Here's an example of how you would use it:
+
+```kotlin
+@ShowkaseRoot
+fun MyRootModule: ShowkaseRootModule
+```
+
+<p>
+The root module that you declare is also important to start the Showkase browser in order to 
+view your UI elements. You will have to pass in the canonical name of this implementation when
+starting the `ShowkaseBrowserActiity`. Here's is how you would do it:
+
+```kotlin
+startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
+```
+
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
