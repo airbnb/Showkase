@@ -142,6 +142,8 @@ fun MyComposable() {
     .......
 }
 ```
+Name and group are optional. Look at the [properties section](#@ShowkaseComposable currently supports the following properties:)
+to understand what happens when you don't pass any properties.
 
 If you are using the `@Preview` annotation with your `@Composable` function already then you 
 don't need to use this annotation. Showkase has first class support for `@Preview`. 
@@ -174,7 +176,7 @@ fun MyComposablePreview() {
 }
 ```
 
-`@ShowkaseComposable` currently supports the following properties:
+###### @ShowkaseComposable currently supports the following properties:
 
 Property Name | Description
 ------------- | -------------
