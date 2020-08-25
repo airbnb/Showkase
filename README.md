@@ -1,7 +1,13 @@
 # Showkase
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
-and visualize Jetpack Compose UI elements. With minimal configuration it generates a UI browser that helps you visualize your components in common situations like dark mode, right-to-left layouts, and font scaling.
+and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
+minimal configuration it generates a UI browser that helps you visualize your components in common 
+situations like dark mode, right-to-left layouts, and font scaling.
+
+> Jetpack Compose is still in alpha so Showkase may need breaking changes in order to keep up 
+with changes in Compose.
 
 <p align="center">
     <img src="assets/showkase_features.png">
@@ -67,7 +73,7 @@ Showkase browser.
 
 ```kotlin
 implementation "com.airbnb.android:showkase:1.0.0-alpha"
-kapt "com.airbnb.android:showkcase-processor:1.0.0-alpha"
+kapt "com.airbnb.android:showkase-processor:1.0.0-alpha"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
