@@ -1,9 +1,7 @@
 # Showkase
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
-and visualize Jetpack Compose UI elements. It magically generates a UI browser with very minimal 
-effort. In addition, it also helps you visualize your components in common situations like dark mode, 
-RTL layouts, font scaled, etc.  
+and visualize Jetpack Compose UI elements. With minimal configuration it generates a UI browser that helps you visualize your components in common situations like dark mode, right-to-left layouts, and font scaling.
 
 <p align="center">
     <img src="assets/showkase_features.png">
@@ -27,14 +25,14 @@ RTL layouts, font scaled, etc.
  ## Why should you use Showkase?
  - When using component based UI toolkits(like React, Compose, Flutter, etc), our codebase often 
  ends up with hundreds of components that are hard to discover, visualize, search and organize.
- - Showkase eliminates the manual work needed in maintaining a UI preview/browser app that 
+ - Showkase eliminates the manual work of maintaining a UI preview/browser app that 
  each company is forced to build in order to maintain their design system.
  - Since all the available UI elements are now easily searchable and discoverable, there is better 
- reuse of UI elements in your repo. This makes it super useful for maintaining consistency across 
+ reuse of UI elements in your repo. This makes it useful for maintaining consistency across 
  your app. The biggest problem for enforcing a design system is discoverability and Showkase 
  hopefully solves that problem for your team.
  - It allows you to quickly visualize `@Composable` components, `Color` properties and `TextStyle
- (Typography)` as you are building them. The goal is to improve the turnaround time in creating a 
+ (Typography)` as you are building them. The goal is to improve the turnaround time in creating 
   production-ready UI elements.
  - Showkase aids in catching common UI issues early with the help of auto-generated permutations 
  of your components.
@@ -61,7 +59,7 @@ RTL layouts, font scaled, etc.
 
 ## Installation
 
-Using Showkase is really straightforward and takes less than a couple minutes to get started.
+Using Showkase is straightforward and takes just a couple minutes to get started.
 
 **Step 1**: Add the dependency to your module's `build.gradle` file. If you have a multi-module 
 setup, add this dependency to all the modules with UI elements that should be displayed inside the 
