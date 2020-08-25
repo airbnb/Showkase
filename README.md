@@ -47,10 +47,9 @@ with changes in Compose.
   - [Super simple setup](#Installation)
   - Support for visualizing composables(`@ShowkaseComposable`), colors(`@ShowkaseColor`) & 
   typography(`@ShowkaseTypography`). 
-  - First class support for [@Preview]
-  (https://developer.android.com/reference/kotlin/androidx/ui/tooling/preview/Preview) annotation. 
-  If you are already using `@Preview` for previews in Android Studio, using Showkase is even 
-  easier as all those components are included in the Showkase browser.  
+  - First class support for [@Preview](https://developer.android.com/reference/kotlin/androidx/ui/tooling/preview/Preview) 
+  annotation. If you are already using `@Preview` for previews in Android Studio, using Showkase 
+  is even easier as all those components are included in the Showkase browser.  
   - Support for top level, class, object & companion object functions and properties to be 
   annotated with the Showkase annotations.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
