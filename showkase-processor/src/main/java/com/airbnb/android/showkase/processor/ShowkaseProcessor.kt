@@ -15,6 +15,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.models.toModel
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserIntentWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.google.auto.service.AutoService
@@ -207,11 +208,12 @@ class ShowkaseProcessor: AbstractProcessor() {
         val classpathTypographyMetadata =
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
 
-        writeShowkaseBrowserFile(
+        writeShowkaseBrowserFiles(
             rootElement, 
             componentMetadata + classpathComponentMetadata, 
             colorMetadata + classpathColorMetadata,
         typographyMetadata + classpathTypographyMetadata)
+        
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
@@ -230,7 +232,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
-    private fun writeShowkaseBrowserFile(
+    private fun writeShowkaseBrowserFiles(
         rootElement: Element,
         componentsMetadata: Set<ShowkaseMetadata>,
         colorsMetadata: Set<ShowkaseMetadata>,
@@ -247,6 +249,14 @@ class ShowkaseProcessor: AbstractProcessor() {
                 typographyMetadata,
                 rootModulePackageName, 
                 rootModuleClassName
+            )
+        }
+
+        ShowkaseBrowserIntentWriter(processingEnv).apply {
+            generateIntentFile(
+                rootModulePackageName = rootModulePackageName,
+                rootModuleClassName = rootModuleClassName,
+                rootElement = rootElement
             )
         }
     }
