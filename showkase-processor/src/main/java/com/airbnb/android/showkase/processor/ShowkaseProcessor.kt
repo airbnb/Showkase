@@ -256,6 +256,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             generateIntentFile(
                 rootModulePackageName = rootModulePackageName,
                 rootModuleClassName = rootModuleClassName,
+                showkaseMetadata = componentsMetadata + colorsMetadata + typographyMetadata
             )
         }
     }

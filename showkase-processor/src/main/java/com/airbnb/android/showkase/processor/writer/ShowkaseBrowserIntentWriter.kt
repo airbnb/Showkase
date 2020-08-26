@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.processor.writer
 
+import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -10,47 +11,51 @@ internal class ShowkaseBrowserIntentWriter(
 ) {
     internal fun generateIntentFile(
         rootModulePackageName: String,
-        rootModuleClassName: String
+        rootModuleClassName: String,
+        showkaseMetadata: Set<ShowkaseMetadata>
     ) {
         val intentFile = 
             getFileBuilder(
                 rootModulePackageName, 
                 "${rootModuleClassName}$SHOWKASE_BROWSER_INTENT_SUFFIX"
             )
-        intentFile.addFunction(generateIntentFunction(rootModulePackageName, rootModuleClassName))
+        intentFile.addFunction(
+            generateIntentFunction(rootModulePackageName, rootModuleClassName, showkaseMetadata)
+        )
             .build()
             .writeTo(processingEnv.filer)
     }
 
     private fun generateIntentFunction(
         rootModulePackageName: String,
-        rootModuleClassName: String
-    ): FunSpec {
-        return FunSpec.builder(INTENT_FUNCTION_NAME)
-            .addParameter(
-                CONTEXT_PARAMETER_NAME, CONTEXT_CLASS_NAME
-            )
-            .returns(INTENT_CLASS_NAME)
-            .addCode(
-                CodeBlock.Builder()
-                    .addStatement(
-                        "val intent = %T(%L, %T::class.java)",
-                        INTENT_CLASS_NAME,
-                        CONTEXT_PARAMETER_NAME,
-                        SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME
-                    )
-                    .addStatement(
-                        "intent.putExtra(%S, %S)",
-                        SHOWKASE_ROOT_MODULE_KEY,
-                        "$rootModulePackageName.$rootModuleClassName"
-                    )
-                    .addStatement(
-                        "return intent"
-                    )
-                    .build()
-            )
-            .build()
+        rootModuleClassName: String,
+        showkaseMetadata: Set<ShowkaseMetadata>,
+    ) = FunSpec.builder(INTENT_FUNCTION_NAME).apply {
+        addParameter(
+            CONTEXT_PARAMETER_NAME, CONTEXT_CLASS_NAME
+        )
+        returns(INTENT_CLASS_NAME)
+        addCode(
+            CodeBlock.Builder()
+                .addStatement(
+                    "val intent = %T(%L, %T::class.java)",
+                    INTENT_CLASS_NAME,
+                    CONTEXT_PARAMETER_NAME,
+                    SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME
+                )
+                .addStatement(
+                    "intent.putExtra(%S, %S)",
+                    SHOWKASE_ROOT_MODULE_KEY,
+                    "$rootModulePackageName.$rootModuleClassName"
+                )
+                .addStatement(
+                    "return intent"
+                )
+                .build()
+        )
+        showkaseMetadata.forEach { addOriginatingElement(it.element) }
     }
+        .build()
 
     companion object {
         private const val SHOWKASE_BROWSER_INTENT_SUFFIX = "IntentCodegen"
