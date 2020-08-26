@@ -36,6 +36,7 @@ internal class ShowkaseBrowserIntentWriter(
         returns(INTENT_CLASS_NAME)
         addCode(
             CodeBlock.Builder()
+                .indent()
                 .addStatement(
                     "val intent = %T(%L, %T::class.java)",
                     INTENT_CLASS_NAME,
@@ -50,6 +51,7 @@ internal class ShowkaseBrowserIntentWriter(
                 .addStatement(
                     "return intent"
                 )
+                .unindent()
                 .build()
         )
         addOriginatingElement(rootElement)
@@ -61,12 +63,12 @@ internal class ShowkaseBrowserIntentWriter(
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
         private const val INTENT_FUNCTION_NAME = "createShowkaseBrowserIntent"
         private const val CONTEXT_PARAMETER_NAME = "context"
-        val CONTEXT_PACKAGE_NAME = "android.content"
-        val CONTEXT_CLASS_NAME =
+        private const val CONTEXT_PACKAGE_NAME = "android.content"
+        private val CONTEXT_CLASS_NAME =
             ClassName(CONTEXT_PACKAGE_NAME, "Context")
-        val INTENT_CLASS_NAME =
+        private val INTENT_CLASS_NAME =
             ClassName(CONTEXT_PACKAGE_NAME, "Intent")
-        val SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME =
+        private val SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME =
             ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
     }
 }

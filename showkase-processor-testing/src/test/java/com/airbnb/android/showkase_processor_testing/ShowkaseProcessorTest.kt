@@ -1052,9 +1052,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1088,6 +1091,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1127,9 +1150,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1167,6 +1193,26 @@ class ShowkaseProcessorTest {
             """.trimIndent()
             )
         }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
+                }
+            """.trimIndent()
+            )
+        }
     }
 
     @Test
@@ -1200,9 +1246,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1235,6 +1284,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1275,9 +1344,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1310,6 +1382,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1355,9 +1447,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1397,6 +1492,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1445,9 +1560,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1491,6 +1609,26 @@ class ShowkaseProcessorTest {
             """.trimIndent()
             )
         }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
+                }
+            """.trimIndent()
+            )
+        }
     }
 
     @Test
@@ -1529,9 +1667,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1565,6 +1706,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1607,9 +1768,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1643,6 +1807,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1684,9 +1868,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1719,6 +1906,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1763,9 +1970,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1798,6 +2008,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1839,9 +2069,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1874,6 +2107,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1918,9 +2171,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -1953,6 +2209,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -1997,9 +2273,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -2033,6 +2312,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -2632,9 +2931,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull() 
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -2679,6 +2981,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -3389,9 +3711,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -3425,6 +3750,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -3464,9 +3809,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -3500,6 +3848,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -3539,9 +3907,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -3575,6 +3946,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -3617,9 +4008,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -3652,6 +4046,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
@@ -3692,9 +4106,12 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
         }).isNotNull()
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
@@ -3727,6 +4144,26 @@ class ShowkaseProcessorTest {
                   override fun getShowkaseColors() = colorList
 
                   override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
                 }
             """.trimIndent()
             )
