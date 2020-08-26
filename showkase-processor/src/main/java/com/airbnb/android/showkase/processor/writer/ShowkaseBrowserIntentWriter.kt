@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.processor.writer
 
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import javax.annotation.processing.ProcessingEnvironment
@@ -27,18 +28,16 @@ internal class ShowkaseBrowserIntentWriter(
     ): FunSpec {
         return FunSpec.builder(INTENT_FUNCTION_NAME)
             .addParameter(
-                CONTEXT_PARAMETER_NAME, ShowkaseBrowserWriter.CONTEXT_CLASS_NAME
+                CONTEXT_PARAMETER_NAME, CONTEXT_CLASS_NAME
             )
-            .returns(
-                ShowkaseBrowserWriter.INTENT_CLASS_NAME
-            )
+            .returns(INTENT_CLASS_NAME)
             .addCode(
                 CodeBlock.Builder()
                     .addStatement(
                         "val intent = %T(%L, %T::class.java)",
-                        ShowkaseBrowserWriter.INTENT_CLASS_NAME,
+                        INTENT_CLASS_NAME,
                         CONTEXT_PARAMETER_NAME,
-                        ShowkaseBrowserWriter.SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME
+                        SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME
                     )
                     .addStatement(
                         "intent.putExtra(%S, %S)",
@@ -58,5 +57,12 @@ internal class ShowkaseBrowserIntentWriter(
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
         private const val INTENT_FUNCTION_NAME = "createShowkaseBrowserIntent"
         private const val CONTEXT_PARAMETER_NAME = "context"
+        val CONTEXT_PACKAGE_NAME = "android.content"
+        val CONTEXT_CLASS_NAME =
+            ClassName(CONTEXT_PACKAGE_NAME, "Context")
+        val INTENT_CLASS_NAME =
+            ClassName(CONTEXT_PACKAGE_NAME, "Intent")
+        val SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME =
+            ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
     }
 }

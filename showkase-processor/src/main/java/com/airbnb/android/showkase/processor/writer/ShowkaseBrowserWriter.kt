@@ -4,7 +4,6 @@ import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorExcepti
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import javax.annotation.processing.ProcessingEnvironment
@@ -293,11 +292,5 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserTypography")
         val SHOWKASE_PROVIDER_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseProvider")
-        val SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME = 
-            ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
-        val CONTEXT_CLASS_NAME =
-            ClassName("android.content", "Context")
-        val INTENT_CLASS_NAME =
-            ClassName("android.content", "Intent")
     }
 }
