@@ -1,7 +1,13 @@
 # Showkase
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
-and visualize Jetpack Compose UI elements. With minimal configuration it generates a UI browser that helps you visualize your components in common situations like dark mode, right-to-left layouts, and font scaling.
+and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
+minimal configuration it generates a UI browser that helps you visualize your components in common 
+situations like dark mode, right-to-left layouts, and font scaling.
+
+> Jetpack Compose is still in alpha so Showkase may need breaking changes in order to keep up 
+with changes in Compose.
 
 <p align="center">
     <img src="assets/showkase_features.png">
@@ -41,9 +47,9 @@ and visualize Jetpack Compose UI elements. With minimal configuration it generat
   - [Super simple setup](#Installation)
   - Support for visualizing composables(`@ShowkaseComposable`), colors(`@ShowkaseColor`) & 
   typography(`@ShowkaseTypography`). 
-  - First class support for `@Preview` annotation. If you are already using `@Preview` 
-  for previews in Android Studio, using Showkase is even easier as all those components are 
-  included in the Showkase browser.  
+  - First class support for [@Preview](https://developer.android.com/reference/kotlin/androidx/ui/tooling/preview/Preview) 
+  annotation. If you are already using `@Preview` for previews in Android Studio, using Showkase 
+  is even easier as all those components are included in the Showkase browser.  
   - Support for top level, class, object & companion object functions and properties to be 
   annotated with the Showkase annotations.
   - 5 Permutations are auto created for each composable (Basic Example, Dark Mode, RTL, Font 
@@ -66,7 +72,7 @@ Showkase browser.
 
 ```kotlin
 implementation "com.airbnb.android:showkase:1.0.0-alpha"
-kapt "com.airbnb.android:showkcase-processor:1.0.0-alpha"
+kapt "com.airbnb.android:showkase-processor:1.0.0-alpha"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -253,6 +259,12 @@ starting the `ShowkaseBrowserActiity`. Here's is how you would do it:
 startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
 ```
 
+Note: The root module is the main module of your app that has a dependency on all other modules 
+in the app. This is relevant because we generate the Showkase related classes in the package of 
+the root module and we need to be able to access the UI elements across all the sub modules. This
+ is only possible from the root module as it typically has a dependency on all the sub-modules. 
+
+
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
@@ -306,6 +318,7 @@ to learn more about your use cases.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
 - Support for other UI elements that are a part of your design system (like icons, spacing, etc)
+- Generating a web version of the Showkase browser with documentation, search and screenshots.
 
 ## Contributing
 Pull requests are welcome! We'd love help improving this library. Feel free to browse through 

@@ -32,7 +32,8 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
             val showkaseBrowserScreenMetadata = 
                 remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
             when {
-                groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() -> {
+                groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() || 
+                        groupedTypographyMap.isNotEmpty() -> {
                     ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap, groupedTypographyMap,
                         showkaseBrowserScreenMetadata)
                 }
