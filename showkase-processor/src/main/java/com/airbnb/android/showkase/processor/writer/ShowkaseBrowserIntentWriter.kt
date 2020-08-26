@@ -1,10 +1,10 @@
 package com.airbnb.android.showkase.processor.writer
 
-import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import javax.annotation.processing.ProcessingEnvironment
+import javax.lang.model.element.Element
 
 internal class ShowkaseBrowserIntentWriter(
     private val processingEnv: ProcessingEnvironment
@@ -12,14 +12,14 @@ internal class ShowkaseBrowserIntentWriter(
     internal fun generateIntentFile(
         rootModulePackageName: String,
         rootModuleClassName: String,
-        showkaseMetadata: Set<ShowkaseMetadata>
+        rootElement: Element
     ) {
         getFileBuilder(
             rootModulePackageName,
             "${rootModuleClassName}$SHOWKASE_BROWSER_INTENT_SUFFIX"
         )
             .addFunction(
-                generateIntentFunction(rootModulePackageName, rootModuleClassName, showkaseMetadata)
+                generateIntentFunction(rootModulePackageName, rootModuleClassName, rootElement)
             )
             .build()
             .writeTo(processingEnv.filer)
@@ -28,7 +28,7 @@ internal class ShowkaseBrowserIntentWriter(
     private fun generateIntentFunction(
         rootModulePackageName: String,
         rootModuleClassName: String,
-        showkaseMetadata: Set<ShowkaseMetadata>,
+        rootElement: Element,
     ) = FunSpec.builder(INTENT_FUNCTION_NAME).apply {
         addParameter(
             CONTEXT_PARAMETER_NAME, CONTEXT_CLASS_NAME
@@ -52,7 +52,7 @@ internal class ShowkaseBrowserIntentWriter(
                 )
                 .build()
         )
-        showkaseMetadata.forEach { addOriginatingElement(it.element) }
+        addOriginatingElement(rootElement)
     }
         .build()
 
