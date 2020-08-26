@@ -14,14 +14,13 @@ internal class ShowkaseBrowserIntentWriter(
         rootModuleClassName: String,
         showkaseMetadata: Set<ShowkaseMetadata>
     ) {
-        val intentFile = 
-            getFileBuilder(
-                rootModulePackageName, 
-                "${rootModuleClassName}$SHOWKASE_BROWSER_INTENT_SUFFIX"
-            )
-        intentFile.addFunction(
-            generateIntentFunction(rootModulePackageName, rootModuleClassName, showkaseMetadata)
+        getFileBuilder(
+            rootModulePackageName,
+            "${rootModuleClassName}$SHOWKASE_BROWSER_INTENT_SUFFIX"
         )
+            .addFunction(
+                generateIntentFunction(rootModulePackageName, rootModuleClassName, showkaseMetadata)
+            )
             .build()
             .writeTo(processingEnv.filer)
     }
