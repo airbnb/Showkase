@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha01-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -29,7 +29,7 @@ with changes in Compose.
 </table>
  
  ## Why should you use Showkase?
- - When using component based UI toolkits(like React, Compose, Flutter, etc), our codebase often 
+ - When using component based UI toolkits (like React, Compose, Flutter, etc), our codebase often 
  ends up with hundreds of components that are hard to discover, visualize, search and organize.
  - Showkase eliminates the manual work of maintaining a UI preview/browser app that 
  each company is forced to build in order to maintain their design system.
@@ -71,8 +71,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-alpha"
-kapt "com.airbnb.android:showkase-processor:1.0.0-alpha"
+implementation "com.airbnb.android:showkase:1.0.0-alpha01"
+kapt "com.airbnb.android:showkase-processor:1.0.0-alpha01"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -315,6 +315,8 @@ the root module and we need to be able to access the UI elements across all the 
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
+- Support for passing a `@PreviewParameter` parameter to `@Preview`/`@ShowkaseComposable` 
+components.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
 - Support for other UI elements that are a part of your design system (like icons, spacing, etc)

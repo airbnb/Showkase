@@ -27,23 +27,21 @@ internal class ShowkaseValidator {
         when {
             element.kind != ElementKind.METHOD -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only composable methods can be " +
-                            "annotated with $annotationName"
+                    "$errorPrefix Only composable methods can be annotated with $annotationName"
                 )
             }
             element.annotationMirrors.find {
                 typeUtils.isSameType(it.annotationType, composableTypeMirror)
             } == null -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only composable methods can be " +
-                            "annotated with $annotationName"
+                    "$errorPrefix Only composable methods can be annotated with $annotationName"
                 )
             }
             element.modifiers.contains(Modifier.PRIVATE) -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix The methods annotated with " +
-                            "$annotationName can't be private " +
-                            "as the library won't be able to access them otherwise."
+                            "$annotationName can't be private as Showkase won't be able to access " +
+                            "them otherwise."
                 )
             }
             // We only want to throw an error if the user used the Showkase annotation. For 
@@ -51,8 +49,8 @@ internal class ShowkaseValidator {
             annotationName == ShowkaseComposable::class.java.simpleName && 
                     (element as ExecutableElement).parameters.size > 0 -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Make sure that the @Composable functions that you " +
-                            "annotate with the $annotationName annotation do not take in any parameters"
+                    "$errorPrefix Make sure that the @Composable functions that you annotate with" +
+                            " the $annotationName annotation do not take in any parameters"
                 )
             }
             else -> { }

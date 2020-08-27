@@ -2,7 +2,6 @@
     package="com.airbnb.android.showkase">
 
     <application
-        android:allowBackup="true"
         android:supportsRtl="true">
         <activity
             android:name="com.airbnb.android.showkase.ui.ShowkaseBrowserActivity"
