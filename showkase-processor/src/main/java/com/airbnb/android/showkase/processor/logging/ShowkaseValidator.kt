@@ -43,7 +43,7 @@ internal class ShowkaseValidator {
                 throw ShowkaseProcessorException(
                     "$errorPrefix The methods annotated with " +
                             "$annotationName can't be private " +
-                            "as the library won't be able to access them otherwise."
+                            "as Showkase library won't be able to access them otherwise."
                 )
             }
             // We only want to throw an error if the user used the Showkase annotation. For 

@@ -5,7 +5,7 @@ buildscript {
             'compose': '1.0.0-alpha01',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
-            'gradle': '4.2.0-alpha07',
+            'gradle': '4.2.0-alpha08',
             'junit' : '4.12',
             'junitImplementation' : '1.1.1',
             'kotlin': '1.4.0',

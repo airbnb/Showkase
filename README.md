@@ -29,7 +29,7 @@ with changes in Compose.
 </table>
  
  ## Why should you use Showkase?
- - When using component based UI toolkits(like React, Compose, Flutter, etc), our codebase often 
+ - When using component based UI toolkits (like React, Compose, Flutter, etc), our codebase often 
  ends up with hundreds of components that are hard to discover, visualize, search and organize.
  - Showkase eliminates the manual work of maintaining a UI preview/browser app that 
  each company is forced to build in order to maintain their design system.

@@ -10,8 +10,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -36,6 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -184,11 +188,15 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
 
 internal fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
     val baseModifier = Modifier.padding(padding4x)
-    if (metadata.heightDp != null && metadata.widthDp != null) {
-        return baseModifier
-            .size(width = metadata.widthDp.dp, height = metadata.heightDp.dp)
+    return when {
+        metadata.heightDp != null && metadata.widthDp != null -> baseModifier.size(
+            width = metadata.widthDp.dp, 
+            height = metadata.heightDp.dp
+        )
+        metadata.heightDp != null -> baseModifier.height(Dp(metadata.heightDp.toFloat()))
+        metadata.widthDp != null -> baseModifier.width(Dp(metadata.widthDp.toFloat()))
+        else -> baseModifier.fillMaxWidth()
     }
-    return baseModifier.fillMaxWidth()
 }
 
 private fun back(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
