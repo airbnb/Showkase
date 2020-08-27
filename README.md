@@ -315,6 +315,8 @@ the root module and we need to be able to access the UI elements across all the 
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
+- Support for passing a `@PreviewParameter` parameter to `@Preview`/`@ShowkaseComposable` 
+components.
 - Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
 this would be a good opportunity to make this a part of your CI and detect diffs in components. 
 - Support for other UI elements that are a part of your design system (like icons, spacing, etc)
