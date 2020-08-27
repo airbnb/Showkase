@@ -1,20 +1,16 @@
 package com.airbnb.android.showkasesample
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Text
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding4x
@@ -95,26 +91,5 @@ fun H4TextRowComponentPreview() {
                 style = Material.h4
             )
         }
-    }
-}
-
-@Preview(heightDp = 200)
-@Composable
-fun CustomViewComponent() {
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        drawCircle(
-            color = Color.Red,
-            radius = 300f
-        )
-
-        drawCircle(
-            color = Color.Green,
-            radius = 200f
-        )
-
-        drawCircle(
-            color = Color.Blue,
-            radius = 100f
-        )
     }
 }
