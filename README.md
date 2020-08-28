@@ -122,15 +122,15 @@ implementation is also annotated with the `@ShowkaseRoot` annotation.
 class MyRootModule: ShowkaseRootModule
 ```
 
-**Step 4**: Showkase is now ready for use! Just start the `ShowkaseBrowserActivity` to access it. 
-Typically you would start this activity from the debug menu of your app but you are free to start 
-this from any place you like! `ShowkaseBrowserActivity` comes with a nice helper function that 
-returns the intent you need to start. Just pass in the context & the `canonicalName` of the root 
-module you created in `Step3`.
- 
+**Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
+ for accesing the UI browser. Typically you would start this activity from the debug menu of 
+ your app but you are free to start this from any place you like! A nice helper function 
+ `createShowkaseBrowserIntent` is generated for you so you might have to build the app one 
+ before it's available for use. Just start the intent and that's all you need to do for accessing
+  Showkase! 
 
 ```kotlin
-startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
+startActivity(createShowkaseBrowserIntent(this))
 ```
 
 ## Documentation
