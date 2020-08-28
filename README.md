@@ -124,7 +124,7 @@ class MyRootModule: ShowkaseRootModule
 
 **Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
  for accesing the UI browser. Typically you would start this activity from the debug menu of 
- your app but you are free to start his from any place you like! A nice helper function 
+ your app but you are free to start this from any place you like! A nice helper function 
  `createShowkaseBrowserIntent` is generated for you so you might have to build the app one 
  before it's available for use. Just start the intent and that's all you need to do for accessing
   Showkase! 
