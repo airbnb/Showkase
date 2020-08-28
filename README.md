@@ -3,10 +3,11 @@
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
-minimal configuration it generates a UI browser that helps you visualize your components in common 
-situations like dark mode, right-to-left layouts, and font scaling.
+minimal configuration it generates a UI browser that helps you easily find your components, 
+colors & typography. It also renders your components in common situations like dark mode, 
+right-to-left layouts, and scaled fonts which help in finding issues early.
 
-> Jetpack Compose is still in alpha so Showkase may need breaking changes in order to keep up 
+> Jetpack Compose is in alpha so Showkase may need breaking changes in order to keep up 
 with changes in Compose.
 
 <p align="center">
@@ -78,8 +79,8 @@ kapt "com.airbnb.android:showkase-processor:1.0.0-alpha01"
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
 
-For `@Composable` components, you can either use the `@Preview` annotation or the 
-`@ShowkaseComposable` annotation: 
+For `@Composable` components, you can either use the `@Preview` annotation that Compose comes with
+ or use the `@ShowkaseComposable` annotation: 
 
 ```kotlin
 @Preview(name = "Custom name for component", group = "Custom group name")
@@ -135,7 +136,10 @@ startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.c
 ## Documentation
 
 ##### 1. @ShowkaseComposable
-Used to annotate `@Composable` functions that should be displayed inside the Showkase browser. 
+Used to annotate `@Composable` functions that should be displayed inside the Showkase browser. If
+ you are using the `@Preview` annotation with your `@Composable` function already then you don't 
+ need to use this annotation. Showkase has first class support for `@Preview`. 
+
 Here's how you would use it with your @Composable function:
 
 ```kotlin
@@ -148,10 +152,6 @@ fun MyComposable() {
 ```
 Name and group are optional. Look at the [properties section](#showkasecomposable-currently-supports-the-following-properties)
 to understand the behavior when you don't pass any properties.
-
-If you are using the `@Preview` annotation with your `@Composable` function already then you 
-don't need to use this annotation. Showkase has first class support for `@Preview`. 
-
 
 **Note:** Make sure that you add this annotation to only those functions that don't accept any 
 parameters. This is similar to how `@Preview` works in Compose as well. `@Preview` recently added
