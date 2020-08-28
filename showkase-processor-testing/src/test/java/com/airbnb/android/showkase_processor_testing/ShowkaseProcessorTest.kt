@@ -306,8 +306,8 @@ class ShowkaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "The methods annotated with ShowkaseComposable can't be private as the " +
-                "library won't be able to access them otherwise."
+        val error = "The methods annotated with ShowkaseComposable can't be private as " +
+                "Showkase won't be able to access them otherwise."
         assertThat(result.messages).contains(error)
     }
 
@@ -329,7 +329,7 @@ class ShowkaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "The methods annotated with Preview can't be private as the library won't be " +
+        val error = "The methods annotated with Preview can't be private as Showkase won't be " +
                 "able to access them otherwise."
         assertThat(result.messages).contains(error)
     }
