@@ -3,8 +3,9 @@
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
-minimal configuration it generates a UI browser that helps you visualize your components in common 
-situations like dark mode, right-to-left layouts, and font scaling.
+minimal configuration it generates a UI browser that helps you easily find your components, 
+colors & typography. It also renders your components in common situations like dark mode, 
+right-to-left layouts, and scaled fonts which help in finding issues early.
 
 > Jetpack Compose is still in alpha so Showkase may need breaking changes in order to keep up 
 with changes in Compose.
