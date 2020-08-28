@@ -250,15 +250,6 @@ Here's an example of how you would use it:
 fun MyRootModule: ShowkaseRootModule
 ```
 
-<p>
-The root module that you declare is also important to start the Showkase browser in order to 
-view your UI elements. You will have to pass in the canonical name of this implementation when
-starting the `ShowkaseBrowserActiity`. Here's is how you would do it:
-
-```kotlin
-startActivity(ShowkaseBrowserActivity.getIntent(this, MyRootModule::class.java.canonicalName!!))
-```
-
 Note: The root module is the main module of your app that has a dependency on all other modules 
 in the app. This is relevant because we generate the Showkase related classes in the package of 
 the root module and we need to be able to access the UI elements across all the sub modules. This
