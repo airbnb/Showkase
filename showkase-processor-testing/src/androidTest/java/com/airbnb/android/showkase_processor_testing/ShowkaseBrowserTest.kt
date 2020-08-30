@@ -6,8 +6,6 @@ import androidx.ui.test.android.AndroidComposeTestRule
 import androidx.ui.test.onNodeWithTag
 import androidx.ui.test.performGesture
 import androidx.ui.test.swipeDown
-import androidx.ui.test.swipeUp
-import androidx.ui.test.waitForIdle
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 import com.vinaygaba.showcase_processor_testing.createShowkaseBrowserIntent
 import org.junit.Rule
@@ -36,53 +34,64 @@ class ShowcaseBrowserTest {
 
     @Test
     fun activity_starts_and_all_the_showkase_ui_elements_are_visible_on_the_screen_and_clickable() {
-        // Assert that all the groups are displayed on the screen and that they are clickable.
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
     }
 
     @Test
     fun clicking_components_takes_you_to_a_screen_with_groups_of_components() {
-        // Click on one of the groups visible on the screen
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
 
+        // Tap on the "Components" row
         clickRowWithText("Components")
 
+        // Verify that all the groups are displayed on the screen
         verifyRowsWithTextAreDisplayed(listOf("Group1", "Group2", "Group3"))
     }
 
     @Test
     fun clicking_colors_takes_you_to_a_screen_with_groups_of_colors() {
-        // Click on one of the groups visible on the screen
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
 
+        // Tap on the "Colors" row
         clickRowWithText("Colors")
 
+        // Verify that a row for the group "Light Colors" is visible on the screen
         verifyRowsWithTextAreDisplayed(listOf("Light Colors"))
     }
 
     @Test
     fun clicking_typography_takes_you_to_a_screen_with_groups_of_typography() {
-        // Click on one of the groups visible on the screen
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
 
+        // Tap on the "Typography" row
         clickRowWithText("Typography")
 
+        // Verify that all typography groups are visible on the screen
         verifyRowsWithTextAreDisplayed(listOf("Material", "Holo"))
     }
 
     @Test
     fun opening_component_detail_screen_has_5_permutations_displayed() {
-        // Click on one of the groups visible on the screen
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
 
+        // Tap on the "Components" row
         clickRowWithText("Components")
-        
+
+        // Select "Group1"
         clickRowWithText("Group1")
 
+        // Verify that the correct composables are displayed on the screen
         verifyRowsWithTextAreDisplayed(listOf("Test Composable1", "Test Composable2"))
         
+        // Select "Test Composable1"
         clickRowWithText("Test Composable1")
 
+        // Verify that all 5 permutations for "Test Composable1" are generated
         verifyRowsWithTextAreDisplayed(
             listOf(
                 "Composable1 [Basic Example]",
@@ -93,10 +102,13 @@ class ShowcaseBrowserTest {
             )
         )
         
+        // Go back to the components in a group screen
         goBack(composeTestRule)
 
+        // Select "Test Composable2"
         clickRowWithText("Test Composable2")
 
+        // Verify that all 5 permutations for "Test Composable2" are generated
         verifyRowsWithTextAreDisplayed(
             listOf(
                 "Composable2 [Basic Example]",
@@ -110,31 +122,40 @@ class ShowcaseBrowserTest {
 
     @Test
     fun selecting_color_group_has_colors_displayed() {
-        // Click on one of the groups visible on the screen
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
 
+        // Tap on the "Colors" row
         clickRowWithText("Colors")
 
+        // Select group "Light Colors"
         clickRowWithText("Light Colors")
 
+        // Verify that the correct colors are displayed on the screen
         verifyColorsDetailScreen()
     }
 
     @Test
     fun selecting_typography_group_has_colors_displayed() {
-        // Click on one of the groups visible on the screen
+        // Assert that all the categories are displayed on the screen and that they are clickable.
         verifyLandingScreen()
 
+        // Tap on the "Typography" row
         clickRowWithText("Typography")
 
+        // Select group "Material"
         clickRowWithText("Material")
 
+        // Verify that the correct typography styles are displayed on the screen
         verifyTypographyDetailScreen()
 
+        // Go back to the typography in a group screen
         goBack(composeTestRule)
 
+        // Select the other group on the screen
         clickRowWithText("Holo")
 
+        // Verify that the correct typography styles are displayed on the screen
         verifyRowsWithTextAreDisplayed(listOf("Button", "Caption", "Overline"))
         
     }
@@ -150,7 +171,7 @@ class ShowcaseBrowserTest {
         // Tap on the search icon
         clickRowWithTag("SearchIcon")
 
-        // Enter "Group1" in the search field
+        // Enter "group1" in the search field
         inputTextWithTag("SearchTextField", "group1")
 
         // Ensure that only Group1 is visible on the screen. The rest of the groups should not be 
@@ -173,7 +194,7 @@ class ShowcaseBrowserTest {
         // Enter "Dark Colors" in the search field
         inputTextWithTag("SearchTextField", "Dark Colors")
 
-        // Ensure that no group is visible on the screen. 
+        // Ensure that no group is now visible on the screen. 
         verifyRowsWithTextDoesNotExist(listOf("Light Colors"))
     }
 
@@ -188,10 +209,10 @@ class ShowcaseBrowserTest {
         // Tap on the search icon
         clickRowWithTag("SearchIcon")
 
-        // Enter "Group1" in the search field
+        // Enter "Ho" in the search field
         inputTextWithTag("SearchTextField", "Ho")
 
-        // Ensure that only Group1 is visible on the screen. The rest of the groups should not be 
+        // Ensure that only "Holo" is visible on the screen. The rest of the groups should not be 
         // visble anymore
         verifyRowsWithTextAreDisplayed(listOf("Holo"))
         verifyRowsWithTextDoesNotExist(listOf("Light Colors"))
@@ -228,10 +249,10 @@ class ShowcaseBrowserTest {
         // Ensure all the categories are visible
         verifyLandingScreen()
 
-        // Select components
+        // Select "Colors"
         clickRowWithText("Colors")
 
-        // Select Light Colors
+        // Click on "Light Colors"
         clickRowWithText("Light Colors")
 
         // Verify the right colors are visible on the screen
@@ -243,8 +264,8 @@ class ShowcaseBrowserTest {
         // Enter "Prim" in the search field
         inputTextWithTag("SearchTextField", "Prim")
 
-        // Ensure that only Group1 is visible on the screen. The rest of the groups should not be 
-        // visble anymore
+        // Ensure that only "Primary" & "Primary Variant" is visible on the screen. The rest of the 
+        // groups should not be visble anymore
         verifyRowsWithTextAreDisplayed(listOf("Primary Variant", "Primary"))
         verifyRowsWithTextDoesNotExist(listOf("Secondary", "Secondary Variant"))
     }
@@ -254,30 +275,29 @@ class ShowcaseBrowserTest {
         // Ensure all the categories are visible
         verifyLandingScreen()
 
-        // Select components
+        // Select "Typography"
         clickRowWithText("Typography")
 
-        // Select Light Colors
+        // Select Material
         clickRowWithText("Material")
 
         // Verify the right typography are visible on the screen
         verifyTypographyDetailScreen()
 
+        // Swipe back to the top of the sreen
         onNodeWithTag("TypographyInAGroupList").performGesture {
             swipeDown()
         }
-        waitForIdle()
 
         // Tap on the search icon
         clickRowWithTag("SearchIcon")
 
-        // Enter "Subtitle" in the search field
+        // Enter "Bod" in the search field
         inputTextWithTag("SearchTextField", "Bod")
         
-        waitForIdle()
-
-        // Ensure that only Group1 is visible on the screen. The rest of the groups should not be 
-        // visble anymore
+        
+        // Ensure that only "Body1" & "Body2" is visible on the screen. The rest of the groups should
+        // not be visble anymore
         verifyRowsWithTextAreDisplayed(listOf("Body1", "Body2"))
         verifyRowsWithTextDoesNotExist(listOf("H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1", 
             "Subtitle2"))
@@ -288,24 +308,31 @@ class ShowcaseBrowserTest {
         // Ensure all the categories are visible
         verifyLandingScreen()
 
-        // Select components
+        // Select components to go to the component groups screen
         clickRowWithText("Components")
 
-        // Select Group 3
+        // Click on "Group 1" to go to the components in a group screen
         clickRowWithText("Group1")
 
+        // Click on "Test Composable1" to go to the component details screen
         clickRowWithText("Test Composable1")
         
+        // Go back to the components in a group screen
         goBack(composeTestRule)
 
+        // Confirm that we are in the right screen
         verifyRowsWithTextAreDisplayed(listOf("Test Composable1", "Test Composable2"))
 
+        // Go back to the component groups screen
         goBack(composeTestRule)
 
+        // Confirm that we are in the right screen
         verifyRowsWithTextAreDisplayed(listOf("Group1", "Group2", "Group3"))
 
+        // Go back to the landing screen
         goBack(composeTestRule)
-        
+
+        // Confirm that we are in the right screen
         verifyLandingScreen()
     }
 
@@ -314,20 +341,25 @@ class ShowcaseBrowserTest {
         // Ensure all the categories are visible
         verifyLandingScreen()
 
-        // Select components
+        // Select "Colors" to go to the color groups screen
         clickRowWithText("Colors")
 
-        // Select Group 3
+        // Select "Light Colors" to go to the colors in a group screen
         clickRowWithText("Light Colors")
 
+        // Confirm that we are in the right screen
         verifyColorsDetailScreen()
 
+        // Go back to the groups in color screen
         goBack(composeTestRule)
-        
+
+        // Confirm that we are in the right screen
         verifyRowsWithTextAreDisplayed(listOf("Light Colors"))
 
+        // Go back to the landing screen
         goBack(composeTestRule)
 
+        // Confirm that we are in the right screen
         verifyLandingScreen()
     }
 
@@ -336,20 +368,25 @@ class ShowcaseBrowserTest {
         // Ensure all the categories are visible
         verifyLandingScreen()
 
-        // Select components
+        // Select "Typography" to go to the typography groups screen
         clickRowWithText("Typography")
 
-        // Select Group 3
+        // Select "Material" to go to the typography in a group screen
         clickRowWithText("Material")
 
+        // Confirm that we are in the right screen
         verifyTypographyDetailScreen()
 
+        // Go back to the typography groups screen
         goBack(composeTestRule)
 
+        // Confirm that we are in the right screen
         verifyRowsWithTextAreDisplayed(listOf("Material"))
 
+        // Go back to the landing screen
         goBack(composeTestRule)
 
+        // Confirm that we are in the right screen
         verifyLandingScreen()
     }
 }
