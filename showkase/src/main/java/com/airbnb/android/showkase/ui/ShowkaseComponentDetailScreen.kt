@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.ConfigurationAmbient
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.platform.DensityAmbient
 import androidx.compose.ui.platform.LayoutDirectionAmbient
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -61,10 +60,7 @@ internal fun ShowkaseComponentDetailScreen(
     val componentMetadata = componentMetadataList.find {
         it.componentName == showkaseBrowserScreenMetadata.value.currentComponent
     } ?: return
-    LazyColumnFor(
-        modifier = Modifier.testTag("ShowkaseComponentDetailList"),
-        items = listOf(componentMetadata), 
-        itemContent = { metadata ->
+    LazyColumnFor(items = listOf(componentMetadata), itemContent = { metadata ->
         ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
             when (showkaseComponentCardType) {
                 ShowkaseComponentCardType.BASIC -> {
