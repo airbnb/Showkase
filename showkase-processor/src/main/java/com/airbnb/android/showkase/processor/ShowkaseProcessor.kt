@@ -98,7 +98,8 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun processComponentAnnotation(roundEnvironment: RoundEnvironment)
             : Set<ShowkaseMetadata> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
-        val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
+//        val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
+        val previewComposablesMetadata = setOf<ShowkaseMetadata>()
         return (showkaseComposablesMetadata + previewComposablesMetadata)
             .dedupeAndSort()
             .toSet()
