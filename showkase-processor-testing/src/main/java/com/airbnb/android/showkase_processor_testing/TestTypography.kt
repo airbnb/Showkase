@@ -1,3 +1,4 @@
+@file:Suppress("PackageNaming")
 package com.airbnb.android.showkase_processor_testing
 
 import androidx.compose.ui.text.TextStyle
