@@ -10,6 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.scrollBy
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
@@ -29,8 +32,10 @@ internal fun ShowkaseTypographyInAGroupScreen(
     val filteredList =
         getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata.value)
     LazyColumnFor(
+        modifier = Modifier.background(Color.White)
+            .fillMaxSize()
+            .testTag("TypographyInAGroupList"),
         items = filteredList,
-        modifier = Modifier.background(Color.White).fillMaxSize(),
         itemContent = { groupTypographyMetadata ->
             Text(
                 text = groupTypographyMetadata.typographyName.capitalize(Locale.getDefault()),
