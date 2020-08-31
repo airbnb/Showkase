@@ -47,7 +47,7 @@ class ShowcaseBrowserTest {
         clickRowWithText("Components")
 
         // Verify that all the groups are displayed on the screen
-        verifyRowsWithTextAreDisplayed(listOf("Group1", "Group2", "Group3"))
+        verifyRowsWithTextAreDisplayed("Group1", "Group2", "Group3")
     }
 
     @Test
@@ -59,7 +59,7 @@ class ShowcaseBrowserTest {
         clickRowWithText("Colors")
 
         // Verify that a row for the group "Light Colors" is visible on the screen
-        verifyRowsWithTextAreDisplayed(listOf("Light Colors"))
+        verifyRowsWithTextAreDisplayed("Light Colors")
     }
 
     @Test
@@ -71,7 +71,7 @@ class ShowcaseBrowserTest {
         clickRowWithText("Typography")
 
         // Verify that all typography groups are visible on the screen
-        verifyRowsWithTextAreDisplayed(listOf("Material", "Holo"))
+        verifyRowsWithTextAreDisplayed("Material", "Holo")
     }
 
     @Test
@@ -86,37 +86,33 @@ class ShowcaseBrowserTest {
         clickRowWithText("Group1")
 
         // Verify that the correct composables are displayed on the screen
-        verifyRowsWithTextAreDisplayed(listOf("Test Composable1", "Test Composable2"))
+        verifyRowsWithTextAreDisplayed("Test Composable1", "Test Composable2")
         
         // Select "Test Composable1"
         clickRowWithText("Test Composable1")
 
         // Verify that all 5 permutations for "Test Composable1" are generated
         verifyRowsWithTextAreDisplayed(
-            listOf(
-                "Composable1 [Basic Example]",
-                "Composable1 [RTL]",
-                "Composable1 [Font Scaled x 2]",
-                "Composable1 [Display Scaled x 2]",
-                "Composable1 [Dark Mode]"
-            )
+            "Composable1 [Basic Example]",
+            "Composable1 [RTL]",
+            "Composable1 [Font Scaled x 2]",
+            "Composable1 [Display Scaled x 2]",
+            "Composable1 [Dark Mode]"
         )
         
         // Go back to the components in a group screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Select "Test Composable2"
         clickRowWithText("Test Composable2")
 
         // Verify that all 5 permutations for "Test Composable2" are generated
         verifyRowsWithTextAreDisplayed(
-            listOf(
-                "Composable2 [Basic Example]",
-                "Composable2 [RTL]",
-                "Composable2 [Font Scaled x 2]",
-                "Composable2 [Display Scaled x 2]",
-                "Composable2 [Dark Mode]"
-            )
+            "Composable2 [Basic Example]",
+            "Composable2 [RTL]",
+            "Composable2 [Font Scaled x 2]",
+            "Composable2 [Display Scaled x 2]",
+            "Composable2 [Dark Mode]"
         )
     }
 
@@ -150,13 +146,13 @@ class ShowcaseBrowserTest {
         verifyTypographyDetailScreen()
 
         // Go back to the typography in a group screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Select the other group on the screen
         clickRowWithText("Holo")
 
         // Verify that the correct typography styles are displayed on the screen
-        verifyRowsWithTextAreDisplayed(listOf("Button", "Caption", "Overline"))
+        verifyRowsWithTextAreDisplayed("Button", "Caption", "Overline")
         
     }
 
@@ -176,8 +172,8 @@ class ShowcaseBrowserTest {
 
         // Ensure that only Group1 is visible on the screen. The rest of the groups should not be 
         // visble anymore
-        verifyRowsWithTextAreDisplayed(listOf("Group1"))
-        verifyRowsWithTextDoesNotExist(listOf("Group3", "Group3"))
+        verifyRowsWithTextAreDisplayed("Group1")
+        verifyRowsWithTextDoesNotExist("Group3", "Group3")
     }
 
     @Test
@@ -195,7 +191,7 @@ class ShowcaseBrowserTest {
         inputTextWithTag("SearchTextField", "Dark Colors")
 
         // Ensure that no group is now visible on the screen. 
-        verifyRowsWithTextDoesNotExist(listOf("Light Colors"))
+        verifyRowsWithTextDoesNotExist("Light Colors")
     }
 
     @Test
@@ -214,8 +210,8 @@ class ShowcaseBrowserTest {
 
         // Ensure that only "Holo" is visible on the screen. The rest of the groups should not be 
         // visble anymore
-        verifyRowsWithTextAreDisplayed(listOf("Holo"))
-        verifyRowsWithTextDoesNotExist(listOf("Light Colors"))
+        verifyRowsWithTextAreDisplayed("Holo")
+        verifyRowsWithTextDoesNotExist("Light Colors")
     }
 
     @Test
@@ -230,7 +226,7 @@ class ShowcaseBrowserTest {
         clickRowWithText("Group3")
 
         // Verify the right composables are visible on the screen
-        verifyRowsWithTextAreDisplayed(listOf("Test Composable4", "Test Composable5"))
+        verifyRowsWithTextAreDisplayed("Test Composable4", "Test Composable5")
         
         // Tap on the search icon
         clickRowWithTag("SearchIcon")
@@ -240,8 +236,8 @@ class ShowcaseBrowserTest {
 
         // Ensure that only Composable4 is visible on the screen. The rest of the groups should not be 
         // visble anymore
-        verifyRowsWithTextAreDisplayed(listOf("Test Composable4"))
-        verifyRowsWithTextDoesNotExist(listOf("Test Composable5"))
+        verifyRowsWithTextAreDisplayed("Test Composable4")
+        verifyRowsWithTextDoesNotExist("Test Composable5")
     }
 
     @Test
@@ -266,8 +262,8 @@ class ShowcaseBrowserTest {
 
         // Ensure that only "Primary" & "Primary Variant" is visible on the screen. The rest of the 
         // groups should not be visble anymore
-        verifyRowsWithTextAreDisplayed(listOf("Primary Variant", "Primary"))
-        verifyRowsWithTextDoesNotExist(listOf("Secondary", "Secondary Variant"))
+        verifyRowsWithTextAreDisplayed("Primary Variant", "Primary")
+        verifyRowsWithTextDoesNotExist("Secondary", "Secondary Variant")
     }
 
     @Test
@@ -298,9 +294,9 @@ class ShowcaseBrowserTest {
         
         // Ensure that only "Body1" & "Body2" is visible on the screen. The rest of the groups should
         // not be visble anymore
-        verifyRowsWithTextAreDisplayed(listOf("Body1", "Body2"))
-        verifyRowsWithTextDoesNotExist(listOf("H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1", 
-            "Subtitle2"))
+        verifyRowsWithTextAreDisplayed("Body1", "Body2")
+        verifyRowsWithTextDoesNotExist("H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1", 
+            "Subtitle2")
     }
 
     @Test
@@ -318,19 +314,19 @@ class ShowcaseBrowserTest {
         clickRowWithText("Test Composable1")
         
         // Go back to the components in a group screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
-        verifyRowsWithTextAreDisplayed(listOf("Test Composable1", "Test Composable2"))
+        verifyRowsWithTextAreDisplayed("Test Composable1", "Test Composable2")
 
         // Go back to the component groups screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
-        verifyRowsWithTextAreDisplayed(listOf("Group1", "Group2", "Group3"))
+        verifyRowsWithTextAreDisplayed("Group1", "Group2", "Group3")
 
         // Go back to the landing screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
         verifyLandingScreen()
@@ -351,13 +347,13 @@ class ShowcaseBrowserTest {
         verifyColorsDetailScreen()
 
         // Go back to the groups in color screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
-        verifyRowsWithTextAreDisplayed(listOf("Light Colors"))
+        verifyRowsWithTextAreDisplayed("Light Colors")
 
         // Go back to the landing screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
         verifyLandingScreen()
@@ -378,13 +374,13 @@ class ShowcaseBrowserTest {
         verifyTypographyDetailScreen()
 
         // Go back to the typography groups screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
-        verifyRowsWithTextAreDisplayed(listOf("Material"))
+        verifyRowsWithTextAreDisplayed("Material")
 
         // Go back to the landing screen
-        goBack(composeTestRule)
+        composeTestRule.goBack()
 
         // Confirm that we are in the right screen
         verifyLandingScreen()
