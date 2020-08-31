@@ -17,6 +17,11 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -52,12 +57,16 @@ dependencies {
     implementation deps.compose.composeRuntime
     implementation deps.compose.core
     implementation deps.compose.foundation
+    androidTestImplementation deps.compose.uiTest
 
     // Testing
     testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
+    androidTestImplementation deps.test.androidXTestCore
+    androidTestImplementation deps.test.androidXTestRules
+    androidTestImplementation deps.test.androidxTestRunner
     // Allows this module to access the annotation processor related classes. Otherwise those are 
     // only available in java library modules. Inspiration - 
     // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle

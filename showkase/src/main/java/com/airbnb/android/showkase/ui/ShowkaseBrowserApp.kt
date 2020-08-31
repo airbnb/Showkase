@@ -16,6 +16,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -109,7 +110,7 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
             fontSize = 18.sp,
             fontWeight = FontWeight.W500
         ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.testTag("SearchTextField").fillMaxWidth(),
         leadingIcon = {
             Icon(asset = Icons.Filled.Search)
         },
@@ -124,9 +125,12 @@ private fun ShowkaseAppBarActions(metadata: MutableState<ShowkaseBrowserScreenMe
         metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL ||  
         metadata.value.currentScreen == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> { }
         else -> {
-            IconButton(onClick = {
-                metadata.value = metadata.value.copy(isSearchActive = true)
-            }) {
+            IconButton(
+                modifier = Modifier.testTag("SearchIcon"),
+                onClick = {
+                    metadata.value = metadata.value.copy(isSearchActive = true)
+                }
+            ) {
                 Icon(asset = Icons.Filled.Search)
             }
         }
