@@ -59,6 +59,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.listInitializerCodeBlock()
 
         showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
+            require(showkaseMetadata is ShowkaseMetadata.Component)
             componentListInitializerCodeBlock.apply {
                 add("\n")
                 add(
@@ -72,14 +73,12 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     showkaseMetadata.showkaseName,
                     showkaseMetadata.showkaseKDoc
                 )
-                if (showkaseMetadata is ShowkaseMetadata.Component) {
-                    showkaseMetadata.apply {
-                        showkaseWidthDp?.let {
-                            add("\nwidthDp = %L,", it)
-                        }
-                        showkaseHeightDp?.let {
-                            add("\nheightDp = %L,", it)
-                        }
+                showkaseMetadata.apply {
+                    showkaseWidthDp?.let {
+                        add("\nwidthDp = %L,", it)
+                    }
+                    showkaseHeightDp?.let {
+                        add("\nheightDp = %L,", it)
                     }
                 }
                 
@@ -89,7 +88,8 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                         showkaseMetadata.enclosingClass,
                         showkaseMetadata.elementName,
                         showkaseMetadata.insideWrapperClass,
-                        showkaseMetadata.insideObject
+                        showkaseMetadata.insideObject,
+                        showkaseMetadata.previewParameterList
                     )
                 )
                 doubleUnindent()
@@ -204,40 +204,58 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         enclosingClass: TypeMirror? = null,
         composeFunctionName: String,
         insideWrapperClass: Boolean,
-        insideObject: Boolean
-    ) = when {
-        // When enclosingClass is null, it denotes that the method was a top-level method 
-        // declaration.
-        enclosingClass == null -> {
-            val composeMember = MemberName(functionPackageName, composeFunctionName)
-            CodeBlock.Builder()
-                .add(
-                    "\ncomponent = @%T { %M() }",
-                    COMPOSE_CLASS_NAME, composeMember
-                )
-                .build()
+        insideObject: Boolean,
+        previewParameterList: List<TypeMirror>
+    ): CodeBlock {
+        val previewParameter = previewParameterList.firstOrNull()
+        
+        return when {
+            // When enclosingClass is null, it denotes that the method was a top-level method 
+            // declaration.
+            enclosingClass == null -> {
+                if (previewParameter == null) {
+                    val composeMember = MemberName(functionPackageName, composeFunctionName)
+                    CodeBlock.Builder()
+                        .add(
+                            "\ncomponent = @%T { %M() }",
+                            COMPOSE_CLASS_NAME, composeMember
+                        )
+                        .build()
+                } else {
+                    val composeMember = MemberName(functionPackageName, composeFunctionName)
+                    CodeBlock.Builder()
+                        .add(
+                            "\ncomponent = @%T { %M(%T()) }",
+                            COMPOSE_CLASS_NAME, composeMember, previewParameter
+                        )
+                        .build()
+                }
+                
+            }
+            // It was declared inside a class.
+            insideWrapperClass -> {
+                CodeBlock.Builder()
+                    .add(
+                        "\ncomponent = @%T { %T().${composeFunctionName}() }",
+                        COMPOSE_CLASS_NAME, enclosingClass
+                    )
+                    .build()
+            }
+            // It was declared inside an object or a companion object.
+            insideObject -> {
+                CodeBlock.Builder()
+                    .add(
+                        "\ncomponent = @%T { %T.${composeFunctionName}() }",
+                        COMPOSE_CLASS_NAME, enclosingClass
+                    )
+                    .build()
+            }
+            else -> throw ShowkaseProcessorException(
+                "Your @ShowkaseComposable/@Preview " +
+                        "function:${composeFunctionName} is declared in a way that is not supported by " +
+                        "Showkase"
+            )
         }
-        // It was declared inside a class.
-        insideWrapperClass -> {
-            CodeBlock.Builder()
-                .add(
-                    "\ncomponent = @%T { %T().${composeFunctionName}() }",
-                    COMPOSE_CLASS_NAME, enclosingClass
-                )
-                .build()
-        }
-        // It was declared inside an object or a companion object.
-        insideObject -> {
-            CodeBlock.Builder()
-                .add(
-                    "\ncomponent = @%T { %T.${composeFunctionName}() }",
-                    COMPOSE_CLASS_NAME, enclosingClass
-                )
-                .build()
-        }
-        else -> throw ShowkaseProcessorException("Your @ShowkaseComposable/@Preview " +
-                "function:${composeFunctionName} is declared in a way that is not supported by " +
-                "Showkase")
     }
 
     @Suppress("LongParameterList")

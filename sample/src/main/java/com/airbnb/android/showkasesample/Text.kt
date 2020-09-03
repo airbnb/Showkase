@@ -12,6 +12,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.ui.tooling.preview.PreviewParameter
+import androidx.ui.tooling.preview.PreviewParameterProvider
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding4x
 
@@ -27,16 +29,16 @@ import com.airbnb.android.showkase.ui.padding4x
  * }
  * ```
  */
-@ShowkaseComposable(name = "Cursive Text Style", group = "Text")
-@Preview
+//@ShowkaseComposable(name = "Cursive Text Style", group = "Text")
+//@Preview
 @Composable
-fun CursiveTextComponent() {
+fun CursiveTextComponent(text: String) {
     val context = ContextAmbient.current
     val string = context.getString(R.string.app_name)
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+            Text(text = text, modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Cursive)
             )
@@ -45,7 +47,7 @@ fun CursiveTextComponent() {
 }
 
 @ShowkaseComposable(name = "Serif Text Style", group = "Text")
-@Preview
+//@Preview
 @Composable
 fun SerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -62,7 +64,7 @@ fun SerifTextComponentPreview() {
 }
 
 @ShowkaseComposable(name = "Sans Serif Text Style", group = "Text")
-@Preview
+//@Preview
 @Composable
 fun SansSerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -92,4 +94,29 @@ fun H4TextRowComponentPreview() {
             )
         }
     }
+}
+
+data class Person(
+    val name: String,
+    val age: Int
+)
+
+class ParameterProvider : PreviewParameterProvider<Person> {
+    override val values: Sequence<Person>
+        get() = sequenceOf(
+            Person("John", 12),
+            Person("Doe", 20)
+        )
+
+    override val count: Int
+        get() = super.count
+
+} 
+
+@Preview
+@Composable
+fun preview(
+    @PreviewParameter(provider = ParameterProvider::class) person: Person
+) {
+    CursiveTextComponent(person.name)
 }
