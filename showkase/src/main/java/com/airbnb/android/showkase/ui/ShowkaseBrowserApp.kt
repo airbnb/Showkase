@@ -51,7 +51,7 @@ internal fun ShowkaseBrowserApp(
                     showkaseBrowserScreenMetadata)
             }
         }
-    )    
+    )
 }
 
 @Composable
