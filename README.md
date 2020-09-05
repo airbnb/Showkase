@@ -65,7 +65,7 @@ with changes in Compose.
 
 ## Installation
 
-Using Showkase is straightforward and takes just a couple minutes to get started.
+Using Showkase is straightforward and takes just a couple of minutes to get started.
 
 **Step 1**: Add the dependency to your module's `build.gradle` file. If you have a multi-module 
 setup, add this dependency to all the modules with UI elements that should be displayed inside the 
@@ -123,7 +123,7 @@ class MyRootModule: ShowkaseRootModule
 ```
 
 **Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
- for accesing the UI browser. Typically you would start this activity from the debug menu of 
+ for accessing the UI browser. Typically you would start this activity from the debug menu of 
  your app but you are free to start this from any place you like! A nice helper function 
  `createShowkaseBrowserIntent` is generated for you so you might have to build the app one 
  before it's available for use. Just start the intent and that's all you need to do for accessing
@@ -156,7 +156,7 @@ to understand the behavior when you don't pass any properties.
 **Note:** Make sure that you add this annotation to only those functions that don't accept any 
 parameters. This is similar to how `@Preview` works in Compose as well. `@Preview` recently added
 support for parameters that are annotated with `@PreviewParameter` and Showkase will add support 
-for that soon. If your function accepts a parameters, wrap it inside another function that doesn't 
+for that soon. If your function accepts parameters, wrap it inside another function that doesn't 
 accept any parameters. 
 
 For example, here is a @Composable function that requires parameters -
@@ -170,7 +170,7 @@ fun MyComposable(name: String) {
 ```
 
 In order to make this function compatible with Showkase, you could further wrap this function 
-inside a method that doesn't accept a parameters in the following way:
+inside a method that doesn't accept parameters in the following way:
 
 ```kotlin
 @ShowkaseComposable(name = "Name", group = "Group")
@@ -186,8 +186,8 @@ Property Name | Description
 ------------- | -------------
 <b>name</b>| The name that should be used to describe your `@Composable` function. If you don't pass any value, the name of the composable function is used as the name.
 <b>group</b> | The grouping key that will be used to group it with other `@Composable` functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
-<b>widthDp</b> | The width that your component will be rendered in inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
-<b>heightDp</b> | The height that your component will be rendered in inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
+<b>widthDp</b> | The width that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
+<b>heightDp</b> | The height that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 
 ##### 2. @ShowkaseColor
 Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 
