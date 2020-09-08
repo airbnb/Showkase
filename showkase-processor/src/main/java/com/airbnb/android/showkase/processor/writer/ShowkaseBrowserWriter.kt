@@ -56,50 +56,51 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             getPropertyList(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME, COMPONENT_PROPERTY_NAME)
 
         val componentListInitializerCodeBlock =
-            SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.listInitializerCodeBlock()
-
-        showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
-            require(showkaseMetadata is ShowkaseMetadata.Component)
-            componentListInitializerCodeBlock.apply {
-                add("\n")
-                add(
-                    "%T(\n",
-                    SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
-                )
-                doubleIndent()
-                add(
-                    "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,",
-                    showkaseMetadata.showkaseGroup,
-                    showkaseMetadata.showkaseName,
-                    showkaseMetadata.showkaseKDoc
-                )
-                showkaseMetadata.apply {
-                    showkaseWidthDp?.let {
-                        add("\nwidthDp = %L,", it)
-                    }
-                    showkaseHeightDp?.let {
-                        add("\nheightDp = %L,", it)
-                    }
-                }
-                
-                add(
-                    composePreviewFunctionLambda(
-                        showkaseMetadata.packageName,
-                        showkaseMetadata.enclosingClass,
-                        showkaseMetadata.elementName,
-                        showkaseMetadata.insideWrapperClass,
-                        showkaseMetadata.insideObject,
-                        showkaseMetadata.previewParameterList
-                    )
-                )
-                doubleUnindent()
-                closeOrContinueListCodeBlock(index, showkaseMetadataSet.size - 1)
-            }
+            SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.mutableListInitializerCodeBlock()
+        val showkaseMetadataWithoutParameterList = showkaseMetadataSet.filter { 
+            it is ShowkaseMetadata.Component && it.previewParameter == null
         }
+        val showkaseMetadataWithParameterList = showkaseMetadataSet.filter {
+            it is ShowkaseMetadata.Component && it.previewParameter != null
+        }
+
         componentListInitializerCodeBlock.apply {
+            showkaseMetadataWithoutParameterList.forEachIndexed { index, withoutParameterMetadata ->
+                require(withoutParameterMetadata is ShowkaseMetadata.Component)
+                addLineBreak()
+                addShowkaseBrowserComponent(withoutParameterMetadata)
+                closeOrContinueListCodeBlock(index, showkaseMetadataWithoutParameterList.size - 1)
+            }
             unindent()
             add(")")
+
+            if (showkaseMetadataWithParameterList.isNotEmpty()) {
+                add(".apply {")
+                doubleIndent()
+                showkaseMetadataWithParameterList.forEachIndexed { index, withParameterMetadata ->
+                    require(withParameterMetadata is ShowkaseMetadata.Component)
+                    addLineBreak()
+                    add(
+                        "%T().values.iterator().forEach { previewParam -> ",
+                        withParameterMetadata.previewParameter
+                    )
+                    doubleIndent()
+                    addLineBreak()
+                    add("add(")
+                    addLineBreak()
+                    doubleIndent()
+                    addShowkaseBrowserComponent(withParameterMetadata)
+                    closeRoundBracket()
+                    doubleUnindent()
+                    closeRoundBracket()
+                    doubleUnindent()
+                    closeCurlyBraces()
+                }
+                doubleUnindent()
+                closeCurlyBraces()
+            }
         }
+        
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
         return componentListProperty
     }
@@ -118,7 +119,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
 
         showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             colorListInitializerCodeBlock.apply {
-                add("\n")
+                addLineBreak()
                 add(
                     "%T(\n",
                     SHOWKASE_BROWSER_COLOR_CLASS_NAME
@@ -166,7 +167,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
 
         showkaseMetadataSet.forEachIndexed { index, showkaseMetadata ->
             typographyListInitializerCodeBlock.apply {
-                add("\n")
+                addLineBreak()
                 add(
                     "%T(\n",
                     SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME
@@ -197,65 +198,6 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             add(")")
         }
         return typographyListProperty.initializer(typographyListInitializerCodeBlock.build())
-    }
-
-    private fun composePreviewFunctionLambda(
-        functionPackageName: String,
-        enclosingClass: TypeMirror? = null,
-        composeFunctionName: String,
-        insideWrapperClass: Boolean,
-        insideObject: Boolean,
-        previewParameterList: List<TypeMirror>
-    ): CodeBlock {
-        val previewParameter = previewParameterList.firstOrNull()
-        
-        return when {
-            // When enclosingClass is null, it denotes that the method was a top-level method 
-            // declaration.
-            enclosingClass == null -> {
-                if (previewParameter == null) {
-                    val composeMember = MemberName(functionPackageName, composeFunctionName)
-                    CodeBlock.Builder()
-                        .add(
-                            "\ncomponent = @%T { %M() }",
-                            COMPOSE_CLASS_NAME, composeMember
-                        )
-                        .build()
-                } else {
-                    val composeMember = MemberName(functionPackageName, composeFunctionName)
-                    CodeBlock.Builder()
-                        .add(
-                            "\ncomponent = @%T { %M(%T()) }",
-                            COMPOSE_CLASS_NAME, composeMember, previewParameter
-                        )
-                        .build()
-                }
-                
-            }
-            // It was declared inside a class.
-            insideWrapperClass -> {
-                CodeBlock.Builder()
-                    .add(
-                        "\ncomponent = @%T { %T().${composeFunctionName}() }",
-                        COMPOSE_CLASS_NAME, enclosingClass
-                    )
-                    .build()
-            }
-            // It was declared inside an object or a companion object.
-            insideObject -> {
-                CodeBlock.Builder()
-                    .add(
-                        "\ncomponent = @%T { %T.${composeFunctionName}() }",
-                        COMPOSE_CLASS_NAME, enclosingClass
-                    )
-                    .build()
-            }
-            else -> throw ShowkaseProcessorException(
-                "Your @ShowkaseComposable/@Preview " +
-                        "function:${composeFunctionName} is declared in a way that is not supported by " +
-                        "Showkase"
-            )
-        }
     }
 
     @Suppress("LongParameterList")

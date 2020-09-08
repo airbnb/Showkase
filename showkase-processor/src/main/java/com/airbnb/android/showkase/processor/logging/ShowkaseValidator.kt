@@ -47,15 +47,15 @@ internal class ShowkaseValidator {
             }
             // We only want to throw an error if the user used the Showkase annotation. For 
             // @Preview annotations with parameter, we simply want to skip those. 
-//            validateComposableParameters(
-//                element as ExecutableElement, previewParameterTypeMirror,
-//                typeUtils
-//            ) -> {
-//                throw ShowkaseProcessorException(
-//                    "$errorPrefix Make sure that the @Composable functions that you annotate with" +
-//                            " the $annotationName annotation do not take in any parameters"
-//                )
-//            }
+            validateComposableParameters(
+                element as ExecutableElement, previewParameterTypeMirror,
+                typeUtils
+            ) -> {
+                throw ShowkaseProcessorException(
+                    "$errorPrefix Make sure that the @Composable functions that you annotate with" +
+                            " the $annotationName annotation do not take in any parameters"
+                )
+            }
             else -> {
             }
         }
@@ -68,10 +68,10 @@ internal class ShowkaseValidator {
     ): Boolean {
         val incorrectParameters = element.parameters
             .filter { paramElement ->
-                val parameter = paramElement.annotationMirrors.find {
-                    !typeUtils.isSameType(it.annotationType, previewParameterTypeMirror)
+                val previewParameter = paramElement.annotationMirrors.find {
+                    typeUtils.isSameType(it.annotationType, previewParameterTypeMirror)
                 }
-                parameter != null
+                paramElement.annotationMirrors.isNotEmpty() && previewParameter == null
             }
         return incorrectParameters.isNotEmpty()
     }

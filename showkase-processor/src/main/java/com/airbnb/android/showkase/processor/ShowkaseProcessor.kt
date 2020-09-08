@@ -107,7 +107,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
         val previewParameterTypeElement =
             elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
-        previewParameterTypeElement?.let {
+        previewParameterTypeElement?.let { previewParameter -> 
             return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java)
                 .map { element ->
                     showkaseValidator.validateComponentElement(
@@ -119,10 +119,11 @@ class ShowkaseProcessor: AbstractProcessor() {
                         element = element as ExecutableElement,
                         elementUtil = elementUtils,
                         typeUtils = typeUtils,
-                        showkaseValidator = showkaseValidator
+                        showkaseValidator = showkaseValidator,
+                        previewParameterTypeMirror = previewParameter.asType()
                     )
                 }.toSet()
-        } ?: return setOf<ShowkaseMetadata>()
+        } ?: return setOf()
     }
         
 
@@ -134,13 +135,16 @@ class ShowkaseProcessor: AbstractProcessor() {
             return roundEnvironment.getElementsAnnotatedWith(previewTypeElement).mapNotNull { element ->
                 showkaseValidator.validateComponentElement(element, composableTypeMirror, typeUtils,
                     previewTypeElement.simpleName.toString(), previewParameterTypeElement.asType())
-                val showkaseMetadata = getShowkaseMetadataFromPreview(
-                    element as ExecutableElement, elementUtils, typeUtils, previewTypeElement.asType(),
-                    previewParameterTypeElement.asType(), showkaseValidator 
+                getShowkaseMetadataFromPreview(
+                    element = element as ExecutableElement, 
+                    elementUtil = elementUtils, 
+                    typeUtils = typeUtils, 
+                    previewTypeMirror = previewTypeElement.asType(),
+                    previewParameterTypeMirror = previewParameterTypeElement.asType(), 
+                    showkaseValidator = showkaseValidator 
                 )
-                showkaseMetadata
             }.toSet()
-        } ?: return setOf<ShowkaseMetadata>()
+        } ?: return setOf()
     }
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {

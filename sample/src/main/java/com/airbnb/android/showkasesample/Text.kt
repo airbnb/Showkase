@@ -29,16 +29,16 @@ import com.airbnb.android.showkase.ui.padding4x
  * }
  * ```
  */
-//@ShowkaseComposable(name = "Cursive Text Style", group = "Text")
-//@Preview
+@ShowkaseComposable(name = "Cursive Text Style", group = "Text")
+@Preview
 @Composable
-fun CursiveTextComponent(text: String) {
+fun CursiveTextComponent() {
     val context = ContextAmbient.current
     val string = context.getString(R.string.app_name)
 
     ShowkaseTheme {
         Card {
-            Text(text = text, modifier = Modifier.fillMaxWidth().padding(padding4x),
+            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Cursive)
             )
@@ -47,7 +47,7 @@ fun CursiveTextComponent(text: String) {
 }
 
 @ShowkaseComposable(name = "Serif Text Style", group = "Text")
-//@Preview
+@Preview
 @Composable
 fun SerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -64,7 +64,7 @@ fun SerifTextComponentPreview() {
 }
 
 @ShowkaseComposable(name = "Sans Serif Text Style", group = "Text")
-//@Preview
+@Preview
 @Composable
 fun SansSerifTextComponentPreview() {
     val context = ContextAmbient.current
@@ -111,12 +111,26 @@ class ParameterProvider : PreviewParameterProvider<Person> {
     override val count: Int
         get() = super.count
 
-} 
+}
 
-@Preview
 @Composable
-fun preview(
+fun H6TextRowComponentPreview(text: String) {
+    val context = ContextAmbient.current
+    
+    ShowkaseTheme {
+        Card {
+            Text(text = text,
+                modifier = Modifier.fillMaxWidth().padding(padding4x),
+                style = Material.h6
+            )
+        }
+    }
+}
+
+@Preview(name = "H6 Text Row", group = "Text")
+@Composable
+fun ComposableWithParameterPreview(
     @PreviewParameter(provider = ParameterProvider::class) person: Person
 ) {
-    CursiveTextComponent(person.name)
+    H6TextRowComponentPreview(person.name)
 }

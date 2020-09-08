@@ -85,6 +85,9 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 showkaseMetadata.showkaseHeightDp?.let {
                     addMember("showkaseHeightDp = %L", it)
                 }
+                showkaseMetadata.previewParameter?.let {
+                    addMember("previewParameterClass = [%T::class]", it)
+                }
             }
         }
         is ShowkaseMetadata.Color -> {

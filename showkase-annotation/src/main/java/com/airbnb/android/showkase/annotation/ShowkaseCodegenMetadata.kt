@@ -34,5 +34,6 @@ annotation class ShowkaseCodegenMetadata(
     val showkaseWidthDp: Int = -1,
     val showkaseHeightDp: Int = -1,
     val insideWrapperClass: Boolean = false,
-    val insideObject: Boolean = false
+    val insideObject: Boolean = false,
+    val previewParameterClass: Array<KClass<*>> = [],
 )

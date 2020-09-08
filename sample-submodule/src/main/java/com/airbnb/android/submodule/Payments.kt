@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.CoreTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.state
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +31,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.ui.tooling.preview.PreviewParameter
+import androidx.ui.tooling.preview.PreviewParameterProvider
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding4x
 
@@ -96,8 +97,34 @@ val creditCardOffsetMap = object : OffsetMap {
 }
 
 @ShowkaseComposable("Credit Card Component", "Payments")
-//@Preview
+@Preview
 @Composable
 fun CreditCardComponentPreview() {
     CreditCardComponent("John Doe")
+}
+
+
+data class DemoDataClass(
+    val name: String,
+    val age: Int
+)
+
+class NewParameterProvider : PreviewParameterProvider<DemoDataClass> {
+    override val values: Sequence<DemoDataClass>
+        get() = sequenceOf(
+            DemoDataClass("John", 12),
+            DemoDataClass("Doe", 20)
+        )
+
+    override val count: Int
+        get() = super.count
+
+}
+
+@Preview
+@Composable
+fun DemoComposablePreview(
+    @PreviewParameter(provider = NewParameterProvider::class) demoDataClass: DemoDataClass
+) {
+    Text(demoDataClass.name)
 }
