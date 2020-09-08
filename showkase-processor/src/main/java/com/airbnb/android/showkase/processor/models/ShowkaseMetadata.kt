@@ -105,15 +105,25 @@ internal enum class ShowkaseMetadataType {
 }
 
 internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata {
-    val enclosingClass = enclosingClass.getTypeMirror()
-    val previewParameterClass = previewParameterClass.getTypeMirror()
+    val enclosingClassTypeMirror = try {
+        enclosingClass
+        listOf<TypeMirror>()
+    } catch (mte: MirroredTypesException) {
+        mte.typeMirrors
+    }.firstOrNull()
+    val previewParameterClassTypeMirror = try {
+        previewParameterClass
+        listOf<TypeMirror>()
+    } catch (mte: MirroredTypesException) {
+        mte.typeMirrors
+    }.firstOrNull()
 
     return when(ShowkaseMetadataType.valueOf(showkaseMetadataType)) {
         ShowkaseMetadataType.COMPONENT -> {
             ShowkaseMetadata.Component(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClass,
+                enclosingClass = enclosingClassTypeMirror,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -123,14 +133,14 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 insideObject = insideObject,
                 showkaseKDoc = showkaseKDoc,
                 element = element,
-                previewParameter = previewParameterClass
+                previewParameter = previewParameterClassTypeMirror
             )
         }
         ShowkaseMetadataType.COLOR -> {
             ShowkaseMetadata.Color(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClass,
+                enclosingClass = enclosingClassTypeMirror,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -144,7 +154,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Typography(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClass,
+                enclosingClass = enclosingClassTypeMirror,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
