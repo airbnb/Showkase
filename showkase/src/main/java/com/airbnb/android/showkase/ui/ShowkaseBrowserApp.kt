@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
@@ -144,51 +145,55 @@ internal fun ShowkaseBodyContent(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
-    when (showkaseBrowserScreenMetadata.value.currentScreen) {
-        ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
-            ShowkaseCategoriesScreen(showkaseBrowserScreenMetadata)
-        }
-        ShowkaseCurrentScreen.COMPONENT_GROUPS -> {
-            ShowkaseComponentGroupsScreen(
-                groupedComponentMap,
-                showkaseBrowserScreenMetadata
-            )
-        }
-        ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP -> {
-            ShowkaseComponentsInAGroupScreen(
-                groupedComponentMap,
-                showkaseBrowserScreenMetadata
-            )
-        }
-        ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
-            ShowkaseComponentDetailScreen(
-                groupedComponentMap,
-                showkaseBrowserScreenMetadata
-            )
-        }
-        ShowkaseCurrentScreen.COLOR_GROUPS -> {
-            ShowkaseColorGroupsScreen(
-                groupedColorsMap, 
-                showkaseBrowserScreenMetadata
-            )
-        }
-        ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
-            ShowkaseColorsInAGroupScreen(
-                groupedColorsMap,
-                showkaseBrowserScreenMetadata
-            )
-        }
-        ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
-            ShowkaseTypographyGroupsScreen(
-                groupedTypographyMap,
-                showkaseBrowserScreenMetadata
-            )
-        }
-        ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP -> {
-            ShowkaseTypographyInAGroupScreen(
-                groupedTypographyMap,
-                showkaseBrowserScreenMetadata
-            )
+    Crossfade(
+        current = showkaseBrowserScreenMetadata.value.currentScreen,
+    ) { currentScreen ->
+        when (currentScreen) {
+            ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
+                ShowkaseCategoriesScreen(showkaseBrowserScreenMetadata)
+            }
+            ShowkaseCurrentScreen.COMPONENT_GROUPS -> {
+                ShowkaseComponentGroupsScreen(
+                    groupedComponentMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
+            ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP -> {
+                ShowkaseComponentsInAGroupScreen(
+                    groupedComponentMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
+            ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
+                ShowkaseComponentDetailScreen(
+                    groupedComponentMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
+            ShowkaseCurrentScreen.COLOR_GROUPS -> {
+                ShowkaseColorGroupsScreen(
+                    groupedColorsMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
+            ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
+                ShowkaseColorsInAGroupScreen(
+                    groupedColorsMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
+            ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
+                ShowkaseTypographyGroupsScreen(
+                    groupedTypographyMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
+            ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP -> {
+                ShowkaseTypographyInAGroupScreen(
+                    groupedTypographyMap,
+                    showkaseBrowserScreenMetadata
+                )
+            }
         }
     }
 }
