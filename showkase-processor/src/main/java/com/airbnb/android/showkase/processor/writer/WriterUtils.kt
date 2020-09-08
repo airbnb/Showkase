@@ -194,15 +194,8 @@ internal fun CodeBlock.Builder.doubleIndent() = indent().indent()
 
 internal fun CodeBlock.Builder.doubleUnindent() = unindent().unindent()
 
-internal fun CodeBlock.Builder.closeRoundBracket() {
-    add("\n)")
-}
+internal fun CodeBlock.Builder.closeRoundBracket() = addLineBreak().add(")")
 
-internal fun CodeBlock.Builder.closeCurlyBraces() {
-    add("\n}")
-}
+internal fun CodeBlock.Builder.closeCurlyBraces() = addLineBreak().add("}")
 
-internal fun CodeBlock.Builder.addLineBreak() {
-    add("\n")
-}
-
+internal fun CodeBlock.Builder.addLineBreak() = add("\n")

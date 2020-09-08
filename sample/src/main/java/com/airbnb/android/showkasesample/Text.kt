@@ -1,17 +1,17 @@
 package com.airbnb.android.showkasesample
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
 import androidx.ui.tooling.preview.PreviewParameterProvider
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -114,9 +114,7 @@ class ParameterProvider : PreviewParameterProvider<Person> {
 }
 
 @Composable
-fun H6TextRowComponentPreview(text: String) {
-    val context = ContextAmbient.current
-    
+fun H6TextRowComponent(text: String) {
     ShowkaseTheme {
         Card {
             Text(text = text,
@@ -129,8 +127,8 @@ fun H6TextRowComponentPreview(text: String) {
 
 @Preview(name = "H6 Text Row", group = "Text")
 @Composable
-fun ComposableWithParameterPreview(
+fun H6TextRowComponentPreview(
     @PreviewParameter(provider = ParameterProvider::class) person: Person
 ) {
-    H6TextRowComponentPreview(person.name)
+    H6TextRowComponent(person.name)
 }
