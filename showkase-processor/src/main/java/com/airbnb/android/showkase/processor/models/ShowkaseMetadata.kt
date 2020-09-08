@@ -18,6 +18,7 @@ import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
+import kotlin.reflect.KClass
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {
@@ -104,26 +105,15 @@ internal enum class ShowkaseMetadataType {
 }
 
 internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata {
-    val enclosingClassArray = try {
-        enclosingClass
-        listOf<TypeMirror>()
-    } catch (mte: MirroredTypesException) {
-        mte.typeMirrors
-    }
-
-    val previewParameterClassArray = try {
-        previewParameterClass
-        listOf<TypeMirror>()
-    } catch (mte: MirroredTypesException) {
-        mte.typeMirrors
-    }
+    val enclosingClass = enclosingClass.getTypeMirror()
+    val previewParameterClass = previewParameterClass.getTypeMirror()
 
     return when(ShowkaseMetadataType.valueOf(showkaseMetadataType)) {
         ShowkaseMetadataType.COMPONENT -> {
             ShowkaseMetadata.Component(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClassArray.firstOrNull(),
+                enclosingClass = enclosingClass,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -133,14 +123,14 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 insideObject = insideObject,
                 showkaseKDoc = showkaseKDoc,
                 element = element,
-                previewParameter = previewParameterClassArray.firstOrNull()
+                previewParameter = previewParameterClass
             )
         }
         ShowkaseMetadataType.COLOR -> {
             ShowkaseMetadata.Color(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClassArray.firstOrNull(),
+                enclosingClass = enclosingClass,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -154,7 +144,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Typography(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClassArray.firstOrNull(),
+                enclosingClass = enclosingClass,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -165,6 +155,16 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             )
         }
     }
+}
+
+private fun Array<KClass<*>>.getTypeMirror(): TypeMirror? {
+    val enclosingClassArray = try {
+        this
+        listOf<TypeMirror>()
+    } catch (mte: MirroredTypesException) {
+        mte.typeMirrors
+    }
+    return enclosingClassArray.firstOrNull()
 }
 
 private fun Int.parseAnnotationProperty() = when(this) {

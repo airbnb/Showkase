@@ -45,15 +45,16 @@ internal class ShowkaseValidator {
                             "them otherwise."
                 )
             }
-            // We only want to throw an error if the user used the Showkase annotation. For 
-            // @Preview annotations with parameter, we simply want to skip those. 
-            validateComposableParameters(
+            // Validate that only a single parameter is passed to these functions. In addition, 
+            // the parameter should be annotated with @PreviewParameter.
+            validateComposableParameter(
                 element as ExecutableElement, previewParameterTypeMirror,
                 typeUtils
             ) -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Make sure that the @Composable functions that you annotate with" +
-                            " the $annotationName annotation do not take in any parameters"
+                            " the $annotationName annotation only have a single parameter that is" +
+                            " annotated with @PreviewParameter."
                 )
             }
             else -> {
@@ -61,11 +62,12 @@ internal class ShowkaseValidator {
         }
     }
 
-    internal fun validateComposableParameters(
+    internal fun validateComposableParameter(
         element: ExecutableElement,
         previewParameterTypeMirror: TypeMirror,
         typeUtils: Types
     ): Boolean {
+        
         val incorrectParameters = element.parameters
             .filter { paramElement ->
                 val previewParameter = paramElement.annotationMirrors.find {
@@ -73,7 +75,10 @@ internal class ShowkaseValidator {
                 }
                 paramElement.annotationMirrors.isNotEmpty() && previewParameter == null
             }
-        return incorrectParameters.isNotEmpty()
+        
+        // Return true if more than one parameter was passed to the @Composable function or if 
+        // the parameter that was passed is not annotated with @PreviewParameter.
+        return element.parameters.size > 1 || incorrectParameters.isNotEmpty()
     }
 
     internal fun validateColorElement(
