@@ -140,6 +140,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     doubleUnindent()
 }
 
+@Suppress("LongParameterList")
 internal fun composePreviewFunctionLambda(
     functionPackageName: String,
     enclosingClass: TypeMirror? = null,

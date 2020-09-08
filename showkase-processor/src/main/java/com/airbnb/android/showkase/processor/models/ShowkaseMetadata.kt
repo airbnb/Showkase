@@ -105,18 +105,8 @@ internal enum class ShowkaseMetadataType {
 }
 
 internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata {
-    val enclosingClassTypeMirror = try {
-        enclosingClass
-        listOf<TypeMirror>()
-    } catch (mte: MirroredTypesException) {
-        mte.typeMirrors
-    }.firstOrNull()
-    val previewParameterClassTypeMirror = try {
-        previewParameterClass
-        listOf<TypeMirror>()
-    } catch (mte: MirroredTypesException) {
-        mte.typeMirrors
-    }.firstOrNull()
+    val (enclosingClassTypeMirror, previewParameterClassTypeMirror) = 
+        getCodegenMetadataTypeMirror()
 
     return when(ShowkaseMetadataType.valueOf(showkaseMetadataType)) {
         ShowkaseMetadataType.COMPONENT -> {
@@ -167,14 +157,20 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
     }
 }
 
-private fun Array<KClass<*>>.getTypeMirror(): TypeMirror? {
-    val enclosingClassArray = try {
-        this
+private fun ShowkaseCodegenMetadata.getCodegenMetadataTypeMirror(): Pair<TypeMirror?, TypeMirror?> {
+    val enclosingClassTypeMirror = try {
+        enclosingClass
         listOf<TypeMirror>()
     } catch (mte: MirroredTypesException) {
         mte.typeMirrors
-    }
-    return enclosingClassArray.firstOrNull()
+    }.firstOrNull()
+    val previewParameterClassTypeMirror = try {
+        previewParameterClass
+        listOf<TypeMirror>()
+    } catch (mte: MirroredTypesException) {
+        mte.typeMirrors
+    }.firstOrNull()
+    return enclosingClassTypeMirror to previewParameterClassTypeMirror
 }
 
 private fun Int.parseAnnotationProperty() = when(this) {
@@ -223,6 +219,7 @@ internal fun getShowkaseMetadata(
     )
 }
 
+@Suppress("LongParameterList")
 internal fun getShowkaseMetadataFromPreview(
     element: ExecutableElement,
     elementUtil: Elements,
