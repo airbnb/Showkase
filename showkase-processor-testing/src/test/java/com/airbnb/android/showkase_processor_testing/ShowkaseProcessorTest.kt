@@ -1024,6 +1024,127 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `top level composable function with preview parameter and showkase composable annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import androidx.ui.tooling.preview.PreviewParameter
+        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.runtime.Composable
+        
+        @ShowkaseComposable(name = "name", group = "group")
+        @Composable
+        fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
+            
+        }
+        
+        class ParameterProvider : PreviewParameterProvider<String> {
+            override val values: Sequence<String>
+                get() = sequenceOf(
+                    "String1",
+                    "String2"
+                )
+        
+            override val count: Int
+                get() = super.count
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `top level composable function with preview parameter and preview annotation generates only metadata file`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import androidx.ui.tooling.preview.Preview
+        import androidx.ui.tooling.preview.PreviewParameter
+        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.runtime.Composable
+        
+        @Preview(name = "name", group = "group")
+        @Composable
+        fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
+            
+        }
+        
+        class ParameterProvider : PreviewParameterProvider<String> {
+            override val values: Sequence<String>
+                get() = sequenceOf(
+                    "String1",
+                    "String2"
+                )
+        
+            override val count: Int
+                get() = super.count
+        }
+    """)
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
     fun `top level composable function with showkase and showkaseroot generates 1 file`() {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
@@ -2349,11 +2470,24 @@ class ShowkaseProcessorTest {
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
         import androidx.compose.runtime.Composable
+        import androidx.ui.tooling.preview.PreviewParameter
+        import androidx.ui.tooling.preview.PreviewParameterProvider
+        
+        class ParameterProvider : PreviewParameterProvider<String> {
+            override val values: Sequence<String>
+                get() = sequenceOf(
+                    "String1",
+                    "String2"
+                )
+        
+            override val count: Int
+                get() = super.count
+        }
         
         class WrapperClass {
             @ShowkaseComposable("name", "group")
             @Composable
-            fun TestComposable() {
+            fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
             
             }
         }
@@ -2368,6 +2502,7 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase
                 
                 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
                 import com.airbnb.android.showkase_processor_testing.WrapperClass
                 
                 class ShowkaseMetadataShowkase_processor_testing {
@@ -2381,7 +2516,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = true,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -4184,6 +4320,17 @@ class ShowkaseProcessorTest {
         import androidx.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
+        class ParameterProvider : PreviewParameterProvider<String> {
+            override val values: Sequence<String>
+                get() = sequenceOf(
+                    "String1",
+                    "String2"
+                )
+        
+            override val count: Int
+                get() = super.count
+        }
+        
         @ShowkaseComposable
         @Composable
         fun TestComposable() {
@@ -4194,17 +4341,6 @@ class ShowkaseProcessorTest {
         @Composable
         fun TestComposable2(@PreviewParameter(provider = ParameterProvider::class) text: String) {
             
-        }
-        
-        class ParameterProvider : PreviewParameterProvider<String> {
-            override val values: Sequence<String>
-                get() = sequenceOf(
-                    "String1",
-                    "String2"
-                )
-        
-            override val count: Int
-                get() = super.count
         }
     """)
 
@@ -4390,6 +4526,245 @@ class ShowkaseProcessorTest {
                                       componentName = "TestComposable2",
                                       componentKDoc = "",
                                       component = @Composable { TestComposable2(previewParam) }
+                                  )
+                              )
+                          }
+                      }
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+                
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+                
+                  override fun getShowkaseComponents() = componentList
+                
+                  override fun getShowkaseColors() = colorList
+                
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `wrapped function with showkase composable and preview parameter and showkaseroot `() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import androidx.ui.tooling.preview.PreviewParameter
+        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.runtime.Composable
+        
+        class ParameterProvider : PreviewParameterProvider<String> {
+            override val values: Sequence<String>
+                get() = sequenceOf(
+                    "String1",
+                    "String2"
+                )
+        
+            override val count: Int
+                get() = super.count
+        }
+        
+        class WrapperClass {
+            @ShowkaseComposable(name = "name", group = "group")
+            @Composable
+            fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
+                
+            }
+        }
+    """)
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> =
+                      mutableListOf<ShowkaseBrowserComponent>().apply {
+                          ParameterProvider().values.iterator().forEach { previewParam -> 
+                              add(
+                                  ShowkaseBrowserComponent(
+                                      group = "group",
+                                      componentName = "name",
+                                      componentKDoc = "",
+                                      component = @Composable { WrapperClass().TestComposable(previewParam) }
+                                  )
+                              )
+                          }
+                      }
+                
+                  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+                
+                  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+                
+                  override fun getShowkaseComponents() = componentList
+                
+                  override fun getShowkaseColors() = colorList
+                
+                  override fun getShowkaseTypography() = typographyList
+                }
+            """.trimIndent()
+            )
+        }
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.content.Context
+                import android.content.Intent
+                import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+                
+                fun createShowkaseBrowserIntent(context: Context): Intent {
+                    val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+                    intent.putExtra("SHOWKASE_ROOT_MODULE",
+                        "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+                    return intent
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `object function with preview annotation and preview parameter and showkaseroot`() {
+        val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import androidx.ui.tooling.preview.Preview
+        import androidx.ui.tooling.preview.PreviewParameter
+        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.runtime.Composable
+        
+        class ParameterProvider : PreviewParameterProvider<String> {
+            override val values: Sequence<String>
+                get() = sequenceOf(
+                    "String1",
+                    "String2"
+                )
+        
+            override val count: Int
+                get() = super.count
+        }
+        
+        object WrapperClass {
+            @Preview(name = "name", group = "group")
+            @Composable
+            fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
+                
+            }
+        }
+    """)
+
+        val kotlinShowkaseRootSource = SourceFile.kotlin("TestShowkaseRoot.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRoot
+        import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+        
+        @ShowkaseRoot
+        class TestShowkaseRoot: ShowkaseRootModule {
+        
+        }
+    """
+        )
+
+        val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }).isNotNull()
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootIntentCodegen.kt"
+        }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "TestShowkaseRootCodegen.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+                import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+                import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+                import com.airbnb.android.showkase.models.ShowkaseProvider
+                import kotlin.collections.List
+                
+                class TestShowkaseRootCodegen : ShowkaseProvider {
+                  val componentList: List<ShowkaseBrowserComponent> =
+                      mutableListOf<ShowkaseBrowserComponent>().apply {
+                          ParameterProvider().values.iterator().forEach { previewParam -> 
+                              add(
+                                  ShowkaseBrowserComponent(
+                                      group = "group",
+                                      componentName = "name",
+                                      componentKDoc = "",
+                                      component = @Composable { WrapperClass.TestComposable(previewParam) }
                                   )
                               )
                           }
