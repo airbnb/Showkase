@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -104,16 +105,16 @@ fun CreditCardComponentPreview() {
 }
 
 
-data class DemoDataClass(
+data class BankHeader(
     val name: String,
     val age: Int
 )
 
-class NewParameterProvider : PreviewParameterProvider<DemoDataClass> {
-    override val values: Sequence<DemoDataClass>
+class NewParameterProvider : PreviewParameterProvider<BankHeader> {
+    override val values: Sequence<BankHeader>
         get() = sequenceOf(
-            DemoDataClass("John", 12),
-            DemoDataClass("Doe", 20)
+            BankHeader("Citi", 12),
+            BankHeader("Goldman Sachs", 20)
         )
 
     override val count: Int
@@ -121,10 +122,18 @@ class NewParameterProvider : PreviewParameterProvider<DemoDataClass> {
 
 }
 
-@Preview
+@Preview(group = "Payments")
 @Composable
-fun DemoComposablePreview(
-    @PreviewParameter(provider = NewParameterProvider::class) demoDataClass: DemoDataClass
+fun BankHeaderPreview(
+    @PreviewParameter(provider = NewParameterProvider::class) bankHeader: BankHeader
 ) {
-    Text(demoDataClass.name)
+    MaterialTheme {
+        Card {
+            Text(
+                text = bankHeader.name,
+                modifier = Modifier.fillMaxWidth().padding(padding4x),
+                style = MaterialTheme.typography.h2
+            )
+        }
+    }
 }

@@ -117,7 +117,8 @@ class ParameterProvider : PreviewParameterProvider<Person> {
 fun H6TextRowComponent(text: String) {
     ShowkaseTheme {
         Card {
-            Text(text = text,
+            Text(
+                text = text,
                 modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = Material.h6
             )
@@ -128,7 +129,7 @@ fun H6TextRowComponent(text: String) {
 @Preview(name = "H6 Text Row", group = "Text")
 @Composable
 fun H6TextRowComponentPreview(
-    @PreviewParameter(provider = ParameterProvider::class, limit = 5) person: Person
+    @PreviewParameter(provider = ParameterProvider::class) person: Person
 ) {
     H6TextRowComponent(person.name)
 }
