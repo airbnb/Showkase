@@ -167,18 +167,24 @@ internal fun composePreviewFunctionLambda(
         }
         // It was declared inside a class.
         insideWrapperClass -> {
+            val composableFunctionString = previewParameter?.let {
+                "${composeFunctionName}(previewParam)"
+            } ?: "${composeFunctionName}()"
             CodeBlock.Builder()
                 .add(
-                    "\ncomponent = @%T { %T().${composeFunctionName}() }",
+                    "\ncomponent = @%T { %T().${composableFunctionString} }",
                     ShowkaseBrowserWriter.COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()
         }
         // It was declared inside an object or a companion object.
         insideObject -> {
+            val composableFunctionString = previewParameter?.let {
+                "${composeFunctionName}(previewParam)"
+            } ?: "${composeFunctionName}()"
             CodeBlock.Builder()
                 .add(
-                    "\ncomponent = @%T { %T.${composeFunctionName}() }",
+                    "\ncomponent = @%T { %T.${composableFunctionString} }",
                     ShowkaseBrowserWriter.COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()
