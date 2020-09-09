@@ -477,11 +477,11 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
         val error = "Make sure that the @Composable functions that you annotate with the " +
                 "@ShowkaseComposable annotation do not take in any parameters"
-        assertThat(result.messages.contains(error))
+        assertThat(result.messages).contains(error)
     }
 
     @Test
-    fun `composable function that has parameters with preview annotation compiles ok but skips the composable`() {
+    fun `composable function that has non preview parameters and preview annotation throws Exception`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import androidx.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
@@ -497,8 +497,11 @@ class ShowkaseProcessorTest {
         )
         val result = compileKotlinSource(listOf(kotlinSource))
 
-        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Make sure that the @Composable functions that you annotate with the Preview " +
+                "annotation only have a single parameter that is annotated with @PreviewParameter."
+        assertThat(result.messages).contains(error)
     }
 
     @Test
@@ -1074,7 +1077,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -1172,7 +1175,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -1267,7 +1270,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
                         ShowkaseBrowserColor(
@@ -1365,7 +1368,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
@@ -1469,7 +1472,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -1582,7 +1585,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -1689,7 +1692,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -1790,7 +1793,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -1889,7 +1892,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
                         ShowkaseBrowserColor(
@@ -1991,7 +1994,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
@@ -2090,7 +2093,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
                         ShowkaseBrowserColor(
@@ -2192,7 +2195,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
@@ -2295,7 +2298,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -2953,7 +2956,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "name",
@@ -3733,7 +3736,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "Default Group",
                             componentName = "TestComposable",
@@ -3831,7 +3834,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "group",
                             componentName = "TestComposable",
@@ -3929,7 +3932,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>(
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
                             group = "Default Group",
                             componentName = "TestComposable",
@@ -4029,7 +4032,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
                         ShowkaseBrowserColor(
@@ -4127,7 +4130,7 @@ class ShowkaseProcessorTest {
                 import kotlin.collections.List
                 
                 class TestShowkaseRootCodegen : ShowkaseProvider {
-                  val componentList: List<ShowkaseBrowserComponent> = listOf<ShowkaseBrowserComponent>()
+                  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
