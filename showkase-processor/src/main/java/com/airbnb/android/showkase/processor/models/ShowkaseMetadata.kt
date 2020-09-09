@@ -18,7 +18,6 @@ import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import kotlin.reflect.KClass
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {
@@ -291,11 +290,9 @@ private fun ExecutableElement.getPreviewParameterTypeMirror(
     val previewParametersMap =
         processPreviewParameterAnnotation(typeUtils, previewParameterTypeMirror)
             .firstOrNull()
-    val previewParameterTypeMirror =
-        previewParametersMap?.get(PreviewParameterProperty.PROVIDER)?.let {
-            elementUtil.getTypeElement(it.toString()).asType()
-        }
-    return previewParameterTypeMirror
+    return previewParametersMap?.get(PreviewParameterProperty.PROVIDER)?.let {
+        elementUtil.getTypeElement(it.toString()).asType()
+    }
 }
 
 private fun ExecutableElement.processPreviewParameterAnnotation(
@@ -303,22 +300,20 @@ private fun ExecutableElement.processPreviewParameterAnnotation(
     previewParameterTypeMirror: TypeMirror
 ) = parameters
     .map {
-        val map = mutableMapOf<PreviewParameterProperty, Any>()
         val previewParameterAnnotation = it.annotationMirrors.find {
             typeUtils.isSameType(it.annotationType, previewParameterTypeMirror)
         }
-        previewParameterAnnotation?.elementValues?.map { entry ->
-            val key = entry.key.simpleName.toString().toUpperCase(Locale.getDefault())
-            val value = entry.value.value.toString()
-
+        previewParameterAnnotation?.elementValues?.entries?.map { entry ->
+            val previewParameterPropertyName =
+                entry.key.simpleName.toString().toUpperCase(Locale.getDefault())
+            val previewParameterPropertyValue = entry.value.value.toString()
+            previewParameterPropertyName to previewParameterPropertyValue
+        }?.filter { pair ->
             // Only store the properties that we currently support in the annotation
-            if (PreviewParameterProperty.values().any { it.name == key }) {
-                val annotationProperty = PreviewParameterProperty.valueOf(key)
-                map[annotationProperty] =  value
-            }
-            
+            PreviewParameterProperty.values().any { it.name == pair.first }
+        }?.associate {
+            PreviewParameterProperty.valueOf(it.first) to it.second
         }
-        map
     }
 
 internal fun getShowkaseColorMetadata(

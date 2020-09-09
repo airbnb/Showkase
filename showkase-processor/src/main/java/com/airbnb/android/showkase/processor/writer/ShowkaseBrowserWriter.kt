@@ -57,12 +57,10 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
 
         val componentListInitializerCodeBlock =
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.mutableListInitializerCodeBlock()
-        val showkaseMetadataWithoutParameterList = showkaseMetadataSet.filter { 
-            it is ShowkaseMetadata.Component && it.previewParameter == null
-        }
-        val showkaseMetadataWithParameterList = showkaseMetadataSet.filter {
-            it is ShowkaseMetadata.Component && it.previewParameter != null
-        }
+        val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
+            showkaseMetadataSet.filterIsInstance<ShowkaseMetadata.Component>().partition {
+                it.previewParameter != null
+            }
 
         componentListInitializerCodeBlock.apply {
             showkaseMetadataWithoutParameterList.forEachIndexed { index, withoutParameterMetadata ->

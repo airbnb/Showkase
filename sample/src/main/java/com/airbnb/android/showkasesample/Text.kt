@@ -128,7 +128,7 @@ fun H6TextRowComponent(text: String) {
 @Preview(name = "H6 Text Row", group = "Text")
 @Composable
 fun H6TextRowComponentPreview(
-    @PreviewParameter(provider = ParameterProvider::class) person: Person
+    @PreviewParameter(provider = ParameterProvider::class, limit = 5) person: Person
 ) {
     H6TextRowComponent(person.name)
 }
