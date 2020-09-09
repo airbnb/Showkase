@@ -57,6 +57,7 @@ dependencies {
     implementation deps.compose.composeRuntime
     implementation deps.compose.core
     implementation deps.compose.foundation
+    implementation deps.compose.tooling
     androidTestImplementation deps.compose.uiTest
 
     // Testing

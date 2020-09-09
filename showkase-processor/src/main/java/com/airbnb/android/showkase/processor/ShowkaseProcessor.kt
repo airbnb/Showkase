@@ -1,8 +1,8 @@
 package com.airbnb.android.showkase.processor
 
-import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
@@ -104,31 +104,47 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
-    private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment) =
-        roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java).map { element ->
-            showkaseValidator.validateComponentElement(
-                element, composableTypeMirror, typeUtils,
-                ShowkaseComposable::class.java.simpleName
-            )
-            getShowkaseMetadata(
-                element = element as ExecutableElement, elementUtil = elementUtils, typeUtils = typeUtils,
-                showkaseValidator = showkaseValidator
-            )
-        }.toSet()
+    private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
+        val previewParameterTypeElement =
+            elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
+        previewParameterTypeElement?.let { previewParameter -> 
+            return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java)
+                .map { element ->
+                    showkaseValidator.validateComponentElement(
+                        element, composableTypeMirror, typeUtils,
+                        ShowkaseComposable::class.java.simpleName,
+                        previewParameterTypeElement.asType()
+                    )
+                    getShowkaseMetadata(
+                        element = element as ExecutableElement,
+                        elementUtil = elementUtils,
+                        typeUtils = typeUtils,
+                        showkaseValidator = showkaseValidator,
+                        previewParameterTypeMirror = previewParameter.asType()
+                    )
+                }.toSet()
+        } ?: return setOf()
+    }
+        
 
     private fun processPreviewAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
         val previewTypeElement = elementUtils.getTypeElement(PREVIEW_CLASS_NAME)
+        val previewParameterTypeElement = 
+            elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
         previewTypeElement?.let {
             return roundEnvironment.getElementsAnnotatedWith(previewTypeElement).mapNotNull { element ->
                 showkaseValidator.validateComponentElement(element, composableTypeMirror, typeUtils,
-                    previewTypeElement.simpleName.toString())
-                val showkaseMetadata = getShowkaseMetadataFromPreview(
-                    element as ExecutableElement, elementUtils, typeUtils, previewTypeElement.asType(),
-                    showkaseValidator
+                    previewTypeElement.simpleName.toString(), previewParameterTypeElement.asType())
+                getShowkaseMetadataFromPreview(
+                    element = element as ExecutableElement, 
+                    elementUtil = elementUtils, 
+                    typeUtils = typeUtils, 
+                    previewTypeMirror = previewTypeElement.asType(),
+                    previewParameterTypeMirror = previewParameterTypeElement.asType(), 
+                    showkaseValidator = showkaseValidator 
                 )
-                showkaseMetadata
             }.toSet()
-        } ?: return setOf<ShowkaseMetadata>()
+        } ?: return setOf()
     }
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
@@ -264,6 +280,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
         const val PREVIEW_CLASS_NAME = "androidx.ui.tooling.preview.Preview"
+        const val PREVIEW_PARAMETER_CLASS_NAME = "androidx.ui.tooling.preview.PreviewParameter"
         const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
 
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/

@@ -1,8 +1,8 @@
 package com.airbnb.android.showkase.processor.models
 
-import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
@@ -45,6 +45,7 @@ internal sealed class ShowkaseMetadata {
         override val insideObject: Boolean = false,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
+        val previewParameter: TypeMirror? = null
     ): ShowkaseMetadata()
 
     data class Color(
@@ -81,6 +82,11 @@ private enum class ShowkaseAnnotationProperty {
     HEIGHTDP,
 }
 
+private enum class PreviewParameterProperty {
+    PROVIDER,
+    LIMIT,
+}
+
 internal enum class ShowkaseFunctionType {
     TOP_LEVEL,
     INSIDE_CLASS,
@@ -98,19 +104,15 @@ internal enum class ShowkaseMetadataType {
 }
 
 internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata {
-    val enclosingClassArray = try {
-        enclosingClass
-        listOf<TypeMirror>()
-    } catch (mte: MirroredTypesException) {
-        mte.typeMirrors
-    }
+    val (enclosingClassTypeMirror, previewParameterClassTypeMirror) = 
+        getCodegenMetadataTypeMirror()
 
     return when(ShowkaseMetadataType.valueOf(showkaseMetadataType)) {
         ShowkaseMetadataType.COMPONENT -> {
             ShowkaseMetadata.Component(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClassArray.firstOrNull(),
+                enclosingClass = enclosingClassTypeMirror,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -119,14 +121,15 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 insideWrapperClass = insideWrapperClass,
                 insideObject = insideObject,
                 showkaseKDoc = showkaseKDoc,
-                element = element
+                element = element,
+                previewParameter = previewParameterClassTypeMirror
             )
         }
         ShowkaseMetadataType.COLOR -> {
             ShowkaseMetadata.Color(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClassArray.firstOrNull(),
+                enclosingClass = enclosingClassTypeMirror,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -140,7 +143,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
             ShowkaseMetadata.Typography(
                 packageSimpleName = packageSimpleName,
                 packageName = packageName,
-                enclosingClass = enclosingClassArray.firstOrNull(),
+                enclosingClass = enclosingClassTypeMirror,
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
@@ -153,6 +156,22 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
     }
 }
 
+private fun ShowkaseCodegenMetadata.getCodegenMetadataTypeMirror(): Pair<TypeMirror?, TypeMirror?> {
+    val enclosingClassTypeMirror = try {
+        enclosingClass
+        listOf<TypeMirror>()
+    } catch (mte: MirroredTypesException) {
+        mte.typeMirrors
+    }.firstOrNull()
+    val previewParameterClassTypeMirror = try {
+        previewParameterClass
+        listOf<TypeMirror>()
+    } catch (mte: MirroredTypesException) {
+        mte.typeMirrors
+    }.firstOrNull()
+    return enclosingClassTypeMirror to previewParameterClassTypeMirror
+}
+
 private fun Int.parseAnnotationProperty() = when(this) {
     -1 -> null
     else -> this
@@ -162,7 +181,8 @@ internal fun getShowkaseMetadata(
     element: ExecutableElement,
     elementUtil: Elements,
     typeUtils: Types,
-    showkaseValidator: ShowkaseValidator
+    showkaseValidator: ShowkaseValidator,
+    previewParameterTypeMirror: TypeMirror
 ): ShowkaseMetadata {
     val showkaseAnnotation = element.getAnnotation(ShowkaseComposable::class.java)
     val packageElement = elementUtil.getPackageOf(element)
@@ -175,6 +195,9 @@ internal fun getShowkaseMetadata(
     val showkaseName = getShowkaseName(showkaseAnnotation.name, elementName)
     val showkaseGroup = getShowkaseGroup(showkaseAnnotation.group, enclosingClassTypeMirror, 
         typeUtils)
+    val previewParameterTypeMirror = element.getPreviewParameterTypeMirror(
+        typeUtils, previewParameterTypeMirror, elementUtil
+    )
     
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
     
@@ -190,21 +213,23 @@ internal fun getShowkaseMetadata(
         insideObject = showkaseFunctionType.insideObject(),
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
-        showkaseKDoc = kDoc
+        showkaseKDoc = kDoc,
+        previewParameter = previewParameterTypeMirror
     )
 }
 
+@Suppress("LongParameterList")
 internal fun getShowkaseMetadataFromPreview(
     element: ExecutableElement,
     elementUtil: Elements,
     typeUtils: Types,
     previewTypeMirror: TypeMirror,
+    previewParameterTypeMirror: TypeMirror,
     showkaseValidator: ShowkaseValidator
 ): ShowkaseMetadata? {
     val previewAnnotationMirror = element.annotationMirrors.find {
         typeUtils.isSameType(it.annotationType, previewTypeMirror)
     }
-
     val map = mutableMapOf<ShowkaseAnnotationProperty, Any>()
     previewAnnotationMirror?.elementValues?.map { entry ->
         val key = entry.key.simpleName.toString().toUpperCase()
@@ -234,20 +259,11 @@ internal fun getShowkaseMetadataFromPreview(
         enclosingClassTypeMirror,
         typeUtils
     )
-
+    val previewParameterTypeMirror = element.getPreviewParameterTypeMirror(
+        typeUtils, previewParameterTypeMirror, elementUtil
+    )
+    
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
-
-    val numParameters = element.parameters.size
-    if (numParameters > 0) {
-        // We don't support @Composable preview functions that take in a parameter. So @ShowkaseComposable 
-        // annotation throws an error to notify the user. However, for the @Preview annotation, they 
-        // recently added support for functions that acccept a parameter(in their case, its a 
-        // data provider for showing some combinations in the preview. Since it's new, I want the
-        // API to stabilize a bit before I try to add support for it. Until then, I return early 
-        // to skip this composable. 
-        // TODO(vinaygaba): Maybe notify the user that we are skipping this Preview.
-        return null
-    }
     
     return ShowkaseMetadata.Component(
         packageSimpleName = moduleName,
@@ -261,9 +277,44 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseHeightDp = map[ShowkaseAnnotationProperty.HEIGHTDP]?.let { it as Int },
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType.insideObject(),
-        element = element
+        element = element,
+        previewParameter = previewParameterTypeMirror 
     )
 }
+
+private fun ExecutableElement.getPreviewParameterTypeMirror(
+    typeUtils: Types,
+    previewParameterTypeMirror: TypeMirror,
+    elementUtil: Elements
+): TypeMirror? {
+    val previewParametersMap =
+        processPreviewParameterAnnotation(typeUtils, previewParameterTypeMirror)
+            .firstOrNull()
+    return previewParametersMap?.get(PreviewParameterProperty.PROVIDER)?.let {
+        elementUtil.getTypeElement(it.toString()).asType()
+    }
+}
+
+private fun ExecutableElement.processPreviewParameterAnnotation(
+    typeUtils: Types,
+    previewParameterTypeMirror: TypeMirror
+) = parameters
+    .map {
+        val previewParameterAnnotation = it.annotationMirrors.find {
+            typeUtils.isSameType(it.annotationType, previewParameterTypeMirror)
+        }
+        previewParameterAnnotation?.elementValues?.entries?.map { entry ->
+            val previewParameterPropertyName =
+                entry.key.simpleName.toString().toUpperCase(Locale.getDefault())
+            val previewParameterPropertyValue = entry.value.value.toString()
+            previewParameterPropertyName to previewParameterPropertyValue
+        }?.filter { pair ->
+            // Only store the properties that we currently support in the annotation
+            PreviewParameterProperty.values().any { it.name == pair.first }
+        }?.associate {
+            PreviewParameterProperty.valueOf(it.first) to it.second
+        }
+    }
 
 internal fun getShowkaseColorMetadata(
     element: Element,

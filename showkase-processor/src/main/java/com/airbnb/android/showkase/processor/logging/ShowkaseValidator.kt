@@ -21,7 +21,8 @@ internal class ShowkaseValidator {
         element: Element,
         composableTypeMirror: TypeMirror,
         typeUtils: Types,
-        annotationName: String 
+        annotationName: String,
+        previewParameterTypeMirror: TypeMirror
     ) {
         val errorPrefix = "Error in ${element.simpleName}:"
         when {
@@ -44,17 +45,40 @@ internal class ShowkaseValidator {
                             "them otherwise."
                 )
             }
-            // We only want to throw an error if the user used the Showkase annotation. For 
-            // @Preview annotations with parameter, we simply want to skip those. 
-            annotationName == ShowkaseComposable::class.java.simpleName && 
-                    (element as ExecutableElement).parameters.size > 0 -> {
+            // Validate that only a single parameter is passed to these functions. In addition, 
+            // the parameter should be annotated with @PreviewParameter.
+            validateComposableParameter(
+                element as ExecutableElement, previewParameterTypeMirror,
+                typeUtils
+            ) -> {
                 throw ShowkaseProcessorException(
                     "$errorPrefix Make sure that the @Composable functions that you annotate with" +
-                            " the $annotationName annotation do not take in any parameters"
+                            " the $annotationName annotation only have a single parameter that is" +
+                            " annotated with @PreviewParameter."
                 )
             }
-            else -> { }
+            else -> {
+            }
         }
+    }
+
+    internal fun validateComposableParameter(
+        element: ExecutableElement,
+        previewParameterTypeMirror: TypeMirror,
+        typeUtils: Types
+    ): Boolean {
+        
+        val incorrectParameters = element.parameters
+            .filter { paramElement ->
+                val previewParameter = paramElement.annotationMirrors.find {
+                    typeUtils.isSameType(it.annotationType, previewParameterTypeMirror)
+                }
+                paramElement.annotationMirrors.isNotEmpty() && previewParameter == null
+            }
+        
+        // Return true if more than one parameter was passed to the @Composable function or if 
+        // the parameter that was passed is not annotated with @PreviewParameter.
+        return element.parameters.size > 1 || incorrectParameters.isNotEmpty()
     }
 
     internal fun validateColorElement(
@@ -76,7 +100,8 @@ internal class ShowkaseValidator {
             // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
             //  for this element adds a private modifier since it's a field. Potentially use 
             //  kotlinMetadata to enforce this check. 
-            else -> { }
+            else -> {
+            }
         }
     }
 
@@ -101,7 +126,8 @@ internal class ShowkaseValidator {
             // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
             //  for this element adds a private modifier since it's a field. Potentially use 
             //  kotlinMetadata to enforce this check. 
-            else -> { }
+            else -> {
+            }
         }
     }
 
@@ -111,7 +137,7 @@ internal class ShowkaseValidator {
         typeUtils: Types
     ) {
         if (elementSet.isEmpty()) return
-        
+
         val showkaseRootAnnotationName = ShowkaseRoot::class.java.simpleName
         val showkaseRootModuleName = ShowkaseRootModule::class.java.simpleName
 
@@ -127,8 +153,10 @@ internal class ShowkaseValidator {
                 val errorPrefix = "Error in ${element.simpleName}:"
 
                 requireClass(element, showkaseRootAnnotationName, errorPrefix)
-                requireInterface(element, elementUtils, typeUtils, showkaseRootAnnotationName,
-                    errorPrefix, showkaseRootModuleName)
+                requireInterface(
+                    element, elementUtils, typeUtils, showkaseRootAnnotationName,
+                    errorPrefix, showkaseRootModuleName
+                )
             }
         }
     }
@@ -168,7 +196,8 @@ internal class ShowkaseValidator {
         enclosingClassTypeMirror: TypeMirror?,
         typeUtils: Types
     ) {
-        val enclosingClassElement = enclosingClassTypeMirror?.let { typeUtils.asElement(it) } ?: return
+        val enclosingClassElement =
+            enclosingClassTypeMirror?.let { typeUtils.asElement(it) } ?: return
         val kmClass =
             (enclosingClassElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
         val errorPrefix = "Error in ${enclosingClassElement.simpleName}:"
