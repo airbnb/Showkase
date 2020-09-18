@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
@@ -47,8 +46,10 @@ internal fun ShowkaseBrowserApp(
                 modifier = Modifier.fillMaxSize(),
                 backgroundColor = SHOWKASE_COLOR_BACKGROUND
             ) {
-                ShowkaseBodyContent(groupedComponentMap, groupedColorsMap, groupedTypographyMap,
-                    showkaseBrowserScreenMetadata)
+                ShowkaseBodyContent(
+                    groupedComponentMap, groupedColorsMap, groupedTypographyMap,
+                    showkaseBrowserScreenMetadata
+                )
             }
         }
     )
@@ -122,9 +123,11 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
 @Composable
 private fun ShowkaseAppBarActions(metadata: MutableState<ShowkaseBrowserScreenMetadata>) {
     when {
-        metadata.value.isSearchActive -> { }
-        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL ||  
-        metadata.value.currentScreen == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> { }
+        metadata.value.isSearchActive -> {
+        }
+        metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL ||
+                metadata.value.currentScreen == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
+        }
         else -> {
             IconButton(
                 modifier = Modifier.testTag("SearchIcon"),
@@ -145,55 +148,51 @@ internal fun ShowkaseBodyContent(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
-    Crossfade(
-        current = showkaseBrowserScreenMetadata.value.currentScreen,
-    ) { currentScreen ->
-        when (currentScreen) {
-            ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
-                ShowkaseCategoriesScreen(showkaseBrowserScreenMetadata)
-            }
-            ShowkaseCurrentScreen.COMPONENT_GROUPS -> {
-                ShowkaseComponentGroupsScreen(
-                    groupedComponentMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
-            ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP -> {
-                ShowkaseComponentsInAGroupScreen(
-                    groupedComponentMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
-            ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
-                ShowkaseComponentDetailScreen(
-                    groupedComponentMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
-            ShowkaseCurrentScreen.COLOR_GROUPS -> {
-                ShowkaseColorGroupsScreen(
-                    groupedColorsMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
-            ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
-                ShowkaseColorsInAGroupScreen(
-                    groupedColorsMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
-            ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
-                ShowkaseTypographyGroupsScreen(
-                    groupedTypographyMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
-            ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP -> {
-                ShowkaseTypographyInAGroupScreen(
-                    groupedTypographyMap,
-                    showkaseBrowserScreenMetadata
-                )
-            }
+    when (showkaseBrowserScreenMetadata.value.currentScreen) {
+        ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
+            ShowkaseCategoriesScreen(showkaseBrowserScreenMetadata)
+        }
+        ShowkaseCurrentScreen.COMPONENT_GROUPS -> {
+            ShowkaseComponentGroupsScreen(
+                groupedComponentMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP -> {
+            ShowkaseComponentsInAGroupScreen(
+                groupedComponentMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
+            ShowkaseComponentDetailScreen(
+                groupedComponentMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.COLOR_GROUPS -> {
+            ShowkaseColorGroupsScreen(
+                groupedColorsMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.COLORS_IN_A_GROUP -> {
+            ShowkaseColorsInAGroupScreen(
+                groupedColorsMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS -> {
+            ShowkaseTypographyGroupsScreen(
+                groupedTypographyMap,
+                showkaseBrowserScreenMetadata
+            )
+        }
+        ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP -> {
+            ShowkaseTypographyInAGroupScreen(
+                groupedTypographyMap,
+                showkaseBrowserScreenMetadata
+            )
         }
     }
 }

@@ -47,7 +47,7 @@ internal fun ShowkaseColorsInAGroupScreen(
                     modifier = Modifier.fillParentMaxWidth()
                         .padding(padding4x),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalGravity = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = groupColorMetadata.colorName,

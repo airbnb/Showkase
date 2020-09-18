@@ -34,7 +34,7 @@ fun BottomNavigationAlwaysShowLabelComponent() {
                         Text(text = label)
                     },
                     selected = selectedIndex == index,
-                    onSelect = { selectedIndex = index }
+                    onClick = { selectedIndex = index }
                 )
             }
         }
