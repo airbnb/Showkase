@@ -148,7 +148,7 @@ internal fun ShowkaseBodyContent(
     Crossfade(
         current = showkaseBrowserScreenMetadata.value.currentScreen,
     ) { currentScreen ->
-        when (currentScreen) {
+        when (showkaseBrowserScreenMetadata.value.currentScreen) {
             ShowkaseCurrentScreen.SHOWKASE_CATEGORIES -> {
                 ShowkaseCategoriesScreen(showkaseBrowserScreenMetadata)
             }

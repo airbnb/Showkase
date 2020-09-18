@@ -109,7 +109,7 @@ private fun DocumentationPanel(kDoc: String) {
             .fillMaxWidth()
             .clickable(onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalGravity = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         ProvideTextStyle(value = MaterialTheme.typography.button) {
             Text(
