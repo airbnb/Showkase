@@ -105,18 +105,30 @@ internal fun CodeBlock.Builder.closeOrContinueListCodeBlock(
 }
 
 internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
-    showkaseMetadata: ShowkaseMetadata.Component
+    showkaseMetadata: ShowkaseMetadata.Component,
+    isParameterComponent: Boolean
 ) {
+    var componentKey = ("${showkaseMetadata.packageName}" +
+            "_${showkaseMetadata.enclosingClass}" +
+            "_${showkaseMetadata.showkaseGroup}" +
+            "_${showkaseMetadata.showkaseName}").replace(
+        "\\s".toRegex(),
+        ""
+    )
+    if (isParameterComponent) {
+        componentKey += "$" + "index"
+    }
     add(
         "%T(\n",
         ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
     )
     doubleIndent()
     add(
-        "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,",
+        "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
         showkaseMetadata.showkaseGroup,
         showkaseMetadata.showkaseName,
-        showkaseMetadata.showkaseKDoc
+        showkaseMetadata.showkaseKDoc,
+        componentKey,
     )
     showkaseMetadata.apply {
         showkaseWidthDp?.let {

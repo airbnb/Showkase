@@ -63,7 +63,8 @@ internal fun goBackToCategoriesScreen(
         else -> showkaseBrowserScreenMetadata.update {
             copy(
                 currentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
-                currentComponent = null,
+                currentComponentKey = null,
+                currentComponentName = null,
                 isSearchActive = false,
                 searchQuery = null,
                 currentGroup = null

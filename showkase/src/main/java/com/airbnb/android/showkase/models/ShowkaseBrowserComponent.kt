@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 // TODO(vinaygaba): Move it to a different module that has Android/Compose dependencies hoooked up. 
 // This was added here only because this module has compose dependencies.
 data class ShowkaseBrowserComponent(
+    val componentKey: String, 
     val group: String,
     val componentName: String,
     val componentKDoc: String,

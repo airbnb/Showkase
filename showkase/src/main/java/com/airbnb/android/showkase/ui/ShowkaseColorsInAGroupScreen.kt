@@ -82,7 +82,8 @@ private fun  goBackFromColorsInAGroupScreen(
         else -> showkaseBrowserScreenMetadata.update {
             copy(
                 currentScreen = ShowkaseCurrentScreen.COLOR_GROUPS,
-                currentComponent = null,
+                currentComponentKey = null,
+                currentComponentName = null,
                 isSearchActive = false,
                 searchQuery = null,
                 currentGroup = null

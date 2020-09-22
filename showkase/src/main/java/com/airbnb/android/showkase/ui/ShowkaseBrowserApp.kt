@@ -90,7 +90,7 @@ private fun ShowkaseAppBarTitle(metadata: MutableState<ShowkaseBrowserScreenMeta
             Text(metadata.value.currentGroup.orEmpty())
         }
         metadata.value.currentScreen == ShowkaseCurrentScreen.COMPONENT_DETAIL -> {
-            Text(metadata.value.currentComponent.orEmpty())
+            Text(metadata.value.currentComponentName.orEmpty())
         }
     }
 }

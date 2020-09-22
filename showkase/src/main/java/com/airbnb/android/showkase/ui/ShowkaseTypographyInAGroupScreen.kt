@@ -11,9 +11,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.scrollBy
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -60,7 +57,8 @@ private fun goBackFromTypographyInAGroupScreen(
             copy(
                 currentScreen = ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS,
                 currentGroup = null,
-                currentComponent = null,
+                currentComponentKey = null,
+                currentComponentName = null,
                 isSearchActive = false,
                 searchQuery = null
             )

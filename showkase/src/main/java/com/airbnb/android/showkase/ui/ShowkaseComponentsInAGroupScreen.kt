@@ -29,7 +29,8 @@ internal fun ShowkaseComponentsInAGroupScreen(
                     showkaseBrowserScreenMetadata.update {
                         copy(
                             currentScreen = ShowkaseCurrentScreen.COMPONENT_DETAIL,
-                            currentComponent = groupComponent.componentName,
+                            currentComponentKey = groupComponent.componentKey,
+                            currentComponentName = groupComponent.componentName,
                             isSearchActive = false
                         )
                     }
@@ -52,7 +53,8 @@ private fun goBackFromComponentsInAGroupScreen(
             copy(
                 currentScreen = ShowkaseCurrentScreen.COMPONENT_GROUPS,
                 currentGroup = null,
-                currentComponent = null,
+                currentComponentKey = null,
+                currentComponentName = null,
                 isSearchActive = false,
                 searchQuery = null
             )

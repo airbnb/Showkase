@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.models
 
+import android.content.ComponentName
 import androidx.compose.runtime.MutableState
 
 internal enum class ShowkaseCurrentScreen {
@@ -21,7 +22,8 @@ internal fun ShowkaseCurrentScreen.insideGroup() =
 internal data class ShowkaseBrowserScreenMetadata(
     val currentScreen: ShowkaseCurrentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
     val currentGroup: String? = null,
-    val currentComponent: String? = null,
+    val currentComponentName: String? = null,
+    val currentComponentKey: String? = null,
     val isSearchActive: Boolean = false,
     val searchQuery: String? = null,
 )

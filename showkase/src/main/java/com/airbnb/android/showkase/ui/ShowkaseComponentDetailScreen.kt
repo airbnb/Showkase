@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumnFor
@@ -59,7 +58,7 @@ internal fun ShowkaseComponentDetailScreen(
     val componentMetadataList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find {
-        it.componentName == showkaseBrowserScreenMetadata.value.currentComponent
+        it.componentKey == showkaseBrowserScreenMetadata.value.currentComponentKey
     } ?: return
     LazyColumnFor(
         modifier = Modifier.testTag("ShowkaseComponentDetailList"),
@@ -207,7 +206,8 @@ private fun back(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScre
     showkaseBrowserScreenMetadata.update {
         copy(
             currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
-            currentComponent = null,
+            currentComponentKey = null,
+            currentComponentName = null,
             isSearchActive = false,
             searchQuery = null
         )
