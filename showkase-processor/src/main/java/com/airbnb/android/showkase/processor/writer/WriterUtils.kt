@@ -106,7 +106,7 @@ internal fun CodeBlock.Builder.closeOrContinueListCodeBlock(
 
 internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     showkaseMetadata: ShowkaseMetadata.Component,
-    isParameterComponent: Boolean
+    isPreviewParameter: Boolean = false
 ) {
     var componentKey = ("${showkaseMetadata.packageName}" +
             "_${showkaseMetadata.enclosingClass}" +
@@ -115,8 +115,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         "\\s".toRegex(),
         ""
     )
-    if (isParameterComponent) {
-        componentKey += "$" + "index"
+    if (isPreviewParameter) {
+        componentKey += "_\$index"
     }
     add(
         "%T(\n",

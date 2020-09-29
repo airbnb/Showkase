@@ -66,7 +66,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             showkaseMetadataWithoutParameterList.forEachIndexed { index, withoutParameterMetadata ->
                 require(withoutParameterMetadata is ShowkaseMetadata.Component)
                 addLineBreak()
-                addShowkaseBrowserComponent(withoutParameterMetadata, false)
+                addShowkaseBrowserComponent(withoutParameterMetadata)
                 closeOrContinueListCodeBlock(index, showkaseMetadataWithoutParameterList.size - 1)
             }
             unindent()
