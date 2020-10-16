@@ -1,8 +1,9 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.IconButton
@@ -42,9 +43,8 @@ internal fun ShowkaseBrowserApp(
             ShowkaseAppBar(showkaseBrowserScreenMetadata)
         },
         bodyContent = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                backgroundColor = SHOWKASE_COLOR_BACKGROUND
+            Column(
+                modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
             ) {
                 ShowkaseBodyContent(
                     groupedComponentMap, groupedColorsMap, groupedTypographyMap,

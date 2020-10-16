@@ -1,8 +1,9 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.foundation.Box
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -58,12 +59,12 @@ internal fun ShowkaseColorsInAGroupScreen(
                             fontWeight = FontWeight.Bold
                         )
                     )
-                    Box(
+                    Column(
                         modifier = Modifier.padding(start = padding4x, end = padding4x)
                             .size(75.dp)
-                            .drawShadow(elevation = 5.dp),
-                        backgroundColor = groupColorMetadata.color,
-                    )
+                            .drawShadow(elevation = 5.dp)
+                            .background(color = groupColorMetadata.color)
+                    ){}
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.airbnb.android.showkasesample
 
-import androidx.compose.foundation.Box
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -55,11 +54,11 @@ fun SimpleRow(title: String, subtitle: String) {
                     )
                 )
             }, icon = {
-                Box(
+                Column(
                     modifier = Modifier.preferredWidth(60.dp)
                         .preferredHeight(60.dp)
                         .background(color = Color.Gray)
-                )
+                ) {}
             })
         }
     }
@@ -93,14 +92,14 @@ fun TitleSubtitleThumbnailRow() {
                     start.linkTo(image.end, margin = padding4x)
                 })
 
-                Box(modifier = Modifier.preferredHeight(72.dp)
+                Column(modifier = Modifier.preferredHeight(72.dp)
                     .preferredWidth(72.dp)
                     .background(color = Color.Gray)
                     .constrainAs(image) {
                         centerVerticallyTo(parent)
                         start.linkTo(parent.start, margin = padding4x)
                     }
-                )
+                ) {}
             }
         }
     }
