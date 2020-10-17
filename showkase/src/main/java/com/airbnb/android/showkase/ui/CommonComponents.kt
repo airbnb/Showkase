@@ -1,9 +1,9 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.foundation.Box
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Stack
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 
@@ -62,18 +61,18 @@ internal fun ComponentCard(
     val composableModifier = generateComposableModifier(metadata)
     val composableContainerModifier = generateContainerModifier(onClick)
     Card() {
-        Stack() {
-            Box(modifier = composableModifier) {
+        Box() {
+            Column(modifier = composableModifier) {
                 metadata.component()
             }
             // Need to add this as part of the stack so that we can intercept the touch of the 
             // component when we are on the "Group components" screen. If 
-            // composableContainerModifier does not have any clickable modifiers, this box has no
+            // composableContainerModifier does not have any clickable modifiers, this column has no
             // impact and the touches go through to the component(this happens in the "Component 
             // Detail" screen.
-            Box(
+            Column(
                 modifier = Modifier.matchParentSize().then(composableContainerModifier)
-            )
+            ){}
         }
 
     }

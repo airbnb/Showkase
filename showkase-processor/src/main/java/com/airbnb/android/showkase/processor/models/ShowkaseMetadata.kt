@@ -195,7 +195,7 @@ internal fun getShowkaseMetadata(
     val showkaseName = getShowkaseName(showkaseAnnotation.name, elementName)
     val showkaseGroup = getShowkaseGroup(showkaseAnnotation.group, enclosingClassTypeMirror, 
         typeUtils)
-    val previewParameterTypeMirror = element.getPreviewParameterTypeMirror(
+    val previewParamTypeMirror = element.getPreviewParameterTypeMirror(
         typeUtils, previewParameterTypeMirror, elementUtil
     )
     
@@ -214,7 +214,7 @@ internal fun getShowkaseMetadata(
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
         showkaseKDoc = kDoc,
-        previewParameter = previewParameterTypeMirror
+        previewParameter = previewParamTypeMirror
     )
 }
 
@@ -259,7 +259,7 @@ internal fun getShowkaseMetadataFromPreview(
         enclosingClassTypeMirror,
         typeUtils
     )
-    val previewParameterTypeMirror = element.getPreviewParameterTypeMirror(
+    val previewParamTypeMirror = element.getPreviewParameterTypeMirror(
         typeUtils, previewParameterTypeMirror, elementUtil
     )
     
@@ -278,7 +278,7 @@ internal fun getShowkaseMetadataFromPreview(
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType.insideObject(),
         element = element,
-        previewParameter = previewParameterTypeMirror 
+        previewParameter = previewParamTypeMirror 
     )
 }
 

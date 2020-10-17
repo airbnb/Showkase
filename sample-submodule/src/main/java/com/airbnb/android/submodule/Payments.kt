@@ -1,7 +1,5 @@
 package com.airbnb.android.submodule
 
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.ContentGravity
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -40,7 +39,11 @@ import com.airbnb.android.showkase.ui.padding4x
 @Composable
 fun CreditCardComponent(cardName: String) {
     MaterialTheme {
-        Box(modifier = Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize(), 
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Card(
                 shape = RoundedCornerShape(padding4x),
                 modifier = Modifier.preferredWidth(300.dp).aspectRatio(16 / 9f),

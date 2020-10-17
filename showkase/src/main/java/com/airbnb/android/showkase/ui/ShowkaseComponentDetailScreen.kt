@@ -2,17 +2,16 @@ package com.airbnb.android.showkase.ui
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.compose.foundation.Box
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.ProvideTextStyle
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumnFor
@@ -170,7 +169,7 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
         val updatedModifier = generateComposableModifier(metadata)
         Card(modifier = Modifier.fillMaxWidth()) {
             Providers(LayoutDirectionAmbient provides LayoutDirection.Rtl) {
-                Box(modifier = updatedModifier) {
+                Column(modifier = updatedModifier) {
                     metadata.component()
                 }
             }
