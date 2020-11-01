@@ -38,9 +38,12 @@ fun CursiveTextComponent() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Cursive)
+            Text(
+                text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+                style = TextStyle(
+                    fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Cursive
+                )
             )
         }
     }
@@ -55,9 +58,12 @@ fun SerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif)
+            Text(
+                text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+                style = TextStyle(
+                    fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Serif
+                )
             )
         }
     }
@@ -72,9 +78,12 @@ fun SansSerifTextComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.SansSerif)
+            Text(
+                text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+                style = TextStyle(
+                    fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif
+                )
             )
         }
     }
@@ -88,7 +97,8 @@ fun H4TextRowComponentPreview() {
 
     ShowkaseTheme {
         Card {
-            Text(text = string, 
+            Text(
+                text = string,
                 modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = Material.h4
             )
