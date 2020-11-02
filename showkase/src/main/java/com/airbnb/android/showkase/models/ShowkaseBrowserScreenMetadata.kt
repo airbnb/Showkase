@@ -1,8 +1,6 @@
 package com.airbnb.android.showkase.models
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.navigation.NavHostController
 
 internal enum class ShowkaseCurrentScreen {
     COMPONENT_GROUPS,
@@ -28,7 +26,6 @@ internal data class ShowkaseBrowserScreenMetadata(
 )
 
 internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
-    Log.e("Clearing Search", "Clearing Search")
     update {
         copy(
             isSearchActive = false,
@@ -39,5 +36,4 @@ internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
 
 internal fun <T> MutableState<T>.update(block: T.() -> T) {
     value = this.component1().run(block)
-    Log.e("Metadat value", value.toString())
 }

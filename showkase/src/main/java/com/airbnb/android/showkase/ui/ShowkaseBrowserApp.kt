@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.ui
 
-import android.util.Log
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -156,7 +155,6 @@ private fun ShowkaseAppBarActions(
                 modifier = Modifier.testTag("SearchIcon"),
                 onClick = {
                     metadata.value = metadata.value.copy(isSearchActive = true)
-                    Log.e("Metadata updated search", metadata.value.toString())
                 }
             ) {
                 Icon(asset = Icons.Filled.Search)

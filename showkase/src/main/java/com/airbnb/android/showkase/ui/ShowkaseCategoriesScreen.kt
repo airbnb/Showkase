@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.ui
 
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.runtime.Composable
@@ -71,7 +70,6 @@ internal fun goBackToCategoriesScreen(
     when {
         showkaseBrowserScreenMetadata.value.isSearchActive -> {
             showkaseBrowserScreenMetadata.clearActiveSearch()
-            Log.e("goBackToCategories clear", showkaseBrowserScreenMetadata.toString())
         }
         else ->  {
             showkaseBrowserScreenMetadata.update {
@@ -82,7 +80,6 @@ internal fun goBackToCategoriesScreen(
                     currentGroup = null
                 )
             }
-            Log.e("goBackToCategories else", showkaseBrowserScreenMetadata.toString())
             navHostController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name)
         }
     }
