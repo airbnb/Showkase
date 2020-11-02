@@ -72,7 +72,7 @@ internal fun ShowkaseColorsInAGroupScreen(
             }
         }
     )
-    BackButtonHandler(navController) {
+    BackButtonHandler {
         goBackFromColorsInAGroupScreen(showkaseBrowserScreenMetadata, navController)
     }
 }

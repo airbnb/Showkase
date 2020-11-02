@@ -45,7 +45,7 @@ internal fun ShowkaseTypographyInAGroupScreen(
             Divider()
         }
     )
-    BackButtonHandler(navController) {
+    BackButtonHandler {
         goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata, navController)
     }
 }

@@ -47,7 +47,7 @@ internal fun ShowkaseCategoriesScreen(
             }
         )
     }
-    BackButtonHandler(navHostController) {
+    BackButtonHandler {
         goBackFromCategoriesScreen(activity, showkaseBrowserScreenMetadata)
     }
 }

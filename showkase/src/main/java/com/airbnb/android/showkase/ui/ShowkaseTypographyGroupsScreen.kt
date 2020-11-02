@@ -36,7 +36,7 @@ internal fun ShowkaseTypographyGroupsScreen(
             }
         )
     })
-    BackButtonHandler(navController) {
+    BackButtonHandler {
         goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController)
     }
 }

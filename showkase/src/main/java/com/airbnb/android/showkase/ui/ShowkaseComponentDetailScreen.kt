@@ -82,7 +82,7 @@ internal fun ShowkaseComponentDetailScreen(
             }
         }
     })
-    BackButtonHandler(navController) {
+    BackButtonHandler {
         back(showkaseBrowserScreenMetadata, navController)
     }
     

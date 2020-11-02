@@ -36,7 +36,7 @@ internal fun ShowkaseComponentGroupsScreen(
             }
         )
     })
-    BackButtonHandler(navController) {
+    BackButtonHandler {
         goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController)
     }
 }

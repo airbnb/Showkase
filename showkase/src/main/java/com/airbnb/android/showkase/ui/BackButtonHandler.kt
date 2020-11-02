@@ -49,15 +49,11 @@ internal fun handler(
 
 @Composable
 internal fun BackButtonHandler(
-    navController: NavHostController,
     onBackPressed: () -> Unit, 
 ) {
     var context = ContextAmbient.current
     while (context is ContextWrapper) {
         if (context is OnBackPressedDispatcherOwner) {
-            navController.setOnBackPressedDispatcher(
-                (context as OnBackPressedDispatcherOwner).onBackPressedDispatcher
-            )
             break
         }
         context = context.baseContext
