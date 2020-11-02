@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
 import java.util.Locale
@@ -72,14 +73,7 @@ internal fun goBackToCategoriesScreen(
             showkaseBrowserScreenMetadata.clearActiveSearch()
         }
         else ->  {
-            showkaseBrowserScreenMetadata.update {
-                copy(
-                    currentComponent = null,
-                    isSearchActive = false,
-                    searchQuery = null,
-                    currentGroup = null
-                )
-            }
+            showkaseBrowserScreenMetadata.clear()
             navHostController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name)
         }
     }

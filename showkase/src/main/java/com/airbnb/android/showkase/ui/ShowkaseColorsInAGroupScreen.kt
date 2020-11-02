@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
 
@@ -85,14 +86,7 @@ private fun  goBackFromColorsInAGroupScreen(
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
-            showkaseBrowserScreenMetadata.update {
-                copy(
-                    currentComponent = null,
-                    isSearchActive = false,
-                    searchQuery = null,
-                    currentGroup = null
-                )
-            }
+            showkaseBrowserScreenMetadata.clear()
             navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS.name)
         }
     }

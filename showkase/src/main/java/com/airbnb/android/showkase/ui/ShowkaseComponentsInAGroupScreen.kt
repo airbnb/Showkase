@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
 
@@ -53,14 +54,7 @@ private fun goBackFromComponentsInAGroupScreen(
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
-            showkaseBrowserScreenMetadata.update {
-                copy(
-                    currentGroup = null,
-                    currentComponent = null,
-                    isSearchActive = false,
-                    searchQuery = null
-                )
-            }
+            showkaseBrowserScreenMetadata.clear()
             navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS.name)
         }
     }

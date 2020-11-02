@@ -25,6 +25,17 @@ internal data class ShowkaseBrowserScreenMetadata(
     val searchQuery: String? = null,
 )
 
+internal fun MutableState<ShowkaseBrowserScreenMetadata>.clear() {
+    update {
+        copy(
+            isSearchActive = false,
+            searchQuery = null,
+            currentComponent = null,
+            currentGroup = null
+        )
+    }
+}
+
 internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
     update {
         copy(

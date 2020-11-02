@@ -4,15 +4,12 @@ import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.runtime.onCommit
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticAmbientOf
 import androidx.compose.ui.platform.ContextAmbient
-import androidx.compose.ui.platform.LifecycleOwnerAmbient
-import androidx.navigation.NavHostController
 
 /**
  * Related discussion - 
@@ -52,6 +49,11 @@ internal fun BackButtonHandler(
     onBackPressed: () -> Unit, 
 ) {
     var context = ContextAmbient.current
+    // Inspired from https://cs.android.com/androidx/platform/frameworks/support/+/
+    // androidx-master-dev:navigation/navigation-compose/src/main/java/androidx/navigation/
+    // compose/NavHost.kt;l=88
+    // This was necessary because using Jetpack Navigation does not allow typecasting a 
+    // NavBackStackEntry to LifecycleOwnerAmbient.
     while (context is ContextWrapper) {
         if (context is OnBackPressedDispatcherOwner) {
             break
