@@ -1,6 +1,8 @@
 package com.airbnb.android.showkase.models
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.navigation.NavHostController
 
 internal enum class ShowkaseCurrentScreen {
     COMPONENT_GROUPS,
@@ -13,13 +15,12 @@ internal enum class ShowkaseCurrentScreen {
     TYPOGRAPHY_IN_A_GROUP,
 }
 
-internal fun ShowkaseCurrentScreen.insideGroup() =
-    this == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP ||
-            this == ShowkaseCurrentScreen.COLORS_IN_A_GROUP ||
-            this == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP
+internal fun String?.insideGroup() =
+    this == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name ||
+            this == ShowkaseCurrentScreen.COLORS_IN_A_GROUP.name ||
+            this == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name
 
 internal data class ShowkaseBrowserScreenMetadata(
-    val currentScreen: ShowkaseCurrentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
     val currentGroup: String? = null,
     val currentComponent: String? = null,
     val isSearchActive: Boolean = false,
@@ -27,6 +28,7 @@ internal data class ShowkaseBrowserScreenMetadata(
 )
 
 internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
+    Log.e("Clearing Search", "Clearing Search")
     update {
         copy(
             isSearchActive = false,
@@ -37,4 +39,5 @@ internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
 
 internal fun <T> MutableState<T>.update(block: T.() -> T) {
     value = this.component1().run(block)
+    Log.e("Metadat value", value.toString())
 }

@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -29,7 +31,8 @@ import com.airbnb.android.showkase.models.update
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val groupColorsList =
         groupedColorsMap[showkaseBrowserScreenMetadata.value.currentGroup]
@@ -69,25 +72,28 @@ internal fun ShowkaseColorsInAGroupScreen(
             }
         }
     )
-    BackButtonHandler {
-        goBackFromColorsInAGroupScreen(showkaseBrowserScreenMetadata)
+    BackButtonHandler(navController) {
+        goBackFromColorsInAGroupScreen(showkaseBrowserScreenMetadata, navController)
     }
 }
 
 private fun  goBackFromColorsInAGroupScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> showkaseBrowserScreenMetadata.update {
-            copy(
-                currentScreen = ShowkaseCurrentScreen.COLOR_GROUPS,
-                currentComponent = null,
-                isSearchActive = false,
-                searchQuery = null,
-                currentGroup = null
-            )
+        else -> {
+            showkaseBrowserScreenMetadata.update {
+                copy(
+                    currentComponent = null,
+                    isSearchActive = false,
+                    searchQuery = null,
+                    currentGroup = null
+                )
+            }
+            navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS.name)
         }
     }
 }

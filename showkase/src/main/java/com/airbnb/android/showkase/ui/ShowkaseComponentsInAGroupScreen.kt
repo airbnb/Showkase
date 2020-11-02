@@ -3,6 +3,8 @@ package com.airbnb.android.showkase.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.runtime.MutableState
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -12,7 +14,8 @@ import com.airbnb.android.showkase.models.update
 @Composable
 internal fun ShowkaseComponentsInAGroupScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val groupComponentsList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
@@ -28,34 +31,37 @@ internal fun ShowkaseComponentsInAGroupScreen(
                 onClick = {
                     showkaseBrowserScreenMetadata.update {
                         copy(
-                            currentScreen = ShowkaseCurrentScreen.COMPONENT_DETAIL,
                             currentComponent = groupComponent.componentName,
                             isSearchActive = false
                         )
                     }
+                    navController.navigate(ShowkaseCurrentScreen.COMPONENT_DETAIL.name)
                 }
             )
         }
     )
-    BackButtonHandler {
-        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata)
+    BackButtonHandler(navController) {
+        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata, navController)
     }
 }
 
 private fun goBackFromComponentsInAGroupScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> showkaseBrowserScreenMetadata.update {
-            copy(
-                currentScreen = ShowkaseCurrentScreen.COMPONENT_GROUPS,
-                currentGroup = null,
-                currentComponent = null,
-                isSearchActive = false,
-                searchQuery = null
-            )
+        else -> {
+            showkaseBrowserScreenMetadata.update {
+                copy(
+                    currentGroup = null,
+                    currentComponent = null,
+                    isSearchActive = false,
+                    searchQuery = null
+                )
+            }
+            navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS.name)
         }
     }
 }

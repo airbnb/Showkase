@@ -1,14 +1,18 @@
 package com.airbnb.android.showkase.ui
 
+import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcherOwner
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.runtime.onCommit
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticAmbientOf
+import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.platform.LifecycleOwnerAmbient
+import androidx.navigation.NavHostController
 
 /**
  * Related discussion - 
@@ -44,9 +48,22 @@ internal fun handler(
 }
 
 @Composable
-internal fun BackButtonHandler(onBackPressed: () -> Unit) {
+internal fun BackButtonHandler(
+    navController: NavHostController,
+    onBackPressed: () -> Unit, 
+) {
+    var context = ContextAmbient.current
+    while (context is ContextWrapper) {
+        if (context is OnBackPressedDispatcherOwner) {
+            navController.setOnBackPressedDispatcher(
+                (context as OnBackPressedDispatcherOwner).onBackPressedDispatcher
+            )
+            break
+        }
+        context = context.baseContext
+    }
     Providers(
-        AmbientBackPressedDispatcher provides LifecycleOwnerAmbient.current as ComponentActivity
+        AmbientBackPressedDispatcher provides context as ComponentActivity
     ) {
         handler {
             onBackPressed()
