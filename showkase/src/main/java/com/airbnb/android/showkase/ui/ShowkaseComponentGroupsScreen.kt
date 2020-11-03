@@ -1,10 +1,10 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.platform.LifecycleOwnerAmbient
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -13,7 +13,8 @@ import com.airbnb.android.showkase.models.update
 @Composable
 internal fun ShowkaseComponentGroupsScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val filteredList = getFilteredSearchList(
         groupedComponentMap.keys.sorted(),
@@ -26,17 +27,17 @@ internal fun ShowkaseComponentGroupsScreen(
             onClick = {
                 showkaseBrowserScreenMetadata.update {
                     copy(
-                        currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
                         currentGroup = group,
                         isSearchActive = false,
                         searchQuery = null
                     )
                 }
+                navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
             }
         )
     })
     BackButtonHandler {
-        goBackToCategoriesScreen(showkaseBrowserScreenMetadata)
+        goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController)
     }
 }
 
