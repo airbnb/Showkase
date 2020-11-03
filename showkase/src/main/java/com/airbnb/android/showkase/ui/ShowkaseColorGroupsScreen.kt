@@ -31,7 +31,7 @@ internal fun ShowkaseColorGroupsScreen(
                         searchQuery = null
                     ) 
                 }
-                navController.navigate(ShowkaseCurrentScreen.COLORS_IN_A_GROUP.name)
+                navController.navigate(ShowkaseCurrentScreen.COLORS_IN_A_GROUP)
             }
         )
     })

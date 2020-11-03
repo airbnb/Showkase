@@ -18,7 +18,7 @@ import java.util.Locale
 @Composable
 internal fun ShowkaseCategoriesScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navHostController: NavHostController
+    navController: NavHostController
 ) {
     val activity = ContextAmbient.current as  AppCompatActivity
     LazyColumnFor(items = ShowkaseCategory.values().toList()) { category ->
@@ -34,14 +34,14 @@ internal fun ShowkaseCategoriesScreen(
                     )
                 }
                 when(category) {
-                    ShowkaseCategory.COMPONENTS -> navHostController.navigate(
-                        ShowkaseCurrentScreen.COMPONENT_GROUPS.name
+                    ShowkaseCategory.COMPONENTS -> navController.navigate(
+                        ShowkaseCurrentScreen.COMPONENT_GROUPS
                     )
-                    ShowkaseCategory.COLORS -> navHostController.navigate(
-                        ShowkaseCurrentScreen.COLOR_GROUPS.name
+                    ShowkaseCategory.COLORS -> navController.navigate(
+                        ShowkaseCurrentScreen.COLOR_GROUPS
                     )
-                    ShowkaseCategory.TYPOGRAPHY -> navHostController.navigate(
-                        ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name
+                    ShowkaseCategory.TYPOGRAPHY -> navController.navigate(
+                        ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS
                     )
                 }
             }
@@ -65,7 +65,7 @@ private fun goBackFromCategoriesScreen(
 
 internal fun goBackToCategoriesScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navHostController: NavHostController
+    navController: NavHostController
 ) {
     
     when {
@@ -74,7 +74,7 @@ internal fun goBackToCategoriesScreen(
         }
         else ->  {
             showkaseBrowserScreenMetadata.clear()
-            navHostController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name)
+            navController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
         }
     }
 }

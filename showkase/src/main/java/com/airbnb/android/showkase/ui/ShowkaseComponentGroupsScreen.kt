@@ -32,7 +32,7 @@ internal fun ShowkaseComponentGroupsScreen(
                         searchQuery = null
                     )
                 }
-                navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name)
+                navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
             }
         )
     })

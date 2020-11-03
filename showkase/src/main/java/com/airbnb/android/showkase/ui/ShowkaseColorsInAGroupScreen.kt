@@ -87,7 +87,7 @@ private fun  goBackFromColorsInAGroupScreen(
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
             showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS.name)
+            navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS)
         }
     }
 }

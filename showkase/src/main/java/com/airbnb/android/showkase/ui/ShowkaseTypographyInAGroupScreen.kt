@@ -60,7 +60,7 @@ private fun goBackFromTypographyInAGroupScreen(
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
             showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name)
+            navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
         }
     }
 }

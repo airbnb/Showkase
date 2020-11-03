@@ -28,6 +28,7 @@ import androidx.navigation.compose.KEY_ROUTE
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
@@ -232,3 +233,9 @@ internal fun ShowkaseBodyContent(
         }
     }
 }
+
+/**
+ * Helper function to navigate to the passed [ShowkaseCurrentScreen]
+ */
+internal fun NavHostController.navigate(destinationScreen: ShowkaseCurrentScreen) = 
+    navigate(destinationScreen.name)

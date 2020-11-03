@@ -32,7 +32,7 @@ internal fun ShowkaseTypographyGroupsScreen(
                         searchQuery = null
                     )
                 }
-                navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name)
+                navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
             }
         )
     })

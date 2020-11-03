@@ -36,7 +36,7 @@ internal fun ShowkaseComponentsInAGroupScreen(
                             isSearchActive = false
                         )
                     }
-                    navController.navigate(ShowkaseCurrentScreen.COMPONENT_DETAIL.name)
+                    navController.navigate(ShowkaseCurrentScreen.COMPONENT_DETAIL)
                 }
             )
         }
@@ -55,7 +55,7 @@ private fun goBackFromComponentsInAGroupScreen(
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
             showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS.name)
+            navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS)
         }
     }
 }
