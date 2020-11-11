@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.ui
 
-import android.graphics.Color
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
@@ -39,8 +38,6 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
-import org.w3c.dom.Text
-import java.time.format.TextStyle
 
 @Composable
 internal fun ShowkaseBrowserApp(
