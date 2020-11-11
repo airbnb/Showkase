@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
@@ -53,7 +55,8 @@ import java.util.Locale
 @Composable
 internal fun ShowkaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val componentMetadataList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
@@ -80,7 +83,7 @@ internal fun ShowkaseComponentDetailScreen(
         }
     })
     BackButtonHandler {
-        back(showkaseBrowserScreenMetadata)
+        back(showkaseBrowserScreenMetadata, navController)
     }
     
 }
@@ -202,13 +205,16 @@ internal fun generateComposableModifier(metadata: ShowkaseBrowserComponent): Mod
     }
 }
 
-private fun back(showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>) {
+private fun back(
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
+) {
     showkaseBrowserScreenMetadata.update {
         copy(
-            currentScreen = ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP,
             currentComponent = null,
             isSearchActive = false,
             searchQuery = null
         )
     }
+    navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
 }

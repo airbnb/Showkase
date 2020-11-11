@@ -3,6 +3,8 @@ package com.airbnb.android.showkase.ui
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -11,7 +13,8 @@ import com.airbnb.android.showkase.models.update
 @Composable
 internal fun ShowkaseColorGroupsScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val filteredList = getFilteredSearchList(
         groupedColorsMap.keys.sorted(),
@@ -23,16 +26,16 @@ internal fun ShowkaseColorGroupsScreen(
             onClick = {
                 showkaseBrowserScreenMetadata.update {
                     copy(
-                        currentScreen = ShowkaseCurrentScreen.COLORS_IN_A_GROUP,
                         currentGroup = group,
                         isSearchActive = false,
                         searchQuery = null
                     ) 
                 }
+                navController.navigate(ShowkaseCurrentScreen.COLORS_IN_A_GROUP)
             }
         )
     })
     BackButtonHandler {
-        goBackToCategoriesScreen(showkaseBrowserScreenMetadata)
+        goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController)
     }
 }

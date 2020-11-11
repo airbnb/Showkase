@@ -11,12 +11,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.scrollBy
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
 import java.util.Locale
@@ -24,7 +24,8 @@ import java.util.Locale
 @Composable
 internal fun ShowkaseTypographyInAGroupScreen(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val groupTypographyList =
         groupedTypographyMap[showkaseBrowserScreenMetadata.value.currentGroup]
@@ -46,24 +47,20 @@ internal fun ShowkaseTypographyInAGroupScreen(
         }
     )
     BackButtonHandler {
-        goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata)
+        goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata, navController)
     }
 }
 
 private fun goBackFromTypographyInAGroupScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> showkaseBrowserScreenMetadata.update {
-            copy(
-                currentScreen = ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS,
-                currentGroup = null,
-                currentComponent = null,
-                isSearchActive = false,
-                searchQuery = null
-            )
+        else -> {
+            showkaseBrowserScreenMetadata.clear()
+            navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
         }
     }
 }

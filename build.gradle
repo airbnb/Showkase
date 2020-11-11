@@ -5,6 +5,7 @@ buildscript {
             'androidXTestRules':'1.1.0',
             'assertJ': '3.16.1',
             'compose': '1.0.0-alpha06',
+            'composeNavigation': '1.0.0-alpha01',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
             'gradle': '4.2.0-alpha15',
@@ -27,6 +28,7 @@ buildscript {
             'autoService': "com.google.auto.service:auto-service:${versions.autoService}",
             'compose': [
                     'composeComplier': "androidx.compose:compose-compiler:${versions.compose}",
+                    'composeNavigation': "androidx.navigation:navigation-compose:${versions.composeNavigation}",
                     'composeRuntime': "androidx.compose.runtime:runtime:${versions.compose}",
                     'core': "androidx.compose.ui:ui:${versions.compose}",
                     'foundation': "androidx.compose.foundation:foundation:${versions.compose}",
