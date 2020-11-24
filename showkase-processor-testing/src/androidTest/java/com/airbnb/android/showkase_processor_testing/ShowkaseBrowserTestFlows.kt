@@ -1,16 +1,16 @@
 package com.airbnb.android.showkase_processor_testing
 
 import androidx.activity.ComponentActivity
-import androidx.ui.test.AndroidComposeTestRule
-import androidx.ui.test.assertCountEquals
-import androidx.ui.test.assertIsDisplayed
-import androidx.ui.test.onChildren
-import androidx.ui.test.onNodeWithTag
-import androidx.ui.test.onNodeWithText
-import androidx.ui.test.performClick
-import androidx.ui.test.performGesture
-import androidx.ui.test.performTextInput
-import androidx.ui.test.swipeUp
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performGesture
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.swipeUp
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 
 internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.clickRowWithText(text: String) { 

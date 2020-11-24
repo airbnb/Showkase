@@ -1,8 +1,8 @@
 package com.airbnb.android.showkase_processor_testing
 
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.ui.test.AndroidComposeTestRule
 import androidx.ui.test.onNodeWithTag
 import androidx.ui.test.performGesture
 import androidx.ui.test.swipeDown
