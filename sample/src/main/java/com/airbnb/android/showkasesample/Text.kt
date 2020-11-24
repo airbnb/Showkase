@@ -1,6 +1,6 @@
 package com.airbnb.android.showkasesample
 
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
@@ -120,7 +120,6 @@ class ParameterProvider : PreviewParameterProvider<Person> {
 
     override val count: Int
         get() = super.count
-
 }
 
 @Composable

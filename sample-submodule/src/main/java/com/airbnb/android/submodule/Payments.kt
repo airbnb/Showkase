@@ -1,6 +1,5 @@
 package com.airbnb.android.submodule
 
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -9,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.CoreTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,14 +52,17 @@ fun CreditCardComponent(cardName: String) {
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
                     var textValue by remember { mutableStateOf("1234567812345678") }
-                    CoreTextField(value = TextFieldValue(textValue),
+                    TextField(
+                        value = TextFieldValue(textValue),
                         modifier = Modifier.padding(padding4x),
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.onPrimary,
                             fontFamily = FontFamily.Serif,
                             fontSize = 25.sp, fontWeight = FontWeight.Bold
                         ),
-                        keyboardType = KeyboardType.Number,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
                         visualTransformation = CreditCardVisualTransformation(),
                         // Update value of textValue with the latest value of the text field
                         onValueChange = { newTextValue ->

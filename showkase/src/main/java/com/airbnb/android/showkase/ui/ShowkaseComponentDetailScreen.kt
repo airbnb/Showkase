@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.material.Icon
 import androidx.compose.foundation.ProvideTextStyle
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
