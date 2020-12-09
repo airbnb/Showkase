@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -59,7 +60,7 @@ internal fun ComponentCard(
     onClick: (() -> Unit)? = null
 ) {
     val composableModifier = Modifier.generateComposableModifier(metadata)
-    val composableContainerModifier = generateContainerModifier(onClick)
+    val composableContainerModifier = Modifier.generateContainerModifier(onClick)
     Card() {
         Box() {
             Column(modifier = composableModifier) {
@@ -78,8 +79,7 @@ internal fun ComponentCard(
     }
 }
 
-@Composable
-private fun generateContainerModifier(onClick: (() -> Unit)?): Modifier = onClick?.let {
-    Modifier.fillMaxWidth()
+private fun Modifier.generateContainerModifier(onClick: (() -> Unit)?): Modifier = composed { onClick?.let {
+    fillMaxWidth()
         .clickable(onClick = onClick)
-} ?: Modifier.fillMaxWidth()
+} ?: fillMaxWidth() }
