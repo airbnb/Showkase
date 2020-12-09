@@ -79,7 +79,7 @@ internal fun ComponentCard(
     }
 }
 
-private fun Modifier.generateContainerModifier(onClick: (() -> Unit)?): Modifier = composed { onClick?.let {
+private fun Modifier.generateContainerModifier(onClick: (() -> Unit)?) = composed { onClick?.let {
     fillMaxWidth()
         .clickable(onClick = onClick)
 } ?: fillMaxWidth() }

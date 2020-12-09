@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.AmbientConfiguration
@@ -191,9 +192,9 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
 }
 
-internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent): Modifier {
+internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent)= composed {
     val baseModifier = padding(padding4x)
-    return when {
+    when {
         metadata.heightDp != null && metadata.widthDp != null -> baseModifier.size(
             width = metadata.widthDp.dp, 
             height = metadata.heightDp.dp
