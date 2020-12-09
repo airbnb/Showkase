@@ -11,24 +11,29 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.swipeUp
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.clickRowWithText(text: String) { 
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.clickRowWithText(
+    text: String
+) {
     onNodeWithText(text, false, false).assertIsDisplayed().performClick()
 }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.clickRowWithTag(text: String) {
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.clickRowWithTag(
+    text: String
+) {
     onNodeWithTag(text).assertIsDisplayed().performClick()
 }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.inputTextWithTag(
-    tag: String, 
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.inputTextWithTag(
+    tag: String,
     text: String
 ) {
     onNodeWithTag(tag).performTextInput(text)
 }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyRowsWithTextAreDisplayed(
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyRowsWithTextAreDisplayed(
     vararg textList: String
 ) {
     textList.forEach {
@@ -36,7 +41,7 @@ internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyRowsWithTextA
     }
 }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyRowsWithTextDoesNotExist(
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyRowsWithTextDoesNotExist(
     vararg textList: String
 ) {
     textList.forEach {
@@ -44,18 +49,19 @@ internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyRowsWithTextD
     }
 }
 
-internal fun <T : ComponentActivity> AndroidComposeTestRule<T>.goBack() = this
+internal fun <T : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule<T>, T>.goBack() = 
+    this
     .activityRule
     .scenario
     .onActivity {
         it.onBackPressed()
     }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyLandingScreen() {
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyLandingScreen() {
     verifyRowsWithTextAreDisplayed("Components", "Typography", "Colors")
 }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyTypographyDetailScreen() {
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyTypographyDetailScreen() {
     verifyRowsWithTextAreDisplayed("Body1", "Body2", "H1", "H2", "H3", "H4")
 
     onNodeWithTag("TypographyInAGroupList").performGesture {
@@ -67,7 +73,7 @@ internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyTypographyDet
     verifyRowsWithTextAreDisplayed("H5", "H6", "Subtitle1", "Subtitle2")
 }
 
-internal fun AndroidComposeTestRule<ShowkaseBrowserActivity>.verifyColorsDetailScreen() {
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyColorsDetailScreen() {
     onNodeWithTag("ColorsInAGroupList").onChildren().assertCountEquals(4)
 
     verifyRowsWithTextAreDisplayed(

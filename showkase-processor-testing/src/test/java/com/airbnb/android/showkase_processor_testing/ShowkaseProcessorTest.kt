@@ -34,7 +34,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("Composables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         class Composables {
@@ -120,7 +120,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview("name", "group")
@@ -180,7 +180,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         object ShowkaseObject {
@@ -269,7 +269,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         class ShowkaseClass {
@@ -315,7 +315,7 @@ class ShowkaseProcessorTest {
     fun `private composable with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import androidx.compose.runtime.Composable
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         
         class GeneratedTestComposables {
             @Preview("name", "group")
@@ -357,7 +357,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `basic function annotated with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         
         class GeneratedTestComposables {
             @Preview("name", "group")
@@ -398,7 +398,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `class annotated with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview("name", "group")
@@ -440,7 +440,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `object annotated with preview annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview("name", "group")
@@ -484,7 +484,7 @@ class ShowkaseProcessorTest {
     @Test
     fun `composable function that has non preview parameters and preview annotation throws Exception`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
 
         class GeneratedTestComposables {
@@ -534,7 +534,7 @@ class ShowkaseProcessorTest {
     fun `composable function with preview annotation inside class with parameters throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         import androidx.compose.runtime.Composable
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
 
         class GeneratedTestComposables(name: String) {
             @Composable
@@ -753,7 +753,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview("name", "group")
@@ -1029,8 +1029,8 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
         @ShowkaseComposable(name = "name", group = "group")
@@ -1089,9 +1089,9 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
-        import androidx.ui.tooling.preview.Preview
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
         @Preview(name = "name", group = "group")
@@ -1247,7 +1247,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview("name", "group")
@@ -2470,8 +2470,8 @@ class ShowkaseProcessorTest {
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
         import androidx.compose.runtime.Composable
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         
         class ParameterProvider : PreviewParameterProvider<String> {
             override val values: Sequence<String>
@@ -2532,7 +2532,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -2631,7 +2631,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         object WrapperObject {
@@ -2732,7 +2732,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -2848,7 +2848,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview("name1", "group1")
@@ -2913,7 +2913,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
         
@@ -2980,7 +2980,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
         
@@ -3197,7 +3197,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview
@@ -3380,7 +3380,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -3575,7 +3575,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         object WrapperClass {
@@ -3772,7 +3772,7 @@ class ShowkaseProcessorTest {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         class WrapperClass {
@@ -4019,7 +4019,7 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.Preview
         import androidx.compose.runtime.Composable
         
         @Preview
@@ -4316,8 +4316,8 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
         class ParameterProvider : PreviewParameterProvider<String> {
@@ -4443,9 +4443,9 @@ class ShowkaseProcessorTest {
         val kotlinComposableSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
-        import androidx.ui.tooling.preview.Preview
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
         @Preview
@@ -4572,8 +4572,8 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
         class ParameterProvider : PreviewParameterProvider<String> {
@@ -4691,9 +4691,9 @@ class ShowkaseProcessorTest {
         package com.airbnb.android.showkase_processor_testing
         
         import com.airbnb.android.showkase.annotation.ShowkaseComposable
-        import androidx.ui.tooling.preview.Preview
-        import androidx.ui.tooling.preview.PreviewParameter
-        import androidx.ui.tooling.preview.PreviewParameterProvider
+        import androidx.compose.ui.tooling.preview.Preview
+        import androidx.compose.ui.tooling.preview.PreviewParameter
+        import androidx.compose.ui.tooling.preview.PreviewParameterProvider
         import androidx.compose.runtime.Composable
         
         class ParameterProvider : PreviewParameterProvider<String> {

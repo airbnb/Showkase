@@ -58,7 +58,7 @@ internal fun ComponentCard(
     metadata: ShowkaseBrowserComponent,
     onClick: (() -> Unit)? = null
 ) {
-    val composableModifier = generateComposableModifier(metadata)
+    val composableModifier = Modifier.generateComposableModifier(metadata)
     val composableContainerModifier = generateContainerModifier(onClick)
     Card() {
         Box() {

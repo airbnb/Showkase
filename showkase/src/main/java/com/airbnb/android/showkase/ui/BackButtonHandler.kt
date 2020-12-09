@@ -9,7 +9,7 @@ import androidx.compose.runtime.Providers
 import androidx.compose.runtime.onCommit
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticAmbientOf
-import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.AmbientContext
 
 /**
  * Related discussion - 
@@ -48,7 +48,7 @@ internal fun handler(
 internal fun BackButtonHandler(
     onBackPressed: () -> Unit, 
 ) {
-    var context = ContextAmbient.current
+    var context = AmbientContext.current
     // Inspired from https://cs.android.com/androidx/platform/frameworks/support/+/
     // androidx-master-dev:navigation/navigation-compose/src/main/java/androidx/navigation/
     // compose/NavHost.kt;l=88

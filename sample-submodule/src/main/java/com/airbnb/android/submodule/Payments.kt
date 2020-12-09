@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.material.Card
@@ -30,10 +31,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
-import androidx.ui.tooling.preview.PreviewParameter
-import androidx.ui.tooling.preview.PreviewParameterProvider
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding4x
 
@@ -52,13 +53,13 @@ fun CreditCardComponent(cardName: String) {
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
                     var textValue by remember { mutableStateOf("1234567812345678") }
-                    TextField(
+                    BasicTextField(
                         value = TextFieldValue(textValue),
                         modifier = Modifier.padding(padding4x),
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.onPrimary,
                             fontFamily = FontFamily.Serif,
-                            fontSize = 25.sp, fontWeight = FontWeight.Bold
+                            fontSize = 20.sp, fontWeight = FontWeight.Bold
                         ),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number

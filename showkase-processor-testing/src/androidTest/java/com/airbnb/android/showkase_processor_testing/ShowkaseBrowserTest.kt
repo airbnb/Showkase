@@ -3,9 +3,9 @@ package com.airbnb.android.showkase_processor_testing
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.ui.test.onNodeWithTag
-import androidx.ui.test.performGesture
-import androidx.ui.test.swipeDown
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performGesture
+import androidx.compose.ui.test.swipeDown
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 import com.vinaygaba.showcase_processor_testing.createShowkaseBrowserIntent
 import org.junit.Rule
@@ -24,12 +24,20 @@ class ShowcaseBrowserTest {
     // android.app.Activity in the AndroidManifest.xml
     @get:Rule
     val composeTestRule =
-        AndroidComposeTestRule<ShowkaseBrowserActivity>(
-            ActivityScenarioRule(
+        AndroidComposeTestRule(
+            activityRule = ActivityScenarioRule<ShowkaseBrowserActivity>(
                 createShowkaseBrowserIntent(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
-            )
+            ),
+            activityProvider = { rule ->
+                var activity: ShowkaseBrowserActivity? = null
+                rule.scenario.onActivity { activity = it }
+                if (activity == null) {
+                    throw IllegalStateException("Activity was not set in the ActivityScenarioRule!")
+                }
+                activity!!
+            }
         )
 
     @Test
