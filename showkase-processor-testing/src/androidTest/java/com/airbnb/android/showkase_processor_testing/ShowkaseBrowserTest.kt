@@ -33,10 +33,7 @@ class ShowcaseBrowserTest {
             activityProvider = { rule ->
                 var activity: ShowkaseBrowserActivity? = null
                 rule.scenario.onActivity { activity = it }
-                if (activity == null) {
-                    error("Activity was not set in the ActivityScenarioRule!")
-                }
-                activity!!
+                activity ?: error("Activity was not set in the ActivityScenarioRule!")
             }
         )
 
