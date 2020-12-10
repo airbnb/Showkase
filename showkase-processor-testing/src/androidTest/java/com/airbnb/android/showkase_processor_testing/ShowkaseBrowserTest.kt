@@ -34,7 +34,7 @@ class ShowcaseBrowserTest {
                 var activity: ShowkaseBrowserActivity? = null
                 rule.scenario.onActivity { activity = it }
                 if (activity == null) {
-                    throw IllegalStateException("Activity was not set in the ActivityScenarioRule!")
+                    error("Activity was not set in the ActivityScenarioRule!")
                 }
                 activity!!
             }
