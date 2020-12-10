@@ -14,6 +14,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawShadow
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -66,7 +67,7 @@ internal fun ShowkaseColorsInAGroupScreen(
                     Column(
                         modifier = Modifier.padding(start = padding4x, end = padding4x)
                             .size(75.dp)
-                            .drawShadow(elevation = 5.dp)
+                            .shadow(elevation = 5.dp)
                             .background(color = groupColorMetadata.color)
                     ){}
                 }

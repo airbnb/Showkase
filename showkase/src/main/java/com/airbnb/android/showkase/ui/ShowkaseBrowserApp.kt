@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.ui
 
-import android.graphics.drawable.Icon
 import androidx.compose.material.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -96,16 +95,16 @@ private fun ShowkaseAppBarTitle(
             ShowkaseSearchField(metadata)
         }
         currentRoute == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name -> {
-            Text(ContextAmbient.current.getString(R.string.app_name))
+            Text(AmbientContext.current.getString(R.string.app_name))
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_GROUPS.name -> {
-            Text(ContextAmbient.current.getString(R.string.components_category))
+            Text(AmbientContext.current.getString(R.string.components_category))
         }
         currentRoute == ShowkaseCurrentScreen.COLOR_GROUPS.name -> {
-            Text(ContextAmbient.current.getString(R.string.colors_category))
+            Text(AmbientContext.current.getString(R.string.colors_category))
         }
         currentRoute == ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name -> {
-            Text(ContextAmbient.current.getString(R.string.typography_category))
+            Text(AmbientContext.current.getString(R.string.typography_category))
         }
         currentRoute.insideGroup() -> {
             Text(metadata.value.currentGroup.orEmpty())
@@ -125,7 +124,7 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
             metadata.value = metadata.value.copy(searchQuery = it)
         },
         label = {
-            Text(text = ContextAmbient.current.getString(R.string.search_label))
+            Text(text = AmbientContext.current.getString(R.string.search_label))
         },
         textStyle = TextStyle(
             color = Color.Black,
@@ -135,7 +134,7 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
         ),
         modifier = Modifier.testTag("SearchTextField").fillMaxWidth(),
         leadingIcon = {
-            Icon(asset = Icons.Filled.Search)
+            Icon(imageVector = Icons.Filled.Search)
         },
         backgroundColor = Color.White
     )
@@ -159,7 +158,7 @@ private fun ShowkaseAppBarActions(
                     metadata.value = metadata.value.copy(isSearchActive = true)
                 }
             ) {
-                Icon(asset = Icons.Filled.Search)
+                Icon(imageVector = Icons.Filled.Search)
             }
         }
     }
