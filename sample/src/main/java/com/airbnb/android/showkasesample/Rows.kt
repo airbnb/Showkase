@@ -1,7 +1,6 @@
 package com.airbnb.android.showkasesample
 
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ConstraintLayout
@@ -23,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.ui.tooling.preview.Preview
-import androidx.ui.tooling.preview.datasource.LoremIpsum
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding1x
 import com.airbnb.android.showkase.ui.padding2x
@@ -55,11 +54,11 @@ fun SimpleRow(title: String, subtitle: String) {
                     )
                 )
             }, icon = {
-                Box(
+                Column(
                     modifier = Modifier.preferredWidth(60.dp)
                         .preferredHeight(60.dp)
                         .background(color = Color.Gray)
-                )
+                ) {}
             })
         }
     }
@@ -93,14 +92,14 @@ fun TitleSubtitleThumbnailRow() {
                     start.linkTo(image.end, margin = padding4x)
                 })
 
-                Box(modifier = Modifier.preferredHeight(72.dp)
+                Column(modifier = Modifier.preferredHeight(72.dp)
                     .preferredWidth(72.dp)
                     .background(color = Color.Gray)
                     .constrainAs(image) {
                         centerVerticallyTo(parent)
                         start.linkTo(parent.start, margin = padding4x)
                     }
-                )
+                ) {}
             }
         }
     }

@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha02-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha03-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -72,8 +72,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-alpha02"
-kapt "com.airbnb.android:showkase-processor:1.0.0-alpha02"
+implementation "com.airbnb.android:showkase:1.0.0-alpha03"
+kapt "com.airbnb.android:showkase-processor:1.0.0-alpha03"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -125,7 +125,7 @@ class MyRootModule: ShowkaseRootModule
 **Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
  for accessing the UI browser. Typically you would start this activity from the debug menu of 
  your app but you are free to start this from any place you like! A nice helper function 
- `createShowkaseBrowserIntent` is generated for you so you might have to build the app one 
+ `createShowkaseBrowserIntent` is generated for you so you might have to build the app once 
  before it's available for use. Just start the intent and that's all you need to do for accessing
   Showkase! 
 

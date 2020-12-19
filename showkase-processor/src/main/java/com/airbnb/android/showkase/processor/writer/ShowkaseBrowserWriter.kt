@@ -64,7 +64,6 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
 
         componentListInitializerCodeBlock.apply {
             showkaseMetadataWithoutParameterList.forEachIndexed { index, withoutParameterMetadata ->
-                require(withoutParameterMetadata is ShowkaseMetadata.Component)
                 addLineBreak()
                 addShowkaseBrowserComponent(withoutParameterMetadata)
                 closeOrContinueListCodeBlock(index, showkaseMetadataWithoutParameterList.size - 1)
@@ -75,8 +74,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
             if (showkaseMetadataWithParameterList.isNotEmpty()) {
                 add(".apply {")
                 doubleIndent()
-                showkaseMetadataWithParameterList.forEachIndexed { index, withParameterMetadata ->
-                    require(withParameterMetadata is ShowkaseMetadata.Component)
+                showkaseMetadataWithParameterList.forEachIndexed { _, withParameterMetadata ->
                     addLineBreak()
                     add(
                         "%T().values.iterator().asSequence().forEachIndexed { index, previewParam -> ",

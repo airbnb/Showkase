@@ -13,19 +13,30 @@ internal enum class ShowkaseCurrentScreen {
     TYPOGRAPHY_IN_A_GROUP,
 }
 
-internal fun ShowkaseCurrentScreen.insideGroup() =
-    this == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP ||
-            this == ShowkaseCurrentScreen.COLORS_IN_A_GROUP ||
-            this == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP
+internal fun String?.insideGroup() =
+    this == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name ||
+            this == ShowkaseCurrentScreen.COLORS_IN_A_GROUP.name ||
+            this == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name
 
 internal data class ShowkaseBrowserScreenMetadata(
-    val currentScreen: ShowkaseCurrentScreen = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES,
     val currentGroup: String? = null,
     val currentComponentName: String? = null,
     val currentComponentKey: String? = null,
     val isSearchActive: Boolean = false,
     val searchQuery: String? = null,
 )
+
+internal fun MutableState<ShowkaseBrowserScreenMetadata>.clear() {
+    update {
+        copy(
+            isSearchActive = false,
+            searchQuery = null,
+            currentComponentKey = null,
+            currentComponentName = null,
+            currentGroup = null
+        )
+    }
+}
 
 internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
     update {

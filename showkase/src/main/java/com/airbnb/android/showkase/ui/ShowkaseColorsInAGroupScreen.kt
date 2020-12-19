@@ -1,8 +1,9 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.Text
+import androidx.compose.material.Text
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,22 +14,27 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawShadow
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.navigate
+import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
+import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val groupColorsList =
         groupedColorsMap[showkaseBrowserScreenMetadata.value.currentGroup]
@@ -58,36 +64,32 @@ internal fun ShowkaseColorsInAGroupScreen(
                             fontWeight = FontWeight.Bold
                         )
                     )
-                    Box(
+                    Column(
                         modifier = Modifier.padding(start = padding4x, end = padding4x)
                             .size(75.dp)
-                            .drawShadow(elevation = 5.dp),
-                        backgroundColor = groupColorMetadata.color,
-                    )
+                            .shadow(elevation = 5.dp)
+                            .background(color = groupColorMetadata.color)
+                    ){}
                 }
             }
         }
     )
     BackButtonHandler {
-        goBackFromColorsInAGroupScreen(showkaseBrowserScreenMetadata)
+        goBackFromColorsInAGroupScreen(showkaseBrowserScreenMetadata, navController)
     }
 }
 
 private fun  goBackFromColorsInAGroupScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> showkaseBrowserScreenMetadata.update {
-            copy(
-                currentScreen = ShowkaseCurrentScreen.COLOR_GROUPS,
-                currentComponentKey = null,
-                currentComponentName = null,
-                isSearchActive = false,
-                searchQuery = null,
-                currentGroup = null
-            )
+        else -> {
+            showkaseBrowserScreenMetadata.clear()
+            navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS)
+
         }
     }
 }

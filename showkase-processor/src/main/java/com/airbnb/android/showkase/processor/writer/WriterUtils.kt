@@ -15,6 +15,8 @@ import com.squareup.kotlinpoet.asClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeMirror
 
+val SPACE_REGEX = "\\s".toRegex()
+
 internal fun getFileBuilder(
     rootModulePackageName: String,
     showkaseComponentsListClassName: String
@@ -112,7 +114,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
             "_${showkaseMetadata.enclosingClass}" +
             "_${showkaseMetadata.showkaseGroup}" +
             "_${showkaseMetadata.showkaseName}").replace(
-        "\\s".toRegex(),
+        SPACE_REGEX,
         ""
     )
     if (isPreviewParameter) {
