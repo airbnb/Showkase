@@ -1,9 +1,8 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.navigation.compose.navigate
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
@@ -20,22 +19,27 @@ internal fun ShowkaseTypographyGroupsScreen(
         groupedTypographyMap.keys.sorted(),
         showkaseBrowserScreenMetadata
     )
-    
-    LazyColumnFor(items = filteredList, itemContent = { group ->
-        SimpleTextCard(
-            text = group,
-            onClick = {
-                showkaseBrowserScreenMetadata.update {
-                    copy(
-                        currentGroup = group,
-                        isSearchActive = false,
-                        searchQuery = null
-                    )
-                }
-                navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
+
+    LazyColumn {
+        items(
+            items = filteredList,
+            itemContent = { group ->
+                SimpleTextCard(
+                    text = group,
+                    onClick = {
+                        showkaseBrowserScreenMetadata.update {
+                            copy(
+                                currentGroup = group,
+                                isSearchActive = false,
+                                searchQuery = null
+                            )
+                        }
+                        navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
+                    }
+                )
             }
         )
-    })
+    }
     BackButtonHandler {
         goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController)
     }
