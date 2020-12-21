@@ -2,9 +2,6 @@ package com.airbnb.android.showkase.ui
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.compose.material.Icon
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,9 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -31,10 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.AmbientConfiguration
-import androidx.compose.ui.platform.AmbientLayoutDirection
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.platform.AmbientLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -63,29 +63,34 @@ internal fun ShowkaseComponentDetailScreen(
     val componentMetadata = componentMetadataList.find {
         it.componentName == showkaseBrowserScreenMetadata.value.currentComponent
     } ?: return
-    LazyColumnFor(
-        modifier = Modifier.testTag("ShowkaseComponentDetailList"),
-        items = listOf(componentMetadata), 
-        itemContent = { metadata ->
-        ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
-            when (showkaseComponentCardType) {
-                ShowkaseComponentCardType.BASIC -> {
-                    if (!metadata.componentKDoc.isBlank()) {
-                        DocumentationPanel(metadata.componentKDoc)
+    LazyColumn(
+        modifier = Modifier.testTag("ShowkaseComponentDetailList")
+    ) {
+        items(items = listOf(componentMetadata),
+            itemContent = { metadata ->
+                ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
+                    when (showkaseComponentCardType) {
+                        ShowkaseComponentCardType.BASIC -> {
+                            if (!metadata.componentKDoc.isBlank()) {
+                                DocumentationPanel(metadata.componentKDoc)
+                            }
+                            BasicComponentCard(metadata)
+                        }
+                        ShowkaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(metadata)
+                        ShowkaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(
+                            metadata
+                        )
+                        ShowkaseComponentCardType.RTL -> RTLComponentCard(metadata)
+                        ShowkaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
                     }
-                    BasicComponentCard(metadata)
                 }
-                ShowkaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(metadata)
-                ShowkaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(metadata)
-                ShowkaseComponentCardType.RTL -> RTLComponentCard(metadata)
-                ShowkaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
             }
-        }
-    })
+        )
+    }
     BackButtonHandler {
         back(showkaseBrowserScreenMetadata, navController)
     }
-    
+
 }
 
 @Composable
@@ -192,11 +197,11 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
 }
 
-internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent)= composed {
+internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent) = composed {
     val baseModifier = padding(padding4x)
     when {
         metadata.heightDp != null && metadata.widthDp != null -> baseModifier.size(
-            width = metadata.widthDp.dp, 
+            width = metadata.widthDp.dp,
             height = metadata.heightDp.dp
         )
         metadata.heightDp != null -> baseModifier.height(Dp(metadata.heightDp.toFloat()))
