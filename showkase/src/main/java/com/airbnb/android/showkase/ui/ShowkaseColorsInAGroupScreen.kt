@@ -90,7 +90,6 @@ private fun goBackFromColorsInAGroupScreen(
         else -> {
             showkaseBrowserScreenMetadata.clear()
             navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS)
-
         }
     }
 }

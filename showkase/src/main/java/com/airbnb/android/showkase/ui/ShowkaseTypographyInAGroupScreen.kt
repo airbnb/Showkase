@@ -62,7 +62,6 @@ private fun goBackFromTypographyInAGroupScreen(
         else -> {
             showkaseBrowserScreenMetadata.clear()
             navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
-
         }
     }
 }

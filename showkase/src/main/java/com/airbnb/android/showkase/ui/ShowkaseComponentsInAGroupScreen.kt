@@ -58,7 +58,6 @@ private fun goBackFromComponentsInAGroupScreen(
         else -> {
             showkaseBrowserScreenMetadata.clear()
             navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS)
-
         }
     }
 }
