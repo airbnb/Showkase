@@ -11,7 +11,6 @@ buildscript {
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
 }
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
