@@ -32,7 +32,8 @@ internal fun ShowkaseComponentsInAGroupScreen(
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(
-                                currentComponent = groupComponent.componentName,
+                            currentComponentKey = groupComponent.componentKey,
+                            currentComponentName = groupComponent.componentName,
                                 isSearchActive = false
                             )
                         }

@@ -61,7 +61,7 @@ internal fun ShowkaseComponentDetailScreen(
     val componentMetadataList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find {
-        it.componentName == showkaseBrowserScreenMetadata.value.currentComponent
+        it.componentKey == showkaseBrowserScreenMetadata.value.currentComponentKey
     } ?: return
     LazyColumn(
         modifier = Modifier.testTag("ShowkaseComponentDetailList")
@@ -216,7 +216,8 @@ private fun back(
 ) {
     showkaseBrowserScreenMetadata.update {
         copy(
-            currentComponent = null,
+            currentComponentKey = null,
+            currentComponentName = null,
             isSearchActive = false,
             searchQuery = null
         )

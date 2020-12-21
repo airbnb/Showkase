@@ -77,7 +77,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 showkaseMetadataWithParameterList.forEachIndexed { _, withParameterMetadata ->
                     addLineBreak()
                     add(
-                        "%T().values.iterator().forEach { previewParam -> ",
+                        "%T().values.iterator().asSequence().forEachIndexed { index, previewParam -> ",
                         withParameterMetadata.previewParameter
                     )
                     doubleIndent()
@@ -85,7 +85,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     add("add(")
                     addLineBreak()
                     doubleIndent()
-                    addShowkaseBrowserComponent(withParameterMetadata)
+                    addShowkaseBrowserComponent(withParameterMetadata, true)
                     closeRoundBracket()
                     doubleUnindent()
                     closeRoundBracket()

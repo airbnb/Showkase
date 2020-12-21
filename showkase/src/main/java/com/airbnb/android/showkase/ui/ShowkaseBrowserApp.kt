@@ -110,7 +110,7 @@ private fun ShowkaseAppBarTitle(
             Text(metadata.value.currentGroup.orEmpty())
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
-            Text(metadata.value.currentComponent.orEmpty())
+            Text(metadata.value.currentComponentName.orEmpty())
         }
     }
 }

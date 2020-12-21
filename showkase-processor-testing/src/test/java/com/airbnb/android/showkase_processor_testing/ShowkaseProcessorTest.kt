@@ -1190,7 +1190,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -1204,17 +1204,18 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
                             component = @Composable { TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -1288,7 +1289,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -1302,17 +1303,18 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
                             component = @Composable { TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -1585,7 +1587,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -1599,9 +1601,10 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
                             component = @Composable { TestComposable() })
                       )
-
+                
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
                         ShowkaseBrowserColor(
                             colorGroup = "group",
@@ -1609,13 +1612,13 @@ class ShowkaseProcessorTest {
                             colorKDoc = "",
                             color = red)
                       )
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
                 
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -1698,7 +1701,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -1712,11 +1715,12 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
                             component = @Composable { TestComposable() })
                       )
-
+                
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
                         ShowkaseBrowserTypography(
                             typographyGroup = "group",
@@ -1724,11 +1728,11 @@ class ShowkaseProcessorTest {
                             typographyKDoc = "",
                             textStyle = title)
                       )
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -1819,17 +1823,19 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
                             component = @Composable { WrapperClass().TestComposable() })
                       )
-
+                
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -1906,7 +1912,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -1920,17 +1926,19 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
                             component = @Composable { WrapperClass.TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -2411,7 +2419,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -2425,17 +2433,19 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
                             component = @Composable { WrapperClass.TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -3084,7 +3094,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -3109,17 +3119,19 @@ class ShowkaseProcessorTest {
                             | }
                             | ```
                             ""${'"'}.trimMargin(),
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
                             component = @Composable { WrapperClass.TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -3864,7 +3876,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -3878,17 +3890,19 @@ class ShowkaseProcessorTest {
                             group = "Default Group",
                             componentName = "TestComposable",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
                             component = @Composable { TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -3962,7 +3976,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -3976,17 +3990,19 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "TestComposable",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_TestComposable""${'"'},
                             component = @Composable { testComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -4060,7 +4076,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -4074,17 +4090,19 @@ class ShowkaseProcessorTest {
                             group = "Default Group",
                             componentName = "TestComposable",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
                             component = @Composable { TestComposable() })
                       )
                 
                   val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
-
+                
                   val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
-
+                
                   override fun getShowkaseComponents() = componentList
-
+                
                   override fun getShowkaseColors() = colorList
-
+                
                   override fun getShowkaseTypography() = typographyList
                 }
             """.trimIndent()
@@ -4389,14 +4407,19 @@ class ShowkaseProcessorTest {
                             group = "Default Group",
                             componentName = "TestComposable",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
                             component = @Composable { TestComposable() })
                       ).apply {
-                          ParameterProvider().values.iterator().forEach { previewParam -> 
+                          ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
+                              
                               add(
                                   ShowkaseBrowserComponent(
                                       group = "Default Group",
                                       componentName = "TestComposable2",
                                       componentKDoc = "",
+                                      componentKey =
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_${'$'}index""${'"'},
                                       component = @Composable { TestComposable2(previewParam) }
                                   )
                               )
@@ -4503,7 +4526,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -4517,14 +4540,19 @@ class ShowkaseProcessorTest {
                             group = "Default Group",
                             componentName = "TestComposable",
                             componentKDoc = "",
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
                             component = @Composable { TestComposable() })
                       ).apply {
-                          ParameterProvider().values.iterator().forEach { previewParam -> 
+                          ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
+                              
                               add(
                                   ShowkaseBrowserComponent(
                                       group = "Default Group",
                                       componentName = "TestComposable2",
                                       componentKDoc = "",
+                                      componentKey =
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_${'$'}index""${'"'},
                                       component = @Composable { TestComposable2(previewParam) }
                                   )
                               )
@@ -4627,7 +4655,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -4638,12 +4666,15 @@ class ShowkaseProcessorTest {
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> =
                       mutableListOf<ShowkaseBrowserComponent>().apply {
-                          ParameterProvider().values.iterator().forEach { previewParam -> 
+                          ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
+                              
                               add(
                                   ShowkaseBrowserComponent(
                                       group = "group",
                                       componentName = "name",
                                       componentKDoc = "",
+                                      componentKey =
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_${'$'}index""${'"'},
                                       component = @Composable { WrapperClass().TestComposable(previewParam) }
                                   )
                               )
@@ -4747,7 +4778,7 @@ class ShowkaseProcessorTest {
             assertThat(it).hasContent("""
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
-                
+
                 import androidx.compose.runtime.Composable
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -4758,12 +4789,15 @@ class ShowkaseProcessorTest {
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> =
                       mutableListOf<ShowkaseBrowserComponent>().apply {
-                          ParameterProvider().values.iterator().forEach { previewParam -> 
+                          ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
+                              
                               add(
                                   ShowkaseBrowserComponent(
                                       group = "group",
                                       componentName = "name",
                                       componentKDoc = "",
+                                      componentKey =
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_${'$'}index""${'"'},
                                       component = @Composable { WrapperClass.TestComposable(previewParam) }
                                   )
                               )
