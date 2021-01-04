@@ -153,13 +153,49 @@ fun MyComposable() {
 Name and group are optional. Look at the [properties section](#showkasecomposable-currently-supports-the-following-properties)
 to understand the behavior when you don't pass any properties.
 
-**Note:** Make sure that you add this annotation to only those functions that don't accept any 
-parameters. This is similar to how `@Preview` works in Compose as well. `@Preview` recently added
-support for parameters that are annotated with `@PreviewParameter` and Showkase will add support 
-for that soon. If your function accepts parameters, wrap it inside another function that doesn't 
-accept any parameters. 
+**Note:** Make sure that you add this annotation to only those functions that meet the following criteria:
+- Functions that don't have any parameters
+- If it does have a parameter, it has to be annotated with `@PreviewParameter` that is provided a `PreviewParameterProvider` implementation.
 
-For example, here is a @Composable function that requires parameters -
+This is identical to how `@Preview` works in Compose as well so Showkase just adheres to the same rules. 
+
+```kotlin
+
+// Consider a simple data class
+data class Person(
+    val name: String,
+    val age: Int
+)
+
+// In order to pass a person object as a parameter to our composable function, we will annotate 
+// our parameter with `@PreviewParameter` and pass a `PreviewParameterProvider` implementation.
+@ShowkaseComposable(name = "Name", group = "Group") or @Preview(name = "Name", group = "Group")
+@Composable
+fun MyComposable(
+    @PreviewParameter(provider = ParameterProvider::class) person: Person
+) {
+    ...
+}
+
+class ParameterProvider : PreviewParameterProvider<Person> {
+    override val values: Sequence<Person>
+        get() = sequenceOf(
+            Person("John", 12),
+            Person("Doe", 20)
+        )
+
+    override val count: Int
+        get() = super.count
+}
+
+// Since we return 2 objects through our ParameterProvider, Showkase will create 2 previews 
+// for this single composable function. Each preview will have it's own parameter that's passed 
+// to it - Person("John", 12) for the first preview and Person("Doe", 20) for the second one. 
+// This is an effective way to preview your composables against different sets of data.
+
+```
+
+Alternatively, you could simply wrap your function inside another function that doesn't accept any parameters -
 
 ```kotlin
 @Composable
