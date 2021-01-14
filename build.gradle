@@ -4,7 +4,7 @@ buildscript {
             'androidXTestCore':'1.0.0',
             'androidXTestRules':'1.1.0',
             'assertJ': '3.16.1',
-            'compose': '1.0.0-alpha09',
+            'compose': '1.0.0-alpha10',
             'composeNavigation': '1.0.0-alpha04',
             'detekt': '1.7.4',
             'espresso': '3.2.0',

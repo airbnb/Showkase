@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +25,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMap
+import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
@@ -100,7 +99,7 @@ val creditCardRegex by lazy {
     "....".toRegex()
 }
 
-val creditCardOffsetMap = object : OffsetMap {
+val creditCardOffsetMap = object : OffsetMapping {
     override fun originalToTransformed(offset: Int) = offset + (offset / 4)
     override fun transformedToOriginal(offset: Int) = offset - (offset / 4)
 }
