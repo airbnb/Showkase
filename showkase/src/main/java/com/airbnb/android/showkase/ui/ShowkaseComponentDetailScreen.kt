@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -66,7 +67,8 @@ internal fun ShowkaseComponentDetailScreen(
     LazyColumn(
         modifier = Modifier.testTag("ShowkaseComponentDetailList")
     ) {
-        items(items = listOf(componentMetadata),
+        items(
+            items = listOf(componentMetadata),
             itemContent = { metadata ->
                 ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
                     when (showkaseComponentCardType) {
@@ -124,7 +126,7 @@ private fun DocumentationPanel(kDoc: String) {
                 color = MaterialTheme.colors.primary
             )
         }
-        Icon(imageVector = icon)
+        Icon(imageVector = icon, contentDescription = buttonText)
     }
 }
 
