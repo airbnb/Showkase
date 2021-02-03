@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Providers
 import androidx.compose.runtime.onCommit
 import androidx.compose.runtime.remember
@@ -32,14 +34,14 @@ internal fun handler(
 ) {
     val dispatcher = (AmbientBackPressedDispatcher.current ?: return).onBackPressedDispatcher
     val handler = remember { ComposableBackHandler(enabled) }
-    onCommit(dispatcher) {
+    DisposableEffect(dispatcher) {
         dispatcher.addCallback(handler)
         onDispose { handler.remove() }
     }
-    onCommit(enabled) {
+    LaunchedEffect(enabled) {
         handler.isEnabled = enabled
     }
-    onCommit(onBackPressed) {
+    LaunchedEffect(onBackPressed) {
         handler.onBackPressed = onBackPressed
     }
 }

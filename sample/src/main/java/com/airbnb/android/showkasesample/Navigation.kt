@@ -28,7 +28,7 @@ fun BottomNavigationAlwaysShowLabelComponent() {
             listItems.forEachIndexed { index, label ->
                 BottomNavigationItem(
                     icon = {
-                        Icon(imageVector = Icons.Filled.Favorite)
+                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite")
                     },
                     label = {
                         Text(text = label)

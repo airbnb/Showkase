@@ -134,7 +134,7 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
         ),
         modifier = Modifier.testTag("SearchTextField").fillMaxWidth(),
         leadingIcon = {
-            Icon(imageVector = Icons.Filled.Search)
+            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
         },
         backgroundColor = Color.White
     )
@@ -158,7 +158,7 @@ private fun ShowkaseAppBarActions(
                     metadata.value = metadata.value.copy(isSearchActive = true)
                 }
             ) {
-                Icon(imageVector = Icons.Filled.Search)
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
             }
         }
     }

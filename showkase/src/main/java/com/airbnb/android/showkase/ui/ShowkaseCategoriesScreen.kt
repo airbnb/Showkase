@@ -2,6 +2,7 @@ package com.airbnb.android.showkase.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.AmbientContext
@@ -22,7 +23,7 @@ internal fun ShowkaseCategoriesScreen(
     val activity = AmbientContext.current as AppCompatActivity
     LazyColumn {
         items(
-            items = ShowkaseCategory.values().toList(),
+            items = ShowkaseCategory.values(),
             itemContent = { category ->
                 val defaultLocale = Locale.getDefault()
                 SimpleTextCard(
