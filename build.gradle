@@ -8,7 +8,7 @@ buildscript {
             'composeNavigation': '1.0.0-alpha06',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
-            'gradle': '4.2.0-alpha15',
+            'gradle': '7.0.0-alpha04',
             'junit' : '4.12',
             'junitImplementation' : '1.1.1',
             'kotlin': '1.4.21-2',
