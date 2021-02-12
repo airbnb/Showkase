@@ -80,9 +80,18 @@ dependencies {
     // only available in java library modules. Inspiration - 
     // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
     testImplementation files(getRuntimeJar())
-    // TODO: Fix when you find a replacement for tools.jar in JDK 11.
-    // testImplementation files(Jvm.current().getToolsJar())
+     testImplementation files(getToolsJar())
     testImplementation deps.kotlinCompileTesting
+}
+
+static def getToolsJar() {
+    try {
+        final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
+        File runtimePath = new File(javaBase, "jmods/java.compiler.jmod")
+        return runtimePath.exists() ? runtimePath : null
+    } catch (IOException e) {
+        throw new RuntimeException(e)
+    }
 }
 
 static def getRuntimeJar() {
