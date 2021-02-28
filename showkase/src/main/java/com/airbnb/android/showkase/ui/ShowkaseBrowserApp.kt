@@ -140,10 +140,7 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
         },
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Black,
-            cursorColor = Color.Gray
-        )
+        colors = TextFieldDefaults.textFieldColors()
     )
 }
 
