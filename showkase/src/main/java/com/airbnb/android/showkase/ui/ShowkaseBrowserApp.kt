@@ -9,6 +9,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -17,7 +19,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -51,7 +54,7 @@ internal fun ShowkaseBrowserApp(
         topBar = {
             ShowkaseAppBar(navController, showkaseBrowserScreenMetadata)
         },
-        bodyContent = {
+        content = {
             Column(
                 modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
             ) {
@@ -90,21 +93,22 @@ private fun ShowkaseAppBarTitle(
     metadata: MutableState<ShowkaseBrowserScreenMetadata>,
     currentRoute: String?
 ) {
+    val context = LocalContext.current
     when {
         metadata.value.isSearchActive -> {
             ShowkaseSearchField(metadata)
         }
         currentRoute == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name -> {
-            Text(AmbientContext.current.getString(R.string.app_name))
+            Text(context.getString(R.string.app_name))
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_GROUPS.name -> {
-            Text(AmbientContext.current.getString(R.string.components_category))
+            Text(LocalContext.current.getString(R.string.components_category))
         }
         currentRoute == ShowkaseCurrentScreen.COLOR_GROUPS.name -> {
-            Text(AmbientContext.current.getString(R.string.colors_category))
+            Text(LocalContext.current.getString(R.string.colors_category))
         }
         currentRoute == ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name -> {
-            Text(AmbientContext.current.getString(R.string.typography_category))
+            Text(LocalContext.current.getString(R.string.typography_category))
         }
         currentRoute.insideGroup() -> {
             Text(metadata.value.currentGroup.orEmpty())
@@ -120,11 +124,11 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
     TextField(
         value = metadata.value.searchQuery.orEmpty(),
         // Update value of textValue with the latest value of the text field
-        onValueChange = {
+        onValueChange = { 
             metadata.value = metadata.value.copy(searchQuery = it)
         },
         label = {
-            Text(text = AmbientContext.current.getString(R.string.search_label))
+            Text(text = LocalContext.current.getString(R.string.search_label))
         },
         textStyle = TextStyle(
             color = Color.Black,
@@ -136,7 +140,10 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
         },
-        backgroundColor = Color.White
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color.Black,
+            cursorColor = Color.Gray
+        )
     )
 }
 

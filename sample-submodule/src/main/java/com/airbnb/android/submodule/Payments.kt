@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,7 +47,7 @@ fun CreditCardComponent(cardName: String) {
         ) {
             Card(
                 shape = RoundedCornerShape(padding4x),
-                modifier = Modifier.preferredWidth(300.dp).aspectRatio(16 / 9f),
+                modifier = Modifier.width(300.dp).aspectRatio(16 / 9f),
                 backgroundColor = MaterialTheme.colors.primary
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {

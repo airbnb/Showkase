@@ -62,6 +62,7 @@ dependencies {
     implementation project(':showkase-processor')
 
     // Compose
+    implementation deps.compose.activityCompose
     implementation deps.compose.composeRuntime
     implementation deps.compose.core
     implementation deps.compose.foundation

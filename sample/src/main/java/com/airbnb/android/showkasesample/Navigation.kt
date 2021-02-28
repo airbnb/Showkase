@@ -10,7 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.savedinstancestate.savedInstanceState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,7 +22,7 @@ val listItems = listOf("Games", "Apps", "Movies", "Books")
 
 @Composable
 fun BottomNavigationAlwaysShowLabelComponent() {
-    var selectedIndex by savedInstanceState { 0 }
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
     ShowkaseTheme {
         BottomNavigation(modifier = Modifier.padding(padding4x)) {

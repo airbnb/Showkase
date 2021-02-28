@@ -3,13 +3,13 @@ package com.airbnb.android.showkasesample
 import androidx.compose.material.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -24,11 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding1x
 import com.airbnb.android.showkase.ui.padding2x
 import com.airbnb.android.showkase.ui.padding4x
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SimpleRow(title: String, subtitle: String) {
     ShowkaseTheme {
@@ -55,8 +57,8 @@ fun SimpleRow(title: String, subtitle: String) {
                 )
             }, icon = {
                 Column(
-                    modifier = Modifier.preferredWidth(60.dp)
-                        .preferredHeight(60.dp)
+                    modifier = Modifier.width(60.dp)
+                        .height(60.dp)
                         .background(color = Color.Gray)
                 ) {}
             })
@@ -68,7 +70,7 @@ fun SimpleRow(title: String, subtitle: String) {
 fun TitleSubtitleThumbnailRow() {
     ShowkaseTheme {
         Card(
-            modifier = Modifier.preferredHeight(120.dp)
+            modifier = Modifier.height(120.dp)
                 .fillMaxWidth()
                 .padding(padding2x),
             shape = RoundedCornerShape(padding1x)
@@ -92,8 +94,8 @@ fun TitleSubtitleThumbnailRow() {
                     start.linkTo(image.end, margin = padding4x)
                 })
 
-                Column(modifier = Modifier.preferredHeight(72.dp)
-                    .preferredWidth(72.dp)
+                Column(modifier = Modifier.height(72.dp)
+                    .width(72.dp)
                     .background(color = Color.Gray)
                     .constrainAs(image) {
                         centerVerticallyTo(parent)
@@ -159,7 +161,7 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
         ) {
             NetworkImage(
                 imageUrl = imageUrl,
-                modifier = Modifier.fillMaxWidth().preferredHeight(200.dp)
+                modifier = Modifier.fillMaxWidth().height(200.dp)
             )
             Text(
                 text = title,
