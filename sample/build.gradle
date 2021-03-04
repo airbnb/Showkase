@@ -9,7 +9,7 @@ kapt {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.airbnb.android.showkasesample"

@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
