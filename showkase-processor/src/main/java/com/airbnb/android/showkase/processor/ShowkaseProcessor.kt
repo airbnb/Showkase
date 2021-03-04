@@ -36,7 +36,7 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 @AutoService(Processor::class) // For registering the service
-@SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
+@SupportedSourceVersion(SourceVersion.RELEASE_11) // to support Java 11
 @SupportedOptions(KAPT_KOTLIN_DIR_PATH)
 class ShowkaseProcessor: AbstractProcessor() {
     private lateinit var typeUtils: Types
