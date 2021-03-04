@@ -76,22 +76,20 @@ dependencies {
     androidTestImplementation deps.test.androidXTestCore
     androidTestImplementation deps.test.androidXTestRules
     androidTestImplementation deps.test.androidxTestRunner
-    // Allows this module to access the annotation processor related classes. Otherwise those are 
-    // only available in java library modules. Inspiration - 
-    // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
+    // Allows this module to access the annotation processor related classes. Otherwise those are
+    // only available in java library modules.
     testImplementation files(getRuntimeJar())
-    testImplementation files(Jvm.current().getToolsJar())
     testImplementation deps.kotlinCompileTesting
 }
 
 static def getRuntimeJar() {
     try {
         final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-        File runtimeJar = new File(javaBase, "lib/rt.jar")
+        File runtimeJar = new File(javaBase, "jmods/java.base.jmod")
         if (runtimeJar.exists()) {
             return runtimeJar
         }
-        runtimeJar = new File(javaBase, "jre/lib/rt.jar")
+        runtimeJar = new File(javaBase, "jre/jmods/java.base.jmod")
         return runtimeJar.exists() ? runtimeJar : null
     } catch (IOException e) {
         throw new RuntimeException(e)
