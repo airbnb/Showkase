@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -78,20 +76,6 @@ dependencies {
     androidTestImplementation deps.test.androidxTestRunner
     // Allows this module to access the annotation processor related classes. Otherwise those are
     // only available in java library modules.
-    testImplementation files(getRuntimeJar())
+    testImplementation files('libs/rt.jar')
     testImplementation deps.kotlinCompileTesting
-}
-
-static def getRuntimeJar() {
-    try {
-        final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-        File runtimeJar = new File(javaBase, "jmods/java.base.jmod")
-        if (runtimeJar.exists()) {
-            return runtimeJar
-        }
-        runtimeJar = new File(javaBase, "jre/jmods/java.base.jmod")
-        return runtimeJar.exists() ? runtimeJar : null
-    } catch (IOException e) {
-        throw new RuntimeException(e)
-    }
 }
