@@ -55,6 +55,7 @@ fun BottomNavigationAlwaysShowLabelComponentPreview() {
  * Added temporarily as there is a bug in beta-01. Should be able to remove this once beta-02 is 
  * released. More details here - https://issuetracker.google.com/issues/180042685 
  */
+@Suppress("SpreadOperator")
 @Composable
 fun <T : Any> rememberSaveable(
     vararg inputs: Any?,
