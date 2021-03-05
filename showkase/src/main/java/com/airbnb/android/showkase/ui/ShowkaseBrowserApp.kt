@@ -2,14 +2,15 @@ package com.airbnb.android.showkase.ui
 
 import androidx.compose.material.Text
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -17,9 +18,11 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
@@ -49,15 +52,17 @@ internal fun ShowkaseBrowserApp(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     val navController = rememberNavController()
+    var showTextField by remember { mutableStateOf(false) }
     Scaffold(
         drawerContent = null,
         topBar = {
-            ShowkaseAppBar(navController, showkaseBrowserScreenMetadata)
+            ShowkaseAppBar(navController, showkaseBrowserScreenMetadata, showTextField)
         },
         content = {
             Column(
                 modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
             ) {
+                Checkbox(checked = showTextField, onCheckedChange = { showTextField = it })
                 ShowkaseBodyContent(
                     navController,
                     groupedComponentMap, 
@@ -73,15 +78,19 @@ internal fun ShowkaseBrowserApp(
 @Composable
 internal fun ShowkaseAppBar(
     navController: NavHostController,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    showTextField: Boolean
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+
     TopAppBar(
-        title = {
-            ShowkaseAppBarTitle(showkaseBrowserScreenMetadata, currentRoute)
-        },
-        actions = {
+        content = {
+            if (showTextField) {
+                ShowkaseSearchField(showkaseBrowserScreenMetadata)
+            } else {
+                ShowkaseAppBarTitle(showkaseBrowserScreenMetadata, currentRoute)
+            }
             ShowkaseAppBarActions(showkaseBrowserScreenMetadata, currentRoute)
         },
         backgroundColor = Color.White
