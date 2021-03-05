@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +33,7 @@ import com.airbnb.android.showkase.ui.padding4x
 @Preview
 @Composable
 fun CursiveTextComponent() {
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val string = context.getString(R.string.app_name)
 
     ShowkaseTheme {
@@ -53,7 +53,7 @@ fun CursiveTextComponent() {
 @Preview
 @Composable
 fun SerifTextComponentPreview() {
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val string = context.getString(R.string.app_name)
 
     ShowkaseTheme {
@@ -73,7 +73,7 @@ fun SerifTextComponentPreview() {
 @Preview
 @Composable
 fun SansSerifTextComponentPreview() {
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val string = context.getString(R.string.app_name)
 
     ShowkaseTheme {
@@ -92,7 +92,7 @@ fun SansSerifTextComponentPreview() {
 @ShowkaseComposable(name = "H4 Text Row", group = "Text")
 @Composable
 fun H4TextRowComponentPreview() {
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val string = context.getString(R.string.app_name)
 
     ShowkaseTheme {

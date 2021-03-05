@@ -1,13 +1,17 @@
 package com.airbnb.android.showkase_processor_testing
 
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.swipeDown
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 import com.vinaygaba.showcase_processor_testing.createShowkaseBrowserIntent
+import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -338,9 +342,11 @@ class ShowcaseBrowserTest {
 
             // Click on "Group 1" to go to the components in a group screen
             clickRowWithText("Group1")
-
+            
             // Click on "Test Composable1" to go to the component details screen
             clickRowWithText("Test Composable1")
+            
+            waitForIdle()
 
             // Go back to the components in a group screen
             goBack()

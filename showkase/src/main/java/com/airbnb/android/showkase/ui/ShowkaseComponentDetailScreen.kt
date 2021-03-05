@@ -22,8 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.Providers
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientConfiguration
-import androidx.compose.ui.platform.AmbientContext
-import androidx.compose.ui.platform.AmbientDensity
-import androidx.compose.ui.platform.AmbientLayoutDirection
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -98,7 +98,7 @@ internal fun ShowkaseComponentDetailScreen(
 @Composable
 private fun DocumentationPanel(kDoc: String) {
     var showDocumentation by remember { mutableStateOf(false) }
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val (buttonText, icon) = getCollabsableTextAndIcon(context, showDocumentation)
     val onClick = { showDocumentation = !showDocumentation }
     if (showDocumentation) {
@@ -146,39 +146,39 @@ private fun BasicComponentCard(metadata: ShowkaseBrowserComponent) {
 
 @Composable
 private fun FontScaledComponentCard(metadata: ShowkaseBrowserComponent) {
-    val density = AmbientDensity.current
+    val density = LocalDensity.current
     val customDensity = Density(fontScale = density.fontScale * 2, density = density.density)
 
     ComponentCardTitle("${metadata.componentName} [Font Scaled x 2]")
-    Providers(AmbientDensity provides customDensity) {
+    CompositionLocalProvider(LocalDensity provides customDensity) {
         ComponentCard(metadata)
     }
 }
 
 @Composable
 private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponent) {
-    val density = AmbientDensity.current
+    val density = LocalDensity.current
     val customDensity = Density(density = density.density * 2f)
 
     ComponentCardTitle("${metadata.componentName} [Display Scaled x 2]")
-    Providers(AmbientDensity provides customDensity) {
+    CompositionLocalProvider(LocalDensity provides customDensity) {
         ComponentCard(metadata)
     }
 }
 
 @Composable
 private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
-    val customConfiguration = Configuration(AmbientConfiguration.current).apply {
+    val customConfiguration = Configuration(LocalConfiguration.current).apply {
         val locale = Locale("ar")
         setLocale(locale)
         setLayoutDirection(locale)
     }
-    val customContext = AmbientContext.current.createConfigurationContext(customConfiguration)
+    val customContext = LocalContext.current.createConfigurationContext(customConfiguration)
     ComponentCardTitle("${metadata.componentName} [RTL]")
-    Providers(AmbientContext provides customContext) {
+    CompositionLocalProvider(LocalContext provides customContext) {
         val updatedModifier = Modifier.generateComposableModifier(metadata)
         Card(modifier = Modifier.fillMaxWidth()) {
-            Providers(AmbientLayoutDirection provides LayoutDirection.Rtl) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 Column(modifier = updatedModifier) {
                     metadata.component()
                 }
@@ -189,12 +189,12 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
 
 @Composable
 private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
-    val customConfiguration = Configuration(AmbientConfiguration.current).apply {
+    val customConfiguration = Configuration(LocalConfiguration.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
 
     ComponentCardTitle("${metadata.componentName} [Dark Mode]")
-    Providers(AmbientConfiguration provides customConfiguration) {
+    CompositionLocalProvider(LocalConfiguration provides customConfiguration) {
         ComponentCard(metadata)
     }
 }
