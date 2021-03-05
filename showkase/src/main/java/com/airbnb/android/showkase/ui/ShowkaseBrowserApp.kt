@@ -133,6 +133,7 @@ internal fun ShowkaseAppBar(
 //    )
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun ShowkaseAppBarTitle(
     isSearchActive: Boolean,
