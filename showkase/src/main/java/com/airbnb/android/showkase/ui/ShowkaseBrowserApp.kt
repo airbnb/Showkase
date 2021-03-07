@@ -42,6 +42,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
 
@@ -253,7 +254,12 @@ internal fun ShowkaseBodyContent(
         composable(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name) {
             ShowkaseCategoriesScreen(
                 showkaseBrowserScreenMetadata,
-                navController
+                navController,
+                getCategoryMetadataMap(
+                    groupedComponentMap,
+                    groupedColorsMap,
+                    groupedTypographyMap
+                )
             )
         }
         composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) {
@@ -306,6 +312,22 @@ internal fun ShowkaseBodyContent(
             )
         }
     }
+}
+
+private fun getCategoryMetadataMap(
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+): Map<ShowkaseCategory, Int> {
+    val componentCount = groupedComponentMap.values.flatMap { it }.count()
+    val colorsCount = groupedColorsMap.values.flatMap { it }.count()
+    val typographyCount = groupedTypographyMap.values.flatMap { it }.count()
+    
+    return mapOf(
+        ShowkaseCategory.COMPONENTS to componentCount,
+        ShowkaseCategory.COLORS to colorsCount,
+        ShowkaseCategory.TYPOGRAPHY to typographyCount
+    )
 }
 
 /**
