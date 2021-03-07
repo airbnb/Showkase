@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha06-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0--alpha11-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha07-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0--beta01-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -72,8 +72,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-alpha06"
-kapt "com.airbnb.android:showkase-processor:1.0.0-alpha06"
+implementation "com.airbnb.android:showkase:1.0.0--alpha07"
+kapt "com.airbnb.android:showkase-processor:1.0.0--alpha07"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
