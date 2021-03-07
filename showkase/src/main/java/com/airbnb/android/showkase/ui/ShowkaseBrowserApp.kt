@@ -319,9 +319,9 @@ private fun getCategoryMetadataMap(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
 ): Map<ShowkaseCategory, Int> {
-    val componentCount = groupedComponentMap.values.flatMap { it }.count()
-    val colorsCount = groupedColorsMap.values.flatMap { it }.count()
-    val typographyCount = groupedTypographyMap.values.flatMap { it }.count()
+    val componentCount = groupedComponentMap.values.flatCount()
+    val colorsCount = groupedColorsMap.values.flatCount()
+    val typographyCount = groupedTypographyMap.values.flatCount()
     
     return mapOf(
         ShowkaseCategory.COMPONENTS to componentCount,
@@ -329,6 +329,8 @@ private fun getCategoryMetadataMap(
         ShowkaseCategory.TYPOGRAPHY to typographyCount
     )
 }
+
+internal fun Collection<List<*>>.flatCount() = flatMap { it }.count()
 
 /**
  * Helper function to navigate to the passed [ShowkaseCurrentScreen]
