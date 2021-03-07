@@ -40,7 +40,6 @@ internal fun ShowkaseGroupsScreen(
                             )
                         }
                         onClick()
-                        navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
                     }
                 )
             }
@@ -92,7 +91,7 @@ internal fun ShowkaseColorGroupsScreen(
         showkaseBrowserScreenMetadata,
         navController
     ) {
-        navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
+        navController.navigate(ShowkaseCurrentScreen.COLORS_IN_A_GROUP)
     }
 }
 
