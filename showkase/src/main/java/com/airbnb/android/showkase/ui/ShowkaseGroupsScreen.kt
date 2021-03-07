@@ -25,6 +25,7 @@ internal fun ShowkaseGroupsScreen(
         showkaseBrowserScreenMetadata
     )
 
+    val string = filteredMap.map { it.key }.joinToString()
     LazyColumn {
         items(
             items = filteredMap.entries.toList(),
@@ -58,8 +59,10 @@ internal fun <T> getFilteredSearchList(
         false -> map
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             map.filter {
-                it.key
-                    .contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase(Locale.getDefault()))
+                it.key.toLowerCase().contains(
+                    showkaseBrowserScreenMetadata.value.searchQuery!!
+                        .toLowerCase(Locale.getDefault())
+                )
             }
         }
         else -> map
