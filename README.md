@@ -72,8 +72,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0--alpha07"
-kapt "com.airbnb.android:showkase-processor:1.0.0--alpha07"
+implementation "com.airbnb.android:showkase:1.0.0-alpha07"
+kapt "com.airbnb.android:showkase-processor:1.0.0-alpha07"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
