@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import com.airbnb.android.showkase.exceptions.ShowkaseException
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseProvider
-import com.airbnb.android.showkase.models.ShowkaseProviderElements
+import com.airbnb.android.showkase.models.ShowkaseElementsMetadata
 
 /**
  * The activity that's responsible for showing all the UI elements that were annotated
@@ -52,7 +52,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
 
     private fun getShowkaseProviderElements(
         classKey: String
-    ): ShowkaseProviderElements {
+    ): ShowkaseElementsMetadata {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
@@ -72,13 +72,13 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     .getShowkaseTypography()
                     .groupBy { it.typographyGroup }
 
-            ShowkaseProviderElements(
+            ShowkaseElementsMetadata(
                 components = componentsMap,
                 colors = colorsMap,
                 typographyMap = typographyMap
             )
         } catch (exception: ClassNotFoundException) {
-            ShowkaseProviderElements()
+            ShowkaseElementsMetadata()
         }
     }
 
