@@ -12,11 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-//            startActivity(createShowkaseBrowserIntent(this))
-//            val map = getShowkaseElementMetadata()
-//            map.components.forEach {
-//                Log.e("Debug", it.key)
-//            }
+            startActivity(ShowkaseMethods.createShowkaseBrowserIntent(this))
         }
     }
 }
