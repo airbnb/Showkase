@@ -18,7 +18,7 @@ internal class ShowkaseMethodsWriter(
     ) {
         getFileBuilder(
             rootModulePackageName,
-            "${rootModuleClassName}$SHOWKASE_BROWSER_INTENT_SUFFIX"
+            "${rootModuleClassName}$SHOWKASE_METHODS_SUFFIX"
         )
             .addType(
                 TypeSpec.objectBuilder(SHOWKASE_METHODS_OBJECT_NAME)
@@ -133,11 +133,11 @@ internal class ShowkaseMethodsWriter(
     )
 
     companion object {
-        private const val SHOWKASE_BROWSER_INTENT_SUFFIX = "IntentCodegen"
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
         private const val INTENT_FUNCTION_NAME = "createShowkaseBrowserIntent"
         private const val METADATA_FUNCTION_NAME = "getShowkaseElementsMetadata"
         private const val SHOWKASE_METHODS_OBJECT_NAME = "ShowkaseMethods"
+        private const val SHOWKASE_METHODS_SUFFIX = "${SHOWKASE_METHODS_OBJECT_NAME}Codegen"
         private const val CONTEXT_PARAMETER_NAME = "context"
         private const val CONTEXT_PACKAGE_NAME = "android.content"
         private val CONTEXT_CLASS_NAME =
