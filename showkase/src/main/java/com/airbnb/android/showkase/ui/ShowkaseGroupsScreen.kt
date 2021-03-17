@@ -25,7 +25,6 @@ internal fun ShowkaseGroupsScreen(
         showkaseBrowserScreenMetadata
     )
 
-    val string = filteredMap.map { it.key }.joinToString()
     LazyColumn {
         items(
             items = filteredMap.entries.toList(),
