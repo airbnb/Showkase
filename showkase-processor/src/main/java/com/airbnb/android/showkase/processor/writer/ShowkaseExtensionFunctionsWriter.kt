@@ -110,8 +110,8 @@ internal class ShowkaseExtensionFunctionsWriter(
 
     companion object {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
-        private const val INTENT_FUNCTION_NAME = "createBrowserIntent"
-        private const val METADATA_FUNCTION_NAME = "getShowkaseMetadata"
+        private const val INTENT_FUNCTION_NAME = "getBrowserIntent"
+        private const val METADATA_FUNCTION_NAME = "getMetadata"
         private const val SHOWKASE_EXTENSION_FUNCTIONS_NAME = "ShowkaseExtensionFunctions"
         private const val SHOWKASE_METHODS_SUFFIX = "${SHOWKASE_EXTENSION_FUNCTIONS_NAME}Codegen"
         private const val CONTEXT_PARAMETER_NAME = "context"
