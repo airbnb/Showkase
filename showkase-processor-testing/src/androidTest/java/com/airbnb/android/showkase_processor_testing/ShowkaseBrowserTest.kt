@@ -1,14 +1,12 @@
 package com.airbnb.android.showkase_processor_testing
 
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.swipeDown
+import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 import com.vinaygaba.showcase_processor_testing.createShowkaseBrowserIntent
 import kotlinx.coroutines.delay
@@ -30,7 +28,7 @@ class ShowcaseBrowserTest {
     val composeTestRule =
         AndroidComposeTestRule(
             activityRule = ActivityScenarioRule<ShowkaseBrowserActivity>(
-                createShowkaseBrowserIntent(
+                Showkase.createShowkaseBrowserIntent(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             ),

@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import com.airbnb.android.showkase.exceptions.ShowkaseException
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseProvider
-import com.airbnb.android.showkase.models.ShowkaseProviderElements
+import com.airbnb.android.showkase.models.ShowkaseElementsMetadata
 
 /**
  * The activity that's responsible for showing all the UI elements that were annotated
@@ -25,17 +25,20 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         )
         setContent {
             val (
-                groupedComponentsMap,
-                groupedColorsMap,
-                groupedTypographyMap
+                groupedComponentsList,
+                groupedColorsList,
+                groupedTypographyList
             ) = getShowkaseProviderElements(classKey)
             
             val showkaseBrowserScreenMetadata = 
                 remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
             when {
-                groupedComponentsMap.isNotEmpty() || groupedColorsMap.isNotEmpty() || 
-                        groupedTypographyMap.isNotEmpty() -> {
-                    ShowkaseBrowserApp(groupedComponentsMap, groupedColorsMap, groupedTypographyMap,
+                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() || 
+                        groupedTypographyList.isNotEmpty() -> {
+                    ShowkaseBrowserApp(
+                        groupedComponentsList.groupBy { it.group }, 
+                        groupedColorsList.groupBy { it.colorGroup }, 
+                        groupedTypographyList.groupBy { it.typographyGroup },
                         showkaseBrowserScreenMetadata)
                 }
                 else -> {
@@ -52,33 +55,30 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
 
     private fun getShowkaseProviderElements(
         classKey: String
-    ): ShowkaseProviderElements {
+    ): ShowkaseElementsMetadata {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
 
-            val componentsMap =
+            val componentsList =
                 (showkaseComponentProvider as ShowkaseProvider)
                     .getShowkaseComponents()
-                    .groupBy { it.group }
             
-            val colorsMap = 
+            val colorsList = 
                 showkaseComponentProvider
                     .getShowkaseColors()
-                    .groupBy { it.colorGroup }
 
-            val typographyMap =
+            val typographyList =
                 showkaseComponentProvider
                     .getShowkaseTypography()
-                    .groupBy { it.typographyGroup }
 
-            ShowkaseProviderElements(
-                components = componentsMap,
-                colors = colorsMap,
-                typographyMap = typographyMap
+            ShowkaseElementsMetadata(
+                components = componentsList,
+                colors = colorsList,
+                typographyMap = typographyList
             )
         } catch (exception: ClassNotFoundException) {
-            ShowkaseProviderElements()
+            ShowkaseElementsMetadata()
         }
     }
 
