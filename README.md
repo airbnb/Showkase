@@ -130,7 +130,7 @@ class MyRootModule: ShowkaseRootModule
   Showkase! 
 
 ```kotlin
-startActivity(Showkase.getBrowserIntent(this))
+startActivity(Showkase.getBrowserIntent(context))
 ```
 
 ## Documentation
@@ -359,6 +359,14 @@ val typography = metadata.typographyList
   people start using this library, we will get a more clear idea about whether that needs to 
   happen or not. If we find that it didn't evolve the way we expected, we will consider 
   consildating these annotations. 
+</details>
+
+<details>
+  <summary>I would like to customize my component browser. Can this library still be useful?
+  </summary>
+  We provide a nice helper function that gives you access to the metadata of all  your UI elements 
+  that are configured to work with Showkase. You can use `Showkase.getMetadata()` to get access 
+  to it and then use it in whatever way you see fit.
 </details>
 
 ## Coming Soon!
