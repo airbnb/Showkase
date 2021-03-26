@@ -1,17 +1,17 @@
 package com.airbnb.android.showkase.processor.writer
 
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_MODELS_PACKAGE_NAME
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_PROVIDER_CLASS_NAME
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeSpec
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 
-internal class ShowkaseMethodsWriter(
+internal class ShowkaseExtensionFunctionsWriter(
     private val processingEnv: ProcessingEnvironment
 ) {
-    internal fun generateShowkaseMethodsObject(
+    internal fun generateShowkaseExtensionFunctions(
         rootModulePackageName: String,
         rootModuleClassName: String,
         rootElement: Element
@@ -20,22 +20,18 @@ internal class ShowkaseMethodsWriter(
             rootModulePackageName,
             "${rootModuleClassName}$SHOWKASE_METHODS_SUFFIX"
         )
-            .addType(
-                TypeSpec.objectBuilder(SHOWKASE_METHODS_OBJECT_NAME)
-                    .addFunction(
-                        generateIntentFunction(
-                            rootModulePackageName, 
-                            rootModuleClassName, 
-                            rootElement
-                        )
-                    )
-                    .addFunction(
-                        generateMetadataFunction(
-                            rootElement, 
-                            "$rootModulePackageName.$rootModuleClassName"
-                        )
-                    )
-                    .build()
+            .addFunction(
+                generateIntentFunction(
+                    rootModulePackageName,
+                    rootModuleClassName,
+                    rootElement
+                )
+            )
+            .addFunction(
+                generateMetadataFunction(
+                    rootElement,
+                    "$rootModulePackageName.$rootModuleClassName"
+                )
             )
             .build()
             .writeTo(processingEnv.filer)
@@ -49,6 +45,7 @@ internal class ShowkaseMethodsWriter(
         addParameter(
             CONTEXT_PARAMETER_NAME, CONTEXT_CLASS_NAME
         )
+        receiver(SHOWKASE_OBJECT_CLASS_NAME)
         returns(INTENT_CLASS_NAME)
         addCode(
             CodeBlock.Builder()
@@ -78,6 +75,10 @@ internal class ShowkaseMethodsWriter(
         rootElement: Element,
         classKey: String
     ) = FunSpec.builder(METADATA_FUNCTION_NAME).apply {
+        val errorMessage = "The class wasn't generated correctly. Make sure that you have setup " +
+                "Showkase correctly by following the steps here - " +
+                "https://github.com/airbnb/Showkase#Installation."
+        receiver(SHOWKASE_OBJECT_CLASS_NAME)
         returns(SHOWKASE_ELEMENTS_METADATA_CLASS_NAME)
         addCode(
             CodeBlock.Builder()
@@ -88,32 +89,11 @@ internal class ShowkaseMethodsWriter(
                     "val showkaseComponentProvider = Class.forName(\"${classKey}Codegen\").newInstance() as %T",
                     SHOWKASE_PROVIDER_CLASS_NAME
                 )
-                .generateShowkaseElementProperty(
-                    "componentsMap", 
-                    "getShowkaseComponents", 
-                    "group"
-                )
-                .generateShowkaseElementProperty(
-                    "colorsMap", 
-                    "getShowkaseColors", 
-                    "colorGroup"
-                )
-                .generateShowkaseElementProperty(
-                    "typographyMap", 
-                    "getShowkaseTypography", 
-                    "typographyGroup"
-                )
-                .addStatement(
-                    "return %T(%L, %L, %L)",
-                    SHOWKASE_ELEMENTS_METADATA_CLASS_NAME,
-                    "componentsMap",
-                    "colorsMap",
-                    "typographyMap"
-                )
+                .addStatement("return %L.metadata()", "showkaseComponentProvider")
                 .unindent()
                 .addStatement("} catch(exception: ClassNotFoundException) {")
                 .indent()
-                .addStatement("return %T()", SHOWKASE_ELEMENTS_METADATA_CLASS_NAME)
+                .addStatement("error(%S)", errorMessage)
                 .unindent()
                 .addStatement("}")
                 .unindent()
@@ -123,21 +103,12 @@ internal class ShowkaseMethodsWriter(
     }
         .build()
 
-    private fun CodeBlock.Builder.generateShowkaseElementProperty(
-        variableName: String,
-        elementMethodName: String,
-        groupPropertyName: String
-    ) = addStatement(
-        "val $variableName = %L.$elementMethodName().groupBy { it.$groupPropertyName }",
-        "showkaseComponentProvider"
-    )
-
     companion object {
         private const val SHOWKASE_ROOT_MODULE_KEY = "SHOWKASE_ROOT_MODULE"
         private const val INTENT_FUNCTION_NAME = "createShowkaseBrowserIntent"
-        private const val METADATA_FUNCTION_NAME = "getShowkaseElementsMetadata"
-        private const val SHOWKASE_METHODS_OBJECT_NAME = "ShowkaseMethods"
-        private const val SHOWKASE_METHODS_SUFFIX = "${SHOWKASE_METHODS_OBJECT_NAME}Codegen"
+        private const val METADATA_FUNCTION_NAME = "getShowkaseMetadata"
+        private const val SHOWKASE_EXTENSION_FUNCTIONS_NAME = "ShowkaseExtensionFunctions"
+        private const val SHOWKASE_METHODS_SUFFIX = "${SHOWKASE_EXTENSION_FUNCTIONS_NAME}Codegen"
         private const val CONTEXT_PARAMETER_NAME = "context"
         private const val CONTEXT_PACKAGE_NAME = "android.content"
         private val CONTEXT_CLASS_NAME =
@@ -146,9 +117,9 @@ internal class ShowkaseMethodsWriter(
             ClassName(CONTEXT_PACKAGE_NAME, "Intent")
         private val SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME =
             ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
-        private val SHOWKASE_PROVIDER_CLASS_NAME =
-            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseProvider")
         private val SHOWKASE_ELEMENTS_METADATA_CLASS_NAME = 
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseElementsMetadata")
+        private val SHOWKASE_OBJECT_CLASS_NAME =
+            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "Showkase")
     }
 }

@@ -15,7 +15,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.models.toModel
-import com.airbnb.android.showkase.processor.writer.ShowkaseMethodsWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.google.auto.service.AutoService
@@ -268,8 +268,8 @@ class ShowkaseProcessor: AbstractProcessor() {
             )
         }
 
-        ShowkaseMethodsWriter(processingEnv).apply {
-            generateShowkaseMethodsObject(
+        ShowkaseExtensionFunctionsWriter(processingEnv).apply {
+            generateShowkaseExtensionFunctions(
                 rootModulePackageName = rootModulePackageName,
                 rootModuleClassName = rootModuleClassName,
                 rootElement = rootElement
