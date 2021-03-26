@@ -125,12 +125,12 @@ class MyRootModule: ShowkaseRootModule
 **Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
  for accessing the UI browser. Typically you would start this activity from the debug menu of 
  your app but you are free to start this from any place you like! A nice helper extension function 
- `createBrowserIntent` is generated for you so you might have to build the app once 
+ `getBrowserIntent` is generated for you so you might have to build the app once 
  before it's available for use. Just start the intent and that's all you need to do for accessing
   Showkase! 
 
 ```kotlin
-startActivity(Showkase.createBrowserIntent(this))
+startActivity(Showkase.getBrowserIntent(this))
 ```
 
 ## Documentation
@@ -299,8 +299,22 @@ methods can be generated for your use.
 
 Extension function | Description
 ------------- | -------------
-createBrowserIntent | Helper function that return an intent to start the ShowkaseBrowser actvity
- | Helper function that return an intent to start the ShowkaseBrowser actvity
+getBrowserIntent | Helper function that return an intent to start the ShowkaseBrowser activity.
+getMetadata | Helper function that's give's you access to Showkase metadata. This contains data about all the composables, colors and typography in your codebase that's rendered in the Showkase Browser.
+
+```kotlin
+
+// Example Usage
+
+val intent = Showkase.getBrowserIntent(context)
+startActivity(intent)
+
+val metadata = Showkase.getMetadata()
+val components = metadata.componentList
+val colors= metadata.colorList
+val typography = metadata.typographyList
+
+```
 
 ## Frequently Asked Questions
 <details>
