@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            startActivity(Showkase.createBrowserIntent(this))
+            startActivity(Showkase.getBrowserIntent(this))
         }
     }
 }
