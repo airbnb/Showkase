@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.swipeDown
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
-import com.vinaygaba.showcase_processor_testing.createBrowserIntent
+import com.vinaygaba.showcase_processor_testing.getBrowserIntent
 import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +28,7 @@ class ShowcaseBrowserTest {
     val composeTestRule =
         AndroidComposeTestRule(
             activityRule = ActivityScenarioRule<ShowkaseBrowserActivity>(
-                Showkase.createBrowserIntent(
+                Showkase.getBrowserIntent(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             ),
