@@ -364,7 +364,7 @@ val typography = metadata.typographyList
 <details>
   <summary>I would like to customize my component browser. Can this library still be useful?
   </summary>
-  We provide a nice helper function that gives you access to the metadata of all  your UI elements 
+  We provide a nice helper function that gives you access to the metadata of all your UI elements 
   that are configured to work with Showkase. You can use `Showkase.getMetadata()` to get access 
   to it and then use it in whatever way you see fit.
 </details>
