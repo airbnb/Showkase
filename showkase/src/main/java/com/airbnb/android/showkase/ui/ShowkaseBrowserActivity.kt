@@ -59,23 +59,13 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
-
-            val componentsList =
-                (showkaseComponentProvider as ShowkaseProvider)
-                    .getShowkaseComponents()
             
-            val colorsList = 
-                showkaseComponentProvider
-                    .getShowkaseColors()
-
-            val typographyList =
-                showkaseComponentProvider
-                    .getShowkaseTypography()
+            val showkaseMetadata = (showkaseComponentProvider as ShowkaseProvider).metadata()
 
             ShowkaseElementsMetadata(
-                components = componentsList,
-                colors = colorsList,
-                typographyMap = typographyList
+                componentList = showkaseMetadata.componentList,
+                colorList = showkaseMetadata.colorList,
+                typographyList = showkaseMetadata.typographyList
             )
         } catch (exception: ClassNotFoundException) {
             ShowkaseElementsMetadata()
