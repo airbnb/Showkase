@@ -1,11 +1,9 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
@@ -16,7 +14,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
@@ -24,11 +22,11 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         compose true
@@ -80,21 +78,6 @@ dependencies {
     // Allows this module to access the annotation processor related classes. Otherwise those are 
     // only available in java library modules. Inspiration - 
     // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
-    testImplementation files(getRuntimeJar())
-    testImplementation files(Jvm.current().getToolsJar())
+    testImplementation files('libs/rt.jar')
     testImplementation deps.kotlinCompileTesting
-}
-
-static def getRuntimeJar() {
-    try {
-        final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-        File runtimeJar = new File(javaBase, "lib/rt.jar")
-        if (runtimeJar.exists()) {
-            return runtimeJar
-        }
-        runtimeJar = new File(javaBase, "jre/lib/rt.jar")
-        return runtimeJar.exists() ? runtimeJar : null
-    } catch (IOException e) {
-        throw new RuntimeException(e)
-    }
 }
