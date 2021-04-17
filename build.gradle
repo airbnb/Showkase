@@ -10,17 +10,23 @@ buildscript {
             'composeNavigation': '1.0.0-alpha09',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
-            'gradle': '7.0.0-alpha12',
+            'gradle': '7.0.0-alpha14',
             'junit' : '4.12',
             'junitImplementation' : '1.1.1',
-            'kotlin': '1.4.31',
-            'kotlinCompilerVersion': '1.4.31',
-            'kotlinCompileTesting': '1.2.8',
-            'kotlinPoet': '1.6.0',
-            'kotlinXMetadata': '0.1.0',
+            'kotlin': '1.4.32',
+            'kotlinCompilerVersion': '1.4.32',
+            'kotlinCompileTesting': '1.3.6',
+            'kotlinPoet': '1.8.0',
+            'kotlinXMetadata': '0.2.0',
+            'ksp': '1.4.31-1.0.0-alpha06',
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
             'picasso': '2.8',
+            // This snapshot version is tied to the androidx.dev build id set up in the androidx
+            // maven repository url, so the snapshot itself is stable and can be bumped as needed.
+            // Snapshot is needed for latest compiler changes, since otherwise Room does not update
+            // very often.
+            'roomCompilerProcessing': '2.4.0-SNAPSHOT',
             'supportLibrary': '1.1.0',
             'testRunner': '1.2.0',
             'googleTruth': '1.0.1',
@@ -43,10 +49,12 @@ buildscript {
                     'uiTest': "androidx.compose.ui:ui-test-junit4:${versions.compose}",
                     'uiLiveData': "androidx.compose.runtime:runtime-livedata:${versions.compose}"
             ],
-            'kotlinStdLib': "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
             'kotlinCompileTesting': "com.github.tschuchortdev:kotlin-compile-testing:${versions.kotlinCompileTesting}",
+            'kotlinCompileTestingKsp': "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.kotlinCompileTesting}",
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'kotlinXMetadata': "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
+            'ksp': "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}",
+            'roomCompilerProcessing': "androidx.room:room-compiler-processing:${versions.roomCompilerProcessing}",
             'imageLoading': [
                     'picasso': "com.squareup.picasso:picasso:${versions.picasso}"
             ],
@@ -73,6 +81,9 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.14.2'
+        // Dokka is needed on classpath for vanniktech publish plugin
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -89,6 +100,18 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        // This androidx repo is needed to get the latest version of the ksp compiler processing abstraction.
+        // it is versioned by the build id in this url
+        // See: https://androidx.dev/
+        maven { url 'https://androidx.dev/snapshots/builds/7291230/artifacts/repository' }
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+            freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
+        }
     }
 }
 

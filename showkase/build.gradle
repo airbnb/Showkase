@@ -1,13 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    // Maven artifact publish
-    dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
-    }
-}
-
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
@@ -65,8 +55,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // Kotlin
-    implementation deps.kotlinStdLib
 
     // Showkase
     api project(':showkase-annotation')
