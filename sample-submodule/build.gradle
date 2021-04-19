@@ -37,7 +37,6 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
         kotlinCompilerExtensionVersion "${versions.compose}"
 
     }
@@ -52,9 +51,6 @@ android {
 }
 
 dependencies {
-    // Kotlin
-    implementation deps.kotlinStdLib
-    
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx

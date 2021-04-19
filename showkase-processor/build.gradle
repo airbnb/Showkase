@@ -1,13 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    // Maven artifact publish
-    dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
-    }
-}
-
 plugins {
     id 'java-library'
     id 'kotlin'
@@ -45,9 +35,10 @@ dependencies {
     compileOnly project(':showkase-annotation')
 
     implementation deps.autoService
-    implementation deps.kotlinStdLib
     implementation deps.kotlinPoet
     implementation deps.kotlinXMetadata
-    
+    implementation deps.roomCompilerProcessing
+    implementation deps.ksp
+
     kapt deps.autoService
 }

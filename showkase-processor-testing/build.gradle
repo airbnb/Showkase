@@ -32,7 +32,6 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
         kotlinCompilerExtensionVersion "${versions.compose}"
     }
     // Added to avoid this error -
@@ -48,11 +47,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    // Kotlin
-    implementation deps.kotlinStdLib
-
     // Support Libraries
     implementation deps.support.appCompat
+    implementation deps.ksp
 
     // Showkase
     implementation project(':showkase')
@@ -80,4 +77,5 @@ dependencies {
     // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
     testImplementation files('libs/rt.jar')
     testImplementation deps.kotlinCompileTesting
+    testImplementation deps.kotlinCompileTestingKsp
 }
