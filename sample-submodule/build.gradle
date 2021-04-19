@@ -37,7 +37,6 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
         kotlinCompilerExtensionVersion "${versions.compose}"
 
     }

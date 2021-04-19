@@ -1,15 +1,15 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XType
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
-import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.type.TypeMirror
 
-internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnvironment) {
+internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     @Suppress("LongMethod")
     internal fun generateShowkaseBrowserFile(
         showkaseComponentMetadata: Set<ShowkaseMetadata>,
@@ -26,7 +26,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         val typographyProperty = initializeTypographyProperty(showkaseTypographyMetadata)
 
         writeFile(
-            processingEnv,
+            environment,
             fileBuilder,
             SHOWKASE_PROVIDER_CLASS_NAME,
             showkaseComponentsListClassName,
@@ -96,7 +96,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 closeCurlyBraces()
             }
         }
-        
+
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
         return componentListProperty
     }
@@ -199,7 +199,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
     @Suppress("LongParameterList")
     private fun showkaseBrowserPropertyValue(
         functionPackageName: String,
-        enclosingClass: TypeMirror? = null,
+        enclosingClass: XType? = null,
         fieldPropertyName: String,
         fieldName: String,
         insideWrapperClass: Boolean,
@@ -225,8 +225,11 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
                 .build()
         }
-        else -> throw ShowkaseProcessorException("Your field:${fieldName} is declared in a way that " +
-                "is not supported by Showkase")
+        else -> throw ShowkaseProcessorException(
+            "Your field:${fieldName} is declared in a way that " +
+                    "is not supported by Showkase",
+            listOfNotNull(enclosingClass.typeElement)
+        )
     }
 
     companion object {

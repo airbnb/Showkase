@@ -32,7 +32,6 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
         kotlinCompilerExtensionVersion "${versions.compose}"
     }
     // Added to avoid this error -
@@ -50,6 +49,7 @@ dependencies {
 
     // Support Libraries
     implementation deps.support.appCompat
+    implementation deps.ksp
 
     // Showkase
     implementation project(':showkase')

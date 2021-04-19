@@ -1,102 +1,69 @@
 package com.airbnb.android.showkase.processor
 
-import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
-import com.airbnb.android.showkase.annotation.ShowkaseColor
-import com.airbnb.android.showkase.annotation.ShowkaseComposable
-import com.airbnb.android.showkase.annotation.ShowkaseRoot
-import com.airbnb.android.showkase.annotation.ShowkaseTypography
+import androidx.room.compiler.processing.*
+import com.airbnb.android.showkase.annotation.*
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.KAPT_KOTLIN_DIR_PATH
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
-import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
-import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
-import com.airbnb.android.showkase.processor.models.toModel
-import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
+import com.airbnb.android.showkase.processor.models.*
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
 import com.google.auto.service.AutoService
-import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Filer
-import javax.annotation.processing.Messager
-import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.Processor
-import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedOptions
-import javax.annotation.processing.SupportedSourceVersion
-import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import kotlin.reflect.KClass
 
 @AutoService(Processor::class) // For registering the service
-@SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedOptions(KAPT_KOTLIN_DIR_PATH)
-class ShowkaseProcessor: AbstractProcessor() {
-    private lateinit var typeUtils: Types
-    private lateinit var elementUtils: Elements
-    private lateinit var filter: Filer
-    private lateinit var messager: Messager
+class ShowkaseProcessor : BaseProcessor(
+    ShowkaseComposable::class.java.name,
+    PREVIEW_CLASS_NAME,
+    ShowkaseColor::class.java.name,
+    ShowkaseTypography::class.java.name,
+    ShowkaseRoot::class.java.name,
+) {
     private val logger = ShowkaseExceptionLogger()
-    private val showkaseValidator = ShowkaseValidator()
-    private lateinit var composableTypeMirror: TypeMirror
-    private lateinit var textStyleTypeMirror: TypeMirror
-
-    override fun init(processingEnv: ProcessingEnvironment) {
-        super.init(processingEnv)
-        typeUtils = processingEnv.typeUtils
-        elementUtils = processingEnv.elementUtils
-        filter = processingEnv.filer
-        messager = processingEnv.messager
-        composableTypeMirror = elementUtils
-            .getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
-            .asType()
-        textStyleTypeMirror = elementUtils
-            .getTypeElement(Class.forName(TYPE_STYLE_CLASS_NAME).canonicalName)
-            .asType()
+    private val showkaseValidator by lazy { ShowkaseValidator(environment) }
+    private val composableAnnotationClass: KClass<out Annotation> by lazy {
+        @Suppress("UNCHECKED_CAST")
+        Class.forName(COMPOSABLE_CLASS_NAME).kotlin as KClass<out Annotation>
+    }
+    private val previewParameterAnnotationClass: KClass<out Annotation> by lazy {
+        @Suppress("UNCHECKED_CAST")
+        Class.forName(PREVIEW_PARAMETER_CLASS_NAME).kotlin as KClass<out Annotation>
+    }
+    private val previewAnnotationClass: KClass<out Annotation> by lazy {
+        @Suppress("UNCHECKED_CAST")
+        Class.forName(PREVIEW_CLASS_NAME).kotlin as KClass<out Annotation>
+    }
+    private val textStyleType: XType by lazy {
+        environment.requireType(TYPE_STYLE_CLASS_NAME)
     }
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
-        ShowkaseComposable::class.java.name,
-        PREVIEW_CLASS_NAME,
-        ShowkaseColor::class.java.name,
-        ShowkaseTypography::class.java.name,
-        ShowkaseRoot::class.java.name,
-    )
-
-    override fun process(
-        annotations: MutableSet<out TypeElement>,
-        roundEnvironment: RoundEnvironment
-    ): Boolean {
+    override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         try {
-            val componentMetadata = processComponentAnnotation(roundEnvironment)
-            val colorMetadata = processColorAnnotation(roundEnvironment)
-            val typographyMetadata = processTypographyAnnotation(roundEnvironment)
-            
+            val componentMetadata = processComponentAnnotation(round)
+            val colorMetadata = processColorAnnotation(round)
+            val typographyMetadata = processTypographyAnnotation(round)
+
             processShowkaseMetadata(
-                roundEnvironment = roundEnvironment, 
-                componentMetadata = componentMetadata, 
+                roundEnvironment = round,
+                componentMetadata = componentMetadata,
                 colorMetadata = colorMetadata,
                 typographyMetadata = typographyMetadata
             )
         } catch (exception: ShowkaseProcessorException) {
-            logger.logErrorMessage("${exception.message}")
+            logger.logError(exception)
         }
-
-        if (roundEnvironment.processingOver()) {
-            logger.publishMessages(messager)
-        }
-        return false
     }
 
-    private fun processComponentAnnotation(roundEnvironment: RoundEnvironment)
-            : Set<ShowkaseMetadata> {
+    override fun finish() {
+        logger.publishMessages(environment.messager)
+    }
+
+    private fun processComponentAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata)
@@ -104,118 +71,121 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
-    private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
-        val previewParameterTypeElement =
-            elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
-        previewParameterTypeElement?.let { previewParameter -> 
-            return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java)
-                .map { element ->
-                    showkaseValidator.validateComponentElement(
-                        element, composableTypeMirror, typeUtils,
-                        ShowkaseComposable::class.java.simpleName,
-                        previewParameterTypeElement.asType()
-                    )
-                    getShowkaseMetadata(
-                        element = element as ExecutableElement,
-                        elementUtil = elementUtils,
-                        typeUtils = typeUtils,
-                        showkaseValidator = showkaseValidator,
-                        previewParameterTypeMirror = previewParameter.asType()
-                    )
-                }.toSet()
-        } ?: return setOf()
-    }
-        
+    private fun processShowkaseAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
+            .map { element ->
+                showkaseValidator.validateComponentElement(
+                    element,
+                    composableAnnotationClass,
+                    ShowkaseComposable::class.java.simpleName,
+                    previewParameterAnnotationClass
+                )
 
-    private fun processPreviewAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
-        val previewTypeElement = elementUtils.getTypeElement(PREVIEW_CLASS_NAME)
-        val previewParameterTypeElement = 
-            elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
-        previewTypeElement?.let {
-            return roundEnvironment.getElementsAnnotatedWith(previewTypeElement).mapNotNull { element ->
-                showkaseValidator.validateComponentElement(element, composableTypeMirror, typeUtils,
-                    previewTypeElement.simpleName.toString(), previewParameterTypeElement.asType())
-                getShowkaseMetadataFromPreview(
-                    element = element as ExecutableElement, 
-                    elementUtil = elementUtils, 
-                    typeUtils = typeUtils, 
-                    previewTypeMirror = previewTypeElement.asType(),
-                    previewParameterTypeMirror = previewParameterTypeElement.asType(), 
-                    showkaseValidator = showkaseValidator 
+                getShowkaseMetadata(
+                    element = element,
+                    showkaseValidator = showkaseValidator,
+                    environment = environment,
+                    previewParameterType = previewParameterAnnotationClass,
                 )
             }.toSet()
-        } ?: return setOf()
+    }
+
+
+    private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
+        return roundEnvironment.getElementsAnnotatedWith(previewAnnotationClass)
+            .mapNotNull { element ->
+                showkaseValidator.validateComponentElement(
+                    element,
+                    composableAnnotationClass,
+                    previewAnnotationClass.simpleName!!,
+                    previewParameterAnnotationClass
+                )
+                getShowkaseMetadataFromPreview(
+                    element = element,
+                    showkaseValidator = showkaseValidator,
+                    environment = environment,
+                    previewTypeClass = previewAnnotationClass,
+                    previewParameterTypeClass = previewParameterAnnotationClass
+                )
+            }.toSet()
     }
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
-        ShowkaseCodegenMetadataWriter(processingEnv).apply {
-            generateShowkaseCodegenFunctions(uniqueComposablesMetadata, typeUtils)
+        ShowkaseCodegenMetadataWriter(environment).apply {
+            generateShowkaseCodegenFunctions(uniqueComposablesMetadata)
         }
     }
 
     private fun Collection<ShowkaseMetadata>.dedupeAndSort() = this.distinctBy {
-        // It's possible that a composable annotation is annotated with both Preview & 
+        // It's possible that a composable annotation is annotated with both Preview &
         // ShowkaseComposable(especially if we add more functionality to Showkase and they diverge
         // in the customizations that they offer). In that scenario, its important to dedupe the
         // composables as they will be processed across both the rounds. We first ensure that
-        // only distict method's are passed onto the next round. We do this by deduping on 
-        // the combination of packageName, the wrapper class when available(otherwise it 
+        // only distict method's are passed onto the next round. We do this by deduping on
+        // the combination of packageName, the wrapper class when available(otherwise it
         // will be null) & the methodName.
         "${it.packageName}_${it.enclosingClass}_${it.elementName}"
     }
         .distinctBy {
-            // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app. 
+            // We also ensure that the component groupName and the component name are unique so
+            // that they don't show up twice in the browser app.
             "${it.showkaseName}_${it.showkaseGroup}"
         }
         .sortedBy {
             "${it.packageName}_${it.enclosingClass}_${it.elementName}"
         }
 
-    private fun processColorAnnotation(roundEnvironment: RoundEnvironment) =
-        roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class.java).map { element ->
+    private fun processColorAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class).map { element ->
             showkaseValidator.validateColorElement(element, ShowkaseColor::class.java.simpleName)
-            getShowkaseColorMetadata(element, elementUtils, typeUtils, showkaseValidator)
+            getShowkaseColorMetadata(element, showkaseValidator, environment)
         }.toSet()
-    
-    private fun processTypographyAnnotation(roundEnvironment: RoundEnvironment) = 
-        roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class.java).map { element ->
-            showkaseValidator.validateTypographyElement(element, 
-                ShowkaseTypography::class.java.simpleName, textStyleTypeMirror, typeUtils)
-            getShowkaseTypographyMetadata(element, elementUtils, typeUtils, showkaseValidator)
+    }
+
+    private fun processTypographyAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class).map { element ->
+            showkaseValidator.validateTypographyElement(
+                element,
+                ShowkaseTypography::class.java.simpleName,
+                textStyleType
+            )
+            getShowkaseTypographyMetadata(element, showkaseValidator, environment)
         }.toSet()
+    }
 
     private fun processShowkaseMetadata(
-        roundEnvironment: RoundEnvironment,
+        roundEnvironment: XRoundEnv,
         componentMetadata: Set<ShowkaseMetadata>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>
     ) {
-        val showkaseRootElements =
-            roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class.java)
-        showkaseValidator.validateShowkaseRootElement(showkaseRootElements, elementUtils, typeUtils)
-        val rootElement = showkaseRootElements.singleOrNull()
+        val showkaseRootElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class)
+        val rootElement = showkaseValidator.validateShowkaseRootElement(showkaseRootElements)
         when (rootElement) {
             // If root element is not present in this module, it means that we only need to write
-            // the metadata file for this module so that the root module can use this info to 
-            // include the composables from this module into the final codegen file. 
+            // the metadata file for this module so that the root module can use this info to
+            // include the composables from this module into the final codegen file.
             null -> writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
-            // Else, this is the module that should aggregate all the other metadata files and 
+            // Else, this is the module that should aggregate all the other metadata files and
             // also use the showkaseMetadata set from the current round to write the final file.
             else -> {
-                writeShowkaseFiles(rootElement, componentMetadata, colorMetadata, typographyMetadata)
+                writeShowkaseFiles(
+                    rootElement,
+                    componentMetadata,
+                    colorMetadata,
+                    typographyMetadata
+                )
             }
         }
     }
 
     private fun writeShowkaseFiles(
-        rootElement: Element,
+        rootElement: XTypeElement,
         componentMetadata: Set<ShowkaseMetadata>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>
     ) {
-        val generatedShowkaseMetadataOnClasspath =
-            getShowkaseCodegenMetadataOnClassPath(elementUtils)
+        val generatedShowkaseMetadataOnClasspath = getShowkaseCodegenMetadataOnClassPath()
         val classpathComponentMetadata =
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Component>()
         val classpathColorMetadata =
@@ -224,51 +194,45 @@ class ShowkaseProcessor: AbstractProcessor() {
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
 
         writeShowkaseBrowserFiles(
-            rootElement, 
-            componentMetadata + classpathComponentMetadata, 
+            rootElement,
+            componentMetadata + classpathComponentMetadata,
             colorMetadata + classpathColorMetadata,
-        typographyMetadata + classpathTypographyMetadata
+            typographyMetadata + classpathTypographyMetadata
         )
-        
+
     }
 
-    private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
-        val showkaseGeneratedPackageElement = elementUtils.getPackageElement(CODEGEN_PACKAGE_NAME)
-        return showkaseGeneratedPackageElement.enclosedElements
-            .flatMap { it.enclosedElements }
+    private fun getShowkaseCodegenMetadataOnClassPath(): Set<ShowkaseMetadata> {
+        return environment.getElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .filterIsInstance<XTypeElement>()
+            .flatMap { it.getDeclaredMethods() }
             .mapNotNull { element ->
-                val codegenMetadataAnnotation =
-                    element.getAnnotation(ShowkaseCodegenMetadata::class.java)
-                when {
-                    codegenMetadataAnnotation == null -> null
-                    else -> element to codegenMetadataAnnotation
-                }
+                element.getAnnotation(ShowkaseCodegenMetadata::class)?.toModel(element)
             }
-            .map { it.second.toModel(it.first) }
             .toSet()
     }
 
     private fun writeShowkaseBrowserFiles(
-        rootElement: Element,
+        rootElement: XTypeElement,
         componentsMetadata: Set<ShowkaseMetadata>,
         colorsMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>
     ) {
         if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
-        val rootModuleClassName = rootElement.simpleName.toString()
-        val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
+        val rootModuleClassName = rootElement.name
+        val rootModulePackageName = rootElement.packageName
 
-        ShowkaseBrowserWriter(processingEnv).apply {
+        ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
-                componentsMetadata, 
-                colorsMetadata, 
+                componentsMetadata,
+                colorsMetadata,
                 typographyMetadata,
-                rootModulePackageName, 
+                rootModulePackageName,
                 rootModuleClassName
             )
         }
 
-        ShowkaseExtensionFunctionsWriter(processingEnv).apply {
+        ShowkaseExtensionFunctionsWriter(environment).apply {
             generateShowkaseExtensionFunctions(
                 rootModulePackageName = rootModulePackageName,
                 rootModuleClassName = rootModuleClassName,
@@ -280,7 +244,8 @@ class ShowkaseProcessor: AbstractProcessor() {
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
         const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
-        const val PREVIEW_PARAMETER_CLASS_NAME = "androidx.compose.ui.tooling.preview.PreviewParameter"
+        const val PREVIEW_PARAMETER_CLASS_NAME =
+            "androidx.compose.ui.tooling.preview.PreviewParameter"
         const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
 
         // https://github.com/Kotlin/kotlin-examples/blob/master/gradle/kotlin-code-generation/
@@ -289,4 +254,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
     }
 }
+
+// Replace with implementation in https://github.com/androidx/androidx/pull/163
+fun XProcessingEnv.getElementsFromPackage(packageName: String): List<XElement> = TODO()
 

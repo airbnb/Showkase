@@ -1,100 +1,77 @@
 package com.airbnb.android.showkase.processor.logging
 
+import androidx.room.compiler.processing.*
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
-import com.airbnb.android.showkase.processor.models.kotlinMetadata
-import kotlinx.metadata.jvm.KotlinClassMetadata
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
-import javax.lang.model.type.TypeKind
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import kotlin.contracts.contract
+import kotlin.reflect.KClass
 
-internal class ShowkaseValidator {
+internal class ShowkaseValidator(val environment: XProcessingEnv) {
     @Suppress("ThrowsCount")
     internal fun validateComponentElement(
-        element: Element,
-        composableTypeMirror: TypeMirror,
-        typeUtils: Types,
+        element: XElement,
+        composableClass: KClass<out Annotation>,
         annotationName: String,
-        previewParameterTypeMirror: TypeMirror
+        previewParameterClass: KClass<out Annotation>
     ) {
-        val errorPrefix = "Error in ${element.simpleName}:"
+        contract {
+            returns() implies (element is XMethodElement)
+        }
+
         when {
-            element.kind != ElementKind.METHOD -> {
+            element !is XMethodElement || !element.hasAnnotation(composableClass) -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only composable methods can be annotated with $annotationName"
+                    "Only composable methods can be annotated with $annotationName",
+                    element
                 )
             }
-            element.annotationMirrors.find {
-                typeUtils.isSameType(it.annotationType, composableTypeMirror)
-            } == null -> {
+            element.isPrivate() -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only composable methods can be annotated with $annotationName"
-                )
-            }
-            element.modifiers.contains(Modifier.PRIVATE) -> {
-                throw ShowkaseProcessorException(
-                    "$errorPrefix The methods annotated with " +
+                    "The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
-                            "them otherwise."
+                            "them otherwise.",
+                    element
                 )
             }
-            // Validate that only a single parameter is passed to these functions. In addition, 
-            // the parameter should be annotated with @PreviewParameter.
-            validateComposableParameter(
-                element as ExecutableElement, previewParameterTypeMirror,
-                typeUtils
-            ) -> {
+            // Validate that no more than one parameter is passed to these functions. If passed,
+            // the parameter must be annotated with @PreviewParameter.
+            validateComposableParameter(element, previewParameterClass) -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Make sure that the @Composable functions that you annotate with" +
+                    "Make sure that the @Composable functions that you annotate with" +
                             " the $annotationName annotation only have a single parameter that is" +
-                            " annotated with @PreviewParameter."
+                            " annotated with @PreviewParameter.",
+                    element
                 )
-            }
-            else -> {
             }
         }
     }
 
     internal fun validateComposableParameter(
-        element: ExecutableElement,
-        previewParameterTypeMirror: TypeMirror,
-        typeUtils: Types
+        element: XMethodElement,
+        previewParameterClass: KClass<out Annotation>,
     ): Boolean {
-        
-        val incorrectParameters = element.parameters
-            .filter { paramElement ->
-                val previewParameter = paramElement.annotationMirrors.find {
-                    typeUtils.isSameType(it.annotationType, previewParameterTypeMirror)
-                }
-                paramElement.annotationMirrors.isNotEmpty() && previewParameter == null
-            }
-        
-        // Return true if more than one parameter was passed to the @Composable function or if 
+        // Return true if more than one parameter was passed to the @Composable function or if
         // the parameter that was passed is not annotated with @PreviewParameter.
-        return element.parameters.size > 1 || incorrectParameters.isNotEmpty()
+        if (element.parameters.size > 1) return true
+
+        val param = element.parameters.firstOrNull() ?: return false
+
+        return !param.hasAnnotation(previewParameterClass)
     }
 
     internal fun validateColorElement(
-        element: Element,
+        element: XElement,
         annotationName: String
     ) {
-        val errorPrefix = "Error in ${element.simpleName}:"
+        contract {
+            returns() implies (element is XFieldElement)
+        }
         when {
-            element.kind != ElementKind.FIELD -> {
+            element !is XFieldElement || !element.type.isLong()-> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only \"Color\" fields can be annotated with $annotationName"
-                )
-            }
-            element.asType().kind != TypeKind.LONG -> {
-                throw ShowkaseProcessorException(
-                    "$errorPrefix Only \"Color\" fields can be annotated with $annotationName"
+                    "Only \"Color\" fields can be annotated with $annotationName", element
                 )
             }
             // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
@@ -106,21 +83,18 @@ internal class ShowkaseValidator {
     }
 
     internal fun validateTypographyElement(
-        element: Element,
+        element: XElement,
         annotationName: String,
-        textStyleTypeMirror: TypeMirror,
-        typeUtils: Types
+        textStyleType: XType,
     ) {
-        val errorPrefix = "Error in ${element.simpleName}:"
+        contract {
+            returns() implies (element is XFieldElement)
+        }
+
         when {
-            element.kind != ElementKind.FIELD -> {
+            element !is XFieldElement || !textStyleType.isAssignableFrom(element.type) -> {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only \"TextStyle\" fields can be annotated with $annotationName"
-                )
-            }
-            !typeUtils.isSameType(element.asType(), textStyleTypeMirror) -> {
-                throw ShowkaseProcessorException(
-                    "$errorPrefix Only \"TextStyle\" fields can be annotated with $annotationName"
+                    "Only \"TextStyle\" fields can be annotated with $annotationName", element
                 )
             }
             // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
@@ -132,81 +106,60 @@ internal class ShowkaseValidator {
     }
 
     internal fun validateShowkaseRootElement(
-        elementSet: Set<Element>,
-        elementUtils: Elements,
-        typeUtils: Types
-    ) {
-        if (elementSet.isEmpty()) return
+        elementSet: Set<XElement>,
+    ): XTypeElement? {
+        val element = elementSet.firstOrNull() ?: return null
 
+        // TODO: 4/18/21 Better room utils to differentiate between normal class, interface, enum, object, etc
         val showkaseRootAnnotationName = ShowkaseRoot::class.java.simpleName
-        val showkaseRootModuleName = ShowkaseRootModule::class.java.simpleName
+        if (element !is XTypeElement) {
+            throw ShowkaseProcessorException(
+                "Only classes can be annotated with @$showkaseRootAnnotationName", element
+            )
+        }
 
         when {
             elementSet.size != 1 -> {
                 throw ShowkaseProcessorException(
-                    "Only one class in a module can be annotated with $showkaseRootAnnotationName"
+                    "Only one class in a module can be annotated with $showkaseRootAnnotationName",
+                    elementSet
                 )
             }
             else -> {
-                // Safe to do this as we've ensured that there's only one element in this set
-                val element = elementSet.first()
-                val errorPrefix = "Error in ${element.simpleName}:"
-
-                requireClass(element, showkaseRootAnnotationName, errorPrefix)
-                requireInterface(
-                    element, elementUtils, typeUtils, showkaseRootAnnotationName,
-                    errorPrefix, showkaseRootModuleName
-                )
+                requireShowkaseRootInterface(element, showkaseRootAnnotationName, environment)
             }
         }
-    }
 
-    private fun requireClass(
-        element: Element,
-        showkaseRootAnnotationName: String,
-        errorPrefix: String
-    ) {
-        if (element.kind != ElementKind.CLASS) {
-            throw ShowkaseProcessorException(
-                "$errorPrefix Only classes can be annotated with @$showkaseRootAnnotationName"
-            )
-        }
+        return element
     }
 
     @Suppress("LongParameterList")
-    private fun requireInterface(
-        element: Element,
-        elementUtils: Elements,
-        typeUtils: Types,
+    private fun requireShowkaseRootInterface(
+        element: XTypeElement,
         showkaseRootAnnotationName: String,
-        errorPrefix: String,
-        showkaseRootModuleName: String
+        environment: XProcessingEnv
     ) {
-        val showkaseRootInterfaceElement =
-            elementUtils.getTypeElement(ShowkaseRootModule::class.java.name)
-        if (!typeUtils.isAssignable(element.asType(), showkaseRootInterfaceElement.asType())) {
+        val showkaseRootInterfaceType = environment.requireType(ShowkaseRootModule::class)
+
+        if (showkaseRootInterfaceType.isAssignableFrom(element.type)) {
             throw ShowkaseProcessorException(
-                "$errorPrefix Only an implementation of $showkaseRootModuleName can be annotated " +
-                        "with @$showkaseRootAnnotationName"
+                "Only an implementation of $showkaseRootInterfaceType can be annotated " +
+                        "with @$showkaseRootAnnotationName",
+                element
             )
         }
     }
 
     fun validateEnclosingClass(
-        enclosingClassTypeMirror: TypeMirror?,
-        typeUtils: Types
+        enclosingClassElement: XTypeElement?,
     ) {
-        val enclosingClassElement =
-            enclosingClassTypeMirror?.let { typeUtils.asElement(it) } ?: return
-        val kmClass =
-            (enclosingClassElement.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass()
-        val errorPrefix = "Error in ${enclosingClassElement.simpleName}:"
-        kmClass.constructors.forEach { constructor ->
-            if (constructor.valueParameters.isNotEmpty()) {
+        enclosingClassElement?.getConstructors()?.forEach { constructor ->
+            if (constructor.parameters.isNotEmpty()) {
                 throw ShowkaseProcessorException(
-                    "$errorPrefix Only classes that don't accept any constructor parameters can " +
+                    "Only classes that don't accept any constructor parameters can " +
                             "hold a @Composable function that's annotated with the " +
-                            "@${ShowkaseComposable::class.java.simpleName}/@Preview annotation"
+                            "@${ShowkaseComposable::class.java.simpleName}/@Preview annotation",
+                    enclosingClassElement
                 )
             }
         }

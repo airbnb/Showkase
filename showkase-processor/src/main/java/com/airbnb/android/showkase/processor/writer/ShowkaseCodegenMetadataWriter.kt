@@ -1,5 +1,9 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
@@ -8,15 +12,12 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.Locale
-import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.util.Types
+import java.util.*
 
-internal class ShowkaseCodegenMetadataWriter(private val processingEnv: ProcessingEnvironment) {
+internal class ShowkaseCodegenMetadataWriter(private val processingEnv: XProcessingEnv) {
 
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
-        typeUtil: Types
     ) {
         if (showkaseMetadataSet.isEmpty()) return
         val moduleName = showkaseMetadataSet.first().packageSimpleName
@@ -30,14 +31,13 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
-            val methodName = when {
-                showkaseMetadata.enclosingClass == null -> showkaseMetadata.elementName
-                else -> {
-                    val enclosingClassName =
-                        typeUtil.asElement(showkaseMetadata.enclosingClass).simpleName
+            val methodName = showkaseMetadata.enclosingClass
+                ?.typeElement
+                ?.name
+                ?.let { enclosingClassName ->
                     "${enclosingClassName}_${showkaseMetadata.elementName}"
                 }
-            }
+                ?: showkaseMetadata.elementName
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
             showkaseMetadata.enclosingClass?.let {
@@ -58,7 +58,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
             }
         )
 
-        fileBuilder.build().writeTo(processingEnv.filer)
+        fileBuilder.build().writeTo(processingEnv.filer, mode = XFiler.Mode.Aggregating)
     }
 
     private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata) =

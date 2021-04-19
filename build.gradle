@@ -110,6 +110,7 @@ allprojects {
         kotlinOptions {
             jvmTarget = "1.8"
             freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+            freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
             freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
         }
     }

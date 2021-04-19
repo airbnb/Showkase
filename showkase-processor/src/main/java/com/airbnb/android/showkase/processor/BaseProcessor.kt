@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 /**
  * Creates a unified abstraction for processors of both KSP and java annotation processing.
  */
-abstract class BaseProcessor(vararg val supportedAnnotations: KClass<out Annotation>) :
+abstract class BaseProcessor(vararg val supportedAnnotations: String) :
     AbstractProcessor(),
     SymbolProcessor {
 
@@ -31,7 +31,7 @@ abstract class BaseProcessor(vararg val supportedAnnotations: KClass<out Annotat
     private lateinit var logger: KSPLogger
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return supportedAnnotations.map { it.qualifiedName!! }.toSet()
+        return supportedAnnotations.toSet()
     }
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.RELEASE_8

@@ -1,20 +1,19 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.*
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_MODELS_PACKAGE_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_PROVIDER_CLASS_NAME
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.element.Element
 
 internal class ShowkaseExtensionFunctionsWriter(
-    private val processingEnv: ProcessingEnvironment
+    private val environment: XProcessingEnv
 ) {
     internal fun generateShowkaseExtensionFunctions(
         rootModulePackageName: String,
         rootModuleClassName: String,
-        rootElement: Element
+        rootElement: XTypeElement
     ) {
         getFileBuilder(
             rootModulePackageName,
@@ -34,13 +33,13 @@ internal class ShowkaseExtensionFunctionsWriter(
                 )
             )
             .build()
-            .writeTo(processingEnv.filer)
+            .writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
     private fun generateIntentFunction(
         rootModulePackageName: String,
         rootModuleClassName: String,
-        rootElement: Element,
+        rootElement: XTypeElement,
     ) = FunSpec.builder(INTENT_FUNCTION_NAME).apply {
         addParameter(
             CONTEXT_PARAMETER_NAME, CONTEXT_CLASS_NAME
@@ -74,7 +73,7 @@ internal class ShowkaseExtensionFunctionsWriter(
         .build()
 
     private fun generateMetadataFunction(
-        rootElement: Element,
+        rootElement: XTypeElement,
         classKey: String
     ) = FunSpec.builder(METADATA_FUNCTION_NAME).apply {
         val errorMessage = "The class wasn't generated correctly. Make sure that you have setup " +
