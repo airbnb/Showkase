@@ -6,8 +6,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.swipeDown
+import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
-import com.vinaygaba.showcase_processor_testing.createShowkaseBrowserIntent
+import com.vinaygaba.showcase_processor_testing.getBrowserIntent
+import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +28,7 @@ class ShowcaseBrowserTest {
     val composeTestRule =
         AndroidComposeTestRule(
             activityRule = ActivityScenarioRule<ShowkaseBrowserActivity>(
-                createShowkaseBrowserIntent(
+                Showkase.getBrowserIntent(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             ),
@@ -50,10 +52,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components")
+            clickRowWithText("Components (5)")
 
             // Verify that all the groups are displayed on the screen
-            verifyRowsWithTextAreDisplayed("Group1", "Group2", "Group3")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
         }
     }
 
@@ -64,10 +66,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Colors" row
-            clickRowWithText("Colors")
+            clickRowWithText("Colors (4)")
 
             // Verify that a row for the group "Light Colors" is visible on the screen
-            verifyRowsWithTextAreDisplayed("Light Colors")
+            verifyRowsWithTextAreDisplayed("Light Colors (4)")
         }
     }
 
@@ -78,10 +80,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Typography" row
-            clickRowWithText("Typography")
+            clickRowWithText("Typography (13)")
 
             // Verify that all typography groups are visible on the screen
-            verifyRowsWithTextAreDisplayed("Material", "Holo")
+            verifyRowsWithTextAreDisplayed("Material (10)", "Holo (3)")
         }
     }
 
@@ -92,10 +94,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components")
+            clickRowWithText("Components (5)")
 
             // Select "Group1"
-            clickRowWithText("Group1")
+            clickRowWithText("Group1 (2)")
 
             // Verify that the correct composables are displayed on the screen
             verifyRowsWithTextAreDisplayed("Test Composable1", "Test Composable2")
@@ -136,10 +138,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Colors" row
-            clickRowWithText("Colors")
+            clickRowWithText("Colors (4)")
 
             // Select group "Light Colors"
-            clickRowWithText("Light Colors")
+            clickRowWithText("Light Colors (4)")
 
             // Verify that the correct colors are displayed on the screen
             verifyColorsDetailScreen()
@@ -153,10 +155,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Typography" row
-            clickRowWithText("Typography")
+            clickRowWithText("Typography (13)")
 
             // Select group "Material"
-            clickRowWithText("Material")
+            clickRowWithText("Material (10)")
 
             // Verify that the correct typography styles are displayed on the screen
             verifyTypographyDetailScreen()
@@ -165,7 +167,7 @@ class ShowcaseBrowserTest {
             composeTestRule.goBack()
 
             // Select the other group on the screen
-            clickRowWithText("Holo")
+            clickRowWithText("Holo (3)")
 
             // Verify that the correct typography styles are displayed on the screen
             verifyRowsWithTextAreDisplayed("Button", "Caption", "Overline")
@@ -179,18 +181,18 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select Components
-            clickRowWithText("Components")
+            clickRowWithText("Components (5)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
 
-            // Enter "group1" in the search field
-            inputTextWithTag("SearchTextField", "group1")
+            // Enter "Group1" in the search field
+            inputTextWithTag("SearchTextField", "Group1 (2)")
 
-            // Ensure that only Group1 is visible on the screen. The rest of the groups should not be 
+            // Ensure that only Group1 (2) is visible on the screen. The rest of the groups should not be 
             // visble anymore
-            verifyRowsWithTextAreDisplayed("Group1")
-            verifyRowsWithTextDoesNotExist("Group3", "Group3")
+            verifyRowsWithTextAreDisplayed("Group1 (2)")
+            verifyRowsWithTextDoesNotExist("Group2 (1)", "Group3 (2)")
         }
     }
 
@@ -201,7 +203,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select Colors
-            clickRowWithText("Colors")
+            clickRowWithText("Colors (4)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
@@ -221,7 +223,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select Typography
-            clickRowWithText("Typography")
+            clickRowWithText("Typography (13)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
@@ -231,7 +233,7 @@ class ShowcaseBrowserTest {
 
             // Ensure that only "Holo" is visible on the screen. The rest of the groups should not be 
             // visble anymore
-            verifyRowsWithTextAreDisplayed("Holo")
+            verifyRowsWithTextAreDisplayed("Holo (3)")
             verifyRowsWithTextDoesNotExist("Light Colors")
         }
     }
@@ -243,10 +245,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select components
-            clickRowWithText("Components")
+            clickRowWithText("Components (5)")
 
             // Select Group 3
-            clickRowWithText("Group3")
+            clickRowWithText("Group3 (2)")
 
             // Verify the right composables are visible on the screen
             verifyRowsWithTextAreDisplayed("Test Composable4", "Test Composable5")
@@ -271,10 +273,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select "Colors"
-            clickRowWithText("Colors")
+            clickRowWithText("Colors (4)")
 
             // Click on "Light Colors"
-            clickRowWithText("Light Colors")
+            clickRowWithText("Light Colors (4)")
 
             // Verify the right colors are visible on the screen
             verifyColorsDetailScreen()
@@ -299,10 +301,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select "Typography"
-            clickRowWithText("Typography")
+            clickRowWithText("Typography (13)")
 
             // Select Material
-            clickRowWithText("Material")
+            clickRowWithText("Material (10)")
 
             // Verify the right typography are visible on the screen
             verifyTypographyDetailScreen()
@@ -334,13 +336,15 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select components to go to the component groups screen
-            clickRowWithText("Components")
+            clickRowWithText("Components (5)")
 
             // Click on "Group 1" to go to the components in a group screen
-            clickRowWithText("Group1")
-
+            clickRowWithText("Group1 (2)")
+            
             // Click on "Test Composable1" to go to the component details screen
             clickRowWithText("Test Composable1")
+            
+            waitForIdle()
 
             // Go back to the components in a group screen
             goBack()
@@ -352,7 +356,7 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyRowsWithTextAreDisplayed("Group1", "Group2", "Group3")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
 
             // Go back to the landing screen
             goBack()
@@ -369,10 +373,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select "Colors" to go to the color groups screen
-            clickRowWithText("Colors")
+            clickRowWithText("Colors (4)")
 
             // Select "Light Colors" to go to the colors in a group screen
-            clickRowWithText("Light Colors")
+            clickRowWithText("Light Colors (4)")
 
             // Confirm that we are in the right screen
             verifyColorsDetailScreen()
@@ -381,7 +385,7 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyRowsWithTextAreDisplayed("Light Colors")
+            verifyRowsWithTextAreDisplayed("Light Colors (4)")
 
             // Go back to the landing screen
             goBack()
@@ -398,10 +402,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select "Typography" to go to the typography groups screen
-            clickRowWithText("Typography")
+            clickRowWithText("Typography (13)")
 
             // Select "Material" to go to the typography in a group screen
-            clickRowWithText("Material")
+            clickRowWithText("Material (10)")
 
             // Confirm that we are in the right screen
             verifyTypographyDetailScreen()
@@ -410,7 +414,7 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyRowsWithTextAreDisplayed("Material")
+            verifyRowsWithTextAreDisplayed("Material (10)")
 
             // Go back to the landing screen
             goBack()

@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha06-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0--alpha11-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha09-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0--beta03-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -72,8 +72,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-alpha06"
-kapt "com.airbnb.android:showkase-processor:1.0.0-alpha06"
+implementation "com.airbnb.android:showkase:1.0.0-alpha09"
+kapt "com.airbnb.android:showkase-processor:1.0.0-alpha09"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -124,13 +124,13 @@ class MyRootModule: ShowkaseRootModule
 
 **Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
  for accessing the UI browser. Typically you would start this activity from the debug menu of 
- your app but you are free to start this from any place you like! A nice helper function 
- `createShowkaseBrowserIntent` is generated for you so you might have to build the app once 
+ your app but you are free to start this from any place you like! A nice helper extension function 
+ `getBrowserIntent` is generated for you so you might have to build the app once 
  before it's available for use. Just start the intent and that's all you need to do for accessing
   Showkase! 
 
 ```kotlin
-startActivity(createShowkaseBrowserIntent(this))
+startActivity(Showkase.getBrowserIntent(context))
 ```
 
 ## Documentation
@@ -290,7 +290,31 @@ Note: The root module is the main module of your app that has a dependency on al
 in the app. This is relevant because we generate the Showkase related classes in the package of 
 the root module and we need to be able to access the UI elements across all the sub modules. This
  is only possible from the root module as it typically has a dependency on all the sub-modules. 
+ 
+##### 5. `Showkase` Object
+The `Showkase` object is the receiver for all the helper methods that this library generates. 
+Currently there are a few extension functions that are generated with the `Showkase` object as the 
+receiver. In order to get access to these functions, you need to build the app once so that the 
+methods can be generated for your use.
 
+Extension function | Description
+------------- | -------------
+getBrowserIntent | Helper function that return an intent to start the ShowkaseBrowser activity.
+getMetadata | Helper function that's give's you access to Showkase metadata. This contains data about all the composables, colors and typography in your codebase that's rendered in the Showkase Browser.
+
+```kotlin
+
+// Example Usage
+
+val intent = Showkase.getBrowserIntent(context)
+startActivity(intent)
+
+val metadata = Showkase.getMetadata()
+val components = metadata.componentList
+val colors= metadata.colorList
+val typography = metadata.typographyList
+
+```
 
 ## Frequently Asked Questions
 <details>
@@ -335,6 +359,14 @@ the root module and we need to be able to access the UI elements across all the 
   people start using this library, we will get a more clear idea about whether that needs to 
   happen or not. If we find that it didn't evolve the way we expected, we will consider 
   consildating these annotations. 
+</details>
+
+<details>
+  <summary>I would like to customize my component browser. Can this library still be useful?
+  </summary>
+  We provide a nice helper function that gives you access to the metadata of all your UI elements 
+  that are configured to work with Showkase. You can use `Showkase.getMetadata()` to get access 
+  to it and then use it in whatever way you see fit.
 </details>
 
 ## Coming Soon!

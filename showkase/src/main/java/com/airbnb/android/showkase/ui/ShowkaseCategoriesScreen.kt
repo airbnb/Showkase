@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCategory
@@ -18,16 +18,18 @@ import java.util.Locale
 @Composable
 internal fun ShowkaseCategoriesScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController
+    navController: NavHostController,
+    categoryMetadataMap: Map<ShowkaseCategory, Int>
 ) {
-    val activity = AmbientContext.current as AppCompatActivity
+    val activity = LocalContext.current as AppCompatActivity
     LazyColumn {
         items(
-            items = ShowkaseCategory.values(),
-            itemContent = { category ->
+            items = categoryMetadataMap.entries.toList(),
+            itemContent = { (category, categorySize) ->
                 val defaultLocale = Locale.getDefault()
+                val title = category.name.toLowerCase(defaultLocale).capitalize(defaultLocale)
                 SimpleTextCard(
-                    text = category.name.toLowerCase(defaultLocale).capitalize(defaultLocale),
+                    text = "$title ($categorySize)",
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(

@@ -13,8 +13,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun ShowkaseErrorScreen(errorText: String) {
     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-        Snackbar(modifier = Modifier.padding(padding4x),
-            text = {
+        Snackbar(
+            modifier = Modifier.padding(padding4x),
+            content = {
                 Text(
                     text = errorText,
                     modifier = Modifier.padding(padding1x)

@@ -1,27 +1,34 @@
 package com.airbnb.android.showkase.ui
 
-import androidx.compose.material.Text
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.KEY_ROUTE
@@ -35,6 +42,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
 
@@ -51,14 +59,14 @@ internal fun ShowkaseBrowserApp(
         topBar = {
             ShowkaseAppBar(navController, showkaseBrowserScreenMetadata)
         },
-        bodyContent = {
+        content = {
             Column(
                 modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
             ) {
                 ShowkaseBodyContent(
                     navController,
-                    groupedComponentMap, 
-                    groupedColorsMap, 
+                    groupedComponentMap,
+                    groupedColorsMap,
                     groupedTypographyMap,
                     showkaseBrowserScreenMetadata
                 )
@@ -74,57 +82,122 @@ internal fun ShowkaseAppBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
-    TopAppBar(
-        title = {
-            ShowkaseAppBarTitle(showkaseBrowserScreenMetadata, currentRoute)
-        },
-        actions = {
-            ShowkaseAppBarActions(showkaseBrowserScreenMetadata, currentRoute)
-        },
-        backgroundColor = Color.White
-    )
+    Row(
+        Modifier.fillMaxWidth()
+            .graphicsLayer(shadowElevation = 4f)
+            .padding(padding2x)
+            .height(64.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ShowkaseAppBarTitle(
+            showkaseBrowserScreenMetadata.value.isSearchActive,
+            showkaseBrowserScreenMetadata.value.currentGroup,
+            showkaseBrowserScreenMetadata.value.currentComponentName,
+            currentRoute,
+            showkaseBrowserScreenMetadata.value.searchQuery,
+            {
+                showkaseBrowserScreenMetadata.value =
+                    showkaseBrowserScreenMetadata.value.copy(searchQuery = it)
+            },
+            Modifier.fillMaxWidth(0.75f)
+        )
+        ShowkaseAppBarActions(
+            showkaseBrowserScreenMetadata,
+            currentRoute,
+            Modifier.fillMaxWidth(0.25f)
+        )
+    }
+
+    /**
+     * Commented out due to TopAppBar not working properly in beta-01 for this use case. Seems to be
+     * related to use to Surface inside TopAppBar and a TextField. Creating my own implementation
+     * for now. Will uncomment if this issue gets fixed.
+     */
+//    TopAppBar(
+//        title = {
+//            ShowkaseAppBarTitle(
+//                showkaseBrowserScreenMetadata.value.isSearchActive,
+//                showkaseBrowserScreenMetadata.value.currentGroup,
+//                showkaseBrowserScreenMetadata.value.currentComponentName,
+//                currentRoute,
+//                showkaseBrowserScreenMetadata.value.searchQuery
+//            ) {
+//                showkaseBrowserScreenMetadata.value = 
+//                    showkaseBrowserScreenMetadata.value.copy(searchQuery = it)
+//            }
+//        },
+//        actions = {
+//            ShowkaseAppBarActions(showkaseBrowserScreenMetadata, currentRoute)
+//        },
+//        backgroundColor = Color.White
+//    )
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun ShowkaseAppBarTitle(
-    metadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    currentRoute: String?
+    isSearchActive: Boolean,
+    currentGroup: String?,
+    currentComponentName: String?,
+    currentRoute: String?,
+    searchQuery: String?,
+    searchQueryValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     when {
-        metadata.value.isSearchActive -> {
-            ShowkaseSearchField(metadata)
+        isSearchActive -> {
+            ShowkaseSearchField(searchQuery, searchQueryValueChange)
         }
         currentRoute == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name -> {
-            Text(AmbientContext.current.getString(R.string.app_name))
+            ToolbarTitle(context.getString(R.string.app_name), modifier)
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_GROUPS.name -> {
-            Text(AmbientContext.current.getString(R.string.components_category))
+            ToolbarTitle(context.getString(R.string.components_category), modifier)
         }
         currentRoute == ShowkaseCurrentScreen.COLOR_GROUPS.name -> {
-            Text(AmbientContext.current.getString(R.string.colors_category))
+            ToolbarTitle(context.getString(R.string.colors_category), modifier)
         }
         currentRoute == ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name -> {
-            Text(AmbientContext.current.getString(R.string.typography_category))
+            ToolbarTitle(context.getString(R.string.typography_category), modifier)
         }
         currentRoute.insideGroup() -> {
-            Text(metadata.value.currentGroup.orEmpty())
+            ToolbarTitle(currentGroup ?: "currentGroup", modifier)
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
-            Text(metadata.value.currentComponentName.orEmpty())
+            ToolbarTitle(currentComponentName.orEmpty(), modifier)
         }
     }
 }
 
 @Composable
-internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMetadata>) {
+fun ToolbarTitle(
+    string: String,
+    modifier: Modifier
+) {
+    Text(
+        text = string,
+        modifier = modifier,
+        style = TextStyle(
+            fontSize = 20.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold
+        )
+    )
+}
+
+@Composable
+internal fun ShowkaseSearchField(
+    searchQuery: String?,
+    searchQueryValueChange: (String) -> Unit
+) {
     TextField(
-        value = metadata.value.searchQuery.orEmpty(),
+        value = searchQuery.orEmpty(),
         // Update value of textValue with the latest value of the text field
-        onValueChange = {
-            metadata.value = metadata.value.copy(searchQuery = it)
-        },
+        onValueChange = searchQueryValueChange,
         label = {
-            Text(text = AmbientContext.current.getString(R.string.search_label))
+            Text(text = LocalContext.current.getString(R.string.search_label))
         },
         textStyle = TextStyle(
             color = Color.Black,
@@ -136,14 +209,15 @@ internal fun ShowkaseSearchField(metadata: MutableState<ShowkaseBrowserScreenMet
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
         },
-        backgroundColor = Color.White
+        colors = TextFieldDefaults.textFieldColors()
     )
 }
 
 @Composable
 private fun ShowkaseAppBarActions(
     metadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    currentRoute: String?
+    currentRoute: String?,
+    modifier: Modifier = Modifier
 ) {
     when {
         metadata.value.isSearchActive -> {
@@ -153,7 +227,7 @@ private fun ShowkaseAppBarActions(
         }
         else -> {
             IconButton(
-                modifier = Modifier.testTag("SearchIcon"),
+                modifier = modifier.testTag("SearchIcon"),
                 onClick = {
                     metadata.value = metadata.value.copy(isSearchActive = true)
                 }
@@ -179,8 +253,13 @@ internal fun ShowkaseBodyContent(
     ) {
         composable(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name) {
             ShowkaseCategoriesScreen(
-                showkaseBrowserScreenMetadata, 
-                navController
+                showkaseBrowserScreenMetadata,
+                navController,
+                getCategoryMetadataMap(
+                    groupedComponentMap,
+                    groupedColorsMap,
+                    groupedTypographyMap
+                )
             )
         }
         composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) {
@@ -193,7 +272,7 @@ internal fun ShowkaseBodyContent(
         composable(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name) {
             ShowkaseComponentsInAGroupScreen(
                 groupedComponentMap,
-                showkaseBrowserScreenMetadata, 
+                showkaseBrowserScreenMetadata,
                 navController
             )
         }
@@ -235,8 +314,20 @@ internal fun ShowkaseBodyContent(
     }
 }
 
+private fun getCategoryMetadataMap(
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+) = mapOf(
+    ShowkaseCategory.COMPONENTS to groupedComponentMap.flatCount(),
+    ShowkaseCategory.COLORS to groupedColorsMap.flatCount(),
+    ShowkaseCategory.TYPOGRAPHY to groupedTypographyMap.flatCount()
+)
+
+internal fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
+
 /**
  * Helper function to navigate to the passed [ShowkaseCurrentScreen]
  */
-internal fun NavHostController.navigate(destinationScreen: ShowkaseCurrentScreen) = 
+internal fun NavHostController.navigate(destinationScreen: ShowkaseCurrentScreen) =
     navigate(destinationScreen.name)

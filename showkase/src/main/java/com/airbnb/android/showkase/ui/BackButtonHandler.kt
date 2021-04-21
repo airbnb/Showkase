@@ -5,19 +5,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Providers
-import androidx.compose.runtime.onCommit
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticAmbientOf
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalContext
 
 /**
  * Related discussion - 
  * https://kotlinlang.slack.com/archives/CJLTWPH7S/p1591558155394500?thread_ts=1591558024.394400&cid=CJLTWPH7S
  */
-private val AmbientBackPressedDispatcher = staticAmbientOf<OnBackPressedDispatcherOwner?> { null }
+private val LocalBackPressedDispatcher = staticCompositionLocalOf<OnBackPressedDispatcherOwner?> { null }
 
 private class ComposableBackHandler(enabled: Boolean) : OnBackPressedCallback(enabled) {
     lateinit var onBackPressed: () -> Unit
@@ -32,7 +31,7 @@ internal fun handler(
     enabled: Boolean = true,
     onBackPressed: () -> Unit
 ) {
-    val dispatcher = (AmbientBackPressedDispatcher.current ?: return).onBackPressedDispatcher
+    val dispatcher = (LocalBackPressedDispatcher.current ?: return).onBackPressedDispatcher
     val handler = remember { ComposableBackHandler(enabled) }
     DisposableEffect(dispatcher) {
         dispatcher.addCallback(handler)
@@ -46,11 +45,12 @@ internal fun handler(
     }
 }
 
+// TODO(vinaygaba) - Replace with the version Compose just exposed in the activity-compose bindings
 @Composable
 internal fun BackButtonHandler(
     onBackPressed: () -> Unit, 
 ) {
-    var context = AmbientContext.current
+    var context = LocalContext.current
     // Inspired from https://cs.android.com/androidx/platform/frameworks/support/+/
     // androidx-master-dev:navigation/navigation-compose/src/main/java/androidx/navigation/
     // compose/NavHost.kt;l=88
@@ -62,8 +62,8 @@ internal fun BackButtonHandler(
         }
         context = context.baseContext
     }
-    Providers(
-        AmbientBackPressedDispatcher provides context as ComponentActivity
+    CompositionLocalProvider(
+        LocalBackPressedDispatcher provides context as ComponentActivity
     ) {
         handler {
             onBackPressed()
