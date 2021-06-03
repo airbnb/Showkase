@@ -1,8 +1,10 @@
 package com.airbnb.android.showkase_processor_testing
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
@@ -45,7 +47,24 @@ internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity
     vararg textList: String
 ) {
     textList.forEach {
-        onNodeWithText(it).assertDoesNotExist()
+        onNodeWithText(it).assertEitherDoesNotExistOrIsNotDisplayed()
+    }
+}
+
+/**
+ * LazyColumn pre-fetching may precompose items in advance even if they are not displayed, and also
+ * keeps two previously visible items active but not displayed
+ * (https://android-review.googlesource.com/c/platform/frameworks/support/+/1686519). There is
+ * not yet a built-in assertion to determine whether a node is not visible for any reason, as
+ * assertIsNotDisplayed() fails if the node does not exist.
+ * See https://issuetracker.google.com/issues/187188981
+ */
+private fun SemanticsNodeInteraction.assertEitherDoesNotExistOrIsNotDisplayed() {
+    try {
+        assertDoesNotExist()
+    } catch (e: AssertionError) {
+        // Does exist, but may not be displayed
+        assertIsNotDisplayed()
     }
 }
 

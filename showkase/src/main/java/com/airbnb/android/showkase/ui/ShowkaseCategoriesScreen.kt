@@ -27,7 +27,10 @@ internal fun ShowkaseCategoriesScreen(
             items = categoryMetadataMap.entries.toList(),
             itemContent = { (category, categorySize) ->
                 val defaultLocale = Locale.getDefault()
-                val title = category.name.toLowerCase(defaultLocale).capitalize(defaultLocale)
+                val title = category.name
+                    .lowercase(defaultLocale)
+                    .replaceFirstChar { it.titlecase(defaultLocale) }
+
                 SimpleTextCard(
                     text = "$title ($categorySize)",
                     onClick = {

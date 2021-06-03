@@ -45,6 +45,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '11'
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+        ]
     }
     buildFeatures {
         compose true

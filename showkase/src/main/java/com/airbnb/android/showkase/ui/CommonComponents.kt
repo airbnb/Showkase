@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SimpleTextCard(
     text: String,
@@ -23,10 +25,8 @@ fun SimpleTextCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
-            .padding(start = padding4x, end = padding4x, top = padding2x, bottom = padding2x)
-            .clickable(
-                onClick = { onClick() }
-            )
+            .padding(start = padding4x, end = padding4x, top = padding2x, bottom = padding2x),
+        onClick = onClick
     ) {
         Text(
             text = text, 

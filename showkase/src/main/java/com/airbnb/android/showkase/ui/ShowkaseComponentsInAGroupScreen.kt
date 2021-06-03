@@ -11,6 +11,7 @@ import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
+import java.util.Locale
 
 @Composable
 internal fun ShowkaseComponentsInAGroupScreen(
@@ -72,8 +73,11 @@ private fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.componentName.toLowerCase()
-                    .contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
+                it.componentName.lowercase(Locale.getDefault())
+                    .contains(
+                        showkaseBrowserScreenMetadata.value.searchQuery!!
+                            .lowercase(Locale.getDefault())
+                    )
             }
         }
         else -> list
