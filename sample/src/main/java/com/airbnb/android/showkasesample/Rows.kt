@@ -29,6 +29,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding1x
 import com.airbnb.android.showkase.ui.padding2x
 import com.airbnb.android.showkase.ui.padding4x
+import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -140,7 +141,7 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
                 color = MaterialTheme.colors.primary
             ) {
                 Text(
-                    text = label.toUpperCase(),
+                    text = label.uppercase(Locale.getDefault()),
                     modifier = Modifier.padding(padding2x),
                     style = TextStyle(
                         fontSize = 10.sp,

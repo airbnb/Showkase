@@ -58,9 +58,9 @@ internal fun <T> getFilteredSearchList(
         false -> map
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             map.filter {
-                it.key.toLowerCase().contains(
+                it.key.lowercase(Locale.getDefault()).contains(
                     showkaseBrowserScreenMetadata.value.searchQuery!!
-                        .toLowerCase(Locale.getDefault())
+                        .lowercase(Locale.getDefault())
                 )
             }
         }
