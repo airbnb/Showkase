@@ -12,8 +12,8 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
+apply plugin: 'kotlin-kapt'
 
 kapt {
     correctErrorTypes = true
