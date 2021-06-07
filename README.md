@@ -374,12 +374,12 @@ val typography = metadata.typographyList
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
-- Support for passing a `@PreviewParameter` parameter to `@Preview`/`@ShowkaseComposable` 
-components.
-- Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
-this would be a good opportunity to make this a part of your CI and detect diffs in components. 
-- Support for other UI elements that are a part of your design system (like icons, spacing, etc)
-- Generating a web version of the Showkase browser with documentation, search and screenshots.
+- [x] Support for passing a `@PreviewParameter` parameter to `@Preview`/`@ShowkaseComposable` 
+components. (See https://github.com/airbnb/Showkase#1-showkasecomposable)
+- [x] Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
+this would be a good opportunity to make this a part of your CI and detect diffs in components. (The `getMetadata` method can be useful to accomplish this. More info here - https://github.com/airbnb/Showkase#5-showkase-object) 
+- [ ] Support for other UI elements that are a part of your design system (like icons, spacing, etc)
+- [ ] Generating a web version of the Showkase browser with documentation, search and screenshots.
 
 ## Contributing
 Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
@@ -389,7 +389,7 @@ a new issue so we can track it.
 ## License
 
 ```
-Copyright 2020 Airbnb, Inc.
+Copyright 2021 Airbnb, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
