@@ -30,7 +30,7 @@ jobs:
       run: ./gradlew test --stacktrace
 
   ui-testing:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     strategy:
       matrix:
         api-level: [26, 28, 29]
