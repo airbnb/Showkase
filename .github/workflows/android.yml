@@ -54,7 +54,7 @@ jobs:
       - name: Run UI Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 6110076
+          emulator-build: 7425822
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
