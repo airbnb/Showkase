@@ -7,7 +7,7 @@ minimal configuration it generates a UI browser that helps you easily find your 
 colors & typography. It also renders your components in common situations like dark mode, 
 right-to-left layouts, and scaled fonts which help in finding issues early.
 
-> Jetpack Compose is in alpha so Showkase may need breaking changes in order to keep up 
+> Jetpack Compose is in beta so Showkase may need breaking changes in order to keep up 
 with changes in Compose.
 
 <p align="center">
