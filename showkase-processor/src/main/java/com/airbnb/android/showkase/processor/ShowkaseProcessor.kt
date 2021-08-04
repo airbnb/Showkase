@@ -55,10 +55,10 @@ class ShowkaseProcessor: AbstractProcessor() {
         filter = processingEnv.filer
         messager = processingEnv.messager
         composableTypeMirror = elementUtils
-            .getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
+            .getTypeElement(COMPOSABLE_CLASS_NAME)
             .asType()
         textStyleTypeMirror = elementUtils
-            .getTypeElement(Class.forName(TYPE_STYLE_CLASS_NAME).canonicalName)
+            .getTypeElement(TYPE_STYLE_CLASS_NAME)
             .asType()
     }
 
