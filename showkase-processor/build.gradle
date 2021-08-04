@@ -20,14 +20,6 @@ kapt {
     generateStubs = true
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
-        }
-    }
-}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
