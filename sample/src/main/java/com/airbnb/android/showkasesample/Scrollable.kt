@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
 @Composable
 fun VerticalScrollSample() {
@@ -30,5 +31,16 @@ fun VerticalScrollSample() {
 @Preview(group = "Scrollable", name = "Vertical Scroll")
 @Composable
 fun VerticalScrollPreview() {
+    VerticalScrollSample()
+}
+
+
+// This preview was only meant for the Android Studio preview and we want to avoid displaying this
+// in the ShowkaseBrowser. In order to do this, I used the ShowkaseComposable annotation along with
+// the skip property set to true.
+@ShowkaseComposable(skip = true)
+@Preview(group = "Scrollable", name = "Vertical Scroll2", showBackground = true)
+@Composable
+fun VerticalScrollPreview2() {
     VerticalScrollSample()
 }

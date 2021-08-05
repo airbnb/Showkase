@@ -109,7 +109,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
         previewParameterTypeElement?.let { previewParameter -> 
             return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java)
-                .map { element ->
+                .mapNotNull { element ->
                     showkaseValidator.validateComponentElement(
                         element, composableTypeMirror, typeUtils,
                         ShowkaseComposable::class.java.simpleName,
@@ -141,7 +141,7 @@ class ShowkaseProcessor: AbstractProcessor() {
                     typeUtils = typeUtils, 
                     previewTypeMirror = previewTypeElement.asType(),
                     previewParameterTypeMirror = previewParameterTypeElement.asType(), 
-                    showkaseValidator = showkaseValidator 
+                    showkaseValidator = showkaseValidator
                 )
             }.toSet()
         } ?: return setOf()
