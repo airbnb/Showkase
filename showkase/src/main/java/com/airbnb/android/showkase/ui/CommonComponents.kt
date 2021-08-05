@@ -2,18 +2,18 @@ package com.airbnb.android.showkase.ui
 
 import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 
@@ -24,7 +24,8 @@ fun SimpleTextCard(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = padding4x, end = padding4x, top = padding2x, bottom = padding2x),
         onClick = onClick
     ) {
@@ -63,7 +64,7 @@ internal fun ComponentCard(
     val composableContainerModifier = Modifier.generateContainerModifier(onClick)
     Card() {
         Box() {
-            Column(modifier = composableModifier) {
+            Column(modifier = composableModifier.sizeIn(maxHeight = Dp(LocalConfiguration.current.screenHeightDp.toFloat()))) {
                 metadata.component()
             }
             // Need to add this as part of the stack so that we can intercept the touch of the 
@@ -72,7 +73,9 @@ internal fun ComponentCard(
             // impact and the touches go through to the component(this happens in the "Component 
             // Detail" screen.
             Column(
-                modifier = Modifier.matchParentSize().then(composableContainerModifier)
+                modifier = Modifier
+                    .matchParentSize()
+                    .then(composableContainerModifier)
             ){}
         }
 
