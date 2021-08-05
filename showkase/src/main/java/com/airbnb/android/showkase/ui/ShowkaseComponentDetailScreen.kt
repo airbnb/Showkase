@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -200,7 +201,7 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent) = composed {
-    val baseModifier = padding(padding4x)
+    val baseModifier = padding(padding4x).sizeIn(maxHeight = Dp(LocalConfiguration.current.screenHeightDp.toFloat()))
     when {
         metadata.heightDp != null && metadata.widthDp != null -> baseModifier.size(
             width = metadata.widthDp.dp,

@@ -24,7 +24,8 @@ fun SimpleTextCard(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = padding4x, end = padding4x, top = padding2x, bottom = padding2x),
         onClick = onClick
     ) {
@@ -72,7 +73,9 @@ internal fun ComponentCard(
             // impact and the touches go through to the component(this happens in the "Component 
             // Detail" screen.
             Column(
-                modifier = Modifier.matchParentSize().then(composableContainerModifier)
+                modifier = Modifier
+                    .matchParentSize()
+                    .then(composableContainerModifier)
             ){}
         }
 
