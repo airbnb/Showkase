@@ -34,7 +34,7 @@ compileKotlin {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compileOnly project(':showkase-annotation')
+    implementation project(':showkase-annotation')
 
     implementation deps.autoService
     implementation deps.kotlinStdLib
