@@ -64,7 +64,7 @@ internal fun ComponentCard(
     val composableContainerModifier = Modifier.generateContainerModifier(onClick)
     Card() {
         Box() {
-            Column(modifier = composableModifier.sizeIn(maxHeight = Dp(LocalConfiguration.current.screenHeightDp.toFloat()))) {
+            Column(modifier = composableModifier) {
                 metadata.component()
             }
             // Need to add this as part of the stack so that we can intercept the touch of the 
