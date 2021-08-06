@@ -220,7 +220,7 @@ internal fun getShowkaseMetadata(
     )
 }
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "LongMethod")
 internal fun getShowkaseMetadataFromPreview(
     element: ExecutableElement,
     elementUtil: Elements,
