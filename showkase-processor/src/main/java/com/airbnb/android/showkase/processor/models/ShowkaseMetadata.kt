@@ -31,7 +31,7 @@ internal sealed class ShowkaseMetadata {
     abstract val enclosingClass: TypeMirror?
     abstract val insideWrapperClass: Boolean
     abstract val insideObject: Boolean
-    
+
     data class Component(
         override val element: Element,
         override val packageName: String,
@@ -45,7 +45,7 @@ internal sealed class ShowkaseMetadata {
         override val insideObject: Boolean = false,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
-        val previewParameter: TypeMirror? = null
+        val previewParameter: TypeMirror? = null,
     ): ShowkaseMetadata()
 
     data class Color(
@@ -94,7 +94,7 @@ internal enum class ShowkaseFunctionType {
     INSIDE_COMPANION_OBJECT,
 }
 
-internal fun ShowkaseFunctionType.insideObject() = this == ShowkaseFunctionType.INSIDE_OBJECT || 
+internal fun ShowkaseFunctionType.insideObject() = this == ShowkaseFunctionType.INSIDE_OBJECT ||
         this == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
 
 internal enum class ShowkaseMetadataType {
@@ -104,7 +104,7 @@ internal enum class ShowkaseMetadataType {
 }
 
 internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata {
-    val (enclosingClassTypeMirror, previewParameterClassTypeMirror) = 
+    val (enclosingClassTypeMirror, previewParameterClassTypeMirror) =
         getCodegenMetadataTypeMirror()
 
     return when(ShowkaseMetadataType.valueOf(showkaseMetadataType)) {
@@ -122,7 +122,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 insideObject = insideObject,
                 showkaseKDoc = showkaseKDoc,
                 element = element,
-                previewParameter = previewParameterClassTypeMirror
+                previewParameter = previewParameterClassTypeMirror,
             )
         }
         ShowkaseMetadataType.COLOR -> {
@@ -183,8 +183,11 @@ internal fun getShowkaseMetadata(
     typeUtils: Types,
     showkaseValidator: ShowkaseValidator,
     previewParameterTypeMirror: TypeMirror
-): ShowkaseMetadata {
+): ShowkaseMetadata? {
     val showkaseAnnotation = element.getAnnotation(ShowkaseComposable::class.java)
+    // If this component was configured to be skipped, return early
+    if (showkaseAnnotation.skip) return null
+
     val packageElement = elementUtil.getPackageOf(element)
     val moduleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
@@ -193,14 +196,13 @@ internal fun getShowkaseMetadata(
     val kDoc = elementUtil.getDocComment(element).orEmpty().trim()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
     val showkaseName = getShowkaseName(showkaseAnnotation.name, elementName)
-    val showkaseGroup = getShowkaseGroup(showkaseAnnotation.group, enclosingClassTypeMirror, 
+    val showkaseGroup = getShowkaseGroup(showkaseAnnotation.group, enclosingClassTypeMirror,
         typeUtils)
     val previewParamTypeMirror = element.getPreviewParameterTypeMirror(
         typeUtils, previewParameterTypeMirror, elementUtil
     )
-    
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
-    
+
     return ShowkaseMetadata.Component(
         packageSimpleName = moduleName,
         packageName = packageName,
@@ -218,27 +220,32 @@ internal fun getShowkaseMetadata(
     )
 }
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "LongMethod")
 internal fun getShowkaseMetadataFromPreview(
     element: ExecutableElement,
     elementUtil: Elements,
     typeUtils: Types,
     previewTypeMirror: TypeMirror,
     previewParameterTypeMirror: TypeMirror,
-    showkaseValidator: ShowkaseValidator
+    showkaseValidator: ShowkaseValidator,
 ): ShowkaseMetadata? {
     val previewAnnotationMirror = element.annotationMirrors.find {
         typeUtils.isSameType(it.annotationType, previewTypeMirror)
     }
+
+    val showkaseComosableAnnotation = element.getAnnotation(ShowkaseComposable::class.java)
+    // If this component was configured to be skipped, return early
+    if (showkaseComosableAnnotation != null && showkaseComosableAnnotation.skip) return null
+
     val map = mutableMapOf<ShowkaseAnnotationProperty, Any>()
     previewAnnotationMirror?.elementValues?.map { entry ->
-        val key = entry.key.simpleName.toString().toUpperCase()
+        val key = entry.key.simpleName.toString().uppercase(Locale.getDefault())
         val value = entry.value.value
         // Only store the properties that we currently support in the annotation
         if (ShowkaseAnnotationProperty.values().any { it.name == key }) {
             // All the supported types are safe to serialize as a String in order to store in the
             // map.
-            val annotationProperty = 
+            val annotationProperty =
                 ShowkaseAnnotationProperty.valueOf(key)
             map[annotationProperty] =  value
         }
@@ -262,9 +269,9 @@ internal fun getShowkaseMetadataFromPreview(
     val previewParamTypeMirror = element.getPreviewParameterTypeMirror(
         typeUtils, previewParameterTypeMirror, elementUtil
     )
-    
+
     showkaseValidator.validateEnclosingClass(enclosingClassTypeMirror, typeUtils)
-    
+
     return ShowkaseMetadata.Component(
         packageSimpleName = moduleName,
         packageName = packageName,
@@ -278,7 +285,7 @@ internal fun getShowkaseMetadataFromPreview(
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = showkaseFunctionType.insideObject(),
         element = element,
-        previewParameter = previewParamTypeMirror 
+        previewParameter = previewParamTypeMirror
     )
 }
 
@@ -328,7 +335,7 @@ internal fun getShowkaseColorMetadata(
     val packageName = packageElement.qualifiedName.toString()
     val elementName = element.simpleName.toString()
     // TODO(vinaygaba): Color propertie's aren't working properly with companion objects. This is
-    // because the properties are generated outside the companion object in java land(as opposed to 
+    // because the properties are generated outside the companion object in java land(as opposed to
     // inside the companion class for functions). Need to investigate more.
     val showkaseFunctionType = element.getShowkaseFunctionType()
     val enclosingClassTypeMirror = element.getEnclosingClassType(showkaseFunctionType)
@@ -360,13 +367,13 @@ internal fun getShowkaseTypographyMetadata(
     typeUtils: Types,
     showkaseValidator: ShowkaseValidator
 ): ShowkaseMetadata {
-    val showkaseTypographyAnnotation = 
+    val showkaseTypographyAnnotation =
         element.getAnnotation(ShowkaseTypography::class.java)
     val packageElement = elementUtils.getPackageOf(element)
     val packageSimpleName = packageElement.simpleName.toString()
     val packageName = packageElement.qualifiedName.toString()
     val elementName = element.simpleName.toString()
-    // TODO(vinaygaba): Typography properties aren't working properly with companion objects. 
+    // TODO(vinaygaba): Typography properties aren't working properly with companion objects.
     // This is because the properties are generated outside the companion object in java land(as
     // opposed to inside the companion class for functions). Need to investigate more.
     val showkaseFunctionType = element.getShowkaseFunctionType()
@@ -405,7 +412,7 @@ internal fun Element.getShowkaseFunctionType(): ShowkaseFunctionType =
                 Flag.Class.IS_COMPANION_OBJECT(kmClass.flags) -> ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
                 Flag.Class.IS_OBJECT(kmClass.flags) -> ShowkaseFunctionType.INSIDE_OBJECT
                 else -> throw ShowkaseProcessorException(
-                    "Your UI element:${this.simpleName} is declared in a way " + 
+                    "Your UI element:${this.simpleName} is declared in a way " +
                             "that is not supported by Showkase.")
             }
         }
@@ -435,7 +442,7 @@ internal fun Element.getEnclosingClassType(
 ) = when(showkaseFunctionType) {
     ShowkaseFunctionType.TOP_LEVEL -> null
     ShowkaseFunctionType.INSIDE_CLASS, ShowkaseFunctionType.INSIDE_OBJECT -> enclosingElement.asType()
-    // Get the class that holds the companion object instead of using the intermediate element 
+    // Get the class that holds the companion object instead of using the intermediate element
     // that's used to represent the companion object.
     ShowkaseFunctionType.INSIDE_COMPANION_OBJECT -> enclosingElement.enclosingElement.asType()
 }
