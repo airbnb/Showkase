@@ -222,6 +222,7 @@ Property Name | Description
 <b>group</b> | The grouping key that will be used to group it with other `@Composable` functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
 <b>widthDp</b> | The width that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 <b>heightDp</b> | The height that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
+<b>skip</b> | Setting this to true will skip this composable from rendering in the Showkase browser. A good use case for this would be when you want to have  composable with `@Preview` but want to stop Showkase from picking it up and rendering it in its browser
 
 ##### 2. @ShowkaseColor
 Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 
