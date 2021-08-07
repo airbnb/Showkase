@@ -18,16 +18,21 @@ import java.util.Locale
 @Composable
 internal fun ShowkaseCategoriesScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController
+    navController: NavHostController,
+    categoryMetadataMap: Map<ShowkaseCategory, Int>
 ) {
     val activity = LocalContext.current as AppCompatActivity
     LazyColumn {
         items(
-            items = ShowkaseCategory.values(),
-            itemContent = { category ->
+            items = categoryMetadataMap.entries.toList(),
+            itemContent = { (category, categorySize) ->
                 val defaultLocale = Locale.getDefault()
+                val title = category.name
+                    .lowercase(defaultLocale)
+                    .replaceFirstChar { it.titlecase(defaultLocale) }
+
                 SimpleTextCard(
-                    text = category.name.toLowerCase(defaultLocale).capitalize(defaultLocale),
+                    text = "$title ($categorySize)",
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(

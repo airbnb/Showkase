@@ -32,7 +32,8 @@ internal fun ShowkaseTypographyInAGroupScreen(
     val filteredList =
         getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata.value)
     LazyColumn(
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier
+            .background(Color.White)
             .fillMaxSize()
             .testTag("TypographyInAGroupList")
     ) {
@@ -40,8 +41,12 @@ internal fun ShowkaseTypographyInAGroupScreen(
             items = filteredList,
             itemContent = { groupTypographyMetadata ->
                 Text(
-                    text = groupTypographyMetadata.typographyName.capitalize(Locale.getDefault()),
-                    modifier = Modifier.fillParentMaxWidth().padding(padding4x),
+                    text = groupTypographyMetadata.typographyName.replaceFirstChar {
+                        it.titlecase(Locale.getDefault())
+                    },
+                    modifier = Modifier
+                        .fillParentMaxWidth()
+                        .padding(padding4x),
                     style = groupTypographyMetadata.textStyle
                 )
                 Divider()
@@ -76,8 +81,11 @@ private fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.typographyName.toLowerCase()
-                    .contains(showkaseBrowserScreenMetadata.searchQuery!!.toLowerCase())
+                it.typographyName.lowercase(Locale.getDefault())
+                    .contains(
+                        showkaseBrowserScreenMetadata.searchQuery!!
+                            .lowercase(Locale.getDefault())
+                    )
             }
         }
         else -> list

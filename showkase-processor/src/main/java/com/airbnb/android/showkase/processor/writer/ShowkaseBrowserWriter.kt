@@ -239,14 +239,14 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         private const val COLOR_PROPERTY_NAME = "colorList"
         private const val TYPOGRAPHY_PROPERTY_NAME = "typographyList"
 
-        val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
-        val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
+        internal val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
+        internal val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponent")
-        val SHOWKASE_BROWSER_COLOR_CLASS_NAME =
+        internal val SHOWKASE_BROWSER_COLOR_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserColor")
-        val SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME =
+        internal val SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserTypography")
-        val SHOWKASE_PROVIDER_CLASS_NAME =
+        internal val SHOWKASE_PROVIDER_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseProvider")
     }
 }

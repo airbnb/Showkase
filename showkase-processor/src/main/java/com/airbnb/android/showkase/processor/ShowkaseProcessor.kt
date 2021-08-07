@@ -15,7 +15,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.models.toModel
-import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserIntentWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.google.auto.service.AutoService
@@ -55,10 +55,10 @@ class ShowkaseProcessor: AbstractProcessor() {
         filter = processingEnv.filer
         messager = processingEnv.messager
         composableTypeMirror = elementUtils
-            .getTypeElement(Class.forName(COMPOSABLE_CLASS_NAME).canonicalName)
+            .getTypeElement(COMPOSABLE_CLASS_NAME)
             .asType()
         textStyleTypeMirror = elementUtils
-            .getTypeElement(Class.forName(TYPE_STYLE_CLASS_NAME).canonicalName)
+            .getTypeElement(TYPE_STYLE_CLASS_NAME)
             .asType()
     }
 
@@ -109,7 +109,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
         previewParameterTypeElement?.let { previewParameter -> 
             return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class.java)
-                .map { element ->
+                .mapNotNull { element ->
                     showkaseValidator.validateComponentElement(
                         element, composableTypeMirror, typeUtils,
                         ShowkaseComposable::class.java.simpleName,
@@ -141,7 +141,7 @@ class ShowkaseProcessor: AbstractProcessor() {
                     typeUtils = typeUtils, 
                     previewTypeMirror = previewTypeElement.asType(),
                     previewParameterTypeMirror = previewParameterTypeElement.asType(), 
-                    showkaseValidator = showkaseValidator 
+                    showkaseValidator = showkaseValidator
                 )
             }.toSet()
         } ?: return setOf()
@@ -268,8 +268,8 @@ class ShowkaseProcessor: AbstractProcessor() {
             )
         }
 
-        ShowkaseBrowserIntentWriter(processingEnv).apply {
-            generateIntentFile(
+        ShowkaseExtensionFunctionsWriter(processingEnv).apply {
+            generateShowkaseExtensionFunctions(
                 rootModulePackageName = rootModulePackageName,
                 rootModuleClassName = rootModuleClassName,
                 rootElement = rootElement

@@ -4,7 +4,7 @@ buildscript {
     }
     // Maven artifact publish
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
     }
 }
 
@@ -12,8 +12,8 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
+apply plugin: 'kotlin-kapt'
 
 kapt {
     correctErrorTypes = true
@@ -21,7 +21,7 @@ kapt {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 21
@@ -40,11 +40,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+        ]
     }
     buildFeatures {
         compose true
@@ -74,20 +77,16 @@ dependencies {
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
-    implementation deps.support.lifecycleExtensions
-    
+
     // Compose
     implementation deps.compose.activityCompose
     implementation deps.compose.composeRuntime
     implementation deps.compose.composeNavigation
-    implementation deps.compose.constraintLayout
     implementation deps.compose.core
     implementation deps.compose.foundation
     implementation deps.compose.tooling
     implementation deps.compose.layout
     implementation deps.compose.material
-    implementation deps.compose.savedInstanceState
-    implementation deps.compose.uiLiveData
     androidTestImplementation deps.compose.uiTest
     
     // Unit Testing

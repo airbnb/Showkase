@@ -27,6 +27,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
+import java.util.Locale
 
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
@@ -51,7 +52,8 @@ internal fun ShowkaseColorsInAGroupScreen(
                     )
                 ) {
                     Row(
-                        modifier = Modifier.fillParentMaxWidth()
+                        modifier = Modifier
+                            .fillParentMaxWidth()
                             .padding(padding4x),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
@@ -66,7 +68,8 @@ internal fun ShowkaseColorsInAGroupScreen(
                             )
                         )
                         Column(
-                            modifier = Modifier.padding(start = padding4x, end = padding4x)
+                            modifier = Modifier
+                                .padding(start = padding4x, end = padding4x)
                                 .size(75.dp)
                                 .shadow(elevation = 5.dp)
                                 .background(color = groupColorMetadata.color)
@@ -103,8 +106,11 @@ internal fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.colorName.toLowerCase()
-                    .contains(showkaseBrowserScreenMetadata.value.searchQuery!!.toLowerCase())
+                it.colorName.lowercase(Locale.getDefault())
+                    .contains(
+                        showkaseBrowserScreenMetadata.value.searchQuery!!
+                            .lowercase(Locale.getDefault())
+                    )
             }
         }
         else -> list

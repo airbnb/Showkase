@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--alpha07-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0--beta01-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta03-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -7,8 +7,6 @@ minimal configuration it generates a UI browser that helps you easily find your 
 colors & typography. It also renders your components in common situations like dark mode, 
 right-to-left layouts, and scaled fonts which help in finding issues early.
 
-> Jetpack Compose is in alpha so Showkase may need breaking changes in order to keep up 
-with changes in Compose.
 
 <p align="center">
     <img src="assets/showkase_features.png">
@@ -72,8 +70,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0--alpha07"
-kapt "com.airbnb.android:showkase-processor:1.0.0--alpha07"
+implementation "com.airbnb.android:showkase:1.0.0-beta03"
+kapt "com.airbnb.android:showkase-processor:1.0.0-beta03"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -124,13 +122,13 @@ class MyRootModule: ShowkaseRootModule
 
 **Step 4**: Showkase is now ready for use! Showkase comes with an Activity that you need to start
  for accessing the UI browser. Typically you would start this activity from the debug menu of 
- your app but you are free to start this from any place you like! A nice helper function 
- `createShowkaseBrowserIntent` is generated for you so you might have to build the app once 
+ your app but you are free to start this from any place you like! A nice helper extension function 
+ `getBrowserIntent` is generated for you so you might have to build the app once 
  before it's available for use. Just start the intent and that's all you need to do for accessing
   Showkase! 
 
 ```kotlin
-startActivity(createShowkaseBrowserIntent(this))
+startActivity(Showkase.getBrowserIntent(context))
 ```
 
 ## Documentation
@@ -224,6 +222,7 @@ Property Name | Description
 <b>group</b> | The grouping key that will be used to group it with other `@Composable` functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
 <b>widthDp</b> | The width that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 <b>heightDp</b> | The height that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
+<b>skip</b> | Setting this to true will skip this composable from rendering in the Showkase browser. A good use case for this would be when you want to have  composable with `@Preview` but want to stop Showkase from picking it up and rendering it in its browser
 
 ##### 2. @ShowkaseColor
 Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 
@@ -290,7 +289,31 @@ Note: The root module is the main module of your app that has a dependency on al
 in the app. This is relevant because we generate the Showkase related classes in the package of 
 the root module and we need to be able to access the UI elements across all the sub modules. This
  is only possible from the root module as it typically has a dependency on all the sub-modules. 
+ 
+##### 5. `Showkase` Object
+The `Showkase` object is the receiver for all the helper methods that this library generates. 
+Currently there are a few extension functions that are generated with the `Showkase` object as the 
+receiver. In order to get access to these functions, you need to build the app once so that the 
+methods can be generated for your use.
 
+Extension function | Description
+------------- | -------------
+getBrowserIntent | Helper function that return an intent to start the ShowkaseBrowser activity.
+getMetadata | Helper function that's give's you access to Showkase metadata. This contains data about all the composables, colors and typography in your codebase that's rendered in the Showkase Browser.
+
+```kotlin
+
+// Example Usage
+
+val intent = Showkase.getBrowserIntent(context)
+startActivity(intent)
+
+val metadata = Showkase.getMetadata()
+val components = metadata.componentList
+val colors= metadata.colorList
+val typography = metadata.typographyList
+
+```
 
 ## Frequently Asked Questions
 <details>
@@ -337,17 +360,25 @@ the root module and we need to be able to access the UI elements across all the 
   consildating these annotations. 
 </details>
 
+<details>
+  <summary>I would like to customize my component browser. Can this library still be useful?
+  </summary>
+  We provide a nice helper function that gives you access to the metadata of all your UI elements 
+  that are configured to work with Showkase. You can use `Showkase.getMetadata()` to get access 
+  to it and then use it in whatever way you see fit.
+</details>
+
 ## Coming Soon!
 
 Here are some ideas that we are thinking about. We are also not limited to these and would love 
 to learn more about your use cases.
 
-- Support for passing a `@PreviewParameter` parameter to `@Preview`/`@ShowkaseComposable` 
-components.
-- Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
-this would be a good opportunity to make this a part of your CI and detect diffs in components. 
-- Support for other UI elements that are a part of your design system (like icons, spacing, etc)
-- Generating a web version of the Showkase browser with documentation, search and screenshots.
+- [x] Support for passing a `@PreviewParameter` parameter to `@Preview`/`@ShowkaseComposable` 
+components. (See https://github.com/airbnb/Showkase#1-showkasecomposable)
+- [x] Hooks for screenshot testing. Since all your components are a part of the Showkase browser, 
+this would be a good opportunity to make this a part of your CI and detect diffs in components. (The `getMetadata` method can be useful to accomplish this. More info here - https://github.com/airbnb/Showkase#5-showkase-object) 
+- [ ] Support for other UI elements that are a part of your design system (like icons, spacing, etc)
+- [ ] Generating a web version of the Showkase browser with documentation, search and screenshots.
 
 ## Contributing
 Pull requests are welcome! We'd love help improving this library. Feel free to browse through 
@@ -357,7 +388,7 @@ a new issue so we can track it.
 ## License
 
 ```
-Copyright 2020 Airbnb, Inc.
+Copyright 2021 Airbnb, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

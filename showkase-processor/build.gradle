@@ -4,7 +4,7 @@ buildscript {
     }
     // Maven artifact publish
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
     }
 }
 
@@ -20,29 +20,21 @@ kapt {
     generateStubs = true
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
-        }
-    }
-}
-
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compileOnly project(':showkase-annotation')
+    implementation project(':showkase-annotation')
 
     implementation deps.autoService
     implementation deps.kotlinStdLib
