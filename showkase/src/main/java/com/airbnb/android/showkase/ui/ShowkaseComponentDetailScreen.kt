@@ -169,20 +169,12 @@ private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponent) {
 
 @Composable
 private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
-    val customConfiguration = Configuration(LocalConfiguration.current).apply {
-        val locale = Locale("ar")
-        setLocale(locale)
-        setLayoutDirection(locale)
-    }
-    val customContext = LocalContext.current.createConfigurationContext(customConfiguration)
     ComponentCardTitle("${metadata.componentName} [RTL]")
-    CompositionLocalProvider(LocalContext provides customContext) {
-        val updatedModifier = Modifier.generateComposableModifier(metadata)
-        Card(modifier = Modifier.fillMaxWidth()) {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                Column(modifier = updatedModifier) {
-                    metadata.component()
-                }
+    val updatedModifier = Modifier.generateComposableModifier(metadata)
+    Card(modifier = Modifier.fillMaxWidth()) {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            Column(modifier = updatedModifier) {
+                metadata.component()
             }
         }
     }
