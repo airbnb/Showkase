@@ -52,7 +52,6 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.update
-import java.util.Locale
 
 @Composable
 internal fun ShowkaseComponentDetailScreen(
