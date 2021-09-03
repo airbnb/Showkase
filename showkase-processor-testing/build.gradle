@@ -68,6 +68,7 @@ dependencies {
     androidTestImplementation deps.compose.uiTest
 
     // Material
+    implementation deps.material.material
     implementation deps.material.mdcComposeThemeAdapter
 
     // Testing
