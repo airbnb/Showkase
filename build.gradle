@@ -24,7 +24,9 @@ buildscript {
             'supportLibrary': '1.1.0',
             'testRunner': '1.2.0',
             'googleTruth': '1.0.1',
-            'autoService': '1.0-rc7'
+            'autoService': '1.0-rc7',
+            'material':'1.4.0',
+            'mdcComposeThemeAdapter':'1.0.2'
     ]
     ext.deps = [
             'autoService': "com.google.auto.service:auto-service:${versions.autoService}",
@@ -63,6 +65,10 @@ buildscript {
                     'junit': "junit:junit:${versions.junit}",
                     'junitImplementation': "androidx.test.ext:junit:${versions.junitImplementation}",
                     'androidxTestRunner': "androidx.test:runner:${versions.testRunner}"
+            ],
+            'material': [
+                    'material':"com.google.android.material:material:${versions.material}",
+                    'mdcComposeThemeAdapter':"com.google.android.material:compose-theme-adapter:${versions.mdcComposeThemeAdapter}"
             ]
     ]
     repositories {

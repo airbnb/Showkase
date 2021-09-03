@@ -67,6 +67,10 @@ dependencies {
     implementation deps.compose.tooling
     androidTestImplementation deps.compose.uiTest
 
+    // Material
+    implementation deps.material.material
+    implementation deps.material.mdcComposeThemeAdapter
+
     // Testing
     testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth

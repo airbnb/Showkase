@@ -7,11 +7,14 @@ import androidx.compose.ui.platform.LocalContext
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+import com.google.android.material.composethemeadapter.MdcTheme
 
 @ShowkaseComposable("Composable1", "Group1")
 @Composable
 fun TestComposable1() {
-    BasicText(text = "Test Composable1")
+    MdcTheme {
+        BasicText(text = "Test Composable1")
+    }
 }
 
 @ShowkaseComposable("Composable2", "Group1")
