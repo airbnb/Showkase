@@ -86,6 +86,9 @@ dependencies {
     implementation deps.compose.layout
     implementation deps.compose.material
     androidTestImplementation deps.compose.uiTest
+
+    // Material
+    implementation deps.material.material
     
     // Unit Testing
     testImplementation deps.test.junit
