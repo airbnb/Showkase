@@ -59,8 +59,9 @@ dependencies {
     implementation deps.support.lifecycleExtensions
     
     // Showkase
-    implementation project(':showkase')
-    kapt project(':showkase-processor')
+    debugImplementation project(':showkase')
+    implementation project(':showkase-annotation')
+    kaptDebug project(':showkase-processor')
 
     // Compose
     implementation deps.compose.activityCompose
