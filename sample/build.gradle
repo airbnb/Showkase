@@ -71,7 +71,7 @@ dependencies {
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
     implementation project(':showkase-annotation')
-    kapt project(':showkase-processor')
+    kaptDebug project(':showkase-processor')
     implementation project(':sample-submodule')
 
     // Support Libraries
@@ -85,7 +85,7 @@ dependencies {
     implementation deps.compose.constraintLayout
     implementation deps.compose.core
     implementation deps.compose.foundation
-    debugImplementation deps.compose.tooling
+    implementation deps.compose.tooling
     implementation deps.compose.layout
     implementation deps.compose.material
     implementation deps.compose.savedInstanceState
