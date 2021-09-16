@@ -70,7 +70,6 @@ dependencies {
     // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
-    implementation project(':showkase-annotation')
     kaptDebug project(':showkase-processor')
     implementation project(':sample-submodule')
 
