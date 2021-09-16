@@ -60,7 +60,7 @@ dependencies {
     
     // Showkase
     implementation project(':showkase')
-    kapt project(':showkase-processor')
+    kaptDebug project(':showkase-processor')
 
     // Compose
     implementation deps.compose.activityCompose

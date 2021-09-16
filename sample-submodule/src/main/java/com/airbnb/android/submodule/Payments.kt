@@ -35,7 +35,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
-import com.airbnb.android.showkase.ui.padding4x
+
+val padding4x = 16.dp
 
 @Composable
 fun CreditCardComponent(cardName: String) {
