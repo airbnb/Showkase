@@ -2,6 +2,7 @@ package com.airbnb.android.showkase.impressionlogging
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,35 +23,44 @@ typealias ImpressionId = String
 
 fun Modifier.impressionLogging(
     id: ImpressionId,
-    onVisibilityEvent: (ImpressionId, VisibilityEvent) -> Unit
+    onVisibilityEvent: (ImpressionId, VisibilityEvent, String) -> Unit
 ) = composed {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val dummyValue = remember {
-        lifecycle.addObserver(
-            LifecycleEventObserver { owner, event ->
-                when (event) {
-                    Lifecycle.Event.ON_STOP -> {
-                        onVisibilityEvent(id, VisibilityEvent.INVISIBLE)
-                    }
-                    Lifecycle.Event.ON_RESUME -> {
-                        onVisibilityEvent(id, VisibilityEvent.INVISIBLE)
-                    }
-                }
+//    val dummyValue = remember {
+//        Log.e("TAG", "Calculating remember")
+//        lifecycle.addObserver(
+//            LifecycleEventObserver { owner, event ->
+//                when (event) {
+//                    Lifecycle.Event.ON_STOP -> {
+//                        onVisibilityEvent(id, VisibilityEvent.INVISIBLE, "ON_STOP")
+//                    }
+//                    Lifecycle.Event.ON_RESUME -> {
+//                        onVisibilityEvent(id, VisibilityEvent.VISIBLE, "ON_RESUME")
+//                    }
+//                }
+//            }
+//        )
+//        5
+//    }
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+//                onVisibilityEvent(id, VisibilityEvent.VISIBLE, "ON_RESUME")
+            } else if (event == Lifecycle.Event.ON_PAUSE) {
+//                onVisibilityEvent(id, VisibilityEvent.INVISIBLE, "ON_PAUSE")
             }
-        )
-        5
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+//            onVisibilityEvent(id, VisibilityEvent.INVISIBLE, "DISPOSABLE_EFFECT")
+        }
     }
-    DisposableEffect(Unit) {
-        onVisibilityEvent(id, VisibilityEvent.VISIBLE)
-        onDispose { onVisibilityEvent(id, VisibilityEvent.INVISIBLE) }
-    }
-    this
-//    this.onGloballyPositioned {
-//        onVisibilityEvent(id, VisibilityEvent.VISIBLE)
-//        Log.e("TAG","onGloballyPositionedCalled")
+    this.onGloballyPositioned {
+        onVisibilityEvent(id, VisibilityEvent.VISIBLE, "onGloballyPositioned ${it.positionInWindow().x} : ${it.positionInWindow().y}")
 //        Log.e("TAG","it.isAttached ${it.isAttached}")
 //        Log.e("TAG","it.positionInWindow ${it.positionInWindow().x} : ${it.positionInWindow().y}")
-//    }
+    }
 }
 
 data class ImpressionMetadata(
@@ -61,27 +71,33 @@ data class ImpressionMetadata(
 
 @Composable
 fun TestScreen() {
-    
+
     var showComposable by remember {
         mutableStateOf(false)
     }
-    Column {
-        Button(onClick = { showComposable = !showComposable }) {
-            Text("Click Me")
-        }
+    LazyColumn {
+
+        for (i in 0 until 100) {
+            item {
+                Button(onClick = { showComposable = !showComposable }) {
+                    Text("Click Me")
+                }
 
 
-        if (!showComposable) {
-            Text(
-                text = "I'm now visible $showComposable",
-                modifier = Modifier.impressionLogging(
-                    id = "TextComposable",
-                    onVisibilityEvent = { impressionId, visibilityEvent ->
-                        Log.e("TAG","$impressionId $visibilityEvent")
-                    }
-                )
-            )
+                if (!showComposable) {
+                    Text(
+                        text = "$i I'm now visible $showComposable",
+                        modifier = Modifier.impressionLogging(
+                            id = "TextComposable",
+                            onVisibilityEvent = { impressionId, visibilityEvent, string ->
+                                Log.e("TAG", "$i $impressionId $visibilityEvent $string")
+                            }
+                        )
+                    )
+                }
+            }
         }
+
     }
 }
 
