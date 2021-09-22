@@ -149,7 +149,7 @@ private fun ShowkaseAppBarTitle(
             ShowkaseSearchField(searchQuery, searchQueryValueChange)
         }
         currentRoute == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name -> {
-            ToolbarTitle(context.getString(R.string.app_name), modifier)
+            ToolbarTitle(context.getString(R.string.showkase_title), modifier)
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_GROUPS.name -> {
             ToolbarTitle(context.getString(R.string.components_category), modifier)
