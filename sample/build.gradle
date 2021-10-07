@@ -50,6 +50,7 @@ android {
     packagingOptions {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/gradle/incremental.annotation.processors'
     }
 
 //    Seeing two apps being installed simultaneously so commenting this until then
@@ -72,6 +73,9 @@ dependencies {
     implementation project(':showkase')
     implementation project(':sample-submodule')
     kapt project(':showkase-processor')
+    androidTestImplementation project(':showkase-testing')
+    kaptAndroidTest project(':showkase-processor')
+    kaptTest project(':showkase-processor')
 
     // Support Libraries
     implementation deps.support.appCompat

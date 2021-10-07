@@ -124,7 +124,7 @@ internal class ShowkaseExtensionFunctionsWriter(
             ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
         private val SHOWKASE_ELEMENTS_METADATA_CLASS_NAME = 
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseElementsMetadata")
-        private val SHOWKASE_OBJECT_CLASS_NAME =
+        internal val SHOWKASE_OBJECT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "Showkase")
     }
 }
