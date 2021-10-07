@@ -222,7 +222,9 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     private fun getShowkaseScreenshotTestElement(roundEnvironment: RoundEnvironment): Element? {
-        return roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshotTest::class.java).singleOrNull()
+        val testElements =  roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshotTest::class.java)
+        showkaseValidator.validateShowkaseTestElement(testElements, elementUtils, typeUtils)
+        return testElements.singleOrNull()
     }
 
     private fun writeShowkaseFiles(
@@ -336,7 +338,6 @@ class ShowkaseProcessor: AbstractProcessor() {
     ) {
         ShowkaseScreenshotTestWriter(processingEnv).apply {
             generateScreenshotTests(
-                screenshotTestElement,
                 componentsSize,
                 colorsSize,
                 typographySize,

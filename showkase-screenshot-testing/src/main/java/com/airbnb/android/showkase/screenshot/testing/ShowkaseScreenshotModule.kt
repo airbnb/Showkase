@@ -12,10 +12,9 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.captureToImage
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.unit.dp
-import androidx.test.platform.app.InstrumentationRegistry
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
@@ -23,12 +22,10 @@ import com.airbnb.android.showkase.ui.padding4x
 import org.junit.Rule
 import java.util.*
 
-abstract class ShowkaseScreenshotBaseTest {
+interface ShowkaseScreenshotModule {
     @get:Rule
-    val composeTestRule = createComposeRule()
+    val composeTestRule: ComposeContentTestRule
 
-    val context
-        get() = InstrumentationRegistry.getInstrumentation().context
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun runTest(
@@ -94,5 +91,5 @@ abstract class ShowkaseScreenshotBaseTest {
         )
     }
 
-    abstract fun onScreenshot(id: String, name: String, group: String, screenshotBitmap: Bitmap)
+    fun onScreenshot(id: String, name: String, group: String, screenshotBitmap: Bitmap)
 }

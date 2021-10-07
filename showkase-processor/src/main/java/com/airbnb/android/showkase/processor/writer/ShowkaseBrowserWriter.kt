@@ -258,9 +258,9 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         private const val COLOR_INTERFACE_METHOD_NAME = "getShowkaseColors"
         private const val TYPOGRAPHY_INTERFACE_METHOD_NAME = "getShowkaseTypography"
         internal const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.android.showkase.models"
-        private const val COMPONENT_PROPERTY_NAME = "componentList"
-        private const val COLOR_PROPERTY_NAME = "colorList"
-        private const val TYPOGRAPHY_PROPERTY_NAME = "typographyList"
+        internal const val COMPONENT_PROPERTY_NAME = "componentList"
+        internal const val COLOR_PROPERTY_NAME = "colorList"
+        internal const val TYPOGRAPHY_PROPERTY_NAME = "typographyList"
 
         internal val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
         internal val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
