@@ -5,4 +5,4 @@ include ':showkase-annotation'
 include ':sample'
 rootProject.name = "Showkase"
 include ':sample-submodule'
-include ':showkase-testing'
+include ':showkase-screenshot-testing'

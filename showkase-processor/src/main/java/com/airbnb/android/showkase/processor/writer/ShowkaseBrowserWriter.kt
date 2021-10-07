@@ -211,7 +211,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         noOfComponentsWithoutPreviewParameter: Int,
         noOfComponentsWithPreviewParameter: Int,
         colorsSize: Int,
-        typographySize: Int
+        typographySize: Int,
     ) = AnnotationSpec.builder(ShowkaseRootCodegen::class)
         .addMember("noOfComposablesWithoutPreviewParameter = %L", noOfComponentsWithoutPreviewParameter)
         .addMember("noOfComposablesWithPreviewParameter = %L", noOfComponentsWithPreviewParameter)

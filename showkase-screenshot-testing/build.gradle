@@ -57,6 +57,8 @@ dependencies {
     // Showkase
     implementation project(':showkase')
     implementation deps.compose.uiTest
+    implementation deps.compose.core
+    implementation deps.compose.foundation
 
     // Testing
     testImplementation deps.test.assertJ

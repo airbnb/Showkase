@@ -38,7 +38,6 @@ import javax.lang.model.util.Types
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
-//@SupportedOptions(KAPT_KOTLIN_DIR_PATH)
 class ShowkaseProcessor: AbstractProcessor() {
     private lateinit var typeUtils: Types
     private lateinit var elementUtils: Elements
@@ -222,8 +221,9 @@ class ShowkaseProcessor: AbstractProcessor() {
         return rootElement
     }
 
-    private fun getShowkaseScreenshotTestElement(roundEnvironment: RoundEnvironment)=
-        roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshotTest::class.java).singleOrNull()
+    private fun getShowkaseScreenshotTestElement(roundEnvironment: RoundEnvironment): Element? {
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshotTest::class.java).singleOrNull()
+    }
 
     private fun writeShowkaseFiles(
         rootElement: Element,

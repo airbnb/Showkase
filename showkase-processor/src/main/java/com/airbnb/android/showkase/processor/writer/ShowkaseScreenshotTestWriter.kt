@@ -36,13 +36,8 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                             .build()
                     )
                     addComposableTests(componentsSize)
-//                    addFunction(componentInterfaceFunction)
-//                    addFunction(colorInterfaceFunction)
-//                    addFunction(typographyInterfaceFunction)
-//                    addProperty(componentListProperty)
-//                    addProperty(colorListProperty)
-//                    addProperty(typographyListProperty)
-//                    showkaseMetadata.forEach { addOriginatingElement(it.element) }
+                    addTypographyTests(typographySize)
+                    addColorTests(colorsSize)
                     build()
                 }
             )
@@ -60,6 +55,40 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                     )
                     .addCode(
                         "runTest(%T.getMetadata().componentList[$index])",
+                        SHOWKASE_OBJECT_CLASS_NAME
+                    )
+                    .build()
+            )
+        }
+    }
+
+    private fun TypeSpec.Builder.addTypographyTests(typographySize: Int) {
+        for (index in 0 until typographySize) {
+            val functionName = "typography_screenshot_test_$index"
+            addFunction(
+                FunSpec.builder(functionName)
+                    .addAnnotation(
+                        AnnotationSpec.builder(JUNIT_TEST).build()
+                    )
+                    .addCode(
+                        "runTest(%T.getMetadata().typographyList[$index])",
+                        SHOWKASE_OBJECT_CLASS_NAME
+                    )
+                    .build()
+            )
+        }
+    }
+
+    private fun TypeSpec.Builder.addColorTests(colorsSize: Int) {
+        for (index in 0 until colorsSize) {
+            val functionName = "color_screenshot_test_$index"
+            addFunction(
+                FunSpec.builder(functionName)
+                    .addAnnotation(
+                        AnnotationSpec.builder(JUNIT_TEST).build()
+                    )
+                    .addCode(
+                        "runTest(%T.getMetadata().colorList[$index])",
                         SHOWKASE_OBJECT_CLASS_NAME
                     )
                     .build()
