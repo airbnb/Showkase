@@ -75,7 +75,6 @@ dependencies {
     kapt project(':showkase-processor')
     androidTestImplementation project(':showkase-screenshot-testing')
     kaptAndroidTest project(':showkase-processor')
-    kaptTest project(':showkase-processor')
 
     // Support Libraries
     implementation deps.support.appCompat
