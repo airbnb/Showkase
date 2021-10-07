@@ -92,7 +92,7 @@ plugins {
 }
 
 allprojects {
-//    apply from: "$rootDir/detekt/detekt.gradle"
+    apply from: "$rootDir/detekt/detekt.gradle"
     repositories {
         google()
         mavenCentral()
