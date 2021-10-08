@@ -20,7 +20,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         rootModulePackageName: String,
         rootModuleClassName: String
     ) {
-        val showkaseComponentsListClassName = "$rootModuleClassName$CODEGEN_AUTOGEN_CLASS_NAME"
+        val showkaseComponentsListClassName = "${rootModuleClassName}_$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 
         val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) = showkaseComponentMetadata.filterIsInstance<ShowkaseMetadata.Component>()
@@ -208,15 +208,15 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
     }
 
     private fun initializeShowkaseRootCodegenAnnotation(
-        noOfComponentsWithoutPreviewParameter: Int,
-        noOfComponentsWithPreviewParameter: Int,
+        numComponentsWithoutPreviewParameter: Int,
+        numComponentsWithPreviewParameter: Int,
         colorsSize: Int,
         typographySize: Int,
     ) = AnnotationSpec.builder(ShowkaseRootCodegen::class)
-        .addMember("noOfComposablesWithoutPreviewParameter = %L", noOfComponentsWithoutPreviewParameter)
-        .addMember("noOfComposablesWithPreviewParameter = %L", noOfComponentsWithPreviewParameter)
-        .addMember("noOfColors = %L", colorsSize)
-        .addMember("noOfTypography = %L", typographySize)
+        .addMember("numComposablesWithoutPreviewParameter = %L", numComponentsWithoutPreviewParameter)
+        .addMember("numComposablesWithPreviewParameter = %L", numComponentsWithPreviewParameter)
+        .addMember("numColors = %L", colorsSize)
+        .addMember("numTypography = %L", typographySize)
         .build()
 
     @Suppress("LongParameterList")

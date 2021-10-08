@@ -4,8 +4,8 @@ package com.airbnb.android.showkase.annotation
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class ShowkaseRootCodegen(
-    val noOfComposablesWithoutPreviewParameter: Int,
-    val noOfComposablesWithPreviewParameter: Int,
-    val noOfColors: Int,
-    val noOfTypography: Int
+    val numComposablesWithoutPreviewParameter: Int,
+    val numComposablesWithPreviewParameter: Int,
+    val numColors: Int,
+    val numTypography: Int
 )

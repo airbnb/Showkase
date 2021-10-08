@@ -8,8 +8,8 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
+import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.element.Element
 
 internal class ShowkaseScreenshotTestWriter(private val processingEnv: ProcessingEnvironment) {
     internal fun generateScreenshotTests(
@@ -19,7 +19,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
         rootModulePackageName: String,
         testClassName: String
     ) {
-        val showkaseScreenshotTestClassName = "$testClassName${ShowkaseBrowserWriter.CODEGEN_AUTOGEN_CLASS_NAME}"
+        val showkaseScreenshotTestClassName = "${testClassName}_ShowkaseCodegen"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseScreenshotTestClassName)
         fileBuilder
             .addType(
@@ -30,7 +30,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                             .addMember("%T::class", JUNIT_CLASSNAME)
                             .build()
                     )
-                    addTest(componentsSize, "component", COMPONENT_PROPERTY_NAME)
+                    addTest(componentsSize, "composable", COMPONENT_PROPERTY_NAME)
                     addTest(typographySize, "typography", TYPOGRAPHY_PROPERTY_NAME)
                     addTest(colorsSize, "color", COLOR_PROPERTY_NAME)
                     build()
@@ -53,7 +53,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                         AnnotationSpec.builder(JUNIT_TEST).build()
                     )
                     .addCode(
-                        "runTest(%T.getMetadata().$propertyName[$index])",
+                        "take${testNamePrefix.replaceFirstChar { it.uppercase() }}Screenshot(%T.getMetadata().$propertyName[$index])",
                         SHOWKASE_OBJECT_CLASS_NAME
                     )
                     .build()
@@ -62,7 +62,6 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
     }
 
     companion object {
-        private const val SHOWKASE_TESTING_PACKAGE_NAME = "com.airbnb.android.showkasetesting"
         private const val JUNIT_ORG = "org.junit"
         private const val JUNIT_RUNNER = "$JUNIT_ORG.runner"
         private val RUNWITH_CLASSNAME = ClassName(JUNIT_RUNNER, "RunWith")

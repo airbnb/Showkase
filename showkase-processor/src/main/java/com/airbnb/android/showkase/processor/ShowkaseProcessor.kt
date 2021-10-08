@@ -257,7 +257,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         val rootModulePackageName = elementUtils.getPackageOf(screenshotTestElement).qualifiedName.toString()
         val rootModuleCodegenAnnotation = getShowkaseRootCodegenOnClassPath(elementUtils, rootModulePackageName)
 
-        rootModuleCodegenAnnotation?.let {
+        rootModuleCodegenAnnotation?.let { showkaseRoot ->
             writeShowkaseScreenshotTestFile(
                 screenshotTestElement,
                 // We only handle composables without preview parameter for screenshots. This is because
@@ -265,9 +265,9 @@ class ShowkaseProcessor: AbstractProcessor() {
                 // preview parameter as it happens on run time and our codegen doesn't get enough information
                 // to be able to predict how many extra composables the preview parameters extrapolate to.
                 // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
-                it.noOfComposablesWithoutPreviewParameter,
-                it.noOfColors,
-                it.noOfTypography,
+                showkaseRoot.numComposablesWithoutPreviewParameter,
+                showkaseRoot.numColors,
+                showkaseRoot.numTypography,
                 rootModulePackageName,
                 testClassName,
             )

@@ -51,11 +51,8 @@ dependencies {
     // Kotlin
     implementation deps.kotlinStdLib
 
-    // Support Libraries
-    implementation deps.support.appCompat
-
     // Showkase
-    implementation project(':showkase')
+    api project(':showkase')
     implementation deps.compose.uiTest
     implementation deps.compose.core
     implementation deps.compose.foundation
