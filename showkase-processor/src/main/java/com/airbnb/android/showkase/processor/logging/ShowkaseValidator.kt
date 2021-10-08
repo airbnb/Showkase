@@ -261,9 +261,9 @@ internal class ShowkaseValidator {
         errorPrefix: String
     ) {
         val flags = (element.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass().flags
-        if (!Flag.IS_OPEN(flags)) {
+        if (!Flag.IS_OPEN(flags) && !Flag.IS_ABSTRACT(flags)) {
             throw ShowkaseProcessorException(
-                "$errorPrefix Class annotated with $annotationName needs to be an open class."
+                "$errorPrefix Class annotated with $annotationName needs to be an abstract/open class."
             )
         }
     }

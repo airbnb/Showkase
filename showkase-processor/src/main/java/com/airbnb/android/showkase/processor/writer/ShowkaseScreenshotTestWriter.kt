@@ -7,8 +7,9 @@ import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWr
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 
 internal class ShowkaseScreenshotTestWriter(private val processingEnv: ProcessingEnvironment) {
@@ -30,6 +31,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                             .addMember("%T::class", JUNIT_CLASSNAME)
                             .build()
                     )
+                    addProperty(addComposeTestRuleProperty())
                     addTest(componentsSize, "composable", COMPONENT_PROPERTY_NAME)
                     addTest(typographySize, "typography", TYPOGRAPHY_PROPERTY_NAME)
                     addTest(colorsSize, "color", COLOR_PROPERTY_NAME)
@@ -39,6 +41,20 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
 
         fileBuilder.build().writeTo(processingEnv.filer)
     }
+
+    private fun addComposeTestRuleProperty() =
+        PropertySpec.builder(
+            "composeTestRule",
+            COMPOSE_CONTENT_TEST_RULE_CLASS_NAME
+        )
+            .addAnnotation(
+                AnnotationSpec.builder(RULE_CLASSNAME)
+                    .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+                    .build()
+            )
+            .addModifiers(KModifier.OVERRIDE)
+            .initializer("%T()", CREATE_COMPOSE_RULE_CLASS_NAME)
+            .build()
 
     private fun TypeSpec.Builder.addTest(
         size: Int,
@@ -67,5 +83,10 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
         private val RUNWITH_CLASSNAME = ClassName(JUNIT_RUNNER, "RunWith")
         private val JUNIT_CLASSNAME = ClassName("${JUNIT_RUNNER}s", "JUnit4")
         private val JUNIT_TEST = ClassName(JUNIT_ORG, "Test")
+        private val RULE_CLASSNAME = ClassName(JUNIT_ORG, "Rule")
+        private const val JUNIT4_PACKAGE = "androidx.compose.ui.test.junit4"
+        private val COMPOSE_CONTENT_TEST_RULE_CLASS_NAME =
+            ClassName(JUNIT4_PACKAGE, "ComposeContentTestRule")
+        private val CREATE_COMPOSE_RULE_CLASS_NAME = ClassName(JUNIT4_PACKAGE, "createComposeRule")
     }
 }
