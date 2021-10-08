@@ -269,7 +269,7 @@ internal class ShowkaseValidator {
     }
 
     companion object {
-        private val SHOWKASE_SCREENSHOT_MODULE_CLASS_NAME =
+        private const val SHOWKASE_SCREENSHOT_MODULE_CLASS_NAME =
             "com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotModule"
     }
 }

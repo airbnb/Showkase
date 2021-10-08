@@ -34,7 +34,13 @@ interface ShowkaseScreenshotModule {
     /**
      * TODO: Add documentation
      */
-    fun onScreenshot(id: String, name: String, group: String, screenshotType: ShowkaseScreenshotType, screenshotBitmap: Bitmap)
+    fun onScreenshot(
+        id: String,
+        name: String,
+        group: String,
+        screenshotType: ShowkaseScreenshotType,
+        screenshotBitmap: Bitmap
+    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun takeComposableScreenshot(

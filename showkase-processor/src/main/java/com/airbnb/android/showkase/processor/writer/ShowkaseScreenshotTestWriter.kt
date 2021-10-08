@@ -61,6 +61,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
         testNamePrefix: String,
         propertyName: String
     ) {
+        val methodName = testNamePrefix.replaceFirstChar { it.uppercase() }
         for (index in 0 until size) {
             val functionName = "${testNamePrefix}_screenshot_test_$index"
             addFunction(
@@ -69,7 +70,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                         AnnotationSpec.builder(JUNIT_TEST).build()
                     )
                     .addCode(
-                        "take${testNamePrefix.replaceFirstChar { it.uppercase() }}Screenshot(%T.getMetadata().$propertyName[$index])",
+                        "take${methodName}Screenshot(%T.getMetadata().$propertyName[$index])",
                         SHOWKASE_OBJECT_CLASS_NAME
                     )
                     .build()

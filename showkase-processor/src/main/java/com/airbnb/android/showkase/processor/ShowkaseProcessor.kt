@@ -259,7 +259,6 @@ class ShowkaseProcessor: AbstractProcessor() {
 
         rootModuleCodegenAnnotation?.let { showkaseRoot ->
             writeShowkaseScreenshotTestFile(
-                screenshotTestElement,
                 // We only handle composables without preview parameter for screenshots. This is because
                 // there's no way to get information about how many previews are dynamically generated using
                 // preview parameter as it happens on run time and our codegen doesn't get enough information
@@ -329,7 +328,6 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     private fun writeShowkaseScreenshotTestFile(
-        screenshotTestElement: Element,
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,

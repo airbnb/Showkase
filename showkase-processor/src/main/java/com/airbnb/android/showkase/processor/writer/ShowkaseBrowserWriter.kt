@@ -23,11 +23,15 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         val showkaseComponentsListClassName = "${rootModuleClassName}$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 
-        val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) = showkaseComponentMetadata.filterIsInstance<ShowkaseMetadata.Component>()
-            .partition {
-                it.previewParameter != null
-            }
-        val componentListProperty = initializeComponentProperty(showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList)
+        val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
+            showkaseComponentMetadata.filterIsInstance<ShowkaseMetadata.Component>()
+                .partition {
+                    it.previewParameter != null
+                }
+        val componentListProperty = initializeComponentProperty(
+            showkaseMetadataWithParameterList,
+            showkaseMetadataWithoutParameterList
+        )
         val colorListProperty = initializeColorProperty(showkaseColorMetadata)
         val typographyProperty = initializeTypographyProperty(showkaseTypographyMetadata)
 
