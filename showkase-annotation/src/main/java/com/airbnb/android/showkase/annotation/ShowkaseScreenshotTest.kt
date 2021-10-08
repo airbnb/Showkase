@@ -1,7 +1,9 @@
 package com.airbnb.android.showkase.annotation
 
-import kotlin.reflect.KClass
 
+/**
+ * TODO: Add documentation
+ */
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)

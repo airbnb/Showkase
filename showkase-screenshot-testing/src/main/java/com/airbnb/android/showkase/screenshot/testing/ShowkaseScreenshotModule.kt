@@ -22,10 +22,17 @@ import com.airbnb.android.showkase.ui.padding4x
 import org.junit.Rule
 import java.util.*
 
+/**
+ * TODO: Add documentation
+ */
 interface ShowkaseScreenshotModule {
     @get:Rule
     val composeTestRule: ComposeContentTestRule
 
+    /**
+     * TODO: Add documentation
+     */
+    fun onScreenshot(id: String, name: String, group: String, screenshotBitmap: Bitmap)
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun runTest(
@@ -90,6 +97,4 @@ interface ShowkaseScreenshotModule {
             bitmap
         )
     }
-
-    fun onScreenshot(id: String, name: String, group: String, screenshotBitmap: Bitmap)
 }
