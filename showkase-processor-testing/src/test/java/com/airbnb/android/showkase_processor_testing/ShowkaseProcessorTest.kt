@@ -704,6 +704,43 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `open class with no interface but ShowkaseScreenshoTest annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("MyScreenshotTest.kt", """
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshotTest
+        
+        @ShowkaseScreenshotTest
+        open class MyScreenshotTest
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Only an implementation of ShowkaseScreenshotModule can be annotated with @ShowkaseScreenshotTest"
+        assertThat(result.messages).contains(error)
+    }
+
+    @Test
+    fun `closed class with right interface and showkasescreenshottest annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("MyScreenshotTest.kt", """
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshotTest
+        import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotModule
+        
+        @ShowkaseScreenshotTest
+        class MyScreenshotTest: ShowkaseScreenshotModule
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Class annotated with ShowkaseScreenshotTest needs to be an abstract/open class"
+        assertThat(result.messages).contains(error)
+    }
+
+    @Test
     fun `top level composable function with showkase annotation generates only metadata file`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing

@@ -58,6 +58,7 @@ dependencies {
     implementation project(':showkase')
     kapt project(':showkase-processor')
     implementation project(':showkase-processor')
+    implementation project(':showkase-screenshot-testing')
 
     // Compose
     implementation deps.compose.activityCompose
