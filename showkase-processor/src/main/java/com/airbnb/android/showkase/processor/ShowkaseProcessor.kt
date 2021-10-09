@@ -5,7 +5,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
-import com.airbnb.android.showkase.annotation.ShowkaseScreenshotTest
+import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
@@ -68,7 +68,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         ShowkaseColor::class.java.name,
         ShowkaseTypography::class.java.name,
         ShowkaseRoot::class.java.name,
-        ShowkaseScreenshotTest::class.java.name,
+        ShowkaseScreenshot::class.java.name,
     )
 
     override fun process(
@@ -222,7 +222,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     private fun getShowkaseScreenshotTestElement(roundEnvironment: RoundEnvironment): Element? {
-        val testElements =  roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshotTest::class.java)
+        val testElements =  roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshot::class.java)
         showkaseValidator.validateShowkaseTestElement(testElements, elementUtils, typeUtils)
         return testElements.singleOrNull()
     }

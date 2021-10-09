@@ -1,15 +1,12 @@
 package com.airbnb.android.showkasesample
 
 import android.graphics.Bitmap
-import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import androidx.compose.ui.test.junit4.createComposeRule
-import com.airbnb.android.showkase.annotation.ShowkaseScreenshotTest
-import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotModule
+import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
-import org.junit.Rule
 
-@ShowkaseScreenshotTest
-abstract class MyScreenshotTest: ShowkaseScreenshotModule {
+@ShowkaseScreenshot
+abstract class MyScreenshotTest: ShowkaseScreenshotTest {
     override fun onScreenshot(
         id: String,
         name: String,

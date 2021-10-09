@@ -707,9 +707,9 @@ class ShowkaseProcessorTest {
     fun `open class with no interface but ShowkaseScreenshoTest annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("MyScreenshotTest.kt", """
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.ShowkaseScreenshotTest
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
         
-        @ShowkaseScreenshotTest
+        @ShowkaseScreenshot
         open class MyScreenshotTest
     """
         )
@@ -717,7 +717,7 @@ class ShowkaseProcessorTest {
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Only an implementation of ShowkaseScreenshotModule can be annotated with @ShowkaseScreenshotTest"
+        val error = "Only an implementation of ShowkaseScreenshotTest can be annotated with @ShowkaseScreenshot"
         assertThat(result.messages).contains(error)
     }
 
@@ -725,18 +725,18 @@ class ShowkaseProcessorTest {
     fun `closed class with right interface and showkasescreenshottest annotation throws compilation error`() {
         val kotlinSource = SourceFile.kotlin("MyScreenshotTest.kt", """
         import androidx.compose.runtime.Composable
-        import com.airbnb.android.showkase.annotation.ShowkaseScreenshotTest
-        import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotModule
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+        import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         
-        @ShowkaseScreenshotTest
-        class MyScreenshotTest: ShowkaseScreenshotModule
+        @ShowkaseScreenshot
+        class MyScreenshotTest: ShowkaseScreenshotTest
     """
         )
         val result = compileKotlinSource(listOf(kotlinSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
         assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
-        val error = "Class annotated with ShowkaseScreenshotTest needs to be an abstract/open class"
+        val error = "Class annotated with ShowkaseScreenshot needs to be an abstract/open class"
         assertThat(result.messages).contains(error)
     }
 
