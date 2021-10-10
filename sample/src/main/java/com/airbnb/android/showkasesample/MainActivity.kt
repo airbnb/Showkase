@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             startActivity(Showkase.getBrowserIntent(this))
+            finish()
         }
     }
 }

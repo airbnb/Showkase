@@ -704,6 +704,43 @@ class ShowkaseProcessorTest {
     }
 
     @Test
+    fun `open class with no interface but ShowkaseScreenshoTest annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("MyScreenshotTest.kt", """
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+        
+        @ShowkaseScreenshot
+        open class MyScreenshotTest
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Only an implementation of ShowkaseScreenshotTest can be annotated with @ShowkaseScreenshot"
+        assertThat(result.messages).contains(error)
+    }
+
+    @Test
+    fun `closed class with right interface and showkasescreenshottest annotation throws compilation error`() {
+        val kotlinSource = SourceFile.kotlin("MyScreenshotTest.kt", """
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+        import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
+        
+        @ShowkaseScreenshot
+        class MyScreenshotTest: ShowkaseScreenshotTest
+    """
+        )
+        val result = compileKotlinSource(listOf(kotlinSource))
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(0)
+        val error = "Class annotated with ShowkaseScreenshot needs to be an abstract/open class"
+        assertThat(result.messages).contains(error)
+    }
+
+    @Test
     fun `top level composable function with showkase annotation generates only metadata file`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
@@ -1192,12 +1229,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -1312,12 +1356,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -1429,12 +1480,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 1,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -1548,12 +1606,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 1
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -1673,12 +1738,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 1,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -1808,12 +1880,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 1
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -1937,12 +2016,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
                 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -2061,12 +2147,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -2183,12 +2276,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 1,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -2306,12 +2406,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 1
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -2426,12 +2533,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 1,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -2549,12 +2663,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 1
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -2673,12 +2794,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -3369,12 +3497,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -4172,12 +4307,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -4293,12 +4435,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -4414,12 +4563,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -4537,12 +4693,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 1,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -4656,12 +4819,19 @@ class ShowkaseProcessorTest {
                 // This is an auto-generated file. Please do not edit/modify this file.
                 package com.airbnb.android.showkase_processor_testing
                 
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 0,
+                  numColors = 0,
+                  numTypography = 1
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>()
                 
@@ -4794,12 +4964,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
                 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 1,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -4948,12 +5125,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 1,
+                  numComposablesWithPreviewParameter = 1,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
                         ShowkaseBrowserComponent(
@@ -5098,12 +5282,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 1,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> =
                       mutableListOf<ShowkaseBrowserComponent>().apply {
@@ -5242,12 +5433,19 @@ class ShowkaseProcessorTest {
                 package com.airbnb.android.showkase_processor_testing
 
                 import androidx.compose.runtime.Composable
+                import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
                 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
                 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
                 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
                 import com.airbnb.android.showkase.models.ShowkaseProvider
                 import kotlin.collections.List
                 
+                @ShowkaseRootCodegen(
+                  numComposablesWithoutPreviewParameter = 0,
+                  numComposablesWithPreviewParameter = 1,
+                  numColors = 0,
+                  numTypography = 0
+                )
                 class TestShowkaseRootCodegen : ShowkaseProvider {
                   val componentList: List<ShowkaseBrowserComponent> =
                       mutableListOf<ShowkaseBrowserComponent>().apply {

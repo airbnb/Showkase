@@ -13,7 +13,7 @@ android {
         exclude("META-INF/*.kotlin_module")
     }
     defaultConfig {
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 30
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -51,38 +51,17 @@ dependencies {
     // Kotlin
     implementation deps.kotlinStdLib
 
-    // Support Libraries
-    implementation deps.support.appCompat
-
     // Showkase
-    implementation project(':showkase')
-    kapt project(':showkase-processor')
-    implementation project(':showkase-processor')
-    implementation project(':showkase-screenshot-testing')
-
-    // Compose
-    implementation deps.compose.activityCompose
-    implementation deps.compose.composeRuntime
+    api project(':showkase')
+    implementation deps.compose.uiTest
     implementation deps.compose.core
     implementation deps.compose.foundation
-    implementation deps.compose.tooling
-    androidTestImplementation deps.compose.uiTest
-
-    // Material
-    implementation deps.material.material
-    implementation deps.material.mdcComposeThemeAdapter
 
     // Testing
     testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth
     testImplementation deps.test.junit
-    androidTestImplementation deps.test.junitImplementation
-    androidTestImplementation deps.test.androidXTestCore
-    androidTestImplementation deps.test.androidXTestRules
-    androidTestImplementation deps.test.androidxTestRunner
-    // Allows this module to access the annotation processor related classes. Otherwise those are 
-    // only available in java library modules. Inspiration - 
-    // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
-    testImplementation files('libs/rt.jar')
-    testImplementation deps.kotlinCompileTesting
+    implementation deps.test.androidXTestCore
+    implementation deps.test.androidXTestRules
+    implementation deps.test.androidxTestRunner
 }

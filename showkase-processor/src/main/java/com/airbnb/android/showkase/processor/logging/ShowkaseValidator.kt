@@ -3,8 +3,10 @@ package com.airbnb.android.showkase.processor.logging
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
+import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.kotlinMetadata
+import kotlinx.metadata.Flag
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -139,7 +141,6 @@ internal class ShowkaseValidator {
         if (elementSet.isEmpty()) return
 
         val showkaseRootAnnotationName = ShowkaseRoot::class.java.simpleName
-        val showkaseRootModuleName = ShowkaseRootModule::class.java.simpleName
 
         when {
             elementSet.size != 1 -> {
@@ -154,8 +155,13 @@ internal class ShowkaseValidator {
 
                 requireClass(element, showkaseRootAnnotationName, errorPrefix)
                 requireInterface(
-                    element, elementUtils, typeUtils, showkaseRootAnnotationName,
-                    errorPrefix, showkaseRootModuleName
+                    element = element,
+                    typeUtils = typeUtils,
+                    interfaceTypeMirror = elementUtils
+                        .getTypeElement(ShowkaseRootModule::class.qualifiedName)
+                        .asType(),
+                    annotationName = showkaseRootAnnotationName,
+                    errorPrefix = errorPrefix
                 )
             }
         }
@@ -176,18 +182,16 @@ internal class ShowkaseValidator {
     @Suppress("LongParameterList")
     private fun requireInterface(
         element: Element,
-        elementUtils: Elements,
         typeUtils: Types,
-        showkaseRootAnnotationName: String,
+        interfaceTypeMirror: TypeMirror,
+        annotationName: String,
         errorPrefix: String,
-        showkaseRootModuleName: String
     ) {
-        val showkaseRootInterfaceElement =
-            elementUtils.getTypeElement(ShowkaseRootModule::class.java.name)
-        if (!typeUtils.isAssignable(element.asType(), showkaseRootInterfaceElement.asType())) {
+        val interfaceName = typeUtils.asElement(interfaceTypeMirror).simpleName.toString()
+        if (!typeUtils.isAssignable(element.asType(), interfaceTypeMirror)) {
             throw ShowkaseProcessorException(
-                "$errorPrefix Only an implementation of $showkaseRootModuleName can be annotated " +
-                        "with @$showkaseRootAnnotationName"
+                "$errorPrefix Only an implementation of ${interfaceName} can be annotated " +
+                        "with @$annotationName"
             )
         }
     }
@@ -210,5 +214,63 @@ internal class ShowkaseValidator {
                 )
             }
         }
+    }
+
+    internal fun validateShowkaseTestElement(
+        elementSet: Set<Element>,
+        elementUtils: Elements,
+        typeUtils: Types
+    ) {
+        if (elementSet.isEmpty()) return
+
+        val showkaseScreenshotAnnotationName = ShowkaseScreenshot::class.java.simpleName
+
+        when {
+            elementSet.size != 1 -> {
+                throw ShowkaseProcessorException(
+                    "Only a single class can be annotated with $showkaseScreenshotAnnotationName"
+                )
+            }
+            else -> {
+                // Safe to do this as we've ensured that there's only one element in this set
+                val element = elementSet.first()
+                val errorPrefix = "Error in ${element.simpleName}:"
+                val showkaseScreenshotTestTypeMirror = elementUtils
+                    .getTypeElement(SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
+                    .asType()
+
+                // Validate that the class annotated with @ShowkaseScreenshotTest is an abstract/open
+                // class
+                requireOpenClass(element, showkaseScreenshotAnnotationName, errorPrefix)
+
+                // Validate that the class annotated with @ShowkaseScreenshot extends the
+                // ShowkaseScreenshotTest interface
+                requireInterface(
+                    element = element,
+                    typeUtils = typeUtils,
+                    interfaceTypeMirror = showkaseScreenshotTestTypeMirror,
+                    annotationName = showkaseScreenshotAnnotationName,
+                    errorPrefix = errorPrefix
+                )
+            }
+        }
+    }
+
+    private fun requireOpenClass(
+        element: Element,
+        annotationName: String,
+        errorPrefix: String
+    ) {
+        val flags = (element.kotlinMetadata() as KotlinClassMetadata.Class).toKmClass().flags
+        if (!Flag.IS_OPEN(flags) && !Flag.IS_ABSTRACT(flags)) {
+            throw ShowkaseProcessorException(
+                "$errorPrefix Class annotated with $annotationName needs to be an abstract/open class."
+            )
+        }
+    }
+
+    companion object {
+        private const val SHOWKASE_SCREENSHOT_TEST_CLASS_NAME =
+            "com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest"
     }
 }

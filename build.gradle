@@ -39,6 +39,7 @@ buildscript {
                     'core': "androidx.compose.ui:ui:${versions.compose}",
                     'foundation': "androidx.compose.foundation:foundation:${versions.compose}",
                     'tooling': "androidx.compose.ui:ui-tooling:${versions.compose}",
+                    'toolingPreview': "androidx.compose.ui:ui-tooling-preview:${versions.compose}",
                     'layout': "androidx.compose.foundation:foundation-layout:${versions.compose}",
                     'material': "androidx.compose.material:material:${versions.compose}",
                     'savedInstanceState': "androidx.compose.runtime:runtime-saveable:${versions.compose}",
