@@ -5520,8 +5520,6 @@ class ShowkaseProcessorTest {
         }
     }
 
-    // TODO: Add tests for screenshot tests
-
     private fun compileKotlinSource(kotlinSourceFiles: List<SourceFile>): KotlinCompilation.Result {
         return KotlinCompilation().apply {
             sources = kotlinSourceFiles

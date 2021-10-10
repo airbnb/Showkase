@@ -239,7 +239,8 @@ internal class ShowkaseValidator {
                     .getTypeElement(SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
                     .asType()
 
-                // Validate that the class annotated with @ShowkaseScreenshotTest is an open class
+                // Validate that the class annotated with @ShowkaseScreenshotTest is an abstract/open
+                // class
                 requireOpenClass(element, showkaseScreenshotAnnotationName, errorPrefix)
 
                 // Validate that the class annotated with @ShowkaseScreenshot extends the
