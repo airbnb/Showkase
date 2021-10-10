@@ -24,9 +24,10 @@ package com.airbnb.android.showkase.annotation
  *
  * </p>
  *
- * Its important that the class you annotate with [ShowkaseScreenshot] is either abstract or
- * open as Showkase generates a class that extends this class in order to get access to the
- * onScreenshot method.
+ * Note: you should add this class to the androidTest sourceSet as that's where your testing
+ * dependencies will exists otherwise the generate test won't compile.Additionally,Its important
+ * that the class you annotate with [ShowkaseScreenshot] is either abstract or open as Showkase
+ * generates a class that extends this class in order to get access to theonScreenshot method.
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
