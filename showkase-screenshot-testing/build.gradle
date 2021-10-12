@@ -42,6 +42,7 @@ android {
     packagingOptions {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/licenses/ASM'
     }
 }
 
@@ -58,9 +59,9 @@ dependencies {
     implementation deps.compose.foundation
 
     // Testing
-    testImplementation deps.test.assertJ
-    testImplementation deps.test.googleTruth
-    testImplementation deps.test.junit
+    implementation deps.test.assertJ
+    implementation deps.test.googleTruth
+    implementation deps.test.junit
     implementation deps.test.androidXTestCore
     implementation deps.test.androidXTestRules
     implementation deps.test.androidxTestRunner
