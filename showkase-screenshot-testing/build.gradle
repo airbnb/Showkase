@@ -1,6 +1,17 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    // Maven artifact publish
+    dependencies {
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
+    }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
     compileSdkVersion 31
