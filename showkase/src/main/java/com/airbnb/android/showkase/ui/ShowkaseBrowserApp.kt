@@ -92,6 +92,7 @@ internal fun ShowkaseAppBar(
             showkaseBrowserScreenMetadata.value.isSearchActive,
             showkaseBrowserScreenMetadata.value.currentGroup,
             showkaseBrowserScreenMetadata.value.currentComponentName,
+            showkaseBrowserScreenMetadata.value.currentComponentStyleName,
             currentRoute,
             showkaseBrowserScreenMetadata.value.searchQuery,
             {
@@ -138,6 +139,7 @@ private fun ShowkaseAppBarTitle(
     isSearchActive: Boolean,
     currentGroup: String?,
     currentComponentName: String?,
+    currentComponentStyleName: String?,
     currentRoute: String?,
     searchQuery: String?,
     searchQueryValueChange: (String) -> Unit,
@@ -163,8 +165,14 @@ private fun ShowkaseAppBarTitle(
         currentRoute.insideGroup() -> {
             ToolbarTitle(currentGroup ?: "currentGroup", modifier)
         }
-        currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
+        currentRoute == ShowkaseCurrentScreen.COMPONENT_STYLES.name -> {
             ToolbarTitle(currentComponentName.orEmpty(), modifier)
+        }
+        currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
+            ToolbarTitle(
+                "${currentComponentName.orEmpty()} [${currentComponentStyleName.orEmpty()}]",
+                modifier
+            )
         }
     }
 }
@@ -269,6 +277,13 @@ internal fun ShowkaseBodyContent(
         }
         composable(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name) {
             ShowkaseComponentsInAGroupScreen(
+                groupedComponentMap,
+                showkaseBrowserScreenMetadata,
+                navController
+            )
+        }
+        composable(ShowkaseCurrentScreen.COMPONENT_STYLES.name) {
+            ShowkaseComponentStylesScreen(
                 groupedComponentMap,
                 showkaseBrowserScreenMetadata,
                 navController

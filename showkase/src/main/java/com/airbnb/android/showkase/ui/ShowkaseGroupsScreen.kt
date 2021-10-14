@@ -29,8 +29,9 @@ internal fun ShowkaseGroupsScreen(
         items(
             items = filteredMap.entries.toList(),
             itemContent = { (group, list) ->
+                val size = getNumOfUIElements(list)
                 SimpleTextCard(
-                    text = "$group (${list.size})",
+                    text = "$group ($size)",
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(
@@ -47,6 +48,14 @@ internal fun ShowkaseGroupsScreen(
     }
     BackButtonHandler {
         goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController)
+    }
+}
+
+internal fun getNumOfUIElements(list: List<*>): Int {
+    val isComponentList = list.filterIsInstance(ShowkaseBrowserComponent::class.java)
+    return when {
+        isComponentList.isNotEmpty() -> isComponentList.distinctBy { it.componentName }.size
+        else -> list.size
     }
 }
 

@@ -22,6 +22,7 @@ internal fun String?.insideGroup() =
 internal data class ShowkaseBrowserScreenMetadata(
     val currentGroup: String? = null,
     val currentComponentName: String? = null,
+    val currentComponentStyleName: String? = null,
     val currentComponentKey: String? = null,
     val isSearchActive: Boolean = false,
     val searchQuery: String? = null,
@@ -34,6 +35,7 @@ internal fun MutableState<ShowkaseBrowserScreenMetadata>.clear() {
             searchQuery = null,
             currentComponentKey = null,
             currentComponentName = null,
+            currentComponentStyleName = null,
             currentGroup = null
         )
     }

@@ -11,50 +11,50 @@ import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
-import java.util.Locale
+import java.util.*
 
 @Composable
-internal fun ShowkaseComponentsInAGroupScreen(
+internal fun ShowkaseComponentStylesScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
-    val groupByComponentName =
+    val componentStylesList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
-            ?.groupBy { it.componentName } ?: return
-    // Only take the first style for each component
-    val componentList = groupByComponentName.values.map {
-        it.first()
-    }
+            ?.filter { it.componentName == showkaseBrowserScreenMetadata.value.currentComponentName  }
+            ?.sortedBy { it.styleName } ?: return
     val filteredList =
-        getFilteredSearchList(componentList, showkaseBrowserScreenMetadata)
+        getFilteredSearchList(componentStylesList, showkaseBrowserScreenMetadata)
     LazyColumn {
         items(
             items = filteredList,
             itemContent = { groupComponent ->
-                ComponentCardTitle(groupComponent.componentName)
+                ComponentCardTitle(
+                    "${groupComponent.componentName} [${groupComponent.styleName}]"
+                )
                 ComponentCard(
                     metadata = groupComponent,
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(
-                            currentComponentKey = groupComponent.componentKey,
-                            currentComponentName = groupComponent.componentName,
+                                currentComponentKey = groupComponent.componentKey,
+                                currentComponentName = groupComponent.componentName,
+                                currentComponentStyleName = groupComponent.styleName,
                                 isSearchActive = false
                             )
                         }
-                        navController.navigate(ShowkaseCurrentScreen.COMPONENT_STYLES)
+                        navController.navigate(ShowkaseCurrentScreen.COMPONENT_DETAIL)
                     }
                 )
             }
         )
     }
     BackButtonHandler {
-        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata, navController)
+        back(showkaseBrowserScreenMetadata, navController)
     }
 }
 
-private fun goBackFromComponentsInAGroupScreen(
+private fun back(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
@@ -62,12 +62,18 @@ private fun goBackFromComponentsInAGroupScreen(
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         else -> {
-            showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS)
+            showkaseBrowserScreenMetadata.update {
+                copy(
+                    currentComponentStyleName = null,
+                    isSearchActive = false,
+                    searchQuery = null
+                )
+            }
+            navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
         }
     }
-}
 
+}
 
 private fun getFilteredSearchList(
     list: List<ShowkaseBrowserComponent>,
@@ -78,6 +84,10 @@ private fun getFilteredSearchList(
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
                 it.componentName.lowercase(Locale.getDefault())
+                    .contains(
+                        showkaseBrowserScreenMetadata.value.searchQuery!!
+                            .lowercase(Locale.getDefault())
+                    ) || it.styleName.lowercase(Locale.getDefault())
                     .contains(
                         showkaseBrowserScreenMetadata.value.searchQuery!!
                             .lowercase(Locale.getDefault())
