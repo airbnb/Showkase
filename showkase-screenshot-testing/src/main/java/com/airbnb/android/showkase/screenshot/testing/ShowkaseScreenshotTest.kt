@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.screenshot.testing
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -55,6 +56,8 @@ import java.util.*
 interface ShowkaseScreenshotTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule
+
+    val context: Context
 
     /**
      * This method is called during the execution of each screenshot test after the screenshot of
