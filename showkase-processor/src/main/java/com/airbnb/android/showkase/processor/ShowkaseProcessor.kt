@@ -97,7 +97,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
 
     private fun processComponentAnnotation(roundEnvironment: RoundEnvironment)
-            : Set<ShowkaseMetadata> {
+            : Set<ShowkaseMetadata.Component> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata)
@@ -105,7 +105,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
-    private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
+    private fun processShowkaseAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata.Component> {
         val previewParameterTypeElement =
             elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
         previewParameterTypeElement?.let { previewParameter -> 
@@ -128,7 +128,7 @@ class ShowkaseProcessor: AbstractProcessor() {
     }
         
 
-    private fun processPreviewAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata> {
+    private fun processPreviewAnnotation(roundEnvironment: RoundEnvironment): Set<ShowkaseMetadata.Component> {
         val previewTypeElement = elementUtils.getTypeElement(PREVIEW_CLASS_NAME)
         val previewParameterTypeElement = 
             elementUtils.getTypeElement(PREVIEW_PARAMETER_CLASS_NAME)
@@ -154,7 +154,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         }
     }
 
-    private fun Collection<ShowkaseMetadata>.dedupeAndSort() = this.distinctBy {
+    private fun Collection<ShowkaseMetadata.Component>.dedupeAndSort() = this.distinctBy {
         // It's possible that a composable annotation is annotated with both Preview & 
         // ShowkaseComposable(especially if we add more functionality to Showkase and they diverge
         // in the customizations that they offer). In that scenario, its important to dedupe the
@@ -167,7 +167,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         .distinctBy {
             // We also ensure that the component groupName and the component name are unique so 
             // that they don't show up twice in the browser app. 
-            "${it.showkaseName}_${it.showkaseGroup}"
+            "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
         }
         .sortedBy {
             "${it.packageName}_${it.enclosingClass}_${it.elementName}"
@@ -188,7 +188,7 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun processShowkaseMetadata(
         roundEnvironment: RoundEnvironment,
-        componentMetadata: Set<ShowkaseMetadata>,
+        componentMetadata: Set<ShowkaseMetadata.Component>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>
     ) {
@@ -229,7 +229,7 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun writeShowkaseFiles(
         rootElement: Element,
-        componentMetadata: Set<ShowkaseMetadata>,
+        componentMetadata: Set<ShowkaseMetadata.Component>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>,
     ) {
@@ -300,7 +300,7 @@ class ShowkaseProcessor: AbstractProcessor() {
 
     private fun writeShowkaseBrowserFiles(
         rootElement: Element,
-        componentsMetadata: Set<ShowkaseMetadata>,
+        componentsMetadata: Set<ShowkaseMetadata.Component>,
         colorsMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>,
     ) {

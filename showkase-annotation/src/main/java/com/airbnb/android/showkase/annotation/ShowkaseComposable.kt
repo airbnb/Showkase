@@ -52,7 +52,8 @@ package com.airbnb.android.showkase.annotation
 annotation class ShowkaseComposable(
     val name: String = "",
     val group: String = "",
+    val styleName: String = "",
     val widthDp: Int = -1,
     val heightDp: Int = -1,
-    val skip: Boolean = false
+    val skip: Boolean = false,
 )
