@@ -106,11 +106,10 @@ internal fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.colorName.lowercase(Locale.getDefault())
-                    .contains(
-                        showkaseBrowserScreenMetadata.value.searchQuery!!
-                            .lowercase(Locale.getDefault())
-                    )
+                matchSearchQuery(
+                    showkaseBrowserScreenMetadata.value.searchQuery!!,
+                    it.colorName
+                )
             }
         }
         else -> list

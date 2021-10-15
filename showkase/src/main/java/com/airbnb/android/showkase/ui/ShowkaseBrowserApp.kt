@@ -332,12 +332,16 @@ private fun getCategoryMetadataMap(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
 ) = mapOf(
-    ShowkaseCategory.COMPONENTS to groupedComponentMap.flatCount(),
+    ShowkaseCategory.COMPONENTS to groupedComponentMap.flatComponentCount(),
     ShowkaseCategory.COLORS to groupedColorsMap.flatCount(),
     ShowkaseCategory.TYPOGRAPHY to groupedTypographyMap.flatCount()
 )
 
-internal fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
+private fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
+
+private fun Map<String, List<ShowkaseBrowserComponent>>.flatComponentCount() = flatMap { entry ->
+    entry.value.distinctBy { "${it.group}_${it.componentName}" }
+}.count()
 
 /**
  * Helper function to navigate to the passed [ShowkaseCurrentScreen]

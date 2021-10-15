@@ -38,8 +38,9 @@ internal fun ShowkaseComponentsInAGroupScreen(
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(
-                            currentComponentKey = groupComponent.componentKey,
-                            currentComponentName = groupComponent.componentName,
+                                currentComponentKey = groupComponent.componentKey,
+                                currentComponentName = groupComponent.componentName,
+                                currentComponentStyleName = groupComponent.styleName,
                                 isSearchActive = false
                             )
                         }
@@ -77,11 +78,10 @@ private fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.componentName.lowercase(Locale.getDefault())
-                    .contains(
-                        showkaseBrowserScreenMetadata.value.searchQuery!!
-                            .lowercase(Locale.getDefault())
-                    )
+                matchSearchQuery(
+                    showkaseBrowserScreenMetadata.value.searchQuery!!,
+                    it.componentName
+                )
             }
         }
         else -> list

@@ -8,10 +8,8 @@ import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
-import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 import com.airbnb.android.showkase.models.update
-import java.util.*
 
 @Composable
 internal fun ShowkaseComponentStylesScreen(
@@ -83,16 +81,17 @@ private fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.componentName.lowercase(Locale.getDefault())
-                    .contains(
-                        showkaseBrowserScreenMetadata.value.searchQuery!!
-                            .lowercase(Locale.getDefault())
-                    ) || it.styleName.lowercase(Locale.getDefault())
-                    .contains(
-                        showkaseBrowserScreenMetadata.value.searchQuery!!
-                            .lowercase(Locale.getDefault())
-                    )
+                matchSearchQuery(
+                    showkaseBrowserScreenMetadata.value.searchQuery!!,
+                    it.componentName,
+                    it.styleName
+                )
             }
         }
         else -> list
     }
+
+internal fun matchSearchQuery(
+    searchQuery: String,
+    vararg properties: String
+) = properties.any { it.contains(searchQuery, ignoreCase = true) }
