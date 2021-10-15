@@ -12,7 +12,7 @@ abstract class MyScreenshotTest: ShowkaseScreenshotTest {
         name: String,
         group: String,
         screenshotType: ShowkaseScreenshotType,
-        screenshotBitmap: Bitmap
+        screenshotBitmap: Bitmap,
     ) {
         // TODO(vinaygaba) - Add example of doing on-device screenshot testing.
     }

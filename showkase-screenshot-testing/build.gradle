@@ -71,8 +71,8 @@ dependencies {
     // Testing
     testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth
-    testImplementation deps.test.junit
-    implementation deps.test.androidXTestCore
-    implementation deps.test.androidXTestRules
-    implementation deps.test.androidxTestRunner
+    api deps.test.junit
+    api deps.test.androidXTestCore
+    api deps.test.androidXTestRules
+    api deps.test.androidxTestRunner
 }
