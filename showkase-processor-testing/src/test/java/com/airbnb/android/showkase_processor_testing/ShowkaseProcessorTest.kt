@@ -6021,7 +6021,7 @@ class ShowkaseProcessorTest {
     }
 
     @Test
-    fun `class with @ScreenshotTest only generates screenshot test for non preview parameter composable`() {
+    fun `class with @ScreenshotTest only generates screenshot test for only non preview parameter composable`() {
         val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
         package com.airbnb.android.showkase_processor_testing
         
@@ -6214,6 +6214,222 @@ class ShowkaseProcessorTest {
                   @Test
                   fun composable_screenshot_test_0() {
                     takeComposableScreenshot(Showkase.getMetadata().componentList[0])
+                  }
+                }
+            """.trimIndent()
+            )
+        }
+    }
+
+    @Test
+    fun `class with @ScreenshotTest generates screenshot test for all UI elements`() {
+        val kotlinSource = SourceFile.kotlin("GeneratedTestComposables.kt", """
+        package com.airbnb.android.showkase_processor_testing
+        
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseColor
+        import com.airbnb.android.showkase.annotation.ShowkaseComposable
+        import com.airbnb.android.showkase.annotation.ShowkaseTypography
+        import androidx.compose.ui.graphics.Color
+        import androidx.compose.ui.text.TextStyle
+        import androidx.compose.ui.text.font.FontFamily
+        
+        @ShowkaseComposable(name = "name1", group = "group1")
+        @Composable
+        fun TestComposable1() {
+            
+        }
+
+        @ShowkaseComposable(name = "name2", group = "group2")
+        @Composable
+        fun TestComposable2() {
+            
+        }
+
+        @ShowkaseColor("name", "group")
+        val red = Color(0xffff0000)
+
+        @ShowkaseTypography("name", "group")
+        val title = TextStyle(
+            fontFamily = FontFamily.Cursive
+        )
+    """)
+        val kotlinRootCodegenSource = SourceFile.kotlin("TestShowkaseRootCodegen.kt", """
+        // This is an auto-generated file. Please do not edit/modify this file.
+        package com.airbnb.android.showkase_processor_testing
+
+        import androidx.compose.runtime.Composable
+        import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
+        import com.airbnb.android.showkase.models.ShowkaseBrowserColor
+        import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+        import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
+        import com.airbnb.android.showkase.models.ShowkaseProvider
+        import kotlin.collections.List
+        
+        @ShowkaseRootCodegen(
+          numComposablesWithoutPreviewParameter = 2,
+          numComposablesWithPreviewParameter = 0,
+          numColors = 1,
+          numTypography = 1
+        )
+        class TestShowkaseRootCodegen : ShowkaseProvider {
+          val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
+                ShowkaseBrowserComponent(
+                    group = "group1",
+                    componentName = "name1",
+                    componentKDoc = "",
+                    componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
+                    component = @Composable { TestComposable1() }),
+                ShowkaseBrowserComponent(
+                    group = "group2",
+                    componentName = "name2",
+                    componentKDoc = "",
+                    componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
+                    component = @Composable { TestComposable2() })
+              )
+        
+          val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+                ShowkaseBrowserColor(
+                    colorGroup = "group",
+                    colorName = "name",
+                    colorKDoc = "",
+                    color = red)
+              )
+        
+          val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
+                ShowkaseBrowserTypography(
+                    typographyGroup = "group",
+                    typographyName = "name",
+                    typographyKDoc = "",
+                    textStyle = title)
+              )
+        
+          override fun getShowkaseComponents() = componentList
+        
+          override fun getShowkaseColors() = colorList
+        
+          override fun getShowkaseTypography() = typographyList
+        }
+    """
+        )
+
+        val kotlinRootExtensionSource = SourceFile.kotlin("TestShowkaseRootExtensionFunctions.kt", """
+        // This is an auto-generated file. Please do not edit/modify this file.
+        package com.airbnb.android.showkase_processor_testing
+        
+        import android.content.Context
+        import android.content.Intent
+        import com.airbnb.android.showkase.models.Showkase
+        import com.airbnb.android.showkase.models.ShowkaseElementsMetadata
+        import com.airbnb.android.showkase.models.ShowkaseProvider
+        import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+        
+        /**
+         * Helper function that's autogenerated and gives you an intent to start the ShowkaseBrowser.
+         */
+        fun Showkase.getBrowserIntent(context: Context): Intent {
+            val intent = Intent(context, ShowkaseBrowserActivity::class.java)
+            intent.putExtra("SHOWKASE_ROOT_MODULE",
+                "com.airbnb.android.showkase_processor_testing.TestShowkaseRoot")
+            return intent
+        }
+        
+        /**
+         * Helper function that's give's you access to Showkase metadata. This contains data about the
+         * composables, colors and typography in your codebase that's rendered in showakse.
+         */
+        fun Showkase.getMetadata(): ShowkaseElementsMetadata {
+            try {
+              val showkaseComponentProvider =
+                  Class.forName("com.airbnb.android.showkase_processor_testing.TestShowkaseRootCodegen").newInstance()
+                  as ShowkaseProvider
+              return showkaseComponentProvider.metadata()
+            } catch(exception: ClassNotFoundException) {
+              error("The class wasn't generated correctly. Make sure that you have setup Showkase correctly by following the steps here - https://github.com/airbnb/Showkase#Installation.")
+            }
+        }
+    """
+        )
+
+        val kotlinTestSource = SourceFile.kotlin("MyShowkaseScreenshotTest.kt", """
+        package com.airbnb.android.showkase_processor_testing
+
+        import android.graphics.Bitmap
+        import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+        import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
+        import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
+        
+        @ShowkaseScreenshot
+        abstract class MyScreenshotTest: ShowkaseScreenshotTest {
+            override fun onScreenshot(
+                id: String,
+                name: String,
+                group: String,
+                screenshotType: ShowkaseScreenshotType,
+                screenshotBitmap: Bitmap,
+            ) {
+                
+            }
+        }
+    """
+        )
+        val result = compileKotlinSource(
+            listOf(
+                kotlinSource,
+                kotlinRootCodegenSource,
+                kotlinRootExtensionSource,
+                kotlinTestSource
+            )
+        )
+
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(1)
+        result.sourcesGeneratedByAnnotationProcessor.forEach {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase_processor_testing
+                
+                import android.Manifest
+                import androidx.compose.ui.test.junit4.ComposeContentTestRule
+                import androidx.compose.ui.test.junit4.createComposeRule
+                import androidx.test.rule.GrantPermissionRule
+                import com.airbnb.android.showkase.models.Showkase
+                import kotlin.jvm.JvmField
+                import org.junit.Rule
+                import org.junit.Test
+                import org.junit.runner.RunWith
+                import org.junit.runners.JUnit4
+                
+                @RunWith(JUnit4::class)
+                class MyScreenshotTest_ShowkaseCodegen : MyScreenshotTest() {
+                  @get:Rule
+                  override val composeTestRule: ComposeContentTestRule = createComposeRule()
+                
+                  @Rule
+                  @JvmField
+                  val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+                       Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                       Manifest.permission.READ_EXTERNAL_STORAGE 
+                      )
+                
+                  @Test
+                  fun composable_screenshot_test_0() {
+                    takeComposableScreenshot(Showkase.getMetadata().componentList[0])
+                  }
+
+                  @Test
+                  fun composable_screenshot_test_1() {
+                    takeComposableScreenshot(Showkase.getMetadata().componentList[1])
+                  }
+
+                  @Test
+                  fun typography_screenshot_test_0() {
+                    takeTypographyScreenshot(Showkase.getMetadata().typographyList[0])
+                  }
+
+                  @Test
+                  fun color_screenshot_test_0() {
+                    takeColorScreenshot(Showkase.getMetadata().colorList[0])
                   }
                 }
             """.trimIndent()
