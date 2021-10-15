@@ -33,7 +33,6 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                             .build()
                     )
                     addProperty(addComposeTestRuleProperty())
-                    addProperty(addContextProperty())
                     addProperty(addStorageRuntimePermissionProperty())
                     addTest(componentsSize, "composable", COMPONENT_PROPERTY_NAME)
                     addTest(typographySize, "typography", TYPOGRAPHY_PROPERTY_NAME)
@@ -58,14 +57,6 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
             .addModifiers(KModifier.OVERRIDE)
             .initializer("%T()", CREATE_COMPOSE_RULE_CLASS_NAME)
             .build()
-
-    private fun addContextProperty() = PropertySpec.builder(
-        "context",
-        CONTEXT_CLASS_NAME
-    )
-        .addModifiers(KModifier.OVERRIDE)
-        .initializer("%T.getInstrumentation().targetContext", INSTRUMENTATION_REGISTRY_CLASS_NAME)
-        .build()
 
     private fun addStorageRuntimePermissionProperty() = PropertySpec.builder(
         "permissionRule",

@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.screenshot.testing
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -57,8 +56,6 @@ interface ShowkaseScreenshotTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule
 
-    val context: Context
-
     /**
      * This method is called during the execution of each screenshot test after the screenshot of
      * the UI element has been successfully taken. Things that you'd typically want to do here include,
@@ -72,14 +69,14 @@ interface ShowkaseScreenshotTest {
      * @param name: name of the UI element.
      * @param group: group that this UI element belongs to
      * @param screenshotType: A screenshot can be one of the following types: Composable, Color or Typography
-     * @param screenshotBitmap: Bitmap of the given UI elemen
+     * @param screenshotBitmap: Bitmap of the given UI element
      */
     fun onScreenshot(
         id: String,
         name: String,
         group: String,
         screenshotType: ShowkaseScreenshotType,
-        screenshotBitmap: Bitmap
+        screenshotBitmap: Bitmap,
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -95,7 +92,7 @@ interface ShowkaseScreenshotTest {
             showkaseBrowserComponent.componentName,
             showkaseBrowserComponent.group,
             ShowkaseScreenshotType.Composable,
-            bitmap
+            bitmap,
         )
     }
 
@@ -122,7 +119,7 @@ interface ShowkaseScreenshotTest {
             showkaseBrowserTypography.typographyName,
             showkaseBrowserTypography.typographyGroup,
             ShowkaseScreenshotType.Typography,
-            bitmap
+            bitmap,
         )
     }
 
@@ -145,7 +142,7 @@ interface ShowkaseScreenshotTest {
             showkaseBrowserColor.colorName,
             showkaseBrowserColor.colorGroup,
             ShowkaseScreenshotType.Color,
-            bitmap
+            bitmap,
         )
     }
 }
