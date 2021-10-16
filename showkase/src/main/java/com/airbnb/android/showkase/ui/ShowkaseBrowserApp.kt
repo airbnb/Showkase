@@ -341,6 +341,8 @@ private fun getCategoryMetadataMap(
 private fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
 
 private fun Map<String, List<ShowkaseBrowserComponent>>.flatComponentCount() = flatMap { entry ->
+    // Only group name and component name is taken into account for the count to ensure that the
+    // styles of the same component aren't added  in this calculation.
     entry.value.distinctBy { "${it.group}_${it.componentName}" }
 }.count()
 

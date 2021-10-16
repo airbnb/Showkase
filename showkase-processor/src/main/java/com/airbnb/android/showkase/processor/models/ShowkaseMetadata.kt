@@ -478,7 +478,8 @@ internal fun getShowkaseStyleName(
     showkaseStyleFromAnnotation: String,
     isDefaultStyle: Boolean,
 ) = when {
-    !showkaseStyleFromAnnotation.isBlank() -> showkaseStyleFromAnnotation.replaceFirstChar { it.uppercase() }
+    showkaseStyleFromAnnotation.isNotBlank() -> showkaseStyleFromAnnotation.replaceFirstChar { it.uppercase() }
+    // If style name is not specified but its the default style, just provide the default style name
     isDefaultStyle -> "Default Style"
     else -> null
 }

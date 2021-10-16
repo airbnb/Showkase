@@ -307,6 +307,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.simpleName.toString()
         val rootModulePackageName = elementUtils.getPackageOf(rootElement).qualifiedName.toString()
+        showkaseValidator.validateShowkaseComponents(componentsMetadata)
 
         ShowkaseBrowserWriter(processingEnv).apply {
             generateShowkaseBrowserFile(

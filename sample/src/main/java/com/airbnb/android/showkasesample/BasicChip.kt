@@ -30,13 +30,13 @@ fun BasicChip(
     }
 }
 
-@ShowkaseComposable(name = "Basic Chip", group = "Chips")
+@ShowkaseComposable(name = "Basic Chip", group = "Chips", defaultStyle = true)
 @Composable
 fun BasicChipPreview() {
     BasicChip(text = "Chip Component")
 }
 
-@ShowkaseComposable(name = "Basic Chip", group = "Chips", styleName = "Yellow Background", defaultStyle = true)
+@ShowkaseComposable(name = "Basic Chip", group = "Chips", styleName = "Yellow Background")
 @Composable
 fun BasicChipYellowPreview() {
     BasicChip(

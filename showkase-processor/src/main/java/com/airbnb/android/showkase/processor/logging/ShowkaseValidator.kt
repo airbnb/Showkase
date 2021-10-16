@@ -5,6 +5,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
+import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.kotlinMetadata
 import kotlinx.metadata.Flag
 import kotlinx.metadata.jvm.KotlinClassMetadata
@@ -266,6 +267,23 @@ internal class ShowkaseValidator {
             throw ShowkaseProcessorException(
                 "$errorPrefix Class annotated with $annotationName needs to be an abstract/open class."
             )
+        }
+    }
+
+    internal fun validateShowkaseComponents(
+        componentsMetadata: Set<ShowkaseMetadata.Component>
+    ) {
+        val groupedComponents = componentsMetadata.groupBy { it.showkaseGroup }
+        groupedComponents.forEach { groupEntry ->
+            val groupedByNameComponents = groupEntry.value.groupBy { it.showkaseName }
+            groupedByNameComponents.forEach { nameEntry ->
+                if (nameEntry.value.filter { it.isDefaultStyle }.size > 1) {
+                    throw ShowkaseProcessorException(
+                        "Multiple styles for component: ${nameEntry.key} are set as default. " +
+                                "Only one style can be the default style"
+                    )
+                }
+            }
         }
     }
 
