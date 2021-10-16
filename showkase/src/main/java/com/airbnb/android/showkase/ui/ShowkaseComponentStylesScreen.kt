@@ -20,15 +20,22 @@ internal fun ShowkaseComponentStylesScreen(
     val componentStylesList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
             ?.filter { it.componentName == showkaseBrowserScreenMetadata.value.currentComponentName  }
-            ?.sortedBy { it.styleName } ?: return
+            ?.sortedWith { a, b ->
+                when {
+                    a.isDefaultStyle -> -1
+                    b.isDefaultStyle -> 1
+                    else -> a.styleName.orEmpty().compareTo(b.styleName.orEmpty())
+                }
+            } ?: return
     val filteredList =
         getFilteredSearchList(componentStylesList, showkaseBrowserScreenMetadata)
     LazyColumn {
         items(
             items = filteredList,
             itemContent = { groupComponent ->
+                val styleName = groupComponent.styleName?.let { "[$it]" }.orEmpty()
                 ComponentCardTitle(
-                    "${groupComponent.componentName} [${groupComponent.styleName}]"
+                    "${groupComponent.componentName} $styleName"
                 )
                 ComponentCard(
                     metadata = groupComponent,
@@ -84,7 +91,7 @@ private fun getFilteredSearchList(
                 matchSearchQuery(
                     showkaseBrowserScreenMetadata.value.searchQuery!!,
                     it.componentName,
-                    it.styleName
+                    it.styleName.orEmpty()
                 )
             }
         }

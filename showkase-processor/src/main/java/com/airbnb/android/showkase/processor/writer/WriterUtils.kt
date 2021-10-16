@@ -130,20 +130,17 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     )
     doubleIndent()
     add(
-        "group = %S,\ncomponentName = %S,\nstyleName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
+        "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
         showkaseMetadata.showkaseGroup,
         showkaseMetadata.showkaseName,
-        showkaseMetadata.showkaseStyleName,
         showkaseMetadata.showkaseKDoc,
         componentKey,
     )
+    add("isDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
     showkaseMetadata.apply {
-        showkaseWidthDp?.let {
-            add("\nwidthDp = %L,", it)
-        }
-        showkaseHeightDp?.let {
-            add("\nheightDp = %L,", it)
-        }
+        showkaseWidthDp?.let { add("\nwidthDp = %L,", it) }
+        showkaseHeightDp?.let { add("\nheightDp = %L,", it) }
+        showkaseStyleName?.let { add("\nstyleName = %S,", it) }
     }
 
     add(

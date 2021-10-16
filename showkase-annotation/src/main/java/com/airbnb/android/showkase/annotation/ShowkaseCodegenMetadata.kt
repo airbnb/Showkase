@@ -30,11 +30,12 @@ annotation class ShowkaseCodegenMetadata(
     val showkaseGroup: String,
     val showkaseKDoc: String,
     val showkaseMetadataType: String,
-    val showkaseStyleName: String = "",
     val enclosingClass: Array<KClass<*>> = [],
     val showkaseWidthDp: Int = -1,
     val showkaseHeightDp: Int = -1,
     val insideWrapperClass: Boolean = false,
     val insideObject: Boolean = false,
     val previewParameterClass: Array<KClass<*>> = [],
+    val showkaseStyleName: String = "",
+    val isDefaultStyle: Boolean = false
 )

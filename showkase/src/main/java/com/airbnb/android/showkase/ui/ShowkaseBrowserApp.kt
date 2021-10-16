@@ -169,8 +169,9 @@ private fun ShowkaseAppBarTitle(
             ToolbarTitle(currentComponentName.orEmpty(), modifier)
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
+            val styleName = currentComponentStyleName?.let { "[$it]" }.orEmpty()
             ToolbarTitle(
-                "${currentComponentName.orEmpty()} [${currentComponentStyleName.orEmpty()}]",
+                "${currentComponentName.orEmpty()} $styleName",
                 modifier
             )
         }

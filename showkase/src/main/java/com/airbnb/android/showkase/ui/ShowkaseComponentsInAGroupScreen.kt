@@ -22,9 +22,9 @@ internal fun ShowkaseComponentsInAGroupScreen(
     val groupByComponentName =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
             ?.groupBy { it.componentName } ?: return
-    // Only take the first style for each component
+    // Use the default style as the preview if its available or take the first style for the component
     val componentList = groupByComponentName.values.map {
-        it.first()
+        it.firstOrNull { it.isDefaultStyle } ?: it.first()
     }
     val filteredList =
         getFilteredSearchList(componentList, showkaseBrowserScreenMetadata)
