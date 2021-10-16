@@ -277,10 +277,11 @@ internal class ShowkaseValidator {
         groupedComponents.forEach { groupEntry ->
             val groupedByNameComponents = groupEntry.value.groupBy { it.showkaseName }
             groupedByNameComponents.forEach { nameEntry ->
+                // Verify that there's at most 1 default style for a given component
                 if (nameEntry.value.filter { it.isDefaultStyle }.size > 1) {
                     throw ShowkaseProcessorException(
-                        "Multiple styles for component: ${nameEntry.key} are set as default. " +
-                                "Only one style can be the default style"
+                        "Multiple styles for component: ${nameEntry.key} are current set as default style. " +
+                                "Only one style is allowed to be the default style"
                     )
                 }
             }
