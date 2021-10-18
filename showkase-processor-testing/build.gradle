@@ -9,8 +9,9 @@ android {
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
     // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
     packagingOptions {
-        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude("META-INF/gradle/incremental.annotation.processors")
         exclude("META-INF/*.kotlin_module")
+        exclude("META-INF/licenses/ASM")
     }
     defaultConfig {
         minSdkVersion 26
