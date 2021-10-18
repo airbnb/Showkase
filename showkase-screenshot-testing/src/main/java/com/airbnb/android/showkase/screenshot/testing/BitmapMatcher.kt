@@ -6,8 +6,7 @@ import kotlin.math.pow
 
 /**
  * Copied from the AndroidX Screenshot Testing open source code that's also used by Google internally.
- * Modified as per
- * Available here -
+ * Modified a bit for our usecase. Original implementation available here -
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:test/screenshot/screenshot/src/main/java/androidx/test/screenshot/matchers/MSSIMMatcher.kt
  *
  * Image comparison using Structural Similarity Index, developed by Wang, Bovik, Sheikh, and
@@ -28,7 +27,7 @@ class BitmapMatcher(
         private const val WINDOW_SIZE = 10
     }
 
-    fun compareBitmaps(
+    internal fun compareBitmaps(
         expected: IntArray,
         given: IntArray,
         width: Int,
@@ -221,7 +220,7 @@ class BitmapMatcher(
     }
 }
 
-data class SimilarityMatchResult(
+internal data class SimilarityMatchResult(
     val matches: Boolean,
     val similarityScore: Double,
     val threshold: Double

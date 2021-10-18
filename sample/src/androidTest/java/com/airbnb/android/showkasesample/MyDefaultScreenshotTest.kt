@@ -5,7 +5,5 @@ import com.airbnb.android.showkase.screenshot.testing.DefaultShowkaseScreenshotT
 
 @ShowkaseScreenshot
 abstract class MyDefaultScreenshotTest: DefaultShowkaseScreenshotTest() {
-    override fun generateGoldenCopy(): Boolean {
-        return true
-    }
+    override fun generateGoldenCopy() = false
 }

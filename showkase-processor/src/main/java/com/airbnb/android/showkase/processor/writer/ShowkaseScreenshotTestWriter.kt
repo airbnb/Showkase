@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor.writer
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.COLOR_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.COMPONENT_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.TYPOGRAPHY_PROPERTY_NAME
+import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter.Companion.CONTEXT_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter.Companion.SHOWKASE_OBJECT_CLASS_NAME
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -32,6 +33,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                             .build()
                     )
                     addProperty(addComposeTestRuleProperty())
+                    addProperty(addStorageRuntimePermissionProperty())
                     addTest(componentsSize, "composable", COMPONENT_PROPERTY_NAME)
                     addTest(typographySize, "typography", TYPOGRAPHY_PROPERTY_NAME)
                     addTest(colorsSize, "color", COLOR_PROPERTY_NAME)
@@ -55,6 +57,20 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
             .addModifiers(KModifier.OVERRIDE)
             .initializer("%T()", CREATE_COMPOSE_RULE_CLASS_NAME)
             .build()
+
+    private fun addStorageRuntimePermissionProperty() = PropertySpec.builder(
+        "permissionRule",
+        GRANT_PERMISSION_RULE_CLASS_NAME
+    )
+        .addAnnotation(AnnotationSpec.builder(RULE_CLASSNAME).build())
+        .addAnnotation(AnnotationSpec.builder(JVM_FIELD_CLASS_NAME).build())
+        .initializer(
+            "%T.grant(\n %T.permission.WRITE_EXTERNAL_STORAGE,\n %T.permission.READ_EXTERNAL_STORAGE \n)",
+            GRANT_PERMISSION_RULE_CLASS_NAME,
+            MANIFEST_CLASS_NAME,
+            MANIFEST_CLASS_NAME
+        )
+        .build()
 
     private fun TypeSpec.Builder.addTest(
         size: Int,
@@ -89,5 +105,11 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
         private val COMPOSE_CONTENT_TEST_RULE_CLASS_NAME =
             ClassName(JUNIT4_PACKAGE, "ComposeContentTestRule")
         private val CREATE_COMPOSE_RULE_CLASS_NAME = ClassName(JUNIT4_PACKAGE, "createComposeRule")
+        private val INSTRUMENTATION_REGISTRY_CLASS_NAME =
+            ClassName("androidx.test.platform.app", "InstrumentationRegistry")
+        private val GRANT_PERMISSION_RULE_CLASS_NAME = ClassName("androidx.test.rule",
+            "GrantPermissionRule")
+        private val JVM_FIELD_CLASS_NAME = ClassName("kotlin.jvm", "JvmField")
+        private val MANIFEST_CLASS_NAME = ClassName("android", "Manifest")
     }
 }
