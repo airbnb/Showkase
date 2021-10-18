@@ -122,7 +122,7 @@ abstract class DefaultShowkaseScreenshotTest : ShowkaseScreenshotTest {
         } catch (exception: FileNotFoundException) {
             throw ShowkaseScreenshotTestingException(
                 "The golden copy of screenshotType: \"$screenshotType\" name: \"$name\" group: " +
-                        "\"$group\" was not found in the folder: \"$folderPath\" under" +
+                        "\"$group\" was not found in the folder: \"$folderPath\" under " +
                         "assets. If this is a new UI element, you will have to generate " +
                         "its golden copy and place it in the asset folder in the androidTest " +
                         "sourceSet where you have defined your ShowkaseScreenshotTest. You can " +
