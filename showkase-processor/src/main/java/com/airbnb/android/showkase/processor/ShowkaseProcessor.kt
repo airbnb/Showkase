@@ -291,7 +291,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             )
         }  ?: run {
             // If ShowkaseRootCodegen was not found on the classpath, its most likely that
-            // @ShowkaseRoot and @ShowkaseScreenshot are declared in the same sourSet. So we use the
+            // @ShowkaseRoot and @ShowkaseScreenshot are declared in the same sourceSet. So we use the
             // same metadata that the showkaseRoot is also going to use to generate the aggregate file.
             val (_, showkaseMetadataWithoutParameterList) =
                 showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
