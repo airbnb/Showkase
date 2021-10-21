@@ -11,7 +11,6 @@ import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorExcepti
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.ShowkaseProcessorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
@@ -385,6 +384,12 @@ class ShowkaseProcessor: AbstractProcessor() {
             )
         }
     }
+
+    private data class ShowkaseProcessorMetadata(
+        val components: Set<ShowkaseMetadata> = setOf(),
+        val colors: Set<ShowkaseMetadata> = setOf(),
+        val typography: Set<ShowkaseMetadata> = setOf(),
+    )
 
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
