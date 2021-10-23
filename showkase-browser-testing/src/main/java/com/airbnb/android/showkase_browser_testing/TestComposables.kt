@@ -1,3 +1,4 @@
+@file:Suppress("PackageNaming")
 package com.airbnb.android.showkase_browser_testing
 
 import androidx.compose.foundation.text.BasicText

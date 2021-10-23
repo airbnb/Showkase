@@ -343,7 +343,7 @@ class ShowcaseBrowserTest {
             
             // Click on "Test Composable1" to go to the component details screen
             clickRowWithText("Test Composable1")
-            
+
             waitForIdle()
 
             // Go back to the components in a group screen
