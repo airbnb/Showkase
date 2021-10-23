@@ -14,6 +14,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import javax.annotation.processing.ProcessingEnvironment
 
 internal class ShowkaseScreenshotTestWriter(private val processingEnv: ProcessingEnvironment) {
+    @Suppress("LongParameterList")
     internal fun generateScreenshotTests(
         componentsSize: Int,
         colorsSize: Int,

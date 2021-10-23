@@ -431,6 +431,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         }
     }
 
+    @Suppress("LongParameterList")
     private fun writeShowkaseScreenshotTestFile(
         componentsSize: Int,
         colorsSize: Int,
