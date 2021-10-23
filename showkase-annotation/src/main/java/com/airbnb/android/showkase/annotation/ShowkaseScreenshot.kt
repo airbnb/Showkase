@@ -1,5 +1,7 @@
 package com.airbnb.android.showkase.annotation
 
+import kotlin.reflect.KClass
+
 
 /**
  * Used to annotate the [ShowkaseScreenshotTest] implementation class. This is needed to let
@@ -32,4 +34,6 @@ package com.airbnb.android.showkase.annotation
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class ShowkaseScreenshot
+annotation class ShowkaseScreenshot(
+    val rootShowkaseClass: KClass<*>
+)
