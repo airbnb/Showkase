@@ -710,7 +710,7 @@ class ShowkaseProcessorTest {
         import androidx.compose.runtime.Composable
         import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = String::class)
         open class MyScreenshotTest
     """
         )
@@ -729,7 +729,7 @@ class ShowkaseProcessorTest {
         import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = String::class)
         class MyScreenshotTest: ShowkaseScreenshotTest
     """
         )
@@ -1215,13 +1215,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -1342,13 +1372,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -1467,13 +1527,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -1593,13 +1683,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -1724,13 +1844,57 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -1866,13 +2030,57 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2002,13 +2210,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2133,13 +2373,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2263,13 +2535,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+                
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+                
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "color",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun WrapperClass_color() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2393,13 +2697,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun WrapperClass_title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2520,13 +2856,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "color",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun WrapperClass_color() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2650,13 +3018,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun WrapperClass_title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -2780,13 +3180,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -3483,13 +3915,46 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
-        }).isNotNull() 
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc =
+                        "This component shows some static text in cursive text style. \n\n Example usage:\n\n ```\n @Composable\n fun MyComposable() {\n    CursiveTextComponentPreview()\n }\n ```",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -4293,13 +4758,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -4421,13 +4916,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "testComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun testComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -4549,13 +5074,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -4680,13 +5235,45 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "color",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun WrapperClass_color() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -4806,13 +5393,43 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "Title",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -4950,13 +5567,59 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable2",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun TestComposable2() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -5111,13 +5774,59 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable2",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun TestComposable2() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -5268,13 +5977,47 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -5419,13 +6162,47 @@ class ShowkaseProcessorTest {
         val result = compileKotlinSource(listOf(kotlinComposableSource, kotlinShowkaseRootSource))
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(2)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootShowkaseExtensionFunctionsCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable",
+                    insideObject = true,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun WrapperClass_TestComposable() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -5566,7 +6343,7 @@ class ShowkaseProcessorTest {
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = TestShowkaseRoot::class)
         abstract class MyScreenshotTest: ShowkaseScreenshotTest {
             override fun onScreenshot(
                 id: String,
@@ -5589,7 +6366,10 @@ class ShowkaseProcessorTest {
         )
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(4)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
@@ -5599,6 +6379,47 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "MyScreenshotTest_ShowkaseCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name1",
+                    showkaseGroup = "group1",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable1() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name2",
+                    showkaseGroup = "group2",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable2() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -5702,6 +6523,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.ui.test.junit4.createComposeRule
                 import androidx.test.rule.GrantPermissionRule
                 import com.airbnb.android.showkase.models.Showkase
+                import com.airbnb.android.showkase_processor_testing.getMetadata
                 import kotlin.jvm.JvmField
                 import org.junit.Rule
                 import org.junit.Test
@@ -5772,7 +6594,7 @@ class ShowkaseProcessorTest {
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = TestShowkaseRoot::class)
         abstract class MyScreenshotTest: ShowkaseScreenshotTest {
             override fun onScreenshot(
                 id: String,
@@ -5795,7 +6617,10 @@ class ShowkaseProcessorTest {
         )
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(4)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
@@ -5805,6 +6630,33 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "MyScreenshotTest_ShowkaseCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun red() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -5901,6 +6753,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.ui.test.junit4.createComposeRule
                 import androidx.test.rule.GrantPermissionRule
                 import com.airbnb.android.showkase.models.Showkase
+                import com.airbnb.android.showkase_processor_testing.getMetadata
                 import kotlin.jvm.JvmField
                 import org.junit.Rule
                 import org.junit.Test
@@ -5967,7 +6820,7 @@ class ShowkaseProcessorTest {
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = TestShowkaseRoot::class)
         abstract class MyScreenshotTest: ShowkaseScreenshotTest {
             override fun onScreenshot(
                 id: String,
@@ -5990,7 +6843,10 @@ class ShowkaseProcessorTest {
         )
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(4)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
@@ -6000,6 +6856,33 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "MyScreenshotTest_ShowkaseCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -6095,6 +6978,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.ui.test.junit4.createComposeRule
                 import androidx.test.rule.GrantPermissionRule
                 import com.airbnb.android.showkase.models.Showkase
+                import com.airbnb.android.showkase_processor_testing.getMetadata
                 import kotlin.jvm.JvmField
                 import org.junit.Rule
                 import org.junit.Test
@@ -6183,7 +7067,7 @@ class ShowkaseProcessorTest {
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = TestShowkaseRoot::class)
         abstract class MyScreenshotTest: ShowkaseScreenshotTest {
             override fun onScreenshot(
                 id: String,
@@ -6206,7 +7090,10 @@ class ShowkaseProcessorTest {
         )
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(4)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
@@ -6216,6 +7103,51 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "MyScreenshotTest_ShowkaseCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+                import com.airbnb.android.showkase_processor_testing.ParameterProvider
+                import com.airbnb.android.showkase_processor_testing.WrapperClass
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable1",
+                    showkaseGroup = "WrapperClass",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = true,
+                    showkaseKDoc = "",
+                    enclosingClass = [WrapperClass::class],
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun WrapperClass_TestComposable1() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "TestComposable2",
+                    showkaseGroup = "Default Group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT",
+                    previewParameterClass = [ParameterProvider::class]
+                  )
+                  fun TestComposable2() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -6328,6 +7260,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.ui.test.junit4.createComposeRule
                 import androidx.test.rule.GrantPermissionRule
                 import com.airbnb.android.showkase.models.Showkase
+                import com.airbnb.android.showkase_processor_testing.getMetadata
                 import kotlin.jvm.JvmField
                 import org.junit.Rule
                 import org.junit.Test
@@ -6399,7 +7332,7 @@ class ShowkaseProcessorTest {
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
         import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
         
-        @ShowkaseScreenshot
+        @ShowkaseScreenshot(rootShowkaseClass = TestShowkaseRoot::class)
         abstract class MyScreenshotTest: ShowkaseScreenshotTest {
             override fun onScreenshot(
                 id: String,
@@ -6438,7 +7371,10 @@ class ShowkaseProcessorTest {
         )
 
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
-        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(3)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.size).isEqualTo(4)
+        assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }).isNotNull()
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }).isNotNull()
@@ -6448,6 +7384,75 @@ class ShowkaseProcessorTest {
         assertThat(result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "MyScreenshotTest_ShowkaseCodegen.kt"
         }).isNotNull()
+        result.sourcesGeneratedByAnnotationProcessor.find {
+            it.name ==  "ShowkaseMetadataShowkase_processor_testing.kt"
+        }!!.let {
+            assertThat(it).hasContent("""
+                // This is an auto-generated file. Please do not edit/modify this file.
+                package com.airbnb.android.showkase
+
+                import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+
+                class ShowkaseMetadataShowkase_processor_testing {
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name1",
+                    showkaseGroup = "group1",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable1",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable1() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name2",
+                    showkaseGroup = "group2",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "TestComposable2",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COMPONENT"
+                  )
+                  fun TestComposable2() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "red",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "COLOR"
+                  )
+                  fun red() {
+                  }
+
+                  @ShowkaseCodegenMetadata(
+                    showkaseName = "name",
+                    showkaseGroup = "group",
+                    packageName = "com.airbnb.android.showkase_processor_testing",
+                    packageSimpleName = "showkase_processor_testing",
+                    showkaseElementName = "title",
+                    insideObject = false,
+                    insideWrapperClass = false,
+                    showkaseKDoc = "",
+                    showkaseMetadataType = "TYPOGRAPHY"
+                  )
+                  fun title() {
+                  }
+                }
+            """.trimIndent()
+            )
+        }
         result.sourcesGeneratedByAnnotationProcessor.find {
             it.name ==  "TestShowkaseRootCodegen.kt"
         }!!.let {
@@ -6563,6 +7568,7 @@ class ShowkaseProcessorTest {
                 import androidx.compose.ui.test.junit4.createComposeRule
                 import androidx.test.rule.GrantPermissionRule
                 import com.airbnb.android.showkase.models.Showkase
+                import com.airbnb.android.showkase_processor_testing.getMetadata
                 import kotlin.jvm.JvmField
                 import org.junit.Rule
                 import org.junit.Test

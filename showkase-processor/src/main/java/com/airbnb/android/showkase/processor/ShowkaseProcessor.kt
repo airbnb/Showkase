@@ -273,15 +273,16 @@ class ShowkaseProcessor: AbstractProcessor() {
         showkaseProcessorMetadata: ShowkaseProcessorMetadata,
     ) {
         val testClassName = screenshotTestElement.simpleName.toString()
+        val screenshotTestPackageName = elementUtils.getPackageOf(screenshotTestElement).qualifiedName.toString()
 
         val specifiedRootClassTypeMirror = getSpecifiedRootTypeElement(screenshotTestElement)
 
         val specifiedRootClassTypeElement = typeUtils.asElement(specifiedRootClassTypeMirror) as TypeElement
         val rootModulePackageName = elementUtils.getPackageOf(specifiedRootClassTypeElement).qualifiedName.toString()
-        val showkaseRootCodegenAnnotation = getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement)
 
-        val showkaseTestMetadata =
-            if (rootElement != null && specifiedRootClassTypeElement.simpleName.toString() == rootElement.simpleName.toString()) {
+        val showkaseTestMetadata = if (rootElement != null &&
+            specifiedRootClassTypeElement.simpleName.toString() == rootElement.simpleName.toString()
+        ) {
             // If the specified root element is currently being processed, use it directly
             val (_, showkaseMetadataWithoutParameterList) =
                 showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
@@ -293,7 +294,9 @@ class ShowkaseProcessor: AbstractProcessor() {
                 showkaseProcessorMetadata.colors.size,
                 showkaseProcessorMetadata.typography.size,
             )
-        } else if (showkaseRootCodegenAnnotation != null) {
+        } else if (getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement) != null) {
+            val showkaseRootCodegenAnnotation =
+                getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement)!!
             ShowkaseTestMetadata(
                 componentsSize = showkaseRootCodegenAnnotation.numComposablesWithoutPreviewParameter,
                 colorsSize = showkaseRootCodegenAnnotation.numColors,
@@ -312,6 +315,7 @@ class ShowkaseProcessor: AbstractProcessor() {
             showkaseTestMetadata.componentsSize,
             showkaseTestMetadata.colorsSize,
             showkaseTestMetadata.typographySize,
+            screenshotTestPackageName,
             rootModulePackageName,
             testClassName,
         )
@@ -431,6 +435,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
+        screenshotTestPackageName: String,
         rootModulePackageName: String,
         testClassName: String,
     ) {
@@ -439,6 +444,7 @@ class ShowkaseProcessor: AbstractProcessor() {
                 componentsSize,
                 colorsSize,
                 typographySize,
+                screenshotTestPackageName,
                 rootModulePackageName,
                 testClassName
             )

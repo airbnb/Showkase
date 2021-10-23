@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
+import com.airbnb.android.showkasetest.MyTestRootModule
 
 @ShowkaseScreenshot(rootShowkaseClass = RootModule::class)
 abstract class MyScreenshotTest: ShowkaseScreenshotTest {

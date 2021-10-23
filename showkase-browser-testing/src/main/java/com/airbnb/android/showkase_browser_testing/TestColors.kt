@@ -1,5 +1,4 @@
-@file:Suppress("PackageNaming")
-package com.airbnb.android.showkase_processor_testing
+package com.airbnb.android.showkase_browser_testing
 
 import androidx.compose.ui.graphics.Color
 import com.airbnb.android.showkase.annotation.ShowkaseColor
