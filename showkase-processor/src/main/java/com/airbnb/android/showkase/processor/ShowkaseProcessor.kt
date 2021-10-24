@@ -275,15 +275,20 @@ class ShowkaseProcessor: AbstractProcessor() {
         val testClassName = screenshotTestElement.simpleName.toString()
         val screenshotTestPackageName = elementUtils.getPackageOf(screenshotTestElement).qualifiedName.toString()
 
+        // Parse the showkase root class that was specified in @ShowkaseScreenshot
         val specifiedRootClassTypeMirror = getSpecifiedRootTypeElement(screenshotTestElement)
-
         val specifiedRootClassTypeElement = typeUtils.asElement(specifiedRootClassTypeMirror) as TypeElement
+
+        // Get the package of the specified root module. We need this to ensure that we use the
+        // Showkase.getMetadata metadata from that package.
         val rootModulePackageName = elementUtils.getPackageOf(specifiedRootClassTypeElement).qualifiedName.toString()
 
         val showkaseTestMetadata = if (rootElement != null &&
             specifiedRootClassTypeElement.simpleName.toString() == rootElement.simpleName.toString()
         ) {
-            // If the specified root element is currently being processed, use it directly
+            // If the specified root element is the being processed in the current processing round,
+            // use it directly instead of looking for it in the class path. This is because it won't
+            // be availabe in the classpath just yet.
             val (_, showkaseMetadataWithoutParameterList) =
                 showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
                     .partition {
@@ -295,6 +300,8 @@ class ShowkaseProcessor: AbstractProcessor() {
                 showkaseProcessorMetadata.typography.size,
             )
         } else if (getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement) != null) {
+            // Else if we were able to find the specified root element in the classpath, we will use
+            // the metadata from there instead.
             val showkaseRootCodegenAnnotation =
                 getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement)!!
             ShowkaseTestMetadata(
@@ -303,7 +310,8 @@ class ShowkaseProcessor: AbstractProcessor() {
                 typographySize = showkaseRootCodegenAnnotation.numTypography
             )
         } else {
-            throw ShowkaseProcessorException("You have not set up your root module correctly")
+            throw ShowkaseProcessorException("Showkase was not able to find the root class that you" +
+                    "passed to @ShowkaseScreenshot. Make sure that you have configured Showkase correctly.")
         }
 
         writeShowkaseScreenshotTestFile(
@@ -319,50 +327,6 @@ class ShowkaseProcessor: AbstractProcessor() {
             rootModulePackageName,
             testClassName,
         )
-
-
-
-
-
-        // If the ShowkaseRootCodegen was found on the classpath, it means that the root module was
-        // already generated so we will use that as the source of truth when generating the test file.
-        // This will also happen when the @ShowkaseRoot and @ShowkaseScreenshot are declared in
-        // different sourceSets.
-//        showkaseRootCodegenAnnotation?.let { showkaseRoot ->
-//            writeShowkaseScreenshotTestFile(
-                // We only handle composables without preview parameter for screenshots. This is because
-                // there's no way to get information about how many previews are dynamically generated using
-                // preview parameter as it happens on run time and our codegen doesn't get enough information
-                // to be able to predict how many extra composables the preview parameters extrapolate to.
-                // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
-//                showkaseRoot.numComposablesWithoutPreviewParameter,
-//                showkaseRoot.numColors,
-//                showkaseRoot.numTypography,
-//                rootModulePackageName,
-//                testClassName,
-//            )
-//        }  ?: run {
-            // If ShowkaseRootCodegen was not found on the classpath, its most likely that
-            // @ShowkaseRoot and @ShowkaseScreenshot are declared in the same sourceSet. So we use the
-            // same metadata that the showkaseRoot is also going to use to generate the aggregate file.
-//            val (_, showkaseMetadataWithoutParameterList) =
-//                showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
-//                    .partition {
-//                        it.previewParameter != null
-//                    }
-//            writeShowkaseScreenshotTestFile(
-                // We only handle composables without preview parameter for screenshots. This is because
-                // there's no way to get information about how many previews are dynamically generated using
-                // preview parameter as it happens on run time and our codegen doesn't get enough information
-                // to be able to predict how many extra composables the preview parameters extrapolate to.
-                // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
-//                showkaseMetadataWithoutParameterList.size,
-//                showkaseProcessorMetadata.colors.size,
-//                showkaseProcessorMetadata.typography.size,
-//                rootModulePackageName,
-//                testClassName,
-//            )
-//        }
     }
 
     private fun getSpecifiedRootTypeElement(screenshotTestElement: Element): TypeMirror? {
