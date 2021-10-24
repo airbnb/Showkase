@@ -18,6 +18,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadat
 import com.airbnb.android.showkase.processor.models.toModel
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.auto.service.AutoService
@@ -32,6 +33,7 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -198,18 +200,23 @@ class ShowkaseProcessor: AbstractProcessor() {
         // Showkase test annotation
         val screenshotTestElement = getShowkaseScreenshotTestElement(roundEnvironment)
 
-        when {
-            // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
-            screenshotTestElement != null -> writeScreenshotTestFiles(screenshotTestElement)
+        var showkaseProcessorMetadata = ShowkaseProcessorMetadata()
+
+        // If root element is not present in this module, it means that we only need to write
+        // the metadata file for this module so that the root module can use this info to
+        // include the composables from this module into the final codegen file.
+        writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
+
+        if (rootElement != null) {
             // This is the module that should aggregate all the other metadata files and
             // also use the showkaseMetadata set from the current round to write the final file.
-            rootElement != null -> writeShowkaseFiles(rootElement, componentMetadata, colorMetadata, typographyMetadata)
-            else -> {
-                // If root element is not present in this module, it means that we only need to write
-                // the metadata file for this module so that the root module can use this info to
-                // include the composables from this module into the final codegen file.
-                writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
-            }
+            showkaseProcessorMetadata =
+                writeShowkaseFiles(rootElement, componentMetadata, colorMetadata, typographyMetadata)
+        }
+
+        if (screenshotTestElement != null) {
+            // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
+            writeScreenshotTestFiles(screenshotTestElement, rootElement, showkaseProcessorMetadata)
         }
     }
 
@@ -232,7 +239,7 @@ class ShowkaseProcessor: AbstractProcessor() {
         componentMetadata: Set<ShowkaseMetadata>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>,
-    ) {
+    ): ShowkaseProcessorMetadata {
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(elementUtils)
         val classpathComponentMetadata =
@@ -242,35 +249,95 @@ class ShowkaseProcessor: AbstractProcessor() {
         val classpathTypographyMetadata =
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
 
+        val allComponents = componentMetadata + classpathComponentMetadata
+        val allColors = colorMetadata + classpathColorMetadata
+        val allTypography = typographyMetadata + classpathTypographyMetadata
+
         writeShowkaseBrowserFiles(
-            rootElement, 
-            componentMetadata + classpathComponentMetadata, 
-            colorMetadata + classpathColorMetadata,
-        typographyMetadata + classpathTypographyMetadata,
+            rootElement,
+            allComponents,
+            allColors,
+            allTypography,
+        )
+
+        return ShowkaseProcessorMetadata(
+            components = allComponents,
+            colors = allColors,
+            typography = allTypography
         )
     }
 
     private fun writeScreenshotTestFiles(
         screenshotTestElement: Element,
+        rootElement: Element?,
+        showkaseProcessorMetadata: ShowkaseProcessorMetadata,
     ) {
         val testClassName = screenshotTestElement.simpleName.toString()
-        val rootModulePackageName = elementUtils.getPackageOf(screenshotTestElement).qualifiedName.toString()
-        val rootModuleCodegenAnnotation = getShowkaseRootCodegenOnClassPath(elementUtils, rootModulePackageName)
+        val screenshotTestPackageName = elementUtils.getPackageOf(screenshotTestElement).qualifiedName.toString()
 
-        rootModuleCodegenAnnotation?.let { showkaseRoot ->
-            writeShowkaseScreenshotTestFile(
-                // We only handle composables without preview parameter for screenshots. This is because
-                // there's no way to get information about how many previews are dynamically generated using
-                // preview parameter as it happens on run time and our codegen doesn't get enough information
-                // to be able to predict how many extra composables the preview parameters extrapolate to.
-                // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
-                showkaseRoot.numComposablesWithoutPreviewParameter,
-                showkaseRoot.numColors,
-                showkaseRoot.numTypography,
-                rootModulePackageName,
-                testClassName,
+        // Parse the showkase root class that was specified in @ShowkaseScreenshot
+        val specifiedRootClassTypeMirror = getSpecifiedRootTypeElement(screenshotTestElement)
+        val specifiedRootClassTypeElement = typeUtils.asElement(specifiedRootClassTypeMirror) as TypeElement
+
+        // Get the package of the specified root module. We need this to ensure that we use the
+        // Showkase.getMetadata metadata from that package.
+        val rootModulePackageName = elementUtils.getPackageOf(specifiedRootClassTypeElement).qualifiedName.toString()
+
+        val showkaseTestMetadata = if (rootElement != null &&
+            specifiedRootClassTypeElement.simpleName.toString() == rootElement.simpleName.toString()
+        ) {
+            // If the specified root element is the being processed in the current processing round,
+            // use it directly instead of looking for it in the class path. This is because it won't
+            // be availabe in the classpath just yet.
+            val (_, showkaseMetadataWithoutParameterList) =
+                showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
+                    .partition {
+                        it.previewParameter != null
+                    }
+            ShowkaseTestMetadata(
+                componentsSize = showkaseMetadataWithoutParameterList.size,
+                showkaseProcessorMetadata.colors.size,
+                showkaseProcessorMetadata.typography.size,
             )
+        } else if (getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement) != null) {
+            // Else if we were able to find the specified root element in the classpath, we will use
+            // the metadata from there instead.
+            val showkaseRootCodegenAnnotation =
+                getShowkaseRootCodegenOnClassPath(elementUtils, specifiedRootClassTypeElement)!!
+            ShowkaseTestMetadata(
+                componentsSize = showkaseRootCodegenAnnotation.numComposablesWithoutPreviewParameter,
+                colorsSize = showkaseRootCodegenAnnotation.numColors,
+                typographySize = showkaseRootCodegenAnnotation.numTypography
+            )
+        } else {
+            throw ShowkaseProcessorException("Showkase was not able to find the root class that you" +
+                    "passed to @ShowkaseScreenshot. Make sure that you have configured Showkase correctly.")
         }
+
+        writeShowkaseScreenshotTestFile(
+            // We only handle composables without preview parameter for screenshots. This is because
+            // there's no way to get information about how many previews are dynamically generated using
+            // preview parameter as it happens on run time and our codegen doesn't get enough information
+            // to be able to predict how many extra composables the preview parameters extrapolate to.
+            // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
+            showkaseTestMetadata.componentsSize,
+            showkaseTestMetadata.colorsSize,
+            showkaseTestMetadata.typographySize,
+            screenshotTestPackageName,
+            rootModulePackageName,
+            testClassName,
+        )
+    }
+
+    private fun getSpecifiedRootTypeElement(screenshotTestElement: Element): TypeMirror? {
+        val showkaseScreenshotAnnotation =
+            screenshotTestElement.getAnnotation(ShowkaseScreenshot::class.java)
+        return try {
+            showkaseScreenshotAnnotation.rootShowkaseClass
+            listOf()
+        } catch (mte: MirroredTypesException) {
+            mte.typeMirrors
+        }.firstOrNull()
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(elementUtils: Elements): Set<ShowkaseMetadata> {
@@ -289,13 +356,14 @@ class ShowkaseProcessor: AbstractProcessor() {
             .toSet()
     }
 
-    private fun getShowkaseRootCodegenOnClassPath(elementUtils: Elements, rootPackage: String): ShowkaseRootCodegen? {
-        val showkaseRootPackageElement = elementUtils.getPackageElement(rootPackage)
+    private fun getShowkaseRootCodegenOnClassPath(
+        elementUtils: Elements,
+        specifiedRootClassTypeElement: TypeElement
+    ): ShowkaseRootCodegen? {
+        val showkaseRootClassElement =
+            elementUtils.getTypeElement("${specifiedRootClassTypeElement.qualifiedName}$CODEGEN_AUTOGEN_CLASS_NAME")
 
-        return showkaseRootPackageElement.enclosedElements
-            .mapNotNull { element ->
-                element.getAnnotation(ShowkaseRootCodegen::class.java)
-            }.singleOrNull()
+        return showkaseRootClassElement.getAnnotation(ShowkaseRootCodegen::class.java)
     }
 
     private fun writeShowkaseBrowserFiles(
@@ -327,10 +395,12 @@ class ShowkaseProcessor: AbstractProcessor() {
         }
     }
 
+    @Suppress("LongParameterList")
     private fun writeShowkaseScreenshotTestFile(
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
+        screenshotTestPackageName: String,
         rootModulePackageName: String,
         testClassName: String,
     ) {
@@ -339,11 +409,24 @@ class ShowkaseProcessor: AbstractProcessor() {
                 componentsSize,
                 colorsSize,
                 typographySize,
+                screenshotTestPackageName,
                 rootModulePackageName,
                 testClassName
             )
         }
     }
+
+    private data class ShowkaseProcessorMetadata(
+        val components: Set<ShowkaseMetadata> = setOf(),
+        val colors: Set<ShowkaseMetadata> = setOf(),
+        val typography: Set<ShowkaseMetadata> = setOf(),
+    )
+
+    private data class ShowkaseTestMetadata(
+        val componentsSize: Int,
+        val colorsSize: Int,
+        val typographySize: Int,
+    )
 
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"

@@ -14,19 +14,22 @@ import com.squareup.kotlinpoet.TypeSpec
 import javax.annotation.processing.ProcessingEnvironment
 
 internal class ShowkaseScreenshotTestWriter(private val processingEnv: ProcessingEnvironment) {
+    @Suppress("LongParameterList")
     internal fun generateScreenshotTests(
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
+        screenshotTestPackageName: String,
         rootModulePackageName: String,
         testClassName: String
     ) {
         val showkaseScreenshotTestClassName = "${testClassName}_ShowkaseCodegen"
-        val fileBuilder = getFileBuilder(rootModulePackageName, showkaseScreenshotTestClassName)
+        val fileBuilder = getFileBuilder(screenshotTestPackageName, showkaseScreenshotTestClassName)
         fileBuilder
+            .addImport(rootModulePackageName, "getMetadata")
             .addType(
                 with(TypeSpec.classBuilder(showkaseScreenshotTestClassName)) {
-                    superclass(ClassName(rootModulePackageName, testClassName))
+                    superclass(ClassName(screenshotTestPackageName, testClassName))
                     addAnnotation(
                         AnnotationSpec.builder(RUNWITH_CLASSNAME)
                             .addMember("%T::class", JUNIT_CLASSNAME)

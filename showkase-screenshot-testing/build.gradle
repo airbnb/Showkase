@@ -64,7 +64,7 @@ dependencies {
 
     // Showkase
     api project(':showkase')
-    implementation deps.compose.uiTest
+    api deps.compose.uiTest
     implementation deps.compose.core
     implementation deps.compose.foundation
 

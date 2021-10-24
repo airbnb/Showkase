@@ -252,6 +252,9 @@ internal class ShowkaseValidator {
                     annotationName = showkaseScreenshotAnnotationName,
                     errorPrefix = errorPrefix
                 )
+
+                // TODO(vinaygaba): Validate that the passed root class is annotated with @ShowkaseRoot
+                // and implements [ShowkaseRootModule]
             }
         }
     }
