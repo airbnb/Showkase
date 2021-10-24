@@ -27,9 +27,13 @@ import kotlin.reflect.KClass
  * </p>
  *
  * Note: you should add this class to the androidTest sourceSet as that's where your testing
- * dependencies will exists otherwise the generate test won't compile.Additionally,Its important
+ * dependencies will exists otherwise the generated test won't compile.Additionally,its important
  * that the class you annotate with [ShowkaseScreenshot] is either abstract or open as Showkase
- * generates a class that extends this class in order to get access to theonScreenshot method.
+ * generates a class that extends this class in order to get access to the onScreenshot method.
+ *
+ * @param rootShowkaseClass: Pass the [ShowkaseRoot] declaration that you declared when setting up
+ * Compose. If you have multiple implementations of [ShowkaseRoot], pass the one that you want to
+ * test.
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
