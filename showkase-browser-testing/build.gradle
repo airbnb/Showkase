@@ -66,18 +66,15 @@ dependencies {
     implementation deps.compose.core
     implementation deps.compose.foundation
     implementation deps.compose.tooling
+    androidTestImplementation deps.compose.uiTest
 
     // Material
     implementation deps.material.material
     implementation deps.material.mdcComposeThemeAdapter
 
     // Testing
-    testImplementation deps.test.assertJ
-    testImplementation deps.test.googleTruth
-    testImplementation deps.test.junit
-    // Allows this module to access the annotation processor related classes. Otherwise those are
-    // only available in java library modules. Inspiration - 
-    // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
-    testImplementation files('libs/rt.jar')
-    testImplementation deps.kotlinCompileTesting
+    androidTestImplementation deps.test.junitImplementation
+    androidTestImplementation deps.test.androidXTestCore
+    androidTestImplementation deps.test.androidXTestRules
+    androidTestImplementation deps.test.androidxTestRunner
 }

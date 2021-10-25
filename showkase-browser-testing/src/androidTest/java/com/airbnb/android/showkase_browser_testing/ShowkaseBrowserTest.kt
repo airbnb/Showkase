@@ -1,4 +1,4 @@
-package com.airbnb.android.showkase_processor_testing
+package com.airbnb.android.showkase_browser_testing
 
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.swipeDown
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
-import com.vinaygaba.showcase_processor_testing.getBrowserIntent
+import com.airbnb.android.showkase_browser_testing.getBrowserIntent
 import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.junit.Test
@@ -343,7 +343,7 @@ class ShowcaseBrowserTest {
             
             // Click on "Test Composable1" to go to the component details screen
             clickRowWithText("Test Composable1")
-            
+
             waitForIdle()
 
             // Go back to the components in a group screen

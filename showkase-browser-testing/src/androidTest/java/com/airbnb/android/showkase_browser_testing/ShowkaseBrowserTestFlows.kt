@@ -1,4 +1,4 @@
-package com.airbnb.android.showkase_processor_testing
+package com.airbnb.android.showkase_browser_testing
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.SemanticsNodeInteraction
