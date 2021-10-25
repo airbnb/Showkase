@@ -33,7 +33,7 @@ internal fun ShowkaseComponentStylesScreen(
         items(
             items = filteredList,
             itemContent = { groupComponent ->
-                val styleName = groupComponent.styleName?.let { "[$it]" }.orEmpty()
+                val styleName = generatedStyleName(groupComponent.styleName, componentStylesList.size)
                 ComponentCardTitle(
                     "${groupComponent.componentName} $styleName"
                 )
@@ -57,6 +57,15 @@ internal fun ShowkaseComponentStylesScreen(
     BackButtonHandler {
         back(showkaseBrowserScreenMetadata, navController)
     }
+}
+
+private fun generatedStyleName(
+    styleName: String?,
+    componentsSize: Int
+) = when {
+    !styleName.isNullOrEmpty() -> "[$styleName]"
+    componentsSize == 1 -> "[Default Style]"
+    else -> ""
 }
 
 private fun back(

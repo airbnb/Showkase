@@ -105,6 +105,12 @@ class ShowcaseBrowserTest {
             // Select "Test Composable1"
             clickRowWithText("Test Composable1")
 
+            // Verify that the default style is visible on the screen
+            verifyRowsWithTextAreDisplayed("Composable1 [Default Style]")
+
+            // Select "Test Composable1 [Default Style]"
+            clickRowWithText("Test Composable1")
+
             // Verify that all 5 permutations for "Test Composable1" are generated
             verifyRowsWithTextAreDisplayed(
                 "Composable1 [Basic Example]",
@@ -114,8 +120,21 @@ class ShowcaseBrowserTest {
                 "Composable1 [Dark Mode]"
             )
 
+            // Go back to the component styles screen
+            goBack()
+
+            waitForIdle()
+
             // Go back to the components in a group screen
             goBack()
+
+            waitForIdle()
+
+            // Select "Test Composable2"
+            clickRowWithText("Test Composable2")
+
+            // Verify that the default style is visible on the screen
+            verifyRowsWithTextAreDisplayed("Composable2 [Default Style]")
 
             // Select "Test Composable2"
             clickRowWithText("Test Composable2")
@@ -341,10 +360,24 @@ class ShowcaseBrowserTest {
             // Click on "Group 1" to go to the components in a group screen
             clickRowWithText("Group1 (2)")
             
+            // Click on "Test Composable1" to go to the component styles screen
+            clickRowWithText("Test Composable1")
+
+            waitForIdle()
+
+            // Verify that the default style is visible on the screen
+            verifyRowsWithTextAreDisplayed("Composable1 [Default Style]")
+
             // Click on "Test Composable1" to go to the component details screen
             clickRowWithText("Test Composable1")
 
             waitForIdle()
+
+            // Go back to the component styles screen
+            goBack()
+
+            // Verify that the default style is visible on the screen
+            verifyRowsWithTextAreDisplayed("Composable1 [Default Style]")
 
             // Go back to the components in a group screen
             goBack()
