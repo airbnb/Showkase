@@ -776,7 +776,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -821,7 +822,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -918,7 +920,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -1036,7 +1039,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -1111,6 +1115,7 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun TestComposable() {
@@ -1172,6 +1177,7 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun TestComposable() {
@@ -1244,7 +1250,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -1279,7 +1286,8 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       )
                 
@@ -1401,7 +1409,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -1436,7 +1445,8 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       )
                 
@@ -1873,7 +1883,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -1922,7 +1933,8 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       )
                 
@@ -2059,7 +2071,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -2108,7 +2121,8 @@ class ShowkaseProcessorTest {
                             group = "group",
                             componentName = "name",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name""${'"'},
+                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       )
                 
@@ -2241,7 +2255,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = true,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -2277,7 +2292,8 @@ class ShowkaseProcessorTest {
                             componentName = "name",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { WrapperClass().TestComposable() })
                       )
                 
@@ -2404,7 +2420,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -2440,7 +2457,8 @@ class ShowkaseProcessorTest {
                             componentName = "name",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { WrapperClass.TestComposable() })
                       )
                 
@@ -3211,7 +3229,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -3247,7 +3266,8 @@ class ShowkaseProcessorTest {
                             componentName = "name",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { WrapperClass.TestComposable() })
                       )
                 
@@ -3361,6 +3381,7 @@ class ShowkaseProcessorTest {
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -3410,7 +3431,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = true,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -3460,7 +3482,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperObject::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperObject_TestComposable() {
                   }
@@ -3509,7 +3532,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperObject::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperObject_TestComposable() {
                   }
@@ -3561,7 +3585,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -3612,7 +3637,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -3663,7 +3689,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable1() {
                   }
@@ -3677,7 +3704,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable2() {
                   }
@@ -3728,7 +3756,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable1() {
                   }
@@ -3742,7 +3771,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable2() {
                   }
@@ -3795,7 +3825,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable1() {
                   }
@@ -3809,7 +3840,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable2() {
                   }
@@ -3857,7 +3889,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable1() {
                   }
@@ -3947,7 +3980,8 @@ class ShowkaseProcessorTest {
                     showkaseKDoc =
                         "This component shows some static text in cursive text style. \n\n Example usage:\n\n ```\n @Composable\n fun MyComposable() {\n    CursiveTextComponentPreview()\n }\n ```",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable() {
                   }
@@ -3994,7 +4028,8 @@ class ShowkaseProcessorTest {
                             | ```
                             ""${'"'}.trimMargin(),
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { WrapperClass.TestComposable() })
                       )
                 
@@ -4089,7 +4124,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun testComposable() {
                   }
@@ -4134,7 +4170,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun testComposable() {
                   }
@@ -4272,7 +4309,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = true,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_testComposable() {
                   }
@@ -4321,7 +4359,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = true,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_testComposable() {
                   }
@@ -4467,7 +4506,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_testComposable() {
                   }
@@ -4516,7 +4556,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_testComposable() {
                   }
@@ -4664,7 +4705,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_testComposable() {
                   }
@@ -4715,7 +4757,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_testComposable() {
                   }
@@ -4787,7 +4830,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -4823,7 +4867,8 @@ class ShowkaseProcessorTest {
                             componentName = "TestComposable",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       )
                 
@@ -4945,7 +4990,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun testComposable() {
                   }
@@ -4981,7 +5027,8 @@ class ShowkaseProcessorTest {
                             componentName = "TestComposable",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_TestComposable""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group_TestComposable_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { testComposable() })
                       )
                 
@@ -5103,7 +5150,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -5139,7 +5187,8 @@ class ShowkaseProcessorTest {
                             componentName = "TestComposable",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       )
                 
@@ -5597,7 +5646,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -5612,6 +5662,7 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun TestComposable2() {
@@ -5648,7 +5699,8 @@ class ShowkaseProcessorTest {
                             componentName = "TestComposable",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       ).apply {
                           ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
@@ -5659,7 +5711,8 @@ class ShowkaseProcessorTest {
                                       componentName = "TestComposable2",
                                       componentKDoc = "",
                                       componentKey =
-                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_${'$'}index""${'"'},
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_null_${'$'}index""${'"'},
+                                      isDefaultStyle = false,
                                       component = @Composable { TestComposable2(previewParam) }
                                   )
                               )
@@ -5804,7 +5857,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable() {
                   }
@@ -5819,6 +5873,7 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun TestComposable2() {
@@ -5855,7 +5910,8 @@ class ShowkaseProcessorTest {
                             componentName = "TestComposable",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable() })
                       ).apply {
                           ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
@@ -5866,7 +5922,8 @@ class ShowkaseProcessorTest {
                                       componentName = "TestComposable2",
                                       componentKDoc = "",
                                       componentKey =
-                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_${'$'}index""${'"'},
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_null_${'$'}index""${'"'},
+                                      isDefaultStyle = false,
                                       component = @Composable { TestComposable2(previewParam) }
                                   )
                               )
@@ -6010,6 +6067,7 @@ class ShowkaseProcessorTest {
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -6050,7 +6108,8 @@ class ShowkaseProcessorTest {
                                       componentName = "name",
                                       componentKDoc = "",
                                       componentKey =
-                                          ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_${'$'}index""${'"'},
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null_${'$'}index""${'"'},
+                                      isDefaultStyle = false,
                                       component = @Composable { WrapperClass().TestComposable(previewParam) }
                                   )
                               )
@@ -6195,6 +6254,7 @@ class ShowkaseProcessorTest {
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun WrapperClass_TestComposable() {
@@ -6235,7 +6295,8 @@ class ShowkaseProcessorTest {
                                       componentName = "name",
                                       componentKDoc = "",
                                       componentKey =
-                                          ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_${'$'}index""${'"'},
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null_${'$'}index""${'"'},
+                                      isDefaultStyle = false,
                                       component = @Composable { WrapperClass.TestComposable(previewParam) }
                                   )
                               )
@@ -6398,7 +6459,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable1() {
                   }
@@ -6412,7 +6474,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable2() {
                   }
@@ -6447,13 +6510,17 @@ class ShowkaseProcessorTest {
                             group = "group1",
                             componentName = "name1",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group1_name1""${'"'},
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group1_name1_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable1() }),
                         ShowkaseBrowserComponent(
                             group = "group2",
                             componentName = "name2",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group2_name2""${'"'},
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group2_name2_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable2() })
                       )
                 
@@ -7125,7 +7192,8 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = true,
                     showkaseKDoc = "",
                     enclosingClass = [WrapperClass::class],
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun WrapperClass_TestComposable1() {
                   }
@@ -7140,6 +7208,7 @@ class ShowkaseProcessorTest {
                     insideWrapperClass = false,
                     showkaseKDoc = "",
                     showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false,
                     previewParameterClass = [ParameterProvider::class]
                   )
                   fun TestComposable2() {
@@ -7176,7 +7245,8 @@ class ShowkaseProcessorTest {
                             componentName = "TestComposable1",
                             componentKDoc = "",
                             componentKey =
-                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_WrapperClass_TestComposable1""${'"'},
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_WrapperClass_TestComposable1_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { WrapperClass().TestComposable1() })
                       ).apply {
                           ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
@@ -7187,7 +7257,8 @@ class ShowkaseProcessorTest {
                                       componentName = "TestComposable2",
                                       componentKDoc = "",
                                       componentKey =
-                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_${'$'}index""${'"'},
+                                          ""${'"'}com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_null_${'$'}index""${'"'},
+                                      isDefaultStyle = false,
                                       component = @Composable { TestComposable2(previewParam) }
                                   )
                               )
@@ -7403,7 +7474,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable1() {
                   }
@@ -7417,7 +7489,8 @@ class ShowkaseProcessorTest {
                     insideObject = false,
                     insideWrapperClass = false,
                     showkaseKDoc = "",
-                    showkaseMetadataType = "COMPONENT"
+                    showkaseMetadataType = "COMPONENT",
+                    isDefaultStyle = false
                   )
                   fun TestComposable2() {
                   }
@@ -7480,13 +7553,17 @@ class ShowkaseProcessorTest {
                             group = "group1",
                             componentName = "name1",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group1_name1""${'"'},
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group1_name1_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable1() }),
                         ShowkaseBrowserComponent(
                             group = "group2",
                             componentName = "name2",
                             componentKDoc = "",
-                            componentKey = ""${'"'}com.airbnb.android.showkase_processor_testing_null_group2_name2""${'"'},
+                            componentKey =
+                                ""${'"'}com.airbnb.android.showkase_processor_testing_null_group2_name2_null""${'"'},
+                            isDefaultStyle = false,
                             component = @Composable { TestComposable2() })
                       )
                 

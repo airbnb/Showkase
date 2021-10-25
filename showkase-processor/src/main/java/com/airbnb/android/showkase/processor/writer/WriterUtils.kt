@@ -136,7 +136,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         showkaseMetadata.showkaseKDoc,
         componentKey,
     )
-    add("isDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
+    add("\nisDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
     showkaseMetadata.apply {
         showkaseWidthDp?.let { add("\nwidthDp = %L,", it) }
         showkaseHeightDp?.let { add("\nheightDp = %L,", it) }
