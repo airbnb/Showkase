@@ -79,6 +79,7 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
         is ShowkaseMetadata.Component -> {
             annotation.apply {
                 addMember("showkaseMetadataType = %S", ShowkaseMetadataType.COMPONENT.name)
+                addMember("isDefaultStyle = ${showkaseMetadata.isDefaultStyle}")
                 showkaseMetadata.showkaseWidthDp?.let {
                     addMember("showkaseWidthDp = %L", it)
                 }
@@ -87,6 +88,9 @@ internal class ShowkaseCodegenMetadataWriter(private val processingEnv: Processi
                 }
                 showkaseMetadata.previewParameter?.let {
                     addMember("previewParameterClass = [%T::class]", it)
+                }
+                showkaseMetadata.showkaseStyleName?.let {
+                    addMember("showkaseStyleName = %S", showkaseMetadata.showkaseStyleName)
                 }
             }
         }

@@ -14,7 +14,7 @@ import javax.lang.model.type.TypeMirror
 internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnvironment) {
     @Suppress("LongMethod")
     internal fun generateShowkaseBrowserFile(
-        showkaseComponentMetadata: Set<ShowkaseMetadata>,
+        showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
         showkaseColorMetadata: Set<ShowkaseMetadata>,
         showkaseTypographyMetadata: Set<ShowkaseMetadata>,
         rootModulePackageName: String,
@@ -24,7 +24,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
 
         val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
-            showkaseComponentMetadata.filterIsInstance<ShowkaseMetadata.Component>()
+            showkaseComponentMetadata
                 .partition {
                     it.previewParameter != null
                 }

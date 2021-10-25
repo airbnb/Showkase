@@ -29,8 +29,9 @@ internal fun ShowkaseGroupsScreen(
         items(
             items = filteredMap.entries.toList(),
             itemContent = { (group, list) ->
+                val size = getNumOfUIElements(list)
                 SimpleTextCard(
-                    text = "$group (${list.size})",
+                    text = "$group ($size)",
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(
@@ -50,6 +51,14 @@ internal fun ShowkaseGroupsScreen(
     }
 }
 
+internal fun getNumOfUIElements(list: List<*>): Int {
+    val isComponentList = list.filterIsInstance(ShowkaseBrowserComponent::class.java)
+    return when {
+        isComponentList.isNotEmpty() -> isComponentList.distinctBy { it.componentName }.size
+        else -> list.size
+    }
+}
+
 internal fun <T> getFilteredSearchList(
     map: Map<String, List<T>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
@@ -58,9 +67,9 @@ internal fun <T> getFilteredSearchList(
         false -> map
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             map.filter {
-                it.key.lowercase(Locale.getDefault()).contains(
-                    showkaseBrowserScreenMetadata.value.searchQuery!!
-                        .lowercase(Locale.getDefault())
+                matchSearchQuery(
+                    showkaseBrowserScreenMetadata.value.searchQuery!!,
+                    it.key
                 )
             }
         }

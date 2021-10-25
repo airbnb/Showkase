@@ -116,7 +116,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     var componentKey = ("${showkaseMetadata.packageName}" +
             "_${showkaseMetadata.enclosingClass}" +
             "_${showkaseMetadata.showkaseGroup}" +
-            "_${showkaseMetadata.showkaseName}").replace(
+            "_${showkaseMetadata.showkaseName}" +
+            "_${showkaseMetadata.showkaseStyleName}").replace(
         SPACE_REGEX,
         ""
     )
@@ -135,13 +136,11 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         showkaseMetadata.showkaseKDoc,
         componentKey,
     )
+    add("\nisDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
     showkaseMetadata.apply {
-        showkaseWidthDp?.let {
-            add("\nwidthDp = %L,", it)
-        }
-        showkaseHeightDp?.let {
-            add("\nheightDp = %L,", it)
-        }
+        showkaseWidthDp?.let { add("\nwidthDp = %L,", it) }
+        showkaseHeightDp?.let { add("\nheightDp = %L,", it) }
+        showkaseStyleName?.let { add("\nstyleName = %S,", it) }
     }
 
     add(

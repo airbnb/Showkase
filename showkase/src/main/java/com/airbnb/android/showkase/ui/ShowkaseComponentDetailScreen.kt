@@ -210,11 +210,10 @@ private fun back(
 ) {
     showkaseBrowserScreenMetadata.update {
         copy(
-            currentComponentKey = null,
-            currentComponentName = null,
+            currentComponentStyleName = null,
             isSearchActive = false,
             searchQuery = null
         )
     }
-    navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
+    navController.navigate(ShowkaseCurrentScreen.COMPONENT_STYLES)
 }
