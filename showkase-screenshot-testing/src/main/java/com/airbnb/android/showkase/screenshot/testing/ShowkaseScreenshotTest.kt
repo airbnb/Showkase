@@ -73,6 +73,7 @@ interface ShowkaseScreenshotTest {
      * @param screenshotType A screenshot can be one of the following types: Composable, Color or Typography
      * @param screenshotBitmap Bitmap of the given UI element
      */
+
     fun onScreenshot(
         id: String,
         name: String,
