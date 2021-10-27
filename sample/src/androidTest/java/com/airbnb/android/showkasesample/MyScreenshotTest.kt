@@ -12,6 +12,7 @@ abstract class MyScreenshotTest: ShowkaseScreenshotTest {
         id: String,
         name: String,
         group: String,
+        styleName: String?,
         screenshotType: ShowkaseScreenshotType,
         screenshotBitmap: Bitmap,
     ) {

@@ -64,17 +64,21 @@ interface ShowkaseScreenshotTest {
      * - Storing the screenshot on device to generate golden copies of images
      * - Using the new screenshot and comparing/asserting against a golden copy of the same element
      *
-     * @param id: a unique id to represent this screenshot. There are no guarantees that the id will
+     * @param id a unique id to represent this screenshot. There are no guarantees that the id will
      * be identical across screenshots for the same UI element.
-     * @param name: name of the UI element.
-     * @param group: group that this UI element belongs to
-     * @param screenshotType: A screenshot can be one of the following types: Composable, Color or Typography
-     * @param screenshotBitmap: Bitmap of the given UI element
+     * @param name name of the UI element.
+     * @param styleName The name of the style that this component represents. This is only available
+     * when ShowkaseScreenshotType == Composable.
+     * @param group group that this UI element belongs to
+     * @param screenshotType A screenshot can be one of the following types: Composable, Color or Typography
+     * @param screenshotBitmap Bitmap of the given UI element
      */
+
     fun onScreenshot(
         id: String,
         name: String,
         group: String,
+        styleName: String? = null,
         screenshotType: ShowkaseScreenshotType,
         screenshotBitmap: Bitmap,
     )
@@ -88,11 +92,12 @@ interface ShowkaseScreenshotTest {
         composeTestRule.setContent { showkaseBrowserComponent.component() }
         val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
         onScreenshot(
-            showkaseBrowserComponent.componentKey,
-            showkaseBrowserComponent.componentName,
-            showkaseBrowserComponent.group,
-            ShowkaseScreenshotType.Composable,
-            bitmap,
+            id = showkaseBrowserComponent.componentKey,
+            name = showkaseBrowserComponent.componentName,
+            group = showkaseBrowserComponent.group,
+            styleName = showkaseBrowserComponent.styleName,
+            screenshotType = ShowkaseScreenshotType.Composable,
+            screenshotBitmap = bitmap,
         )
     }
 
@@ -115,11 +120,11 @@ interface ShowkaseScreenshotTest {
         }
         val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
         onScreenshot(
-            showkaseBrowserTypography.hashCode().toString(),
-            showkaseBrowserTypography.typographyName,
-            showkaseBrowserTypography.typographyGroup,
-            ShowkaseScreenshotType.Typography,
-            bitmap,
+            id = showkaseBrowserTypography.hashCode().toString(),
+            name = showkaseBrowserTypography.typographyName,
+            group = showkaseBrowserTypography.typographyGroup,
+            screenshotType = ShowkaseScreenshotType.Typography,
+            screenshotBitmap = bitmap,
         )
     }
 
@@ -138,11 +143,11 @@ interface ShowkaseScreenshotTest {
         }
         val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
         onScreenshot(
-            showkaseBrowserColor.hashCode().toString(),
-            showkaseBrowserColor.colorName,
-            showkaseBrowserColor.colorGroup,
-            ShowkaseScreenshotType.Color,
-            bitmap,
+            id = showkaseBrowserColor.hashCode().toString(),
+            name = showkaseBrowserColor.colorName,
+            group = showkaseBrowserColor.colorGroup,
+            screenshotType = ShowkaseScreenshotType.Color,
+            screenshotBitmap = bitmap,
         )
     }
 }

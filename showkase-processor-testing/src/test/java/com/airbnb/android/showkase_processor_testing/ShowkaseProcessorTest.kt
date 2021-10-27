@@ -6410,6 +6410,7 @@ class ShowkaseProcessorTest {
                 id: String,
                 name: String,
                 group: String,
+                styleName: String?,
                 screenshotType: ShowkaseScreenshotType,
                 screenshotBitmap: Bitmap,
             ) {
@@ -6667,6 +6668,7 @@ class ShowkaseProcessorTest {
                 id: String,
                 name: String,
                 group: String,
+                styleName: String?,
                 screenshotType: ShowkaseScreenshotType,
                 screenshotBitmap: Bitmap,
             ) {
@@ -6893,6 +6895,7 @@ class ShowkaseProcessorTest {
                 id: String,
                 name: String,
                 group: String,
+                styleName: String?,
                 screenshotType: ShowkaseScreenshotType,
                 screenshotBitmap: Bitmap,
             ) {
@@ -7140,6 +7143,7 @@ class ShowkaseProcessorTest {
                 id: String,
                 name: String,
                 group: String,
+                styleName: String?,
                 screenshotType: ShowkaseScreenshotType,
                 screenshotBitmap: Bitmap,
             ) {
@@ -7409,6 +7413,7 @@ class ShowkaseProcessorTest {
                 id: String,
                 name: String,
                 group: String,
+                styleName: String?,
                 screenshotType: ShowkaseScreenshotType,
                 screenshotBitmap: Bitmap,
             ) {
