@@ -53,6 +53,7 @@ buildscript {
             'support': [
                     'appCompat': "androidx.appcompat:appcompat:${versions.supportLibrary}",
                     'ktx': "androidx.core:core-ktx:${versions.supportLibrary}",
+                    'lifecycleRuntimeKtx': "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}",
                     'lifecycleExtensions': "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
             ],
             'test': [

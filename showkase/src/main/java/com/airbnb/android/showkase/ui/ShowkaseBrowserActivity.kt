@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.AnnotatedString
 import com.airbnb.android.showkase.exceptions.ShowkaseException
-import com.airbnb.android.showkase.impressionlogging.TestScreen
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseProvider
 import com.airbnb.android.showkase.models.ShowkaseElementsMetadata
@@ -36,33 +35,32 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                     "the ShowkaseBrowserActivity.getIntent() method."
         )
         setContent {
-            TestScreen()
-//            val (
-//                groupedComponentsList,
-//                groupedColorsList,
-//                groupedTypographyList
-//            ) = getShowkaseProviderElements(classKey)
-//
-//            val showkaseBrowserScreenMetadata =
-//                remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
-//            when {
-//                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() ||
-//                        groupedTypographyList.isNotEmpty() -> {
-//                    ShowkaseBrowserApp(
-//                        groupedComponentsList.groupBy { it.group },
-//                        groupedColorsList.groupBy { it.colorGroup },
-//                        groupedTypographyList.groupBy { it.typographyGroup },
-//                        showkaseBrowserScreenMetadata)
-//                }
-//                else -> {
-//                    ShowkaseErrorScreen(
-//                        errorText = "There were no elements that were annotated with either " +
-//                                "@ShowkaseComposable, @ShowkaseTypography or @ShowkaseColor. If " +
-//                                "you think this is a mistake, file an issue at " +
-//                                "https://github.com/airbnb/Showkase/issues"
-//                    )
-//                }
-//            }
+            val (
+                groupedComponentsList,
+                groupedColorsList,
+                groupedTypographyList
+            ) = getShowkaseProviderElements(classKey)
+
+            val showkaseBrowserScreenMetadata =
+                remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
+            when {
+                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() ||
+                        groupedTypographyList.isNotEmpty() -> {
+                    ShowkaseBrowserApp(
+                        groupedComponentsList.groupBy { it.group },
+                        groupedColorsList.groupBy { it.colorGroup },
+                        groupedTypographyList.groupBy { it.typographyGroup },
+                        showkaseBrowserScreenMetadata)
+                }
+                else -> {
+                    ShowkaseErrorScreen(
+                        errorText = "There were no elements that were annotated with either " +
+                                "@ShowkaseComposable, @ShowkaseTypography or @ShowkaseColor. If " +
+                                "you think this is a mistake, file an issue at " +
+                                "https://github.com/airbnb/Showkase/issues"
+                    )
+                }
+            }
         }
     }
 

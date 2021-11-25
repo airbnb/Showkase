@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    // Maven artifact publish
+    dependencies {
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
+    }
+}
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+apply plugin: "com.vanniktech.maven.publish"
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+        ]
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.compose}"
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Kotlin
+    implementation deps.kotlinStdLib
+    implementation deps.support.lifecycleRuntimeKtx
+
+    // Support Libraries
+    implementation deps.support.ktx
+
+    // Compose
+    implementation deps.compose.activityCompose
+    implementation deps.compose.foundation
+    implementation deps.compose.layout
+    androidTestImplementation deps.compose.uiTest
+
+    // Unit Testing
+    testImplementation deps.test.junit
+    androidTestImplementation deps.test.junitImplementation
+}
