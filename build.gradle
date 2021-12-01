@@ -15,9 +15,10 @@ buildscript {
             'junitImplementation' : '1.1.1',
             'kotlin': '1.5.30',
             'kotlinCompilerVersion': '1.5.30',
-            'kotlinCompileTesting': '1.4.4',
+            'kotlinCompileTesting': '1.4.6',
             'kotlinPoet': '1.10.2',
-            'kotlinXMetadata': '0.3.0',
+            'kotlinXMetadata': '0.4.0',
+            'ksp': '1.5.31-1.0.1',
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
             'picasso': '2.8',
@@ -26,7 +27,8 @@ buildscript {
             'googleTruth': '1.0.1',
             'autoService': '1.0-rc7',
             'material':'1.4.0',
-            'mdcComposeThemeAdapter':'1.0.2'
+            'mdcComposeThemeAdapter':'1.0.2',
+            'xprocessing':'2.4.0-beta02',
     ]
     ext.deps = [
             'autoService': "com.google.auto.service:auto-service:${versions.autoService}",
@@ -46,10 +48,10 @@ buildscript {
                     'uiTest': "androidx.compose.ui:ui-test-junit4:${versions.compose}",
                     'uiLiveData': "androidx.compose.runtime:runtime-livedata:${versions.compose}"
             ],
-            'kotlinStdLib': "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
             'kotlinCompileTesting': "com.github.tschuchortdev:kotlin-compile-testing:${versions.kotlinCompileTesting}",
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'kotlinXMetadata': "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
+            'ksp': "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}",
             'imageLoading': [
                     'picasso': "com.squareup.picasso:picasso:${versions.picasso}"
             ],
@@ -70,7 +72,8 @@ buildscript {
             'material': [
                     'material':"com.google.android.material:material:${versions.material}",
                     'mdcComposeThemeAdapter':"com.google.android.material:compose-theme-adapter:${versions.mdcComposeThemeAdapter}"
-            ]
+            ],
+            'xprocessing': "androidx.room:room-compiler-processing:${versions.xprocessing}",
     ]
     repositories {
         google()

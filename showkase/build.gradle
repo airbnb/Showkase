@@ -66,8 +66,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // Kotlin
-    implementation deps.kotlinStdLib
 
     // Showkase
     api project(':showkase-annotation')

@@ -36,10 +36,8 @@ dependencies {
 
     implementation project(':showkase-annotation')
 
-    implementation deps.autoService
-    implementation deps.kotlinStdLib
     implementation deps.kotlinPoet
     implementation deps.kotlinXMetadata
-    
-    kapt deps.autoService
+    implementation deps.ksp
+    implementation deps.xprocessing
 }

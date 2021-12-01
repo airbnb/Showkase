@@ -1,34 +1,16 @@
 package com.airbnb.android.showkase.processor
 
-import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
-import com.airbnb.android.showkase.annotation.ShowkaseColor
-import com.airbnb.android.showkase.annotation.ShowkaseComposable
-import com.airbnb.android.showkase.annotation.ShowkaseRoot
-import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
-import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
-import com.airbnb.android.showkase.annotation.ShowkaseTypography
+import com.airbnb.android.showkase.annotation.*
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
-import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
-import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
-import com.airbnb.android.showkase.processor.models.toModel
-import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
+import com.airbnb.android.showkase.processor.models.*
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
-import com.google.auto.service.AutoService
-import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Filer
-import javax.annotation.processing.Messager
-import javax.annotation.processing.ProcessingEnvironment
-import javax.annotation.processing.Processor
-import javax.annotation.processing.RoundEnvironment
-import javax.annotation.processing.SupportedSourceVersion
+import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
@@ -38,7 +20,6 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-@AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 class ShowkaseProcessor: AbstractProcessor() {
     private lateinit var typeUtils: Types

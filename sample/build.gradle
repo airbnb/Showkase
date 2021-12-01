@@ -64,9 +64,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // Kotlin
-    implementation deps.kotlinStdLib
-    
+
     // Showkase dependencies
     // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 
     //  Figure out a way to enable using debugImplementation
