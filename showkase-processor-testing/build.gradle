@@ -57,6 +57,9 @@ dependencies {
     implementation project(':showkase-processor')
     implementation project(':showkase-screenshot-testing')
 
+    // KSP
+    implementation deps.ksp
+
     // Compose
     implementation deps.compose.activityCompose
     implementation deps.compose.composeRuntime

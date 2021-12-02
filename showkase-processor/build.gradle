@@ -31,13 +31,30 @@ compileKotlin {
     }
 }
 
+// Need to apply to all tasks like this so test tasks also get these compiler args
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+                "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+                "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi",
+                "-Xopt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview",
+        ]
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':showkase-annotation')
 
     implementation deps.kotlinPoet
+    implementation deps.kotlinJavaPoetInterop
     implementation deps.kotlinXMetadata
     implementation deps.ksp
     implementation deps.xprocessing
+
+    testImplementation deps.test.junit
+    testImplementation deps.strikt
+    testImplementation deps.xprocessingTesting
 }

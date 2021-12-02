@@ -28,6 +28,7 @@ buildscript {
             'autoService': '1.0-rc7',
             'material':'1.4.0',
             'mdcComposeThemeAdapter':'1.0.2',
+            'strikt':'0.33.0',
             'xprocessing':'2.4.0-beta02',
     ]
     ext.deps = [
@@ -50,6 +51,7 @@ buildscript {
             ],
             'kotlinCompileTesting': "com.github.tschuchortdev:kotlin-compile-testing:${versions.kotlinCompileTesting}",
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
+            'kotlinJavaPoetInterop': "com.squareup:kotlinpoet-javapoet:${versions.kotlinPoet}",
             'kotlinXMetadata': "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
             'ksp': "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}",
             'imageLoading': [
@@ -73,7 +75,9 @@ buildscript {
                     'material':"com.google.android.material:material:${versions.material}",
                     'mdcComposeThemeAdapter':"com.google.android.material:compose-theme-adapter:${versions.mdcComposeThemeAdapter}"
             ],
+            'strikt':"io.strikt:strikt-core:${versions.strikt}",
             'xprocessing': "androidx.room:room-compiler-processing:${versions.xprocessing}",
+            'xprocessingTesting': "androidx.room:room-compiler-processing-testing:${versions.xprocessing}",
     ]
     repositories {
         google()

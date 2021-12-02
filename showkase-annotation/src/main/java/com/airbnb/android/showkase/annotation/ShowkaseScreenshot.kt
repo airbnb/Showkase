@@ -36,7 +36,7 @@ import kotlin.reflect.KClass
  * test.
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 annotation class ShowkaseScreenshot(
     val rootShowkaseClass: KClass<*>

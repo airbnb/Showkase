@@ -1,20 +1,10 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.*
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
-import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.type.TypeMirror
 
 val SPACE_REGEX = "\\s".toRegex()
 
@@ -43,7 +33,7 @@ internal fun getShowkaseProviderInterfaceFunction(
 
 @Suppress("LongParameterList")
 internal fun writeFile(
-    processingEnv: ProcessingEnvironment,
+    processingEnv: XProcessingEnv,
     fileBuilder: FileSpec.Builder,
     superInterfaceClassName: ClassName,
     showkaseComponentsListClassName: String,
@@ -72,7 +62,7 @@ internal fun writeFile(
             }
         )
 
-    fileBuilder.build().writeTo(processingEnv.filer)
+    fileBuilder.build().writeTo(processingEnv.filer, mode = XFiler.Mode.Aggregating)
 }
 
 internal fun ClassName.listInitializerCodeBlock(): CodeBlock.Builder {
@@ -113,8 +103,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     showkaseMetadata: ShowkaseMetadata.Component,
     isPreviewParameter: Boolean = false
 ) {
-    var componentKey = ("${showkaseMetadata.packageName}" +
-            "_${showkaseMetadata.enclosingClass}" +
+    var componentKey = (showkaseMetadata.packageName +
+            "_${showkaseMetadata.enclosingClassName}" +
             "_${showkaseMetadata.showkaseGroup}" +
             "_${showkaseMetadata.showkaseName}" +
             "_${showkaseMetadata.showkaseStyleName}").replace(
@@ -146,11 +136,11 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     add(
         composePreviewFunctionLambdaCodeBlock(
             showkaseMetadata.packageName,
-            showkaseMetadata.enclosingClass,
+            showkaseMetadata.enclosingClassName,
             showkaseMetadata.elementName,
             showkaseMetadata.insideWrapperClass,
             showkaseMetadata.insideObject,
-            showkaseMetadata.previewParameter
+            showkaseMetadata.previewParameterProviderType
         )
     )
     doubleUnindent()
@@ -159,11 +149,11 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
 @Suppress("LongParameterList")
 internal fun composePreviewFunctionLambdaCodeBlock(
     functionPackageName: String,
-    enclosingClass: TypeMirror? = null,
+    enclosingClass: ClassName? = null,
     composeFunctionName: String,
     insideWrapperClass: Boolean,
     insideObject: Boolean,
-    previewParameter: TypeMirror? = null
+    previewParameter: TypeName? = null
 ): CodeBlock {
     return when {
         // When enclosingClass is null, it denotes that the method was a top-level method 

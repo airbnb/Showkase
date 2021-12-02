@@ -19,7 +19,7 @@ package com.airbnb.android.showkase.annotation
  * name. If the field is a top level field, the textStyle is added to a "Default Group".
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FIELD)
 annotation class ShowkaseTypography(
     val name: String = "",

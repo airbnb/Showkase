@@ -1,9 +1,11 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.COLOR_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.COMPONENT_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.TYPOGRAPHY_PROPERTY_NAME
-import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter.Companion.CONTEXT_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter.Companion.SHOWKASE_OBJECT_CLASS_NAME
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -11,9 +13,8 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import javax.annotation.processing.ProcessingEnvironment
 
-internal class ShowkaseScreenshotTestWriter(private val processingEnv: ProcessingEnvironment) {
+internal class ShowkaseScreenshotTestWriter(private val environment: XProcessingEnv) {
     @Suppress("LongParameterList")
     internal fun generateScreenshotTests(
         componentsSize: Int,
@@ -44,7 +45,7 @@ internal class ShowkaseScreenshotTestWriter(private val processingEnv: Processin
                 }
             )
 
-        fileBuilder.build().writeTo(processingEnv.filer)
+        fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
     private fun addComposeTestRuleProperty() =
