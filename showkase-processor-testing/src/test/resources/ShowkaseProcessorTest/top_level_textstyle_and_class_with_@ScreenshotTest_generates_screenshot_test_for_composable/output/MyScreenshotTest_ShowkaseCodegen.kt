@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.rule.GrantPermissionRule
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase_processor_testing.getMetadata
+import kotlin.Unit
 import kotlin.jvm.JvmField
 import org.junit.Rule
 import org.junit.Test
@@ -14,19 +15,19 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
-class MyScreenshotTest_ShowkaseCodegen : MyScreenshotTest() {
+public class MyScreenshotTest_ShowkaseCodegen : MyScreenshotTest() {
   @get:Rule
-  override val composeTestRule: ComposeContentTestRule = createComposeRule()
+  public override val composeTestRule: ComposeContentTestRule = createComposeRule()
 
   @Rule
   @JvmField
-  val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+  public val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
        Manifest.permission.WRITE_EXTERNAL_STORAGE,
        Manifest.permission.READ_EXTERNAL_STORAGE 
       )
 
   @Test
-  fun typography_screenshot_test_0() {
+  public fun typography_screenshot_test_0(): Unit {
     takeTypographyScreenshot(Showkase.getMetadata().typographyList[0])
   }
 }

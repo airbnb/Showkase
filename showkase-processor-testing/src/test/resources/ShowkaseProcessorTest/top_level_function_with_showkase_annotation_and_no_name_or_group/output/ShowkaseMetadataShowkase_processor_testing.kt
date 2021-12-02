@@ -1,9 +1,10 @@
 // This is an auto-generated file. Please do not edit/modify this file.
 package com.airbnb.android.showkase
 
-import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
+import kotlin.Unit
 
-class ShowkaseMetadataShowkase_processor_testing {
+public class ShowkaseMetadataShowkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "TestComposable",
     showkaseGroup = "Default Group",
@@ -16,6 +17,6 @@ class ShowkaseMetadataShowkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  fun testComposable() {
+  public fun testComposable(): Unit {
   }
 }

@@ -2,7 +2,7 @@
 package com.airbnb.android.showkase_processor_testing
 
 import androidx.compose.runtime.Composable
-import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
+import com.airbnb.android.showkase.`annotation`.ShowkaseRootCodegen
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
@@ -15,8 +15,9 @@ import kotlin.collections.List
   numColors = 1,
   numTypography = 1
 )
-class TestShowkaseRootCodegen : ShowkaseProvider {
-  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
+public class TestShowkaseRootCodegen : ShowkaseProvider {
+  public val componentList: List<ShowkaseBrowserComponent> =
+      mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
             group = "group1",
             componentName = "name1",
@@ -35,7 +36,7 @@ class TestShowkaseRootCodegen : ShowkaseProvider {
             component = @Composable { TestComposable2() })
       )
 
-  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
+  public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
         ShowkaseBrowserColor(
             colorGroup = "group",
             colorName = "name",
@@ -43,7 +44,7 @@ class TestShowkaseRootCodegen : ShowkaseProvider {
             color = red)
       )
 
-  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
+  public val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
         ShowkaseBrowserTypography(
             typographyGroup = "group",
             typographyName = "name",
@@ -51,9 +52,9 @@ class TestShowkaseRootCodegen : ShowkaseProvider {
             textStyle = title)
       )
 
-  override fun getShowkaseComponents() = componentList
+  public override fun getShowkaseComponents() = componentList
 
-  override fun getShowkaseColors() = colorList
+  public override fun getShowkaseColors() = colorList
 
-  override fun getShowkaseTypography() = typographyList
+  public override fun getShowkaseTypography() = typographyList
 }

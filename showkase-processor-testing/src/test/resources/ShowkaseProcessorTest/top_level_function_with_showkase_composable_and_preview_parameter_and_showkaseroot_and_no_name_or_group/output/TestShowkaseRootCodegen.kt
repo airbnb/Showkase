@@ -2,7 +2,7 @@
 package com.airbnb.android.showkase_processor_testing
 
 import androidx.compose.runtime.Composable
-import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
+import com.airbnb.android.showkase.`annotation`.ShowkaseRootCodegen
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
@@ -15,8 +15,9 @@ import kotlin.collections.List
   numColors = 0,
   numTypography = 0
 )
-class TestShowkaseRootCodegen : ShowkaseProvider {
-  val componentList: List<ShowkaseBrowserComponent> = mutableListOf<ShowkaseBrowserComponent>(
+public class TestShowkaseRootCodegen : ShowkaseProvider {
+  public val componentList: List<ShowkaseBrowserComponent> =
+      mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
             group = "Default Group",
             componentName = "TestComposable",
@@ -42,13 +43,13 @@ class TestShowkaseRootCodegen : ShowkaseProvider {
           }
       }
 
-  val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+  public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
 
-  val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+  public val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
 
-  override fun getShowkaseComponents() = componentList
+  public override fun getShowkaseComponents() = componentList
 
-  override fun getShowkaseColors() = colorList
+  public override fun getShowkaseColors() = colorList
 
-  override fun getShowkaseTypography() = typographyList
+  public override fun getShowkaseTypography() = typographyList
 }
