@@ -8,7 +8,10 @@ import org.assertj.core.api.Assertions
 import org.junit.Rule
 import java.io.File
 
-
+/**
+ * Temporarily set this to true to have the test runner update test resource file expected outputs
+ * instead of failing tests on mismatch. Use this to easily update expected outputs.
+ */
 const val UPDATE_TEST_OUTPUTS = false
 
 abstract class BaseProcessorTest {
@@ -16,6 +19,10 @@ abstract class BaseProcessorTest {
     @JvmField
     val testNameRule = TestNameRule()
 
+    /**
+     * Collects the files in the "input" directory of this test's resources directory
+     * and compiles them with Kotlin, returning the result.
+     */
     protected fun compileInputs(): KotlinCompilation.Result {
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
 
@@ -43,6 +50,10 @@ abstract class BaseProcessorTest {
         result.assertGeneratedSources()
     }
 
+    /**
+     * Collects the files in the "output" directory of this test's resources directory
+     * and validates that they match the generated sources of this compilation result.
+     */
     protected fun KotlinCompilation.Result.assertGeneratedSources() {
         Assertions.assertThat(exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
 
