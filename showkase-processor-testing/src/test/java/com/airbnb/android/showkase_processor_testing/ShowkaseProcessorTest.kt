@@ -166,14 +166,13 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `class with no interface but showkaseroot annotation throws compilation error`() {
-        assertCompilationFails("Only an implementation of ShowkaseRootModule can be annotated with " +
-                "@ShowkaseRoot")
+        assertCompilationFails("Only an implementation of com.airbnb.android.showkase.annotation.ShowkaseRootModule can be annotated with @ShowkaseRoot")
     }
 
     @Test
     fun `open class with no interface but ShowkaseScreenshoTest annotation throws compilation error`() {
         assertCompilationFails(
-            "Only an implementation of ShowkaseScreenshotTest can be annotated with @ShowkaseScreenshot"
+            "Only an implementation of com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest can be annotated with @ShowkaseScreenshot"
         )
     }
 

@@ -336,7 +336,7 @@ internal fun getShowkaseTypographyMetadata(
         showkaseGroup = showkaseGroup,
         showkaseKDoc = commonMetadata.kDoc,
         elementName = element.name,
-        packageSimpleName = commonMetadata.packageName,
+        packageSimpleName = commonMetadata.moduleName,
         packageName = commonMetadata.packageName,
         enclosingClassName = commonMetadata.enclosingClassName,
         insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
