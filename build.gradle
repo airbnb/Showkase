@@ -69,13 +69,13 @@ buildscript {
                     'googleTruth': "com.google.truth:truth:${versions.googleTruth}",
                     'junit': "junit:junit:${versions.junit}",
                     'junitImplementation': "androidx.test.ext:junit:${versions.junitImplementation}",
-                    'androidxTestRunner': "androidx.test:runner:${versions.testRunner}"
+                    'androidxTestRunner': "androidx.test:runner:${versions.testRunner}",
+                    'strikt':"io.strikt:strikt-core:${versions.strikt}",
             ],
             'material': [
                     'material':"com.google.android.material:material:${versions.material}",
                     'mdcComposeThemeAdapter':"com.google.android.material:compose-theme-adapter:${versions.mdcComposeThemeAdapter}"
             ],
-            'strikt':"io.strikt:strikt-core:${versions.strikt}",
             'xprocessing': "androidx.room:room-compiler-processing:${versions.xprocessing}",
             'xprocessingTesting': "androidx.room:room-compiler-processing-testing:${versions.xprocessing}",
     ]

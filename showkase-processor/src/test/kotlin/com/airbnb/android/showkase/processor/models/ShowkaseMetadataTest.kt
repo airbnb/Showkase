@@ -29,7 +29,8 @@ class ShowkaseMetadataTest {
         runProcessorTest(listOf(libSource)) { invocation ->
             val barClass = invocation.processingEnv.requireTypeElement("Bar")
 
-            expectThat(barClass.getDeclaredMethods().single())
+            expectThat(barClass.getDeclaredMethods()
+                .single())
                 .get { isTopLevel(enclosingElement) }
                 .isFalse()
 
