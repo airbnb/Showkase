@@ -1,9 +1,10 @@
 package com.vinaygaba.showkase_component_impressions
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
@@ -11,90 +12,107 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 
 internal data class ImpressionData<T>(
     val key: T,
-    val visibilityEvent: ShowkaseVisibilityEvent
+    val visibilityPercentage: Float,
+    val boundsInWindow: Rect
 )
 
-@Composable
+/**
+ *
+ */
+@OptIn(FlowPreview::class)
 fun <T> Modifier.visibilityImpressions(
     key: T,
-    onVisibilityEvent: (T, ShowkaseVisibilityEvent, String) -> Unit,
-    visibilityThreshold: Float = 0.5f
+    onVisibilityEvent: (T, Float, Rect) -> Unit,
 ) = composed {
     val view = LocalView.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val impressionCollector = remember { ImpressionCollector<T>(lifecycle) }
-    var isVisible: Boolean? by remember { mutableStateOf(null) }
+    val scope = rememberCoroutineScope()
+    val visibilityEvent by rememberUpdatedState(newValue = onVisibilityEvent)
+    val impressionCollector = remember(key) { ImpressionCollector<T>(scope, visibilityEvent) }
+    var visibilityMetadata: VisibilityMetadata? by remember { mutableStateOf(null) }
 
-    registerLifecycleImpressionEvents(key, lifecycle, impressionCollector)
-    registerDisposeImpressionEvents(key, impressionCollector)
-    collectImpressionEvents(key, impressionCollector, onVisibilityEvent)
+    registerLifecycleImpressionEvents(key, lifecycle, impressionCollector, visibilityMetadata)
+    registerDisposeImpressionEvents(key, impressionCollector, lifecycle)
+    collectImpressionEvents(key, impressionCollector, visibilityEvent)
 
     onGloballyPositioned { layoutCoordinates ->
-        isVisible = layoutCoordinates.isOnScreen(
-            parentView = view,
-            visibilityThreshold = visibilityThreshold
-        )
-        impressionCollector.onCoordinatesUpdated(key, isVisible)
+        visibilityMetadata = layoutCoordinates.visibilityPercentage(view = view)
+        impressionCollector.onLayoutCoordinatesChanged(key, visibilityMetadata!!)
     }
 }
 
+@SuppressLint("ComposableNaming")
 @Composable
 private fun <T> registerDisposeImpressionEvents(
     key: T,
-    impressionCollector: ImpressionCollector<T>
+    impressionCollector: ImpressionCollector<T>,
+    lifecycle: Lifecycle
 ) {
-    DisposableEffect(key) {
+    DisposableEffect(key, lifecycle) {
         onDispose {
-            impressionCollector.publishImpressionEvent(
+            impressionCollector.publishDisposeEvent(
                 key,
-                ShowkaseVisibilityEvent.INVISIBLE
+                defaultVisibilityMetadata,
             )
         }
     }
 }
 
+@SuppressLint("ComposableNaming")
+@FlowPreview
 @Composable
 private fun <T> collectImpressionEvents(
     key: T,
     impressionCollector: ImpressionCollector<T>,
-    onVisibilityEvent: (T, ShowkaseVisibilityEvent, String) -> Unit
+    onVisibilityEvent: (T, Float, Rect) -> Unit
 ) {
     LaunchedEffect(key) {
-        impressionCollector.impressionEvents.collect { impressions ->
-            val impression = impressions as ImpressionData<*>
+        impressionCollector.impressionEvents
+            .collect { impressionData ->
+            val impression = impressionData as ImpressionData<*>
             onVisibilityEvent(
                 impression.key as T,
-                impression.visibilityEvent,
-                impression.visibilityEvent.name
+                impression.visibilityPercentage,
+                impression.boundsInWindow
             )
         }
     }
 }
 
+@SuppressLint("RememberReturnType", "ComposableNaming")
 @Composable
 private fun <T> registerLifecycleImpressionEvents(
     key: T,
     lifecycle: Lifecycle,
     impressionCollector: ImpressionCollector<T>,
+    visibility: VisibilityMetadata?,
 ) {
-    remember {
+    remember(key1 = key, key2 = visibility) {
         lifecycle.addObserver(
             LifecycleEventObserver { _, event ->
                 when (event) {
                     Lifecycle.Event.ON_PAUSE, Lifecycle.Event.ON_STOP  -> {
-                        impressionCollector.publishImpressionEvent(key, ShowkaseVisibilityEvent.INVISIBLE)
+                        impressionCollector.publishImpressionEvent(key, defaultVisibilityMetadata)
                     }
                     Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_START -> {
-                        impressionCollector.publishImpressionEvent(key, ShowkaseVisibilityEvent.VISIBLE)
+                        visibility?.let {
+                            impressionCollector.publishImpressionEvent(key, it)
+                        }
                     }
-                    else -> {}
+                    else -> {
+                        // No-op
+                    }
                 }
             }
         )
