@@ -50,6 +50,7 @@ buildscript {
                     'uiLiveData': "androidx.compose.runtime:runtime-livedata:${versions.compose}"
             ],
             'kotlinCompileTesting': "com.github.tschuchortdev:kotlin-compile-testing:${versions.kotlinCompileTesting}",
+            'kotlinCompileTestingKsp': "com.github.tschuchortdev:kotlin-compile-testing-ksp:${versions.kotlinCompileTesting}",
             'kotlinPoet': "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'kotlinJavaPoetInterop': "com.squareup:kotlinpoet-javapoet:${versions.kotlinPoet}",
             'kotlinXMetadata': "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",

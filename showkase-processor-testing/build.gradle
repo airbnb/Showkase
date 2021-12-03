@@ -75,9 +75,6 @@ dependencies {
     testImplementation deps.test.assertJ
     testImplementation deps.test.googleTruth
     testImplementation deps.test.junit
-    // Allows this module to access the annotation processor related classes. Otherwise those are
-    // only available in java library modules. Inspiration - 
-    // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
-    testImplementation files('libs/rt.jar')
     testImplementation deps.kotlinCompileTesting
+    testImplementation deps.kotlinCompileTestingKsp
 }
