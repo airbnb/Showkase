@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 31
@@ -43,17 +42,24 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
     }
+    configurations {
+        all {
+            exclude group: "com.intellij", module: "annotations"
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     // Support Libraries
     implementation deps.support.appCompat
 
     // Showkase
     implementation project(':showkase')
-    kapt project(':showkase-processor')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+    }
     implementation project(':showkase-processor')
     implementation project(':showkase-screenshot-testing')
 

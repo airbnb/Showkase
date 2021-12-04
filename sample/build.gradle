@@ -2,11 +2,6 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 }
-apply plugin: 'kotlin-kapt'
-
-kapt {
-    correctErrorTypes = true
-}
 
 android {
     compileSdkVersion 31
@@ -63,16 +58,19 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     // Showkase dependencies
     // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
     implementation project(':sample-submodule')
-    kapt project(':showkase-processor')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+        kspAndroidTest project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+        kaptAndroidTest project(':showkase-processor')
+    }
     androidTestImplementation project(':showkase-screenshot-testing')
-    kaptAndroidTest project(':showkase-processor')
 
     // Support Libraries
     implementation deps.support.appCompat

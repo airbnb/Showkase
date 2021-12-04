@@ -10,7 +10,6 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
@@ -57,8 +56,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     // Showkase
     api project(':showkase')
     api deps.compose.uiTest
