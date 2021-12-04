@@ -1,12 +1,15 @@
 package com.airbnb.android.showkase.processor.writer
 
-import androidx.room.compiler.processing.*
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_MODELS_PACKAGE_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_PROVIDER_CLASS_NAME
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import javax.annotation.processing.ProcessingEnvironment
 
 internal class ShowkaseExtensionFunctionsWriter(
     private val environment: XProcessingEnv

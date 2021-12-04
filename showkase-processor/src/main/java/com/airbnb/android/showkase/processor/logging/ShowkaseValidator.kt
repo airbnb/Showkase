@@ -1,6 +1,15 @@
 package com.airbnb.android.showkase.processor.logging
 
-import androidx.room.compiler.processing.*
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.isField
+import androidx.room.compiler.processing.isLong
+import androidx.room.compiler.processing.isMethod
+import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
@@ -64,14 +73,16 @@ internal class ShowkaseValidator {
     ): Boolean {
         // Return true if more than one parameter was passed to the @Composable function or if
         // the parameter that was passed is not annotated with @PreviewParameter.
-        if (element.parameters.size > 1) return true
-
-        val param = element.parameters.singleOrNull() ?: return false
-        val paramAnnotations = param.getAllAnnotations()
-
-        return paramAnnotations.none { it.name == PREVIEW_PARAMETER_SIMPLE_NAME }
-        // TODO: Was the previous behavior correct?
-        // && paramAnnotations.isNotEmpty()
+        return when (element.parameters.size) {
+            0 -> false
+            1 -> {
+                return element.parameters
+                    .single()
+                    .getAllAnnotations()
+                    .none { it.name == PREVIEW_PARAMETER_SIMPLE_NAME }
+            }
+            else -> true
+        }
     }
 
     internal fun validateColorElement(

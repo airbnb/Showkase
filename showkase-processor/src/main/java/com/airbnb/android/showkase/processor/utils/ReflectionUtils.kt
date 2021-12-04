@@ -6,7 +6,7 @@ package com.airbnb.android.showkase.processor.utils
  * @param fieldName Name of the field on this class
  * @param U The type of the field..
  */
-fun <U> Any.getFieldWithReflection(fieldName: String): U {
+inline fun <reified U> Any.getFieldWithReflection(fieldName: String): U {
 
     val field = (javaClass.fields + javaClass.declaredFields).firstOrNull {
         it.name == fieldName
@@ -31,9 +31,9 @@ fun <U> Any.getFieldWithReflection(fieldName: String): U {
         }
     }
 
-//    check(value is U) {
-//        "Expected field '$fieldName' to be ${U::class.java.simpleName} but got a ${value.javaClass.simpleName}"
-//    }
+    check(value is U) {
+        "Expected field '$fieldName' to be ${U::class.java.simpleName} but got a ${value.javaClass.simpleName}"
+    }
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     return value as U
 }

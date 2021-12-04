@@ -12,7 +12,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.*
+import java.util.Locale
 
 internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessingEnv) {
 

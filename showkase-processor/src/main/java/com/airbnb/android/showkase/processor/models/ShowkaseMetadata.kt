@@ -1,6 +1,13 @@
 package com.airbnb.android.showkase.processor.models
 
-import androidx.room.compiler.processing.*
+import androidx.room.compiler.processing.XAnnotation
+import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMemberContainer
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
@@ -19,7 +26,7 @@ import com.squareup.kotlinpoet.javapoet.toKClassName
 import com.squareup.kotlinpoet.javapoet.toKTypeName
 import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
-import java.util.*
+import java.util.Locale
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {
@@ -391,6 +398,7 @@ fun XElement.isTopLevel(enclosingElement: XMemberContainer): Boolean {
 }
 
 fun XElement.isJavac(): Boolean {
+    @Suppress("TooGenericExceptionCaught")
     return try {
         toJavac()
         true

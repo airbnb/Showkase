@@ -18,7 +18,9 @@ import javax.tools.Diagnostic
 /**
  * Creates a unified abstraction for processors of both KSP and java annotation processing.
  */
-abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = null) : AbstractProcessor(), SymbolProcessor {
+abstract class BaseProcessor(
+    val kspEnvironment: SymbolProcessorEnvironment? = null
+) : AbstractProcessor(), SymbolProcessor {
 
     lateinit var environment: XProcessingEnv
         private set
@@ -48,7 +50,8 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
     }
 
     /**
-     * Unified place to handle any compiler processor options that are passed to either javac processor or KSP processor,
+     * Unified place to handle any compiler processor options that are passed to
+     * either javac processor or KSP processor,
      * before any rounds are processed.
      */
     open fun initOptions(options: Map<String, String>) {}
@@ -69,7 +72,12 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
 
     final override fun process(resolver: Resolver): List<KSAnnotated> {
         val kspEnvironment = requireNotNull(kspEnvironment)
-        environment = XProcessingEnv.create(kspEnvironment.options, resolver, kspEnvironment.codeGenerator, kspEnvironment.logger)
+        environment = XProcessingEnv.create(
+            kspEnvironment.options,
+            resolver,
+            kspEnvironment.codeGenerator,
+            kspEnvironment.logger
+        )
         internalProcess(environment, XRoundEnv.create(environment))
         return emptyList()
     }
@@ -78,7 +86,10 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
         environment: XProcessingEnv,
         round: XRoundEnv
     ) {
-        val timer = Timer(this.javaClass.simpleName + " [Round $roundNumber][${if (isKsp()) "ksp" else "javac"}]")
+        val timer =
+            Timer(
+                this.javaClass.simpleName + " [Round $roundNumber][${if (isKsp()) "ksp" else "javac"}]"
+            )
         timer.start()
 
         tryOrPrintError {
