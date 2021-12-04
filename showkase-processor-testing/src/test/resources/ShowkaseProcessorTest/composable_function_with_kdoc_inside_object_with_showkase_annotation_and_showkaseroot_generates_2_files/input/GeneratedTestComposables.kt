@@ -5,15 +5,13 @@ import androidx.compose.runtime.Composable
 
 object WrapperClass {
     /**
-     * This component shows some static text in cursive text style. 
-     * 
+     * This component shows some static text in cursive text style.
+     *
      * Example usage:
      *
      * ```
      * @Composable
-     * fun MyComposable() {
-     *     CursiveTextComponentPreview()
-     * }
+     * fun MyComposable() { CursiveTextComponentPreview() }
      * ```
      */
     @ShowkaseComposable("name", "group")
