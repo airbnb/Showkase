@@ -65,7 +65,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
-    implementation deps.kotlinStdLib
     implementation deps.support.lifecycleRuntimeKtx
 
     // Support Libraries
@@ -82,7 +81,5 @@ dependencies {
     androidTestImplementation deps.test.androidXTestCore
     androidTestImplementation deps.test.androidXTestRules
     androidTestImplementation deps.test.androidxTestRunner
-    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-    androidTestImplementation "org.mockito:mockito-inline:3.10.0"
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation deps.test.uiAutomator
 }
