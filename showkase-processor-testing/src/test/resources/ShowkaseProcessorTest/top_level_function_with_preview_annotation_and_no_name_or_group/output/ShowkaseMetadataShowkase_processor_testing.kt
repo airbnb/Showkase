@@ -15,7 +15,9 @@ public class ShowkaseMetadataShowkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
+    showkaseWidthDp = -1,
+    showkaseHeightDp = -1
   )
   public fun testComposable(): Unit {
   }

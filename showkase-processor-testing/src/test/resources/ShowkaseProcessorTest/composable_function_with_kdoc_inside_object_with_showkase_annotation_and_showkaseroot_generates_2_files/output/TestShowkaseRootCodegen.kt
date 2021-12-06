@@ -22,15 +22,13 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             group = "group",
             componentName = "name",
             componentKDoc = """
-            |This component shows some static text in cursive text style. 
+            |This component shows some static text in cursive text style.
             |
             | Example usage:
             |
             | ```
             | @Composable
-            | fun MyComposable() {
-            |    CursiveTextComponentPreview()
-            | }
+            | fun MyComposable() { CursiveTextComponentPreview() }
             | ```
             """.trimMargin(),
             componentKey =

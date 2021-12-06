@@ -1,5 +1,5 @@
 package com.airbnb.android.showkase.processor.exceptions
 
-import java.lang.Exception
+import androidx.room.compiler.processing.XElement
 
-internal class ShowkaseProcessorException(message: String): Exception(message)
+internal class ShowkaseProcessorException(message: String, val element: XElement? = null): Exception(message)

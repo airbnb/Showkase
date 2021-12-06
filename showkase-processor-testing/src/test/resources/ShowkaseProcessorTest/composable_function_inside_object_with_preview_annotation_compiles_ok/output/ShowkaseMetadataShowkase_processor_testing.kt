@@ -17,7 +17,9 @@ public class ShowkaseMetadataShowkase_processor_testing {
     showkaseKDoc = "",
     enclosingClass = [ShowkaseObject::class],
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
+    showkaseWidthDp = -1,
+    showkaseHeightDp = -1
   )
   public fun ShowkaseObject_TestComposable(): Unit {
   }

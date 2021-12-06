@@ -1,7 +1,7 @@
 package com.airbnb.android.showkase.annotation
 
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 annotation class ShowkaseRootCodegen(
     val numComposablesWithoutPreviewParameter: Int,

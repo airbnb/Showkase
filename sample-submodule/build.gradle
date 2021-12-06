@@ -2,11 +2,6 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-apply plugin: 'kotlin-kapt'
-
-kapt {
-    correctErrorTypes = true
-}
 
 android {
     compileSdkVersion 31
@@ -50,9 +45,6 @@ android {
 }
 
 dependencies {
-    // Kotlin
-    implementation deps.kotlinStdLib
-    
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
@@ -60,7 +52,11 @@ dependencies {
     
     // Showkase
     implementation project(':showkase')
-    kapt project(':showkase-processor')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+    }
 
     // Compose
     implementation deps.compose.activityCompose

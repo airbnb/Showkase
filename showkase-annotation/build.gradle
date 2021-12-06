@@ -26,6 +26,4 @@ compileKotlin {
 }
 
 dependencies {
-    implementation deps.kotlinStdLib
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }

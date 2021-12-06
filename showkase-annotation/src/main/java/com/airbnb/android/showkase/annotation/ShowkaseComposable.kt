@@ -47,8 +47,8 @@ package com.airbnb.android.showkase.annotation
  * Use this to restrict the size of your preview inside the Showkase browser.
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FUNCTION)
 @Suppress("LongParameterList")
 annotation class ShowkaseComposable(
     val name: String = "",

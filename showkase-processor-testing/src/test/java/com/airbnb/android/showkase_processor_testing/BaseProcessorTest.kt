@@ -1,10 +1,13 @@
 package com.airbnb.android.showkase_processor_testing
 
 import com.airbnb.android.showkase.processor.ShowkaseProcessor
+import com.airbnb.android.showkase.processor.ShowkaseProcessorProvider
 import com.google.common.io.Resources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import org.assertj.core.api.Assertions
+import com.tschuchort.compiletesting.kspSourcesDir
+import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import java.io.File
 
@@ -19,43 +22,66 @@ abstract class BaseProcessorTest {
     @JvmField
     val testNameRule = TestNameRule()
 
+    enum class Mode {
+        KSP, KAPT
+    }
+
     /**
      * Collects the files in the "input" directory of this test's resources directory
      * and compiles them with Kotlin, returning the result.
      */
-    protected fun compileInputs(): KotlinCompilation.Result {
+    protected fun compileInputs(
+        modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        onCompilation: (mode: Mode, compilation: KotlinCompilation, result: KotlinCompilation.Result) -> Unit
+    ) {
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
 
         val inputDir = File(testResourcesDir, "input")
         inputDir.mkdirs()
 
-        return KotlinCompilation().apply {
-            sources = inputDir.listFiles()?.toList().orEmpty().map { SourceFile.fromPath(it) }
-            annotationProcessors = listOf(ShowkaseProcessor())
-            inheritClassPath = true
-            messageOutputStream = System.out // see diagnostics in real time
-        }.compile()
+        modes.forEach { mode ->
+            val compilation = KotlinCompilation().apply {
+                sources = inputDir.listFiles()?.toList().orEmpty().map { SourceFile.fromPath(it) }
+                when (mode) {
+                    Mode.KSP -> {
+                        symbolProcessorProviders = listOf(ShowkaseProcessorProvider())
+                    }
+                    Mode.KAPT -> {
+                        annotationProcessors = listOf(ShowkaseProcessor())
+                    }
+                }
+                inheritClassPath = true
+                messageOutputStream = System.out // see diagnostics in real time
+            }
+
+            val result = compilation.compile()
+
+            onCompilation(mode, compilation, result)
+        }
     }
 
     protected fun assertCompilationFails(errorMessage: String) {
-        val result = compileInputs()
+        compileInputs { _, _, result ->
+            assertThat(result.exitCode)
+                .isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
 
-        Assertions.assertThat(result.exitCode)
-            .isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
-        Assertions.assertThat(result.messages).contains(errorMessage)
+            assertThat(result.messages)
+                .contains(errorMessage)
+        }
     }
 
     protected fun compileInputsAndVerifyOutputs() {
-        val result = compileInputs()
-        result.assertGeneratedSources()
+        compileInputs { mode, compilation, result ->
+            result.assertGeneratedSources(mode, compilation)
+        }
     }
 
     /**
      * Collects the files in the "output" directory of this test's resources directory
      * and validates that they match the generated sources of this compilation result.
      */
-    protected fun KotlinCompilation.Result.assertGeneratedSources() {
-        Assertions.assertThat(exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+    protected fun KotlinCompilation.Result.assertGeneratedSources(mode: Mode, compilation: KotlinCompilation) {
+        assertThat(exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
 
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
         val outputDir = File(testResourcesDir, "output")
@@ -65,20 +91,25 @@ abstract class BaseProcessorTest {
         }
         outputDir.mkdirs()
 
+        val generatedSources = when (mode){
+            Mode.KSP -> compilation.kspSourcesDir.walk().filter { it.isFile }.toList()
+            Mode.KAPT -> sourcesGeneratedByAnnotationProcessor
+        }
+
         if (UPDATE_TEST_OUTPUTS) {
-            sourcesGeneratedByAnnotationProcessor.forEach {
+            generatedSources.forEach {
                 println("Generated: ${it.name}")
                 it.copyTo(File(outputDir, it.name))
             }
         } else {
-            Assertions.assertThat(sourcesGeneratedByAnnotationProcessor.size)
+            assertThat(generatedSources.size)
                 .isEqualTo(outputDir.listFiles()?.size ?: 0)
 
-            sourcesGeneratedByAnnotationProcessor.forEach { actualFile ->
+            generatedSources.forEach { actualFile ->
                 println("Generated: ${actualFile.name}")
                 val expectedFile = File(outputDir, actualFile.name)
-                Assertions.assertThat(expectedFile).exists()
-                Assertions.assertThat(actualFile).hasSameTextualContentAs(expectedFile)
+                assertThat(expectedFile).exists()
+                assertThat(actualFile).hasSameTextualContentAs(expectedFile)
             }
         }
     }

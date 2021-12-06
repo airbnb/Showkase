@@ -15,7 +15,7 @@ public class ShowkaseMetadataShowkase_processor_testing {
     insideObject = true,
     insideWrapperClass = false,
     showkaseKDoc =
-        "This component shows some static text in cursive text style. \n\n Example usage:\n\n ```\n @Composable\n fun MyComposable() {\n    CursiveTextComponentPreview()\n }\n ```",
+        "This component shows some static text in cursive text style.\n\n Example usage:\n\n ```\n @Composable\n fun MyComposable() { CursiveTextComponentPreview() }\n ```",
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false

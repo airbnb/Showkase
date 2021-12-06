@@ -17,6 +17,8 @@ public class ShowkaseMetadataShowkase_processor_testing {
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
+    showkaseWidthDp = -1,
+    showkaseHeightDp = -1,
     previewParameterClass = [ParameterProvider::class]
   )
   public fun TestComposable(): Unit {
