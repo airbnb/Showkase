@@ -21,6 +21,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 
+/**
+ * Passed in the callback of the [visibilityEvents] Modifier. Contains information about the
+ * visibility of a given composable function that uses the visibilityEvents Modifier.
+ */
 data class ShowkaseVisibilityEvent<T>(
     val key: T,
     val visibilityPercentage: Float,
@@ -39,7 +43,7 @@ data class ShowkaseVisibilityEvent<T>(
  * that's visible on the screen and the bounds of the composable.
  */
 @OptIn(FlowPreview::class)
-fun <T> Modifier.visibilityImpressions(
+fun <T> Modifier.visibilityEvents(
     key: T,
     onVisibilityChanged: (ShowkaseVisibilityEvent<T>) -> Unit,
 ) = composed {
@@ -82,7 +86,8 @@ private fun <T> registerDisposeImpressionEvents(
 }
 
 /**
- * 
+ * Collects the visibility change events from the internal coroutine flow and invokes the
+ * onVisibilityEvent that the user passed.
  */
 @SuppressLint("ComposableNaming")
 @FlowPreview
@@ -95,18 +100,21 @@ private fun <T> collectImpressionEvents(
     LaunchedEffect(key) {
         impressionCollector.impressionEvents
             .collect { impressionData ->
-            val impression = impressionData as ShowkaseVisibilityEvent<*>
-            onVisibilityEvent(
-                ShowkaseVisibilityEvent(
-                    impression.key as T,
-                    impression.visibilityPercentage,
-                    impression.boundsInWindow
+                val impression = impressionData as ShowkaseVisibilityEvent<*>
+                onVisibilityEvent(
+                    ShowkaseVisibilityEvent(
+                        impression.key as T,
+                        impression.visibilityPercentage,
+                        impression.boundsInWindow
+                    )
                 )
-            )
-        }
+            }
     }
 }
 
+/**
+ * Used for handling the use case where the activity/app is backgrounded or foregrounded.
+ */
 @SuppressLint("RememberReturnType", "ComposableNaming")
 @Composable
 private fun <T> registerLifecycleImpressionEvents(

@@ -20,7 +20,7 @@ class ShowkaseImpressionLoggingTest2 {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun test() {
+    fun fully_visible_component_has_exactly_1_visibility_percentage() {
         composeTestRule.setContent {
             BasicComposableWithVisibilityToggle()
         }
@@ -32,7 +32,7 @@ class ShowkaseImpressionLoggingTest2 {
     }
 
     @Test
-    fun test2() {
+    fun component_changes_visibility_on_its_visibility_being_toggled() {
         composeTestRule.setContent {
             BasicComposableWithVisibilityToggle()
         }
@@ -44,8 +44,9 @@ class ShowkaseImpressionLoggingTest2 {
         }
     }
 
+    // WIP. Do not review
     @Test
-    fun test3() {
+    fun component_visibility_changes_when_app_is_backgrounded_and_foregrounded() {
         val instrumentation = getInstrumentation()
         val device = UiDevice.getInstance(instrumentation)
         composeTestRule.setContent {
@@ -72,6 +73,7 @@ class ShowkaseImpressionLoggingTest2 {
             PartiallyVisibleComposable()
         }
 
+        // TODO: Needs work as this is not what we expect
         val textToAssert = "key: key visibilityPercentage: 1.0"
         composeTestRule.apply {
             onNodeWithText(textToAssert).assertIsDisplayed()

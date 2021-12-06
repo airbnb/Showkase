@@ -3,7 +3,6 @@ package com.vinaygaba.showkase_component_impressions
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +26,7 @@ internal fun BasicComposableWithVisibilityToggle() {
             BasicText(
                 text = "Testing Impression Events",
                 modifier = Modifier
-                    .visibilityImpressions(
+                    .visibilityEvents(
                         key = "key",
                         onVisibilityChanged = { event ->
                             showkaseVisibilityEvent = event
@@ -43,7 +42,7 @@ internal fun BasicComposableWithVisibilityToggle() {
     }
 }
 
-
+// WIP. Do Not Review
 @Composable
 internal fun BasicTestComposableWithEvents() {
     var counter by remember { mutableStateOf(0) }
@@ -54,7 +53,7 @@ internal fun BasicTestComposableWithEvents() {
     Column {
         BasicText(
             text = "Testing Impression Events",
-            modifier = Modifier.visibilityImpressions(
+            modifier = Modifier.visibilityEvents(
                 key = "key",
                 onVisibilityChanged = { event ->
 //                    impressionData = ImpressionData(key, visibilityPercentage, bounds)
@@ -81,7 +80,7 @@ internal fun PartiallyVisibleComposable() {
                 fontFamily = FontFamily.Monospace
             ),
             modifier = Modifier.offset(x = (-40).dp, y = (-40).dp)
-                .visibilityImpressions(
+                .visibilityEvents(
                     key = "key",
                     onVisibilityChanged = { event ->
                         showkaseVisibilityEvent = event
