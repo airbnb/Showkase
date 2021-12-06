@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Showkase</string>
+    <string name="showkase_title">Showkase</string>
     <string name="search_label">Search</string>
     <string name="showkase_browser_show_documentation">Show Documentation</string>
     <string name="showkase_browser_hide_documentation">Hide Documentation</string>

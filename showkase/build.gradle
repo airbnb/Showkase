@@ -21,13 +21,11 @@ kapt {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -88,7 +86,7 @@ dependencies {
     implementation deps.compose.layout
     implementation deps.compose.material
     androidTestImplementation deps.compose.uiTest
-    
+
     // Unit Testing
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation

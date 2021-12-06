@@ -21,24 +21,29 @@ import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 
-internal data class ImpressionData<T>(
+data class ShowkaseVisibilityEvent<T>(
     val key: T,
     val visibilityPercentage: Float,
     val boundsInWindow: Rect
 )
 
 /**
+ * Use this modifier to get visibility events for a given Composable. It emits visibility events
+ * when the composable is added to the composition (visible), when its removed from the
+ * composition(invisible), when the activity is backgrounded(visible) and when the activity is
+ * foregrounded(visible). In addition,
  *
+ * @param key
  */
 @OptIn(FlowPreview::class)
 fun <T> Modifier.visibilityImpressions(
     key: T,
-    onVisibilityEvent: (T, Float, Rect) -> Unit,
+    onVisibilityChanged: (ShowkaseVisibilityEvent<T>) -> Unit,
 ) = composed {
     val view = LocalView.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val scope = rememberCoroutineScope()
-    val visibilityEvent by rememberUpdatedState(newValue = onVisibilityEvent)
+    val visibilityEvent by rememberUpdatedState(newValue = onVisibilityChanged)
     val impressionCollector = remember(key) { ImpressionCollector<T>(scope, visibilityEvent) }
     var visibilityMetadata: VisibilityMetadata? by remember { mutableStateOf(null) }
 
@@ -75,16 +80,18 @@ private fun <T> registerDisposeImpressionEvents(
 private fun <T> collectImpressionEvents(
     key: T,
     impressionCollector: ImpressionCollector<T>,
-    onVisibilityEvent: (T, Float, Rect) -> Unit
+    onVisibilityEvent: (ShowkaseVisibilityEvent<T>) -> Unit
 ) {
     LaunchedEffect(key) {
         impressionCollector.impressionEvents
             .collect { impressionData ->
-            val impression = impressionData as ImpressionData<*>
+            val impression = impressionData as ShowkaseVisibilityEvent<*>
             onVisibilityEvent(
-                impression.key as T,
-                impression.visibilityPercentage,
-                impression.boundsInWindow
+                ShowkaseVisibilityEvent(
+                    impression.key as T,
+                    impression.visibilityPercentage,
+                    impression.boundsInWindow
+                )
             )
         }
     }

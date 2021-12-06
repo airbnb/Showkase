@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta03-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.0-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta08-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.3-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -70,8 +70,8 @@ setup, add this dependency to all the modules with UI elements that should be di
 Showkase browser.
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta03"
-kapt "com.airbnb.android:showkase-processor:1.0.0-beta03"
+implementation "com.airbnb.android:showkase:1.0.0-beta08"
+kapt "com.airbnb.android:showkase-processor:1.0.0-beta08"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -222,6 +222,7 @@ Property Name | Description
 <b>group</b> | The grouping key that will be used to group it with other `@Composable` functions. This is useful for better organization and discoverability of your components. If you don't pass any value for the group, the name of the class that wraps this function is used as the group name. If the function is a top level function, the composable is added to a "Default Group".
 <b>widthDp</b> | The width that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 <b>heightDp</b> | The height that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
+<b>skip</b> | Setting this to true will skip this composable from rendering in the Showkase browser. A good use case for this would be when you want to have  composable with `@Preview` but want to stop Showkase from picking it up and rendering it in its browser
 
 ##### 2. @ShowkaseColor
 Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 

@@ -81,11 +81,10 @@ private fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.typographyName.lowercase(Locale.getDefault())
-                    .contains(
-                        showkaseBrowserScreenMetadata.searchQuery!!
-                            .lowercase(Locale.getDefault())
-                    )
+                matchSearchQuery(
+                    showkaseBrowserScreenMetadata.searchQuery!!,
+                    it.typographyName
+                )
             }
         }
         else -> list

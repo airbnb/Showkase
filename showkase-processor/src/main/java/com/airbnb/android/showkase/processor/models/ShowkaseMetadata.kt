@@ -46,6 +46,8 @@ internal sealed class ShowkaseMetadata {
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
         val previewParameter: TypeMirror? = null,
+        val showkaseStyleName: String? = null,
+        val isDefaultStyle: Boolean = false
     ): ShowkaseMetadata()
 
     data class Color(
@@ -116,6 +118,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 elementName = showkaseElementName,
                 showkaseName = showkaseName,
                 showkaseGroup = showkaseGroup,
+                showkaseStyleName = showkaseStyleName,
                 showkaseWidthDp = showkaseWidthDp.parseAnnotationProperty(),
                 showkaseHeightDp = showkaseHeightDp.parseAnnotationProperty(),
                 insideWrapperClass = insideWrapperClass,
@@ -123,6 +126,7 @@ internal fun ShowkaseCodegenMetadata.toModel(element: Element): ShowkaseMetadata
                 showkaseKDoc = showkaseKDoc,
                 element = element,
                 previewParameter = previewParameterClassTypeMirror,
+                isDefaultStyle = isDefaultStyle
             )
         }
         ShowkaseMetadataType.COLOR -> {
@@ -183,7 +187,7 @@ internal fun getShowkaseMetadata(
     typeUtils: Types,
     showkaseValidator: ShowkaseValidator,
     previewParameterTypeMirror: TypeMirror
-): ShowkaseMetadata? {
+): ShowkaseMetadata.Component? {
     val showkaseAnnotation = element.getAnnotation(ShowkaseComposable::class.java)
     // If this component was configured to be skipped, return early
     if (showkaseAnnotation.skip) return null
@@ -198,6 +202,8 @@ internal fun getShowkaseMetadata(
     val showkaseName = getShowkaseName(showkaseAnnotation.name, elementName)
     val showkaseGroup = getShowkaseGroup(showkaseAnnotation.group, enclosingClassTypeMirror,
         typeUtils)
+    val isDefaultStyle = showkaseAnnotation.defaultStyle
+    val showkaseStyleName = getShowkaseStyleName(showkaseAnnotation.styleName, isDefaultStyle)
     val previewParamTypeMirror = element.getPreviewParameterTypeMirror(
         typeUtils, previewParameterTypeMirror, elementUtil
     )
@@ -210,13 +216,15 @@ internal fun getShowkaseMetadata(
         elementName = elementName,
         showkaseName = showkaseName,
         showkaseGroup = showkaseGroup,
+        showkaseStyleName = showkaseStyleName,
         showkaseWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
         showkaseHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
         insideObject = showkaseFunctionType.insideObject(),
         insideWrapperClass = showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
         showkaseKDoc = kDoc,
-        previewParameter = previewParamTypeMirror
+        previewParameter = previewParamTypeMirror,
+        isDefaultStyle = isDefaultStyle
     )
 }
 
@@ -228,7 +236,7 @@ internal fun getShowkaseMetadataFromPreview(
     previewTypeMirror: TypeMirror,
     previewParameterTypeMirror: TypeMirror,
     showkaseValidator: ShowkaseValidator,
-): ShowkaseMetadata? {
+): ShowkaseMetadata.Component? {
     val previewAnnotationMirror = element.annotationMirrors.find {
         typeUtils.isSameType(it.annotationType, previewTypeMirror)
     }
@@ -464,4 +472,14 @@ internal fun getShowkaseGroup(
     showkaseGroupFromAnnotation.isBlank() && enclosingClassTypeMirror != null  ->
         typeUtils.asElement(enclosingClassTypeMirror).simpleName.toString().capitalize(Locale.getDefault())
     else -> "Default Group"
+}
+
+internal fun getShowkaseStyleName(
+    showkaseStyleFromAnnotation: String,
+    isDefaultStyle: Boolean,
+) = when {
+    showkaseStyleFromAnnotation.isNotBlank() -> showkaseStyleFromAnnotation.replaceFirstChar { it.uppercase() }
+    // If style name is not specified but its the default style, just provide the default style name
+    isDefaultStyle -> "Default Style"
+    else -> null
 }

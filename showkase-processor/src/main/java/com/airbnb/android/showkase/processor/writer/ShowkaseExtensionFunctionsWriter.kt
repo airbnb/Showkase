@@ -116,7 +116,7 @@ internal class ShowkaseExtensionFunctionsWriter(
         private const val SHOWKASE_METHODS_SUFFIX = "${SHOWKASE_EXTENSION_FUNCTIONS_NAME}Codegen"
         private const val CONTEXT_PARAMETER_NAME = "context"
         private const val CONTEXT_PACKAGE_NAME = "android.content"
-        private val CONTEXT_CLASS_NAME =
+        internal val CONTEXT_CLASS_NAME =
             ClassName(CONTEXT_PACKAGE_NAME, "Context")
         private val INTENT_CLASS_NAME =
             ClassName(CONTEXT_PACKAGE_NAME, "Intent")
@@ -124,7 +124,7 @@ internal class ShowkaseExtensionFunctionsWriter(
             ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
         private val SHOWKASE_ELEMENTS_METADATA_CLASS_NAME = 
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseElementsMetadata")
-        private val SHOWKASE_OBJECT_CLASS_NAME =
+        internal val SHOWKASE_OBJECT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "Showkase")
     }
 }

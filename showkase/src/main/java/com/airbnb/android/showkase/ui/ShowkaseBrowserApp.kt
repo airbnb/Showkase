@@ -92,6 +92,7 @@ internal fun ShowkaseAppBar(
             showkaseBrowserScreenMetadata.value.isSearchActive,
             showkaseBrowserScreenMetadata.value.currentGroup,
             showkaseBrowserScreenMetadata.value.currentComponentName,
+            showkaseBrowserScreenMetadata.value.currentComponentStyleName,
             currentRoute,
             showkaseBrowserScreenMetadata.value.searchQuery,
             {
@@ -138,6 +139,7 @@ private fun ShowkaseAppBarTitle(
     isSearchActive: Boolean,
     currentGroup: String?,
     currentComponentName: String?,
+    currentComponentStyleName: String?,
     currentRoute: String?,
     searchQuery: String?,
     searchQueryValueChange: (String) -> Unit,
@@ -149,7 +151,7 @@ private fun ShowkaseAppBarTitle(
             ShowkaseSearchField(searchQuery, searchQueryValueChange)
         }
         currentRoute == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name -> {
-            ToolbarTitle(context.getString(R.string.app_name), modifier)
+            ToolbarTitle(context.getString(R.string.showkase_title), modifier)
         }
         currentRoute == ShowkaseCurrentScreen.COMPONENT_GROUPS.name -> {
             ToolbarTitle(context.getString(R.string.components_category), modifier)
@@ -163,8 +165,15 @@ private fun ShowkaseAppBarTitle(
         currentRoute.insideGroup() -> {
             ToolbarTitle(currentGroup ?: "currentGroup", modifier)
         }
-        currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
+        currentRoute == ShowkaseCurrentScreen.COMPONENT_STYLES.name -> {
             ToolbarTitle(currentComponentName.orEmpty(), modifier)
+        }
+        currentRoute == ShowkaseCurrentScreen.COMPONENT_DETAIL.name -> {
+            val styleName = currentComponentStyleName?.let { "[$it]" }.orEmpty()
+            ToolbarTitle(
+                "${currentComponentName.orEmpty()} $styleName",
+                modifier
+            )
         }
     }
 }
@@ -274,6 +283,13 @@ internal fun ShowkaseBodyContent(
                 navController
             )
         }
+        composable(ShowkaseCurrentScreen.COMPONENT_STYLES.name) {
+            ShowkaseComponentStylesScreen(
+                groupedComponentMap,
+                showkaseBrowserScreenMetadata,
+                navController
+            )
+        }
         composable(ShowkaseCurrentScreen.COMPONENT_DETAIL.name) {
             ShowkaseComponentDetailScreen(
                 groupedComponentMap,
@@ -317,12 +333,18 @@ private fun getCategoryMetadataMap(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
 ) = mapOf(
-    ShowkaseCategory.COMPONENTS to groupedComponentMap.flatCount(),
+    ShowkaseCategory.COMPONENTS to groupedComponentMap.flatComponentCount(),
     ShowkaseCategory.COLORS to groupedColorsMap.flatCount(),
     ShowkaseCategory.TYPOGRAPHY to groupedTypographyMap.flatCount()
 )
 
-internal fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
+private fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
+
+private fun Map<String, List<ShowkaseBrowserComponent>>.flatComponentCount() = flatMap { entry ->
+    // Only group name and component name is taken into account for the count to ensure that the
+    // styles of the same component aren't added  in this calculation.
+    entry.value.distinctBy { "${it.group}_${it.componentName}" }
+}.count()
 
 /**
  * Helper function to navigate to the passed [ShowkaseCurrentScreen]

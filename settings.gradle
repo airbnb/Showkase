@@ -6,3 +6,5 @@ include ':sample'
 rootProject.name = "Showkase"
 include ':sample-submodule'
 include ':showkase-component-impressions'
+include ':showkase-screenshot-testing'
+include ':showkase-browser-testing'

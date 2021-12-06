@@ -57,6 +57,8 @@ android {
     packagingOptions {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/licenses/ASM'
+        exclude '**/attach_hotspot_windows.dll'
     }
 }
 
@@ -73,9 +75,14 @@ dependencies {
     implementation deps.compose.activityCompose
     implementation deps.compose.foundation
     implementation deps.compose.layout
-    androidTestImplementation deps.compose.uiTest
 
-    // Unit Testing
-    testImplementation deps.test.junit
+    // Testing
+    androidTestImplementation deps.compose.uiTest
     androidTestImplementation deps.test.junitImplementation
+    androidTestImplementation deps.test.androidXTestCore
+    androidTestImplementation deps.test.androidXTestRules
+    androidTestImplementation deps.test.androidxTestRunner
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    androidTestImplementation "org.mockito:mockito-inline:3.10.0"
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }

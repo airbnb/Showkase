@@ -1,0 +1,78 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    // Maven artifact publish
+    dependencies {
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: "com.vanniktech.maven.publish"
+
+android {
+    compileSdkVersion 31
+    // Added to avoid this error -
+    // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+    // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude("META-INF/*.kotlin_module")
+    }
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.compose}"
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Kotlin
+    implementation deps.kotlinStdLib
+
+    // Showkase
+    api project(':showkase')
+    api deps.compose.uiTest
+    implementation deps.compose.core
+    implementation deps.compose.foundation
+
+    // Testing
+    testImplementation deps.test.assertJ
+    testImplementation deps.test.googleTruth
+    api deps.test.junit
+    api deps.test.androidXTestCore
+    api deps.test.androidXTestRules
+    api deps.test.androidxTestRunner
+}

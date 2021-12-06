@@ -10,6 +10,8 @@ data class ShowkaseBrowserComponent(
     val componentName: String,
     val componentKDoc: String,
     val component: @Composable () -> Unit,
+    val styleName: String? = null,
+    val isDefaultStyle: Boolean = false,
     val widthDp: Int? = null,
     val heightDp: Int? = null,
 )

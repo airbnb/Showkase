@@ -4,19 +4,19 @@ buildscript {
             'androidXTestCore':'1.0.0',
             'androidXTestRules':'1.1.0',
             'assertJ': '3.16.1',
-            'compose': '1.0.0',
-            'composeActivity': '1.3.0',
-            'composeConstraintLayout': '1.0.0-beta02',
-            'composeNavigation': '2.4.0-alpha05',
+            'compose': '1.0.3',
+            'composeActivity': '1.3.1',
+            'composeConstraintLayout': '1.0.0-rc01',
+            'composeNavigation': '2.4.0-alpha10',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
-            'gradle': '7.0.0-beta03',
+            'gradle': '7.0.1',
             'junit' : '4.12',
             'junitImplementation' : '1.1.1',
-            'kotlin': '1.5.10',
-            'kotlinCompilerVersion': '1.5.10',
-            'kotlinCompileTesting': '1.4.1',
-            'kotlinPoet': '1.6.0',
+            'kotlin': '1.5.30',
+            'kotlinCompilerVersion': '1.5.30',
+            'kotlinCompileTesting': '1.4.4',
+            'kotlinPoet': '1.10.2',
             'kotlinXMetadata': '0.3.0',
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
@@ -24,7 +24,9 @@ buildscript {
             'supportLibrary': '1.1.0',
             'testRunner': '1.2.0',
             'googleTruth': '1.0.1',
-            'autoService': '1.0-rc7'
+            'autoService': '1.0-rc7',
+            'material':'1.4.0',
+            'mdcComposeThemeAdapter':'1.0.2'
     ]
     ext.deps = [
             'autoService': "com.google.auto.service:auto-service:${versions.autoService}",
@@ -37,6 +39,7 @@ buildscript {
                     'core': "androidx.compose.ui:ui:${versions.compose}",
                     'foundation': "androidx.compose.foundation:foundation:${versions.compose}",
                     'tooling': "androidx.compose.ui:ui-tooling:${versions.compose}",
+                    'toolingPreview': "androidx.compose.ui:ui-tooling-preview:${versions.compose}",
                     'layout': "androidx.compose.foundation:foundation-layout:${versions.compose}",
                     'material': "androidx.compose.material:material:${versions.compose}",
                     'savedInstanceState': "androidx.compose.runtime:runtime-saveable:${versions.compose}",
@@ -64,6 +67,10 @@ buildscript {
                     'junit': "junit:junit:${versions.junit}",
                     'junitImplementation': "androidx.test.ext:junit:${versions.junitImplementation}",
                     'androidxTestRunner': "androidx.test:runner:${versions.testRunner}"
+            ],
+            'material': [
+                    'material':"com.google.android.material:material:${versions.material}",
+                    'mdcComposeThemeAdapter':"com.google.android.material:compose-theme-adapter:${versions.mdcComposeThemeAdapter}"
             ]
     ]
     repositories {

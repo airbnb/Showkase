@@ -4,6 +4,8 @@ import android.view.View
 import androidx.annotation.FloatRange
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.boundsInWindow
 
 internal val defaultVisibilityMetadata = VisibilityMetadata(0f, Rect(0f, 0f,0f,0f))

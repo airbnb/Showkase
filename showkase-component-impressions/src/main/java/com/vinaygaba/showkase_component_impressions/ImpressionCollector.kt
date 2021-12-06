@@ -1,6 +1,5 @@
 package com.vinaygaba.showkase_component_impressions
 
-import androidx.compose.ui.geometry.Rect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,11 +9,11 @@ import kotlinx.coroutines.launch
 
 internal class ImpressionCollector<T>(
     val coroutineScope: CoroutineScope,
-    val onVisibilityEvent: (T, Float, Rect) -> Unit
+    val onVisibilityEvent: (ShowkaseVisibilityEvent<T>) -> Unit
 ) {
-    private val mutableImpressionEvents = MutableStateFlow<ImpressionData<T>?>(null)
+    private val mutableImpressionEvents = MutableStateFlow<ShowkaseVisibilityEvent<T>?>(null)
 
-    val impressionEvents: Flow<ImpressionData<T>> = mutableImpressionEvents.filterNotNull().debounce(200)
+    val impressionEvents: Flow<ShowkaseVisibilityEvent<T>> = mutableImpressionEvents.filterNotNull().debounce(200)
 
     internal fun onLayoutCoordinatesChanged(
         key: T,
@@ -29,7 +28,7 @@ internal class ImpressionCollector<T>(
     ) {
         coroutineScope.launch {
             mutableImpressionEvents.emit(
-                ImpressionData(
+                ShowkaseVisibilityEvent(
                     key,
                     visibilityMetadata.visibilityPercentage,
                     visibilityMetadata.boundsInWindow
@@ -42,6 +41,12 @@ internal class ImpressionCollector<T>(
         key: T,
         visibilityMetadata: VisibilityMetadata,
     ) {
-        onVisibilityEvent(key, visibilityMetadata.visibilityPercentage, visibilityMetadata.boundsInWindow)
+        onVisibilityEvent(
+            ShowkaseVisibilityEvent(
+                key,
+                visibilityMetadata.visibilityPercentage,
+                visibilityMetadata.boundsInWindow
+            )
+        )
     }
 }

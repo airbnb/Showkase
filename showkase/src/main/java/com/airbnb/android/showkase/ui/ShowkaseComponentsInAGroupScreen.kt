@@ -19,11 +19,15 @@ internal fun ShowkaseComponentsInAGroupScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
-    val groupComponentsList =
+    val groupByComponentName =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
-            ?.sortedBy { it.componentName } ?: return
+            ?.groupBy { it.componentName } ?: return
+    // Use the default style as the preview if its available or take the first style for the component
+    val componentList = groupByComponentName.values.map {
+        it.firstOrNull { it.isDefaultStyle } ?: it.first()
+    }
     val filteredList =
-        getFilteredSearchList(groupComponentsList, showkaseBrowserScreenMetadata)
+        getFilteredSearchList(componentList, showkaseBrowserScreenMetadata)
     LazyColumn {
         items(
             items = filteredList,
@@ -34,12 +38,13 @@ internal fun ShowkaseComponentsInAGroupScreen(
                     onClick = {
                         showkaseBrowserScreenMetadata.update {
                             copy(
-                            currentComponentKey = groupComponent.componentKey,
-                            currentComponentName = groupComponent.componentName,
+                                currentComponentKey = groupComponent.componentKey,
+                                currentComponentName = groupComponent.componentName,
+                                currentComponentStyleName = groupComponent.styleName,
                                 isSearchActive = false
                             )
                         }
-                        navController.navigate(ShowkaseCurrentScreen.COMPONENT_DETAIL)
+                        navController.navigate(ShowkaseCurrentScreen.COMPONENT_STYLES)
                     }
                 )
             }
@@ -73,11 +78,10 @@ private fun getFilteredSearchList(
         false -> list
         !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
             list.filter {
-                it.componentName.lowercase(Locale.getDefault())
-                    .contains(
-                        showkaseBrowserScreenMetadata.value.searchQuery!!
-                            .lowercase(Locale.getDefault())
-                    )
+                matchSearchQuery(
+                    showkaseBrowserScreenMetadata.value.searchQuery!!,
+                    it.componentName
+                )
             }
         }
         else -> list

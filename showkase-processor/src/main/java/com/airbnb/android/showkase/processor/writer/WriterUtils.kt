@@ -2,6 +2,7 @@ package com.airbnb.android.showkase.processor.writer
 
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -52,11 +53,13 @@ internal fun writeFile(
     showkaseMetadata: Set<ShowkaseMetadata>,
     componentInterfaceFunction: FunSpec,
     colorInterfaceFunction: FunSpec,
-    typographyInterfaceFunction: FunSpec
+    typographyInterfaceFunction: FunSpec,
+    showkaseRootCodegenAnnotation: AnnotationSpec
 ) {
     fileBuilder
         .addType(
             with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
+                addAnnotation(showkaseRootCodegenAnnotation)
                 addSuperinterface(superInterfaceClassName)
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
@@ -113,7 +116,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     var componentKey = ("${showkaseMetadata.packageName}" +
             "_${showkaseMetadata.enclosingClass}" +
             "_${showkaseMetadata.showkaseGroup}" +
-            "_${showkaseMetadata.showkaseName}").replace(
+            "_${showkaseMetadata.showkaseName}" +
+            "_${showkaseMetadata.showkaseStyleName}").replace(
         SPACE_REGEX,
         ""
     )
@@ -132,17 +136,15 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         showkaseMetadata.showkaseKDoc,
         componentKey,
     )
+    add("\nisDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
     showkaseMetadata.apply {
-        showkaseWidthDp?.let {
-            add("\nwidthDp = %L,", it)
-        }
-        showkaseHeightDp?.let {
-            add("\nheightDp = %L,", it)
-        }
+        showkaseWidthDp?.let { add("\nwidthDp = %L,", it) }
+        showkaseHeightDp?.let { add("\nheightDp = %L,", it) }
+        showkaseStyleName?.let { add("\nstyleName = %S,", it) }
     }
 
     add(
-        composePreviewFunctionLambda(
+        composePreviewFunctionLambdaCodeBlock(
             showkaseMetadata.packageName,
             showkaseMetadata.enclosingClass,
             showkaseMetadata.elementName,
@@ -155,7 +157,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
 }
 
 @Suppress("LongParameterList")
-internal fun composePreviewFunctionLambda(
+internal fun composePreviewFunctionLambdaCodeBlock(
     functionPackageName: String,
     enclosingClass: TypeMirror? = null,
     composeFunctionName: String,
