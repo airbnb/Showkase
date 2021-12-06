@@ -20,7 +20,7 @@ import kotlin.reflect.KClass
  * @param showkaseHeightDp The height that your component will be rendered in inside the
  * Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
  */
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.BINARY)
 @Suppress("LongParameterList")
 annotation class ShowkaseCodegenMetadata(
     val packageSimpleName: String,

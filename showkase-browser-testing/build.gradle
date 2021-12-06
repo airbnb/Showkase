@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 31
@@ -43,20 +42,26 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
     }
+    configurations {
+        all {
+            // work around this error:
+            // Duplicate class org.intellij.lang.annotations.Identifier found in modules annotations-12.0 (com.intellij:annotations:12.0) and annotations-13.0 (org.jetbrains:annotations:13.0)
+            exclude group: "com.intellij", module: "annotations"
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    // Kotlin
-    implementation deps.kotlinStdLib
-
     // Support Libraries
     implementation deps.support.appCompat
 
     // Showkase
     implementation project(':showkase')
-    kapt project(':showkase-processor')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+    }
     implementation project(':showkase-processor')
     implementation project(':showkase-screenshot-testing')
 

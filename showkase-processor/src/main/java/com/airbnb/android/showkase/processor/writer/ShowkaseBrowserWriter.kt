@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.XProcessingEnv
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
@@ -8,10 +9,9 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
-import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.type.TypeMirror
+import com.squareup.kotlinpoet.TypeName
 
-internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnvironment) {
+internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     @Suppress("LongMethod")
     internal fun generateShowkaseBrowserFile(
         showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
@@ -26,7 +26,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
             showkaseComponentMetadata
                 .partition {
-                    it.previewParameter != null
+                    it.previewParameterProviderType != null
                 }
         val componentListProperty = initializeComponentProperty(
             showkaseMetadataWithParameterList,
@@ -43,7 +43,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
         )
 
         writeFile(
-            processingEnv,
+            environment,
             fileBuilder,
             SHOWKASE_PROVIDER_CLASS_NAME,
             showkaseComponentsListClassName,
@@ -93,7 +93,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                     addLineBreak()
                     add(
                         "%T().values.iterator().asSequence().forEachIndexed { index, previewParam -> ",
-                        withParameterMetadata.previewParameter
+                        withParameterMetadata.previewParameterProviderType
                     )
                     doubleIndent()
                     addLineBreak()
@@ -145,7 +145,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 add(
                     showkaseBrowserPropertyValue(
                         showkaseMetadata.packageName,
-                        showkaseMetadata.enclosingClass,
+                        showkaseMetadata.enclosingClassName,
                         "color",
                         showkaseMetadata.elementName,
                         showkaseMetadata.insideWrapperClass,
@@ -193,7 +193,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
                 add(
                     showkaseBrowserPropertyValue(
                         showkaseMetadata.packageName,
-                        showkaseMetadata.enclosingClass,
+                        showkaseMetadata.enclosingClassName,
                         "textStyle",
                         showkaseMetadata.elementName,
                         showkaseMetadata.insideWrapperClass,
@@ -226,7 +226,7 @@ internal class ShowkaseBrowserWriter(private val processingEnv: ProcessingEnviro
     @Suppress("LongParameterList")
     private fun showkaseBrowserPropertyValue(
         functionPackageName: String,
-        enclosingClass: TypeMirror? = null,
+        enclosingClass: TypeName? = null,
         fieldPropertyName: String,
         fieldName: String,
         insideWrapperClass: Boolean,

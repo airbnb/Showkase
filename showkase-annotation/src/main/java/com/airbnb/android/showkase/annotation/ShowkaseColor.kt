@@ -18,7 +18,7 @@ package com.airbnb.android.showkase.annotation
  * field is a top level field, the color is added to a "Default Group".
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FIELD)
 annotation class ShowkaseColor(
     val name: String = "",

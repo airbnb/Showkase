@@ -19,6 +19,8 @@ public class ShowkaseMetadataShowkase_processor_testing {
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
+    showkaseWidthDp = -1,
+    showkaseHeightDp = -1,
     previewParameterClass = [ParameterProvider::class]
   )
   public fun WrapperClass_TestComposable(): Unit {

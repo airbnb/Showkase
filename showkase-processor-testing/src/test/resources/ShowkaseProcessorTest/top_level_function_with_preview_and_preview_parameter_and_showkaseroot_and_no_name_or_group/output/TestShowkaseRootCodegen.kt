@@ -25,6 +25,8 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             componentKey =
                 """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""",
             isDefaultStyle = false,
+            widthDp = -1,
+            heightDp = -1,
             component = @Composable { TestComposable() })
       ).apply {
           ParameterProvider().values.iterator().asSequence().forEachIndexed { index, previewParam ->
@@ -37,6 +39,8 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
                       componentKey =
                           """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_null_$index""",
                       isDefaultStyle = false,
+                      widthDp = -1,
+                      heightDp = -1,
                       component = @Composable { TestComposable2(previewParam) }
                   )
               )

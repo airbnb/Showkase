@@ -24,10 +24,8 @@ jobs:
         # https://medium.com/@ychescale9/running-android-instrumented-tests-on-ci-from-bitrise-io-to-github-actions-a611e57ce71f
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
         restore-keys: ${{ runner.os }}-gradle-
-    - name: Build with Gradle
-      run: ./gradlew build
-    - name: Run Unit tests
-      run: ./gradlew test --stacktrace
+    - name: Run Checks
+      run: ./gradlew check --stacktrace
 
   ui-testing:
     runs-on: macos-10.15
@@ -51,11 +49,20 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Run UI Tests
+      - name: Run UI Tests w/ KAPT
         uses: reactivecircus/android-emulator-runner@v2
         with:
           emulator-build: 7425822
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace
+          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=false
+
+      - name: Run UI Tests w/ KSP
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          emulator-build: 7425822
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: x86_64
+          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true

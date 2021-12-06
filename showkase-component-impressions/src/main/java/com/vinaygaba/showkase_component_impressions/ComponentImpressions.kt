@@ -33,7 +33,10 @@ data class ShowkaseVisibilityEvent<T>(
  * composition(invisible), when the activity is backgrounded(visible) and when the activity is
  * foregrounded(visible). In addition,
  *
- * @param key
+ * @param key Unique identifier for a given composable function that you use this modifier on
+ * @param onVisibilityChanged Callback that's called when the visibility of a composable function
+ * changes. This event has information about the key of the composable, the percentage of composable
+ * that's visible on the screen and the bounds of the composable.
  */
 @OptIn(FlowPreview::class)
 fun <T> Modifier.visibilityImpressions(
@@ -57,6 +60,10 @@ fun <T> Modifier.visibilityImpressions(
     }
 }
 
+/**
+ * Used for handling the use case where a composable function is not in composition anymore i.e is
+ * invisible.
+ */
 @SuppressLint("ComposableNaming")
 @Composable
 private fun <T> registerDisposeImpressionEvents(
@@ -74,6 +81,9 @@ private fun <T> registerDisposeImpressionEvents(
     }
 }
 
+/**
+ * 
+ */
 @SuppressLint("ComposableNaming")
 @FlowPreview
 @Composable

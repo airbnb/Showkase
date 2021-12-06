@@ -12,13 +12,7 @@ plugins {
     id 'java-library'
     id 'kotlin'
 }
-apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
-
-kapt {
-    correctErrorTypes = true
-    generateStubs = true
-}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -31,15 +25,28 @@ compileKotlin {
     }
 }
 
-dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+// Need to apply to all tasks like this so test tasks also get these compiler args
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+                "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+                "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi",
+                "-Xopt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview",
+        ]
+    }
+}
 
+dependencies {
     implementation project(':showkase-annotation')
 
-    implementation deps.autoService
-    implementation deps.kotlinStdLib
     implementation deps.kotlinPoet
+    implementation deps.kotlinJavaPoetInterop
     implementation deps.kotlinXMetadata
-    
-    kapt deps.autoService
+    implementation deps.ksp
+    implementation deps.xprocessing
+
+    testImplementation deps.test.strikt
+    testImplementation deps.test.junit
+    testImplementation deps.xprocessingTesting
 }
