@@ -34,7 +34,7 @@ data class ShowkaseVisibilityEvent<T>(
 /**
  * Use this modifier to get visibility events for a given Composable. It emits visibility events
  * when the composable is added to the composition (visible), when its removed from the
- * composition(invisible), when the activity is backgrounded(visible) and when the activity is
+ * composition(invisible), when the activity is backgrounded(invisible) and when the activity is
  * foregrounded(visible). In addition,
  *
  * @param key Unique identifier for a given composable function that you use this modifier on
