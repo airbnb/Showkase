@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
-internal class ImpressionCollector<T>(
+internal class ImpressionCollector<T: Any>(
+    val key: T,
     val coroutineScope: CoroutineScope,
     val onVisibilityEvent: (ShowkaseVisibilityEvent<T>) -> Unit
 ) {
@@ -19,14 +20,12 @@ internal class ImpressionCollector<T>(
         mutableImpressionEvents.filterNotNull().debounce(200)
 
     internal fun onLayoutCoordinatesChanged(
-        key: T,
         visibilityPercentage: VisibilityMetadata,
     ) {
-        publishImpressionEvent(key, visibilityPercentage)
+        publishImpressionEvent(visibilityPercentage)
     }
 
     internal fun publishImpressionEvent(
-        key: T,
         visibilityMetadata: VisibilityMetadata,
     ) {
         coroutineScope.launch {
@@ -40,8 +39,7 @@ internal class ImpressionCollector<T>(
         }
     }
 
-    internal fun publishDisposeEvent(
-        key: T,
+    internal fun onDisposeEvent(
         visibilityMetadata: VisibilityMetadata,
     ) {
         onVisibilityEvent(

@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.collect
  * Passed in the callback of the [visibilityEvents] Modifier. Contains information about the
  * visibility of a given composable function that uses the visibilityEvents Modifier.
  */
-data class ShowkaseVisibilityEvent<T>(
+data class ShowkaseVisibilityEvent<T: Any>(
     val key: T,
     val visibilityPercentage: Float,
     val boundsInWindow: Rect
@@ -34,33 +34,31 @@ data class ShowkaseVisibilityEvent<T>(
 /**
  * Use this modifier to get visibility events for a given Composable. It emits visibility events
  * when the composable is added to the composition (visible), when its removed from the
- * composition(invisible), when the activity is backgrounded(visible) and when the activity is
+ * composition(invisible), when the activity is backgrounded(invisible) and when the activity is
  * foregrounded(visible). In addition,
  *
  * @param key Unique identifier for a given composable function that you use this modifier on
  * @param onVisibilityChanged Callback that's called when the visibility of a composable function
- * changes. This event has information about the key of the composable, the percentage of composable
- * that's visible on the screen and the bounds of the composable.
+ * changes.
  */
 @OptIn(FlowPreview::class)
-fun <T> Modifier.visibilityEvents(
+fun <T: Any> Modifier.visibilityEvents(
     key: T,
     onVisibilityChanged: (ShowkaseVisibilityEvent<T>) -> Unit,
 ) = composed {
     val view = LocalView.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val scope = rememberCoroutineScope()
-    val visibilityEvent by rememberUpdatedState(newValue = onVisibilityChanged)
-    val impressionCollector = remember(key) { ImpressionCollector<T>(scope, visibilityEvent) }
+    val visibilityEventCallback by rememberUpdatedState(newValue = onVisibilityChanged)
+    val impressionCollector = remember(key) { ImpressionCollector<T>(key, scope, visibilityEventCallback) }
     var visibilityMetadata: VisibilityMetadata? by remember { mutableStateOf(null) }
 
-    registerLifecycleImpressionEvents(key, lifecycle, impressionCollector, visibilityMetadata)
-    registerDisposeImpressionEvents(key, impressionCollector, lifecycle)
-    collectImpressionEvents(key, impressionCollector, visibilityEvent)
+    registerDisposeImpressionEvents(key, impressionCollector, lifecycle, visibilityMetadata)
+    collectImpressionEvents(key, impressionCollector, visibilityEventCallback)
 
     onGloballyPositioned { layoutCoordinates ->
         visibilityMetadata = layoutCoordinates.visibilityPercentage(view = view)
-        impressionCollector.onLayoutCoordinatesChanged(key, visibilityMetadata!!)
+        impressionCollector.onLayoutCoordinatesChanged(visibilityMetadata!!)
     }
 }
 
@@ -68,19 +66,37 @@ fun <T> Modifier.visibilityEvents(
  * Used for handling the use case where a composable function is not in composition anymore i.e is
  * invisible.
  */
-@SuppressLint("ComposableNaming")
+@SuppressLint("ComposableNaming", "RememberReturnType")
 @Composable
-private fun <T> registerDisposeImpressionEvents(
+private fun <T: Any> registerDisposeImpressionEvents(
     key: T,
     impressionCollector: ImpressionCollector<T>,
-    lifecycle: Lifecycle
+    lifecycle: Lifecycle,
+    visibility: VisibilityMetadata?
 ) {
-    DisposableEffect(key, lifecycle) {
-        onDispose {
-            impressionCollector.publishDisposeEvent(
-                key,
-                defaultVisibilityMetadata,
-            )
+        DisposableEffect(key, lifecycle) {
+            val observer = LifecycleEventObserver { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_PAUSE, Lifecycle.Event.ON_STOP -> {
+                        impressionCollector.publishImpressionEvent(hidden)
+                    }
+                    Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_START -> {
+                        visibility?.let {
+                            impressionCollector.publishImpressionEvent(it)
+                        }
+                    }
+                    else -> {
+                        // No-op
+                    }
+                }
+            }
+            lifecycle.addObserver(observer)
+            onDispose {
+                impressionCollector.onDisposeEvent(
+                    hidden,
+                )
+                lifecycle.removeObserver(observer)
+            }
         }
     }
 }
@@ -92,7 +108,7 @@ private fun <T> registerDisposeImpressionEvents(
 @SuppressLint("ComposableNaming")
 @FlowPreview
 @Composable
-private fun <T> collectImpressionEvents(
+private fun <T: Any> collectImpressionEvents(
     key: T,
     impressionCollector: ImpressionCollector<T>,
     onVisibilityEvent: (ShowkaseVisibilityEvent<T>) -> Unit
@@ -109,37 +125,5 @@ private fun <T> collectImpressionEvents(
                     )
                 )
             }
-    }
-}
-
-/**
- * Used for handling the use case where the activity/app is backgrounded or foregrounded.
- */
-@SuppressLint("RememberReturnType", "ComposableNaming")
-@Composable
-private fun <T> registerLifecycleImpressionEvents(
-    key: T,
-    lifecycle: Lifecycle,
-    impressionCollector: ImpressionCollector<T>,
-    visibility: VisibilityMetadata?,
-) {
-    remember(key1 = key, key2 = visibility) {
-        lifecycle.addObserver(
-            LifecycleEventObserver { _, event ->
-                when (event) {
-                    Lifecycle.Event.ON_PAUSE, Lifecycle.Event.ON_STOP  -> {
-                        impressionCollector.publishImpressionEvent(key, defaultVisibilityMetadata)
-                    }
-                    Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_START -> {
-                        visibility?.let {
-                            impressionCollector.publishImpressionEvent(key, it)
-                        }
-                    }
-                    else -> {
-                        // No-op
-                    }
-                }
-            }
-        )
     }
 }
