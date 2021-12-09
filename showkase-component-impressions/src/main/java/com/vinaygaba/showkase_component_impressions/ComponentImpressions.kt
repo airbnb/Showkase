@@ -40,6 +40,7 @@ data class ShowkaseVisibilityEvent<T: Any>(
  * @param key Unique identifier for a given composable function that you use this modifier on
  * @param onVisibilityChanged Callback that's called when the visibility of a composable function
  * changes.
+
  */
 @OptIn(FlowPreview::class)
 fun <T: Any> Modifier.visibilityEvents(
@@ -55,6 +56,7 @@ fun <T: Any> Modifier.visibilityEvents(
 
     registerDisposeImpressionEvents(key, impressionCollector, lifecycle, visibilityMetadata)
     collectImpressionEvents(key, impressionCollector, visibilityEventCallback)
+
 
     onGloballyPositioned { layoutCoordinates ->
         visibilityMetadata = layoutCoordinates.visibilityPercentage(view = view)
@@ -94,6 +96,7 @@ private fun <T: Any> registerDisposeImpressionEvents(
             onDispose {
                 impressionCollector.onDisposeEvent(
                     hidden,
+
                 )
                 lifecycle.removeObserver(observer)
             }
