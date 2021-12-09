@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.collect
  * Passed in the callback of the [visibilityEvents] Modifier. Contains information about the
  * visibility of a given composable function that uses the visibilityEvents Modifier.
  */
-data class ShowkaseVisibilityEvent<T>(
+data class ShowkaseVisibilityEvent<T : Any>(
     val key: T,
     val visibilityPercentage: Float,
     val boundsInWindow: Rect
