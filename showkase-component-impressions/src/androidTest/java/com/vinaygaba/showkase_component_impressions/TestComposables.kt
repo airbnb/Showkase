@@ -22,6 +22,11 @@ internal fun BasicComposableWithVisibilityToggle() {
     }
     var isVisible by remember { mutableStateOf(true) }
     Column {
+        BasicText(
+            text = "Click Me",
+            modifier = Modifier
+                .clickable { isVisible = !isVisible }
+        )
         if (isVisible) {
             BasicText(
                 text = "Testing Impression Events",
@@ -32,7 +37,6 @@ internal fun BasicComposableWithVisibilityToggle() {
                             showkaseVisibilityEvent = event
                         }
                     )
-                    .clickable { isVisible = !isVisible }
             )
         }
 
@@ -46,10 +50,7 @@ internal fun BasicComposableWithVisibilityToggle() {
 @Composable
 internal fun BasicTestComposableWithEvents() {
     var counter by remember { mutableStateOf(0) }
-    val counterLambda = { counter++ }
-//    var impressionData: ImpressionData? by remember {
-//        mutableStateOf(null)
-//    }
+
     Column {
         BasicText(
             text = "Testing Impression Events",
@@ -57,7 +58,7 @@ internal fun BasicTestComposableWithEvents() {
                 key = "key",
                 onVisibilityChanged = { event ->
 //                    impressionData = ImpressionData(key, visibilityPercentage, bounds)
-                    counterLambda()
+                   counter++
                 }
             )
         )

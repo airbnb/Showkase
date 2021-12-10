@@ -13,6 +13,7 @@ buildscript {
             'detekt': '1.7.4',
             'espresso': '3.2.0',
             'gradle': '7.0.3',
+            'gradleMavenPublish': '0.15.1',
             'junit' : '4.13',
             'junitImplementation' : '1.1.2',
             'kotlin': '1.5.31',
@@ -94,6 +95,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "com.vanniktech:gradle-maven-publish-plugin:${versions.gradleMavenPublish}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

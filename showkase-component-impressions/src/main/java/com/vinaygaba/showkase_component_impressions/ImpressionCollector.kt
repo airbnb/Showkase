@@ -1,5 +1,6 @@
 package com.vinaygaba.showkase_component_impressions
 
+import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ internal class ImpressionCollector<T: Any>(
 
     @OptIn(FlowPreview::class)
     val impressionEvents: Flow<ShowkaseVisibilityEvent<T>> =
-        mutableImpressionEvents.filterNotNull().debounce(200)
+        mutableImpressionEvents.filterNotNull().debounce(500)
 
     internal fun onLayoutCoordinatesChanged(
         visibilityPercentage: VisibilityMetadata,
@@ -33,7 +34,7 @@ internal class ImpressionCollector<T: Any>(
                 ShowkaseVisibilityEvent(
                     key,
                     visibilityMetadata.visibilityPercentage,
-                    visibilityMetadata.boundsInWindow
+                    visibilityMetadata.boundsInWindow,
                 )
             )
         }
