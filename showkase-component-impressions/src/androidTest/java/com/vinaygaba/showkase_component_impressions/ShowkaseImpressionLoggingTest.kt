@@ -1,7 +1,5 @@
 package com.vinaygaba.showkase_component_impressions
 
-import android.app.Activity
-import android.view.KeyEvent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
@@ -16,11 +14,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import android.content.Intent
-import android.view.View
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.isRoot
-import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 
 @RunWith(JUnit4::class)
 class ShowkaseImpressionLoggingTest2 {

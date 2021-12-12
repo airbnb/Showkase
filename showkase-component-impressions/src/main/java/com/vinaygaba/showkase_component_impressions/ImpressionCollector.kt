@@ -1,6 +1,5 @@
 package com.vinaygaba.showkase_component_impressions
 
-import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

@@ -1,7 +1,6 @@
 package com.vinaygaba.showkase_component_impressions
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -25,6 +24,14 @@ import kotlinx.coroutines.flow.collect
 /**
  * Passed in the callback of the [visibilityEvents] Modifier. Contains information about the
  * visibility of a given composable function that uses the visibilityEvents Modifier.
+ *
+ * @param key The unique identifier that you passed with the [visibilityEvents] modifier.
+ * @param visibilityPercentage A value between 0.0 and 1.0 that represents how much a given composable
+ * was visible on the screen. 0.0 represents that it wasn't visible on the screen and 1.0 represents
+ * that it was completely visible on the screen.
+ * @param boundsInWindow A [Rect] object that contains information about the bounds of a given
+ * composable. When the bounds are (0, 0, 0, 0), it means that the composable was not visible on
+ * screen.
  */
 data class ShowkaseVisibilityEvent<T : Any>(
     val key: T,
@@ -60,8 +67,9 @@ fun <T : Any> Modifier.visibilityEvents(
     collectImpressionEvents(key, impressionCollector, visibilityEventCallback)
 
     onGloballyPositioned { layoutCoordinates ->
-        visibilityMetadata = layoutCoordinates.visibilityPercentage(view = view)
-        impressionCollector.onLayoutCoordinatesChanged(visibilityMetadata!!)
+        visibilityMetadata = layoutCoordinates.visibilityPercentage(view = view).also {
+            impressionCollector.onLayoutCoordinatesChanged(it)
+        }
     }
 }
 
