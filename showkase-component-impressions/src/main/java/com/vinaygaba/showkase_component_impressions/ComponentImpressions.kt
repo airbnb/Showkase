@@ -5,8 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -17,9 +15,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
 
 /**
  * Passed in the callback of the [visibilityEvents] Modifier. Contains information about the
@@ -61,13 +57,11 @@ fun <T : Any> Modifier.visibilityEvents(
     val visibilityEventCallback by rememberUpdatedState(newValue = onVisibilityChanged)
     val impressionCollector =
         remember(key) { ImpressionCollector<T>(key, scope, visibilityEventCallback) }
-    var visibilityMetadata: VisibilityMetadata? by remember { mutableStateOf(null) }
 
-    registerDisposeImpressionEvents(key, impressionCollector, lifecycle, visibilityMetadata)
-    collectImpressionEvents(key, impressionCollector, visibilityEventCallback)
+    registerDisposeImpressionEvents(key, impressionCollector, lifecycle)
 
     onGloballyPositioned { layoutCoordinates ->
-        visibilityMetadata = layoutCoordinates.visibilityPercentage(view = view).also {
+        layoutCoordinates.visibilityPercentage(view = view).also {
             impressionCollector.onLayoutCoordinatesChanged(it)
         }
     }
@@ -77,62 +71,18 @@ fun <T : Any> Modifier.visibilityEvents(
  * Used for handling the use case where a composable function is not in composition anymore i.e is
  * invisible.
  */
-@SuppressLint("ComposableNaming", "RememberReturnType")
+@SuppressLint("ComposableNaming")
 @Composable
 private fun <T : Any> registerDisposeImpressionEvents(
     key: T,
     impressionCollector: ImpressionCollector<T>,
     lifecycle: Lifecycle,
-    visibility: VisibilityMetadata?
 ) {
-    val updatedVisibilityMetadata by rememberUpdatedState(newValue = visibility)
     DisposableEffect(key) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_STOP -> {
-                    impressionCollector.publishImpressionEvent(hidden)
-                }
-                Lifecycle.Event.ON_START -> {
-                    updatedVisibilityMetadata?.let {
-                        impressionCollector.publishImpressionEvent(it)
-                    }
-                }
-                else -> {
-                    // No-op
-                }
-            }
-        }
-        lifecycle.addObserver(observer)
+        lifecycle.addObserver(impressionCollector)
         onDispose {
             impressionCollector.onDisposeEvent(hidden)
-            lifecycle.removeObserver(observer)
+            lifecycle.removeObserver(impressionCollector)
         }
-    }
-}
-
-/**
- * Collects the visibility change events from the internal coroutine flow and invokes the
- * onVisibilityEvent that the user passed.
- */
-@SuppressLint("ComposableNaming")
-@FlowPreview
-@Composable
-private fun <T : Any> collectImpressionEvents(
-    key: T,
-    impressionCollector: ImpressionCollector<T>,
-    onVisibilityEvent: (ShowkaseVisibilityEvent<T>) -> Unit
-) {
-    LaunchedEffect(key) {
-        impressionCollector.impressionEvents
-            .collect { impressionData ->
-                val impression = impressionData as ShowkaseVisibilityEvent<*>
-                onVisibilityEvent(
-                    ShowkaseVisibilityEvent(
-                        impression.key as T,
-                        impression.visibilityPercentage,
-                        impression.boundsInWindow
-                    )
-                )
-            }
     }
 }
