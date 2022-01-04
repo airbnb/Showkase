@@ -15,7 +15,7 @@ import java.io.File
  * Temporarily set this to true to have the test runner update test resource file expected outputs
  * instead of failing tests on mismatch. Use this to easily update expected outputs.
  */
-const val UPDATE_TEST_OUTPUTS = true
+const val UPDATE_TEST_OUTPUTS = false
 
 abstract class BaseProcessorTest {
     @Rule
