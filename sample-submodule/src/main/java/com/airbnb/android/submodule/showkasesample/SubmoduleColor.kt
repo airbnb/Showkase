@@ -1,4 +1,4 @@
-package com.airbnb.android.submodule
+package com.airbnb.android.submodule.showkasesample
 
 import androidx.compose.ui.graphics.Color
 import com.airbnb.android.showkase.annotation.ShowkaseColor

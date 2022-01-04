@@ -1,4 +1,4 @@
-package com.airbnb.android.submodule
+package com.airbnb.android.submodule.showkasesample
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
