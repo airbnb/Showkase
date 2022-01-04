@@ -69,10 +69,29 @@ Using Showkase is straightforward and takes just a couple of minutes to get star
 setup, add this dependency to all the modules with UI elements that should be displayed inside the 
 Showkase browser.
 
+Showkase supports both ksp and kapt. By default, it uses kapt as we only recently added ksp support.
+
+
+#### If you are using kapt
+
 ```kotlin
 implementation "com.airbnb.android:showkase:1.0.0-beta09"
 kapt "com.airbnb.android:showkase-processor:1.0.0-beta09"
 ```
+
+#### If you are using ksp
+```kotlin
+implementation "com.airbnb.android:showkase:1.0.0-beta09"
+ksp "com.airbnb.android:showkase-processor:1.0.0-beta09"
+```
+
+In addition, you will also need to pass a flag to the gradle command that you use to build/run with showkase. 
+Here's an example of what this would look like:
+
+```
+./gradlew sample:clean sample:build -i -PuseKsp=true
+```
+
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
