@@ -20,8 +20,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         showkaseMetadataSet: Set<ShowkaseMetadata>,
     ) {
         if (showkaseMetadataSet.isEmpty()) return
-        val moduleName = showkaseMetadataSet.first().packageSimpleName
-        val generatedClassName = "ShowkaseMetadata${moduleName.capitalize(Locale.getDefault())}"
+        val moduleName = showkaseMetadataSet.first().packageName.replace(".","_")
+        val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
             generatedClassName
