@@ -8,7 +8,7 @@ import kotlin.Unit
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "name",
-    showkaseGroup = "group",
+    showkaseGroup = "component",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "TestComposable",
@@ -18,12 +18,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun TestComposable(): Unit {
+  public fun component_name(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
     showkaseName = "name",
-    showkaseGroup = "group",
+    showkaseGroup = "typography",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "title",
@@ -33,6 +33,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "TYPOGRAPHY"
   )
-  public fun WrapperClass_title(): Unit {
+  public fun typography_name(): Unit {
   }
 }

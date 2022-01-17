@@ -23,6 +23,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseHeightDp = -1,
     previewParameterClass = [ParameterProvider::class]
   )
-  public fun WrapperClass_TestComposable(): Unit {
+  public fun group_name(): Unit {
   }
 }

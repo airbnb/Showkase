@@ -18,6 +18,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "TYPOGRAPHY"
   )
-  public fun WrapperClass_title(): Unit {
+  public fun WrapperClass_Title(): Unit {
   }
 }

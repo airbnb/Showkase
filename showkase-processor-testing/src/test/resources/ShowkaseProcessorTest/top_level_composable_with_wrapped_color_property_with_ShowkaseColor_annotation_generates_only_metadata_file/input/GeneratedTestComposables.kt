@@ -5,13 +5,13 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 
-@ShowkaseComposable("name", "group")
+@ShowkaseComposable("name", "component")
 @Composable
 fun TestComposable() {
     
 }
 
 class WrapperClass {
-    @ShowkaseColor("name", "group")
+    @ShowkaseColor("name", "color")
     val red = Color(0xffff0000)
 }

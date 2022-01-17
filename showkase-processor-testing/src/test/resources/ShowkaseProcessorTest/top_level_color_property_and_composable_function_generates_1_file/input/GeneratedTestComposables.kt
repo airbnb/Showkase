@@ -5,11 +5,11 @@ import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import androidx.compose.runtime.Composable
 
-@ShowkaseComposable("name", "group")
+@ShowkaseComposable("name", "component")
 @Composable
 fun TestComposable() {
     
 }
 
-@ShowkaseColor("name", "group")
+@ShowkaseColor("name", "color")
 val red = Color(0xffff0000)

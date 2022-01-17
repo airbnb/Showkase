@@ -20,7 +20,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         showkaseMetadataSet: Set<ShowkaseMetadata>,
     ) {
         if (showkaseMetadataSet.isEmpty()) return
-        val moduleName = showkaseMetadataSet.first().packageName.replace(".","_")
+        val moduleName = showkaseMetadataSet.first().packageName.replace(".", "_")
         val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
@@ -32,11 +32,10 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
 
-            val methodName = when (val enclosingClass = showkaseMetadata.enclosingClassName) {
-                null -> showkaseMetadata.elementName
-                else -> {
-                    "${enclosingClass.simpleName}_${showkaseMetadata.elementName}"
-                }
+            val methodName = if (showkaseMetadata is ShowkaseMetadata.Component && showkaseMetadata.showkaseStyleName != null) {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}_${showkaseMetadata.showkaseStyleName}"
+            } else {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
             }
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
@@ -52,7 +51,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         }
 
         fileBuilder.addType(
-            with(autogenClass) {
+            with(autogenClass)
+            {
                 showkaseMetadataSet.forEach { addOriginatingElement(it.element) }
                 build()
             }
