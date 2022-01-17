@@ -19,17 +19,18 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public val componentList: List<ShowkaseBrowserComponent> =
       mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
-            group = "group",
+            group = "component",
             componentName = "name",
             componentKDoc = "",
-            componentKey = """com.airbnb.android.showkase_processor_testing_null_group_name_null""",
+            componentKey =
+                """com.airbnb.android.showkase_processor_testing_null_component_name_null""",
             isDefaultStyle = false,
             component = @Composable { TestComposable() })
       )
 
   public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
         ShowkaseBrowserColor(
-            colorGroup = "group",
+            colorGroup = "color",
             colorName = "name",
             colorKDoc = "",
             color = red)

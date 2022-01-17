@@ -6,13 +6,13 @@ import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import androidx.compose.runtime.Composable
 
-@ShowkaseComposable("name", "group")
+@ShowkaseComposable("name", "component")
 @Composable
 fun TestComposable() {
     
 }
 
-@ShowkaseTypography("name", "group")
+@ShowkaseTypography("name", "typography")
 val title = TextStyle(
     fontFamily = FontFamily.Cursive
 )

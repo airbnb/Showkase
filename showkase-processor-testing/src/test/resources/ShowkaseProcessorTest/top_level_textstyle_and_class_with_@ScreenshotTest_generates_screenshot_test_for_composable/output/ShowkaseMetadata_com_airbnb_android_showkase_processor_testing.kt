@@ -16,6 +16,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseKDoc = "",
     showkaseMetadataType = "TYPOGRAPHY"
   )
-  public fun title(): Unit {
+  public fun group_name(): Unit {
   }
 }
