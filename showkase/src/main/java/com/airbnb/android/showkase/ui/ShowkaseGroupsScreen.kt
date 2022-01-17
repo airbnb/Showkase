@@ -112,11 +112,24 @@ internal fun ShowkaseTypographyGroupsScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
-    ShowkaseGroupsScreen(
-        groupedTypographyMap,
-        showkaseBrowserScreenMetadata,
-        navController
-    ) {
-        navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
+    if (groupedTypographyMap.size == 1) {
+        showkaseBrowserScreenMetadata.update {
+            copy(
+                currentGroup = groupedTypographyMap.entries.first().key,
+            )
+        }
+        ShowkaseTypographyInAGroupScreen(
+            groupedTypographyMap = groupedTypographyMap,
+            showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+            navController = navController
+        )
+    } else {
+        ShowkaseGroupsScreen(
+            groupedTypographyMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        ) {
+            navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
+        }
     }
 }
