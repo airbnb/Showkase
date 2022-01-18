@@ -12,7 +12,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.Locale
+import java.util.*
 
 internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessingEnv) {
 
@@ -31,11 +31,13 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
-
-            val methodName = if (showkaseMetadata is ShowkaseMetadata.Component && showkaseMetadata.showkaseStyleName != null) {
-                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}_${showkaseMetadata.showkaseStyleName}"
+            val name = "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+            val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
+                && showkaseMetadata.showkaseStyleName != null
+            ) {
+                "${name}_${showkaseMetadata.showkaseStyleName}"
             } else {
-                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+                name
             }
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
