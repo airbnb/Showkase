@@ -36,6 +36,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     isDefaultStyle = false,
     previewParameterClass = [ParameterProvider::class]
   )
-  public fun `Default Group_TestComposable2`(): Unit {
+  public fun Default_Group_TestComposable2(): Unit {
   }
 }

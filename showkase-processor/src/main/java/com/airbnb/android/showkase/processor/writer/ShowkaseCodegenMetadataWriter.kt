@@ -38,7 +38,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 "${name}_${showkaseMetadata.showkaseStyleName}"
             } else {
                 name
-            }
+            }.replace(" ", "_")
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
             showkaseMetadata.enclosingClassName?.let {

@@ -16,6 +16,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseKDoc = "",
     showkaseMetadataType = "COLOR"
   )
-  public fun `Default Group_Red`(): Unit {
+  public fun Default_Group_Red(): Unit {
   }
 }
