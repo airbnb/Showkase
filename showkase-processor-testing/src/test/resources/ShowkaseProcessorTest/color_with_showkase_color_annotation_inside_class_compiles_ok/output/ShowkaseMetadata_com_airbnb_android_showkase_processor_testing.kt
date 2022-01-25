@@ -18,6 +18,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COLOR"
   )
-  public fun Composables_red(): Unit {
+  public fun group_name(): Unit {
   }
 }

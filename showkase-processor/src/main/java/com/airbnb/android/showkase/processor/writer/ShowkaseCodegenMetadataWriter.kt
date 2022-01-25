@@ -12,7 +12,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.Locale
+import java.util.*
 
 internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessingEnv) {
 
@@ -20,7 +20,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         showkaseMetadataSet: Set<ShowkaseMetadata>,
     ) {
         if (showkaseMetadataSet.isEmpty()) return
-        val moduleName = showkaseMetadataSet.first().packageName.replace(".","_")
+        val moduleName = showkaseMetadataSet.first().packageName.replace(".", "_")
         val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
@@ -31,13 +31,14 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
-
-            val methodName = when (val enclosingClass = showkaseMetadata.enclosingClassName) {
-                null -> showkaseMetadata.elementName
-                else -> {
-                    "${enclosingClass.simpleName}_${showkaseMetadata.elementName}"
-                }
-            }
+            val name = "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+            val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
+                && showkaseMetadata.showkaseStyleName != null
+            ) {
+                "${name}_${showkaseMetadata.showkaseStyleName}"
+            } else {
+                name
+            }.replace(" ", "_")
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
             showkaseMetadata.enclosingClassName?.let {
@@ -52,7 +53,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         }
 
         fileBuilder.addType(
-            with(autogenClass) {
+            with(autogenClass)
+            {
                 showkaseMetadataSet.forEach { addOriginatingElement(it.element) }
                 build()
             }
