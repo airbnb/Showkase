@@ -60,7 +60,7 @@ internal fun ShowkaseColorsInAGroupScreen(
                     ) {
                         Text(
                             text = groupColorMetadata.colorName,
-                            modifier = Modifier.padding(start = padding4x, end = padding4x),
+                            modifier = Modifier.padding(start = padding4x, end = padding4x).weight(1f),
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.Serif,
