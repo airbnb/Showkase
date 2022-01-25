@@ -28,6 +28,7 @@ annotation class ShowkaseCodegenMetadata(
     val showkaseElementName: String,
     val showkaseName: String,
     val showkaseGroup: String,
+    val showkaseOrder: Int,
     val showkaseKDoc: String,
     val showkaseMetadataType: String,
     val enclosingClass: Array<KClass<*>> = [],

@@ -93,9 +93,11 @@ internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity
 }
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyColorsDetailScreen() {
-    onNodeWithTag("ColorsInAGroupList").onChildren().assertCountEquals(4)
-
-    verifyRowsWithTextAreDisplayed(
-        "Primary", "Primary Variant", "Secondary", "Secondary Variant"
-    )
+    val groupList = onNodeWithTag("ColorsInAGroupList")
+    val textList = listOf("Primary", "Primary Variant", "Secondary", "Secondary Variant")
+    groupList.onChildren().assertCountEquals(4)
+    textList.forEachIndexed { index, text ->
+        groupList.onChildAt(index).onChild().assertTextEquals(text)
+    }
+    verifyRowsWithTextAreDisplayed(*textList.toTypedArray())
 }

@@ -22,6 +22,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
         ShowkaseBrowserColor(
             colorGroup = "group",
             colorName = "name",
+            order = 2147483647,
             colorKDoc = "",
             color = WrapperClass().color)
       )

@@ -111,7 +111,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 closeCurlyBraces()
             }
         }
-        
+
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
         return componentListProperty
     }
@@ -137,9 +137,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 )
                 doubleIndent()
                 add(
-                    "colorGroup = %S,\ncolorName = %S,\ncolorKDoc = %S,",
+                    "colorGroup = %S,\ncolorName = %S,\norder = %L,\ncolorKDoc = %S,",
                     showkaseMetadata.showkaseGroup,
                     showkaseMetadata.showkaseName,
+                    showkaseMetadata.showkaseOrder,
                     showkaseMetadata.showkaseKDoc
                 )
                 add(
@@ -185,9 +186,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 )
                 doubleIndent()
                 add(
-                    "typographyGroup = %S,\ntypographyName = %S,\ntypographyKDoc = %S,",
+                    "typographyGroup = %S,\ntypographyName = %S,\norder = %L,\ntypographyKDoc = %S,",
                     showkaseMetadata.showkaseGroup,
                     showkaseMetadata.showkaseName,
+                    showkaseMetadata.showkaseOrder,
                     showkaseMetadata.showkaseKDoc
                 )
                 add(
@@ -252,8 +254,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
                 .build()
         }
-        else -> throw ShowkaseProcessorException("Your field:${fieldName} is declared in a way that " +
-                "is not supported by Showkase")
+        else -> throw ShowkaseProcessorException(
+            "Your field:${fieldName} is declared in a way that " +
+                    "is not supported by Showkase"
+        )
     }
 
     companion object {

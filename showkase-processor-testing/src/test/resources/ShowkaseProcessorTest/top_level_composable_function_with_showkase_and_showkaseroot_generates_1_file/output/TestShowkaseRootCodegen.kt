@@ -20,6 +20,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
       mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
             group = "group",
+            order = 2147483647,
             componentName = "name",
             componentKDoc = "",
             componentKey = """com.airbnb.android.showkase_processor_testing_null_group_name_null""",

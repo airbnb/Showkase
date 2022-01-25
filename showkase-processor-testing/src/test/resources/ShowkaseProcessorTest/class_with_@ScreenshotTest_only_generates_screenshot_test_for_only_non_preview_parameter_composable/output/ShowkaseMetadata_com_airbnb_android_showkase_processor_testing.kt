@@ -10,6 +10,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "TestComposable1",
     showkaseGroup = "WrapperClass",
+    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "TestComposable1",
@@ -26,6 +27,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "TestComposable2",
     showkaseGroup = "Default Group",
+    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "TestComposable2",

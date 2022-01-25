@@ -133,8 +133,9 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     )
     doubleIndent()
     add(
-        "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
+        "group = %S,\norder = %L,\ncomponentName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
         showkaseMetadata.showkaseGroup,
+        showkaseMetadata.showkaseOrder,
         showkaseMetadata.showkaseName,
         showkaseMetadata.showkaseKDoc,
         componentKey,

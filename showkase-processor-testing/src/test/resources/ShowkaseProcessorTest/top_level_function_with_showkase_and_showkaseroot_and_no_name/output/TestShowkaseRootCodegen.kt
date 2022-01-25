@@ -20,6 +20,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
       mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
             group = "group",
+            order = 2147483647,
             componentName = "TestComposable",
             componentKDoc = "",
             componentKey =

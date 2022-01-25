@@ -15,13 +15,13 @@ import java.util.Locale
 
 @Composable
 internal fun ShowkaseGroupsScreen(
-    groupedTypographyMap: Map<String, List<*>>,
+    groupedMap: Map<String, List<*>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController,
     onClick: () -> Unit
 ) {
     val filteredMap = getFilteredSearchList(
-        groupedTypographyMap.toSortedMap(),
+        groupedMap.toSortedMap(),
         showkaseBrowserScreenMetadata
     )
 

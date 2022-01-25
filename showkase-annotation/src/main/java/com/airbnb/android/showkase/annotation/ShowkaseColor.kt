@@ -23,4 +23,5 @@ package com.airbnb.android.showkase.annotation
 annotation class ShowkaseColor(
     val name: String = "",
     val group: String = "",
+    val order: Int = Int.MAX_VALUE
 )

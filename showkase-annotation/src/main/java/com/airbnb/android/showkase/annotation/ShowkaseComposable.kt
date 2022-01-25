@@ -57,5 +57,6 @@ annotation class ShowkaseComposable(
     val widthDp: Int = -1,
     val heightDp: Int = -1,
     val skip: Boolean = false,
-    val defaultStyle: Boolean = false
+    val defaultStyle: Boolean = false,
+    val order: Int = Int.MAX_VALUE
 )

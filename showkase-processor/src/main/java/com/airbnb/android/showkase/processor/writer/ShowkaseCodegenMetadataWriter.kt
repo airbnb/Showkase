@@ -67,6 +67,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
             .addMember("showkaseName = %S", showkaseMetadata.showkaseName)
             .addMember("showkaseGroup = %S", showkaseMetadata.showkaseGroup)
+            .addMember("showkaseOrder = %L", showkaseMetadata.showkaseOrder)
             .addMember("packageName = %S", showkaseMetadata.packageName)
             .addMember("packageSimpleName = %S", showkaseMetadata.packageSimpleName)
             .addMember("showkaseElementName = %S", showkaseMetadata.elementName)

@@ -36,6 +36,7 @@ internal sealed class ShowkaseMetadata {
     abstract val elementName: String
     abstract val showkaseName: String
     abstract val showkaseGroup: String
+    abstract val showkaseOrder: Int
     abstract val showkaseKDoc: String
     abstract val enclosingClassName: ClassName?
     abstract val insideWrapperClass: Boolean
@@ -49,6 +50,7 @@ internal sealed class ShowkaseMetadata {
         override val showkaseName: String,
         override val showkaseGroup: String,
         override val showkaseKDoc: String,
+        override val showkaseOrder: Int,
         override val enclosingClassName: ClassName? = null,
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
@@ -66,6 +68,7 @@ internal sealed class ShowkaseMetadata {
         override val elementName: String,
         override val showkaseName: String,
         override val showkaseGroup: String,
+        override val showkaseOrder: Int,
         override val showkaseKDoc: String,
         override val enclosingClassName: ClassName? = null,
         override val insideWrapperClass: Boolean = false,
@@ -79,6 +82,7 @@ internal sealed class ShowkaseMetadata {
         override val elementName: String,
         override val showkaseName: String,
         override val showkaseGroup: String,
+        override val showkaseOrder: Int,
         override val showkaseKDoc: String,
         override val enclosingClassName: ClassName? = null,
         override val insideWrapperClass: Boolean = false,
@@ -117,6 +121,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XTypeEleme
                 elementName = props.showkaseElementName,
                 showkaseName = props.showkaseName,
                 showkaseGroup = props.showkaseGroup,
+                showkaseOrder = props.showkaseOrder,
                 showkaseStyleName = props.showkaseStyleName,
                 showkaseWidthDp = props.showkaseWidthDp.parseAnnotationProperty(),
                 showkaseHeightDp = props.showkaseHeightDp.parseAnnotationProperty(),
@@ -136,6 +141,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XTypeEleme
                 elementName = props.showkaseElementName,
                 showkaseName = props.showkaseName,
                 showkaseGroup = props.showkaseGroup,
+                showkaseOrder = props.showkaseOrder,
                 insideWrapperClass = props.insideWrapperClass,
                 insideObject = props.insideObject,
                 showkaseKDoc = props.showkaseKDoc,
@@ -149,6 +155,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XTypeEleme
                 enclosingClassName = enclosingClassType?.typeElement?.className?.toKClassName(),
                 elementName = props.showkaseElementName,
                 showkaseName = props.showkaseName,
+                showkaseOrder = props.showkaseOrder,
                 showkaseGroup = props.showkaseGroup,
                 insideWrapperClass = props.insideWrapperClass,
                 insideObject = props.insideObject,
@@ -195,6 +202,7 @@ internal fun getShowkaseMetadata(
         elementName = element.name,
         showkaseName = showkaseName,
         showkaseGroup = showkaseGroup,
+        showkaseOrder = showkaseAnnotation.order,
         showkaseStyleName = showkaseStyleName,
         showkaseWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
         showkaseHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
@@ -271,6 +279,7 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseKDoc = commonMetadata.kDoc,
         showkaseName = showkaseName,
         showkaseGroup = showkaseGroup,
+        showkaseOrder = showkaseComosableAnnotation?.order ?: Int.MAX_VALUE,
         showkaseWidthDp = previewAnnotation.getAsInt("widthDp"),
         showkaseHeightDp = previewAnnotation.getAsInt("heightDp"),
         insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
@@ -311,6 +320,7 @@ internal fun getShowkaseColorMetadata(
         element = element,
         showkaseName = showkaseName,
         showkaseGroup = showkaseGroup,
+        showkaseOrder = showkaseColorAnnotation.order,
         showkaseKDoc = commonMetadata.kDoc,
         elementName = element.name,
         packageSimpleName = commonMetadata.moduleName,
@@ -341,6 +351,7 @@ internal fun getShowkaseTypographyMetadata(
         element = element,
         showkaseName = showkaseName,
         showkaseGroup = showkaseGroup,
+        showkaseOrder = showkaseTypographyAnnotation.order,
         showkaseKDoc = commonMetadata.kDoc,
         elementName = element.name,
         packageSimpleName = commonMetadata.moduleName,

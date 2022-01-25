@@ -20,6 +20,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
       mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
             group = "component",
+            order = 2147483647,
             componentName = "name",
             componentKDoc = "",
             componentKey =
@@ -34,6 +35,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
         ShowkaseBrowserTypography(
             typographyGroup = "typography",
             typographyName = "name",
+            order = 2147483647,
             typographyKDoc = "",
             textStyle = title)
       )

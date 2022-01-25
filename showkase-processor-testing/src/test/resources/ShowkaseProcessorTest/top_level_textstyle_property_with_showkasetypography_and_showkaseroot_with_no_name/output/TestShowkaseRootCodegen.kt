@@ -24,6 +24,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
         ShowkaseBrowserTypography(
             typographyGroup = "group",
             typographyName = "Title",
+            order = 2147483647,
             typographyKDoc = "",
             textStyle = title)
       )

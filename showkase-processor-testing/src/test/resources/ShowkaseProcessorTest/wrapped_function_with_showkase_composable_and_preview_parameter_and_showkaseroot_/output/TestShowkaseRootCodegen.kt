@@ -23,6 +23,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
               add(
                   ShowkaseBrowserComponent(
                       group = "group",
+                      order = 2147483647,
                       componentName = "name",
                       componentKDoc = "",
                       componentKey =

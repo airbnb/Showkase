@@ -25,7 +25,7 @@ internal fun ShowkaseComponentsInAGroupScreen(
     // Use the default style as the preview if its available or take the first style for the component
     val componentList = groupByComponentName.values.map {
         it.firstOrNull { it.isDefaultStyle } ?: it.first()
-    }
+    }.sorted()
     val filteredList =
         getFilteredSearchList(componentList, showkaseBrowserScreenMetadata)
     LazyColumn {

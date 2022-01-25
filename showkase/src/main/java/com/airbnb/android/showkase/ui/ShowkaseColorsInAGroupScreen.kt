@@ -37,7 +37,7 @@ internal fun ShowkaseColorsInAGroupScreen(
 ) {
     val groupColorsList =
         groupedColorsMap[showkaseBrowserScreenMetadata.value.currentGroup]
-            ?.sortedBy { it.colorName } ?: return
+            ?.sorted() ?: return
     val filteredList =
         getFilteredSearchList(groupColorsList, showkaseBrowserScreenMetadata)
     LazyColumn(

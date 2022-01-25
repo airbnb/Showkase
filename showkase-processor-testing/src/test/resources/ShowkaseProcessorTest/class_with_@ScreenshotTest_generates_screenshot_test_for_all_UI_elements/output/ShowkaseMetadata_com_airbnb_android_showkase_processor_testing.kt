@@ -8,6 +8,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "name1",
     showkaseGroup = "group1",
+    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "TestComposable1",
@@ -23,6 +24,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "name2",
     showkaseGroup = "group2",
+    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "TestComposable2",
@@ -38,6 +40,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "name",
     showkaseGroup = "color",
+    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "red",
@@ -52,6 +55,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "name",
     showkaseGroup = "typography",
+    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
     showkaseElementName = "title",

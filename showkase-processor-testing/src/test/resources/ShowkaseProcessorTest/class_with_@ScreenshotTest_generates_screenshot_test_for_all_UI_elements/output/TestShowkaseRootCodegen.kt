@@ -20,6 +20,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
       mutableListOf<ShowkaseBrowserComponent>(
         ShowkaseBrowserComponent(
             group = "group1",
+            order = 2147483647,
             componentName = "name1",
             componentKDoc = "",
             componentKey =
@@ -28,6 +29,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             component = @Composable { TestComposable1() }),
         ShowkaseBrowserComponent(
             group = "group2",
+            order = 2147483647,
             componentName = "name2",
             componentKDoc = "",
             componentKey =
@@ -40,6 +42,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
         ShowkaseBrowserColor(
             colorGroup = "color",
             colorName = "name",
+            order = 2147483647,
             colorKDoc = "",
             color = red)
       )
@@ -48,6 +51,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
         ShowkaseBrowserTypography(
             typographyGroup = "typography",
             typographyName = "name",
+            order = 2147483647,
             typographyKDoc = "",
             textStyle = title)
       )
