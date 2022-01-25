@@ -54,17 +54,22 @@ internal fun ShowkaseTypographyInAGroupScreen(
         )
     }
     BackButtonHandler {
-        goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata, navController)
+        goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata, groupedTypographyMap.size == 1, navController)
     }
 }
 
 private fun goBackFromTypographyInAGroupScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    noGroups : Boolean,
     navController: NavHostController
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
     when {
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
+        noGroups -> {
+            showkaseBrowserScreenMetadata.clear()
+            navController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+        }
         else -> {
             showkaseBrowserScreenMetadata.clear()
             navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
