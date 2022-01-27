@@ -99,3 +99,5 @@ internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity
         "Primary", "Primary Variant", "Secondary", "Secondary Variant"
     )
 }
+
+feat.speedtest
