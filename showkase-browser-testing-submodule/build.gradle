@@ -54,8 +54,6 @@ android {
 dependencies {
     // Support Libraries
     implementation deps.support.appCompat
-    // Submodule for testing
-    implementation project(':showkase-browser-testing-submodule')
 
     // Showkase
     implementation project(':showkase')

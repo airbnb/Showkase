@@ -52,10 +52,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components (5)")
+            clickRowWithText("Components (6)")
 
             // Verify that all the groups are displayed on the screen
-            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)", "Submodule (1)")
         }
     }
 

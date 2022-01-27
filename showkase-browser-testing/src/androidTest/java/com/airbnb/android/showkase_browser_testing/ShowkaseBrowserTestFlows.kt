@@ -77,7 +77,7 @@ internal fun <T : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule
     }
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyLandingScreen() {
-    verifyRowsWithTextAreDisplayed("Components (5)", "Typography (13)", "Colors (4)")
+    verifyRowsWithTextAreDisplayed("Components (6)", "Typography (13)", "Colors (4)")
 }
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyTypographyDetailScreen() {
