@@ -20,10 +20,10 @@ fun TestComposable2() {
     
 }
 
-@ShowkaseColor("name", "group")
+@ShowkaseColor("name", "color")
 val red = Color(0xffff0000)
 
-@ShowkaseTypography("name", "group")
+@ShowkaseTypography("name", "typography")
 val title = TextStyle(
     fontFamily = FontFamily.Cursive
 )

@@ -38,7 +38,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
 
   public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
         ShowkaseBrowserColor(
-            colorGroup = "group",
+            colorGroup = "color",
             colorName = "name",
             colorKDoc = "",
             color = red)
@@ -46,7 +46,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
 
   public val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
         ShowkaseBrowserTypography(
-            typographyGroup = "group",
+            typographyGroup = "typography",
             typographyName = "name",
             typographyKDoc = "",
             textStyle = title)

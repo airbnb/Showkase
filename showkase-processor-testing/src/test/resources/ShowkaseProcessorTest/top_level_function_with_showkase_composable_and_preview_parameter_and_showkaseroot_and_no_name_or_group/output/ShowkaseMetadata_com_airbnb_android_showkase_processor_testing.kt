@@ -18,7 +18,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun TestComposable(): Unit {
+  public fun Default_Group_TestComposable(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -34,6 +34,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     isDefaultStyle = false,
     previewParameterClass = [ParameterProvider::class]
   )
-  public fun TestComposable2(): Unit {
+  public fun Default_Group_TestComposable2(): Unit {
   }
 }
