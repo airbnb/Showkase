@@ -52,10 +52,10 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components (5)")
+            clickRowWithText("Components (6)")
 
             // Verify that all the groups are displayed on the screen
-            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)", "Submodule (1)")
         }
     }
 
@@ -94,7 +94,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components (5)")
+            clickRowWithText("Components (6)")
 
             // Select "Group1"
             clickRowWithText("Group1 (2)")
@@ -200,7 +200,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select Components
-            clickRowWithText("Components (5)")
+            clickRowWithText("Components (6)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
@@ -264,7 +264,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select components
-            clickRowWithText("Components (5)")
+            clickRowWithText("Components (6)")
 
             // Select Group 3
             clickRowWithText("Group3 (2)")
@@ -355,7 +355,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select components to go to the component groups screen
-            clickRowWithText("Components (5)")
+            clickRowWithText("Components (6)")
 
             // Click on "Group 1" to go to the components in a group screen
             clickRowWithText("Group1 (2)")

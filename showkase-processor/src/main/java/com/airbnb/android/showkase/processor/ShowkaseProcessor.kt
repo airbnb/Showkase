@@ -322,14 +322,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv): Set<ShowkaseMetadata> {
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
                 val codegenMetadataAnnotation =
                     element.getAnnotation(ShowkaseCodegenMetadata::class)
                 when {
                     codegenMetadataAnnotation == null -> null
-                    else -> codegenMetadataAnnotation.toModel(element)
+                    else -> element to codegenMetadataAnnotation
                 }
             }
+            .map { it.second.toModel(it.first) }
             .toSet()
     }
 
