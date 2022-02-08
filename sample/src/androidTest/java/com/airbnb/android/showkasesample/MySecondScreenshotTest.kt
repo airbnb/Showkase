@@ -6,7 +6,7 @@ import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
 
 // This test is similar to [MyScreenshotTest] however it uses a different root module. This is
-// to provide coverage of a bug that was introduced previously - 
+// to provide coverage for a bug that was introduced previously -
 // https://github.com/airbnb/Showkase/issues/212
 @ShowkaseScreenshot(rootShowkaseClass = RootModule::class)
 abstract class MySecondScreenshotTest: ShowkaseScreenshotTest {
