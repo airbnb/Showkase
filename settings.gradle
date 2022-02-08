@@ -7,3 +7,4 @@ rootProject.name = "Showkase"
 include ':sample-submodule'
 include ':showkase-screenshot-testing'
 include ':showkase-browser-testing'
+include ':showkase-browser-testing-submodule'

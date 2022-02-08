@@ -106,7 +106,7 @@ internal enum class ShowkaseMetadataType {
     TYPOGRAPHY
 }
 
-internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XTypeElement): ShowkaseMetadata {
+internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement): ShowkaseMetadata {
     val (enclosingClassType, previewParameterClassType) = getCodegenMetadataTypes()
 
     // The box is needed to get all Class values, primitives can be accessed dirctly
