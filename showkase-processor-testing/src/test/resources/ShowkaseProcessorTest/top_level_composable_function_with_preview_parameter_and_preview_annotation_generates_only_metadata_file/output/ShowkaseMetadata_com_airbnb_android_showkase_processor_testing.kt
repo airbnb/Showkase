@@ -17,8 +17,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
-    showkaseWidthDp = -1,
-    showkaseHeightDp = -1,
     previewParameterClass = [ParameterProvider::class]
   )
   public fun group_name(): Unit {
