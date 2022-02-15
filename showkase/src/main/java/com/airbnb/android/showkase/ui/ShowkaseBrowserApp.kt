@@ -246,7 +246,6 @@ private fun ShowkaseAppBarActions(
     }
 }
 
-@Suppress("LongMethod")
 @Composable
 internal fun ShowkaseBodyContent(
     navController: NavHostController,
@@ -266,7 +265,13 @@ internal fun ShowkaseBodyContent(
         builder = if (isOnlyComponents) {
             componentsNavGraph(navController, groupedComponentMap, showkaseBrowserScreenMetadata)
         } else {
-            fullNavGraph(navController, groupedComponentMap, groupedColorsMap, groupedTypographyMap, showkaseBrowserScreenMetadata)
+            fullNavGraph(
+                navController,
+                groupedComponentMap,
+                groupedColorsMap,
+                groupedTypographyMap,
+                showkaseBrowserScreenMetadata
+            )
         }
     )
 }
@@ -308,6 +313,7 @@ private fun componentsNavGraph(
     }
 }
 
+@Suppress("LongMethod")
 private fun fullNavGraph(
     navController: NavHostController,
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
