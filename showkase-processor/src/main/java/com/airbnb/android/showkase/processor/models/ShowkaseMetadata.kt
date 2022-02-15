@@ -271,6 +271,9 @@ internal fun getShowkaseMetadataFromPreview(
         commonMetadata.enclosingClass,
     )
 
+    val width = previewAnnotation.getAsInt("widthDp")
+    val height = previewAnnotation.getAsInt("heightDp")
+
     return ShowkaseMetadata.Component(
         packageSimpleName = commonMetadata.moduleName,
         packageName = commonMetadata.packageName,
@@ -280,8 +283,8 @@ internal fun getShowkaseMetadataFromPreview(
         showkaseName = showkaseName,
         showkaseGroup = showkaseGroup,
         showkaseOrder = showkaseComosableAnnotation?.order ?: Int.MAX_VALUE,
-        showkaseWidthDp = previewAnnotation.getAsInt("widthDp"),
-        showkaseHeightDp = previewAnnotation.getAsInt("heightDp"),
+        showkaseWidthDp = if (width == -1) null else width,
+        showkaseHeightDp = if (height == -1) null else width,
         insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = commonMetadata.showkaseFunctionType.insideObject(),
         element = element,

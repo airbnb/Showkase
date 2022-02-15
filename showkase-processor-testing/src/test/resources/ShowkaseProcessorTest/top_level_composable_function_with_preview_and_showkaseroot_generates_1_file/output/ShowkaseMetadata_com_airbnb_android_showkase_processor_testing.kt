@@ -16,9 +16,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false,
-    showkaseWidthDp = -1,
-    showkaseHeightDp = -1
+    isDefaultStyle = false
   )
   public fun group_name(): Unit {
   }
