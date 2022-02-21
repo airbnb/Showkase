@@ -2,6 +2,8 @@ package com.airbnb.android.showkase.ui
 
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -83,7 +85,7 @@ internal fun ShowkaseComponentDetailScreen(
                             metadata
                         )
                         ShowkaseComponentCardType.RTL -> RTLComponentCard(metadata)
-                        ShowkaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
+                        ShowkaseComponentCardType.INVERSE_MODE -> InverseModeComponentCard(metadata)
                     }
                 }
             }
@@ -180,13 +182,13 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 @Composable
-private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
-    val customConfiguration = Configuration(LocalConfiguration.current).apply {
-        uiMode = Configuration.UI_MODE_NIGHT_YES
-    }
+private fun InverseModeComponentCard(metadata: ShowkaseBrowserComponent) {
+    val configuration = Configuration(LocalConfiguration.current)
+    val modeIsDark = (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == UI_MODE_NIGHT_YES
+    configuration.uiMode = if (modeIsDark) UI_MODE_NIGHT_NO else UI_MODE_NIGHT_YES
 
-    ComponentCardTitle("${metadata.componentName} [Dark Mode]")
-    CompositionLocalProvider(LocalConfiguration provides customConfiguration) {
+    ComponentCardTitle("${metadata.componentName} [Inverse Mode]")
+    CompositionLocalProvider(LocalConfiguration provides configuration) {
         ComponentCard(metadata)
     }
 }
