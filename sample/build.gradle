@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'shot'
 }
 
 android {
@@ -14,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
     }
 
     buildTypes {
@@ -70,7 +72,8 @@ dependencies {
         kapt project(':showkase-processor')
         kaptAndroidTest project(':showkase-processor')
     }
-    androidTestImplementation project(':showkase-screenshot-testing')
+//    androidTestImplementation project(':showkase-screenshot-testing')
+    androidTestImplementation project(':showkase-screenshot-testing-shot')
 
     // Support Libraries
     implementation deps.support.appCompat
