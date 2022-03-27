@@ -268,6 +268,8 @@ fun Preview_CustomButton_Small() {
 
 ```
 
+<img src="assets/showkase_styles_demo.png" height=400>
+
 ###### @ShowkaseComposable currently supports the following properties:
 
 Property Name | Description
