@@ -13,12 +13,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
-enum class ButtonSize {
-    Large,
-    Medium,
-    Small
-}
-
 @Composable
 fun CustomButton(
     text: String,
@@ -48,7 +42,7 @@ fun getPadding(
 
 @ShowkaseComposable(name = "CustomButton", group = "Buttons", defaultStyle = true)
 @Composable
-fun Preview_CustomButton_Default() {
+fun PreviewCustomButtonDefault() {
     CustomButton(
         text = "Button",
         onClick = {  }
@@ -57,7 +51,7 @@ fun Preview_CustomButton_Default() {
 
 @ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Medium")
 @Composable
-fun Preview_CustomButton_Medium() {
+fun PreviewCustomButtonMedium() {
     CustomButton(
         text = "Button",
         onClick = {  },
@@ -67,10 +61,18 @@ fun Preview_CustomButton_Medium() {
 
 @ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Small")
 @Composable
-fun Preview_CustomButton_Small() {
+fun PreviewCustomButtonSmall() {
     CustomButton(
         text = "Button",
         onClick = {  },
         size = ButtonSize.Small
     )
+}
+
+
+@Suppress("MatchingDeclarationName")
+enum class ButtonSize {
+    Large,
+    Medium,
+    Small
 }
