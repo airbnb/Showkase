@@ -233,6 +233,43 @@ fun MyComposablePreview() {
 }
 ```
 
+**Representing component styles in Showkase**
+
+There are usecases where you might have a component that supports multiple styles. Consider the following example where you `CustomButton` composable supports 3 sizes - Large/Medium/Small. You want to be able to document this in Showkase so that your team can visualize what these different styles look like in action. One option would be to treat them as 3 separate components. However this isn't ideal. `ShowkaseComposable` offers two properties that help you represent this information better - `styleName` & `defaultStyle`. Using these properties allow you to describe all the styles offered by a given `Composable` component in an organized manner as they are shown on the same screen in Compose. 
+
+Here's what the usage would actually look like for this example - 
+
+```kotlin
+// Actual component
+@Composable
+fun CustomButton(
+    size: ButtonSize,
+    ...
+)
+
+// Previews
+@ShowkaseComposable(name = "CustomButton", group = "Buttons", defaultStyle = true)
+@Composable
+fun Preview_CustomButton_Large() {
+    CustomButton(size = ButtonSize.Large)
+}
+
+@ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Medium size")
+@Composable
+fun Preview_CustomButton_Medium() {
+    CustomButton(size = ButtonSize.Medium)
+}
+
+@ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Small size")
+@Composable
+fun Preview_CustomButton_Small() {
+    CustomButton(size = ButtonSize.Small)
+}
+
+```
+
+<img src="assets/showkase_styles_demo.png" height=400>
+
 ###### @ShowkaseComposable currently supports the following properties:
 
 Property Name | Description
@@ -242,6 +279,8 @@ Property Name | Description
 <b>widthDp</b> | The width that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 <b>heightDp</b> | The height that your component will be rendered inside the Showkase browser. Use this to restrict the size of your preview inside the Showkase browser.
 <b>skip</b> | Setting this to true will skip this composable from rendering in the Showkase browser. A good use case for this would be when you want to have  composable with `@Preview` but want to stop Showkase from picking it up and rendering it in its browser
+<b>styleName</b> | The name of the style that a given composable represents. This is useful for scenarios where a given component has multiple style variants and you want to organize them through Showkase for better discoverability.
+<b>defaultStyle</b> | A boolean value to denote whether the current composable is using its default style (or the only style if the composable doesn't have other style variants) 
 
 ##### 2. @ShowkaseColor
 Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 
