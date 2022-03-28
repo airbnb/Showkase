@@ -6,6 +6,7 @@ import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.compat.XConverters.toJavac
 import androidx.room.compiler.processing.isField
 import androidx.room.compiler.processing.isLong
 import androidx.room.compiler.processing.isMethod
@@ -18,7 +19,13 @@ import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.COMPOSA
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.android.showkase.processor.models.isJavac
 import com.airbnb.android.showkase.processor.utils.findAnnotationBySimpleName
+import com.airbnb.android.showkase.processor.utils.kotlinMetadata
+import kotlinx.metadata.Flag
+import kotlinx.metadata.KmFunction
+import kotlinx.metadata.jvm.KotlinClassMetadata
+import javax.lang.model.element.Element
 import kotlin.contracts.contract
 
 internal class ShowkaseValidator {
@@ -68,14 +75,23 @@ internal class ShowkaseValidator {
         }
     }
 
-    internal fun validateComposableParameter(
+    private fun validateComposableParameter(
         element: XMethodElement,
     ): Boolean {
         // Return true if more than one parameter was passed to the @Composable function or if
         // the parameter that was passed is not annotated with @PreviewParameter.
-        return when (element.parameters.size) {
-            0 -> false
-            1 -> {
+        return when {
+            element.parameters.isEmpty() -> false
+            // If the user is using kapt, we need to leverage kotlin metadata library to get
+            // information about the default values of the method parameters
+            element.isJavac() &&
+                    element.toJavac().enclosingElement.validateKaptComposableParameter(element) -> false
+            // The hasDefaultValue check only works with ksp hence we explicitly check that
+            // before we do the hasDefaultValue check
+            !element.isJavac() && element.validateKspComposableParameters() -> false
+            // If the composable function isn't using default parameters, we allow 1 parameter as
+            // long as its a preview parameter
+            element.parameters.size == 1 -> {
                 return element.parameters
                     .single()
                     .getAllAnnotations()
@@ -83,6 +99,50 @@ internal class ShowkaseValidator {
             }
             else -> true
         }
+    }
+
+    private fun Element.validateKaptComposableParameter(composableMethodElement: XMethodElement) =
+        when (val metadata = kotlinMetadata()) {
+            is KotlinClassMetadata.FileFacade -> metadata.toKmPackage().functions.validateKaptComposableParameter(
+                composableMethodElement
+            )
+            is KotlinClassMetadata.Class -> metadata.toKmClass().functions.validateKaptComposableParameter(
+                composableMethodElement
+            )
+            else -> false
+        }
+
+    private fun MutableList<KmFunction>.validateKaptComposableParameter(
+        composableMethodElement: XMethodElement,
+    ): Boolean {
+        val composableFunctionMetadata = this.find { it.name == composableMethodElement.name} ?: return false
+
+        val (nonPreviewParameterParameters, previewParameterParameters) =
+            composableMethodElement.parameters.partition {
+                it.getAllAnnotations().none {
+                    it.name == PREVIEW_PARAMETER_SIMPLE_NAME
+                }
+            }
+
+       val nonPreviewParameterParametersMetadata =  composableFunctionMetadata.valueParameters.filter { metadata ->
+          nonPreviewParameterParameters.any { metadata.name == it.name }
+       }
+
+        return nonPreviewParameterParametersMetadata.all {
+            Flag.ValueParameter.DECLARES_DEFAULT_VALUE(it.flags)
+        } && previewParameterParameters.size <= 1
+    }
+
+    private fun XMethodElement.validateKspComposableParameters(): Boolean {
+        val (nonPreviewParameterParameters, previewParameterParameters) =
+            parameters.partition { parameter ->
+                parameter.getAllAnnotations().none { annotation ->
+                    annotation.name == PREVIEW_PARAMETER_SIMPLE_NAME
+                }
+            }
+
+        return nonPreviewParameterParameters.all { it.hasDefaultValue } &&
+                previewParameterParameters.size <= 1
     }
 
     internal fun validateColorElement(
