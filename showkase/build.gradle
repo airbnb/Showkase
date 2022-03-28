@@ -72,7 +72,6 @@ dependencies {
     implementation deps.compose.composeNavigation
     implementation deps.compose.core
     implementation deps.compose.foundation
-    implementation deps.compose.tooling
     implementation deps.compose.layout
     implementation deps.compose.material
     androidTestImplementation deps.compose.uiTest
