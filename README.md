@@ -235,7 +235,7 @@ fun MyComposablePreview() {
 
 **Representing component styles in Showkase**
 
-There are usecases where you might have a component that supports multiple styles. Consider the following example where you `CustomButton` composable supports 3 sizes - Large/Medium/Small. You want to be able to document this in Showkase so that your team can visualize what these different styles look like in action. One option would be to treat them as 3 separate components. However this isn't ideal. `ShowkaseComposable` offers two properties that help you represent this information better - `styleName` & `defaultStyle`. Using these properties allow you to describe all the styles offered by a given `Composable` component in an organized manner as they are shown on the same screen in Compose. 
+There are usecases where you might have a component that supports multiple styles. Consider the following example where you have a `CustomButton` composable and it supports 3 different sizes - Large/Medium/Small. You want to be able to document this in Showkase so that your team can visualize what these different styles look like in action. One option would be to treat them as 3 separate components. However this isn't ideal. `ShowkaseComposable` offers two properties that help you represent this information better - `styleName` & `defaultStyle`. Using these properties allow you to describe all the styles offered by a given `Composable` component in an organized manner as they are shown on the same screen in the Showkase browser. 
 
 Here's what the usage would actually look like for this example - 
 
