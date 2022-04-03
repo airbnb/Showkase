@@ -1,17 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.airbnb.android.showkase">
 
-    <application
-        android:supportsRtl="true">
+    <application android:supportsRtl="true">
         <activity
             android:name="com.airbnb.android.showkase.ui.ShowkaseBrowserActivity"
+            android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:label="ShowkaseBrowserActivity"
             android:theme="@style/Theme.App.NoActionBar">
-            <!-- TODO(vinaygaba): Figure out product flavor stuff -->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
     </application>
 </manifest>
