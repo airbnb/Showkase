@@ -153,7 +153,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
             showkaseMetadata.elementName,
             showkaseMetadata.insideWrapperClass,
             showkaseMetadata.insideObject,
-            showkaseMetadata.previewParameterProviderType
+            showkaseMetadata.previewParameterProviderType,
+            showkaseMetadata.previewParameterName
         )
     )
     doubleUnindent()
@@ -166,14 +167,15 @@ internal fun composePreviewFunctionLambdaCodeBlock(
     composeFunctionName: String,
     insideWrapperClass: Boolean,
     insideObject: Boolean,
-    previewParameter: TypeName? = null
+    previewParameter: TypeName? = null,
+    previewParameterName: String? = null
 ): CodeBlock {
     return when {
         // When enclosingClass is null, it denotes that the method was a top-level method 
         // declaration.
         enclosingClass == null -> {
             val composableFunctionString = previewParameter?.let {
-                "%M(previewParam)"
+                "%M($previewParameterName = previewParam)"
             } ?: "%M()"
 
             val composeMember = MemberName(functionPackageName, composeFunctionName)
@@ -187,7 +189,7 @@ internal fun composePreviewFunctionLambdaCodeBlock(
         // It was declared inside a class.
         insideWrapperClass -> {
             val composableFunctionString = previewParameter?.let {
-                "${composeFunctionName}(previewParam)"
+                "${composeFunctionName}($previewParameterName = previewParam)"
             } ?: "${composeFunctionName}()"
             CodeBlock.Builder()
                 .add(
@@ -199,7 +201,7 @@ internal fun composePreviewFunctionLambdaCodeBlock(
         // It was declared inside an object or a companion object.
         insideObject -> {
             val composableFunctionString = previewParameter?.let {
-                "${composeFunctionName}(previewParam)"
+                "${composeFunctionName}($previewParameterName = previewParam)"
             } ?: "${composeFunctionName}()"
             CodeBlock.Builder()
                 .add(

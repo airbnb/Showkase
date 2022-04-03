@@ -70,6 +70,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `composable function that has default parameters compiles ok`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `private composable with showkase annotation throws compilation error`() {
         assertCompilationFails("The methods annotated with ShowkaseComposable can't be private as " +
                 "Showkase won't be able to access them otherwise.")
@@ -121,6 +126,12 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function that has non preview parameters and preview annotation throws Exception`() {
+        assertCompilationFails("Make sure that the @Composable functions that you annotate with the Preview " +
+                "annotation only have a single parameter that is annotated with @PreviewParameter.")
+    }
+
+    @Test
+    fun `composable function with partial default parameters throws compilation error`() {
         assertCompilationFails("Make sure that the @Composable functions that you annotate with the Preview " +
                 "annotation only have a single parameter that is annotated with @PreviewParameter.")
     }
