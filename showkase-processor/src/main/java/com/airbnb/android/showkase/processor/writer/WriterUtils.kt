@@ -107,7 +107,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     } else {
         "_${showkaseMetadata.showkaseName}"
     }
-    var componentKey = (showkaseMetadata.packageName +
+    var componentKey = (showkaseMetadata.fqPrefix +
             "_${showkaseMetadata.enclosingClassName}" +
             "_${showkaseMetadata.showkaseGroup}" +
             componentName +
@@ -323,10 +323,10 @@ internal fun generatePropertyNameFromMetadata(
             val name =
                 if (metadata.componentIndex != null && metadata.componentIndex > 0
                 ) {
-                    "${metadata.packageName}_${metadata.showkaseGroup}_" +
+                    "${metadata.fqPrefix}_${metadata.showkaseGroup}_" +
                             "${metadata.showkaseName}_${metadata.componentIndex}"
                 } else {
-                    "${metadata.packageName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+                    "${metadata.fqPrefix}_${metadata.showkaseGroup}_${metadata.showkaseName}"
                 }
             val propertyName = if (metadata.showkaseStyleName != null) {
                 "${name}_${metadata.showkaseStyleName}"
@@ -336,7 +336,7 @@ internal fun generatePropertyNameFromMetadata(
             propertyName
         }
         else -> {
-            "${metadata.packageName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+            "${metadata.fqPrefix}_${metadata.showkaseGroup}_${metadata.showkaseName}"
                 .filter { it.isLetterOrDigit() }
         }
     }

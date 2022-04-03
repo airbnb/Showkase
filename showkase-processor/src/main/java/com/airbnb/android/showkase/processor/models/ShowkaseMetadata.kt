@@ -42,6 +42,10 @@ internal sealed class ShowkaseMetadata {
     abstract val insideWrapperClass: Boolean
     abstract val insideObject: Boolean
 
+    /** A fully qualified prefix for use when de-duplicating components. **/
+    val fqPrefix: String
+        get() = "${packageName}_${enclosingClassName}_$elementName"
+
     data class Component(
         override val element: XElement,
         override val packageName: String,
