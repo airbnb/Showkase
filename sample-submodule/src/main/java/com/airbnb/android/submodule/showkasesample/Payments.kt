@@ -105,10 +105,11 @@ val creditCardOffsetMap = object : OffsetMapping {
 }
 
 @ShowkaseComposable("Credit Card Component", "Payments")
-@Preview
 @Composable
-fun CreditCardComponentPreview() {
-    CreditCardComponent("John Doe")
+fun CreditCardComponentPreview(
+    text: String = "John Doe",
+) {
+    CreditCardComponent(text)
 }
 
 
@@ -132,12 +133,13 @@ class NewParameterProvider : PreviewParameterProvider<BankHeader> {
 @Preview(group = "Payments")
 @Composable
 fun BankHeaderPreview(
+    prefix: String = "Bank:",
     @PreviewParameter(provider = NewParameterProvider::class) bankHeader: BankHeader
 ) {
     MaterialTheme {
         Card {
             Text(
-                text = bankHeader.name,
+                text = "$prefix: ${bankHeader.name}",
                 modifier = Modifier.fillMaxWidth().padding(padding4x),
                 style = MaterialTheme.typography.h2
             )

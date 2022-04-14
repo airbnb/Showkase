@@ -36,6 +36,7 @@ annotation class ShowkaseCodegenMetadata(
     val insideWrapperClass: Boolean = false,
     val insideObject: Boolean = false,
     val previewParameterClass: Array<KClass<*>> = [],
+    val previewParameterName: String = "",
     val showkaseStyleName: String = "",
     val isDefaultStyle: Boolean = false
 )

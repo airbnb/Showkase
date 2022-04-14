@@ -3,6 +3,15 @@ plugins {
     id 'kotlin-android'
 }
 
+if (project.hasProperty('useKsp')) {
+    apply plugin: 'com.google.devtools.ksp'
+} else {
+    apply plugin: 'kotlin-kapt'
+    kapt {
+        correctErrorTypes = true
+    }
+}
+
 android {
     compileSdkVersion 31
 
