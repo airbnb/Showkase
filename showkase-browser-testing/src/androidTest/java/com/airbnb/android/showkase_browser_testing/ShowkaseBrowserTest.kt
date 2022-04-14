@@ -117,7 +117,7 @@ class ShowcaseBrowserTest {
                 "Composable1 [RTL]",
                 "Composable1 [Font Scaled x 2]",
                 "Composable1 [Display Scaled x 2]",
-                "Composable1 [Inverse Mode]"
+                "Composable1 [Dark Mode]"
             )
 
             // Go back to the component styles screen
@@ -145,7 +145,7 @@ class ShowcaseBrowserTest {
                 "Composable2 [RTL]",
                 "Composable2 [Font Scaled x 2]",
                 "Composable2 [Display Scaled x 2]",
-                "Composable2 [Inverse Mode]"
+                "Composable2 [Dark Mode]"
             )
         }
     }
