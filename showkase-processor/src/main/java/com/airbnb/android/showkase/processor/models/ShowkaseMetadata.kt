@@ -55,6 +55,7 @@ internal sealed class ShowkaseMetadata {
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
         val previewParameterProviderType: TypeName? = null,
+        val previewParameterName: String? = null,
         val showkaseStyleName: String? = null,
         val isDefaultStyle: Boolean = false
     ) : ShowkaseMetadata()
@@ -125,6 +126,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 showkaseKDoc = props.showkaseKDoc,
                 element = element,
                 previewParameterProviderType = previewParameterClassType?.typeName?.toKTypeName(),
+                previewParameterName = props.previewParameterName,
                 isDefaultStyle = props.isDefaultStyle
             )
         }
@@ -188,6 +190,8 @@ internal fun getShowkaseMetadata(
     val isDefaultStyle = showkaseAnnotation.defaultStyle
     val showkaseStyleName = getShowkaseStyleName(showkaseAnnotation.styleName, isDefaultStyle)
 
+    val previewParameterMetadata = element.getPreviewParameterMetadata()
+
     return ShowkaseMetadata.Component(
         packageSimpleName = commonMetadata.moduleName,
         packageName = commonMetadata.packageName,
@@ -202,7 +206,8 @@ internal fun getShowkaseMetadata(
         insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         element = element,
         showkaseKDoc = commonMetadata.kDoc,
-        previewParameterProviderType = element.getPreviewParameterType(),
+        previewParameterName = previewParameterMetadata?.first,
+        previewParameterProviderType = previewParameterMetadata?.second,
         isDefaultStyle = isDefaultStyle
     )
 }
@@ -266,6 +271,8 @@ internal fun getShowkaseMetadataFromPreview(
     val width = previewAnnotation.getAsInt("widthDp")
     val height = previewAnnotation.getAsInt("heightDp")
 
+    val previewParameterMetadata = element.getPreviewParameterMetadata()
+
     return ShowkaseMetadata.Component(
         packageSimpleName = commonMetadata.moduleName,
         packageName = commonMetadata.packageName,
@@ -279,21 +286,27 @@ internal fun getShowkaseMetadataFromPreview(
         insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = commonMetadata.showkaseFunctionType.insideObject(),
         element = element,
-        previewParameterProviderType = element.getPreviewParameterType()
+        previewParameterName = previewParameterMetadata?.first,
+        previewParameterProviderType = previewParameterMetadata?.second
     )
 }
 
-private fun XMethodElement.getPreviewParameterType(): TypeName? {
-    return getPreviewParameterAnnotation()
-        ?.getAsType("provider")
-        ?.typeName
-        ?.toKTypeName()
+private fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName>? {
+    val previewParameterPair = getPreviewParameterAnnotation()
+    return previewParameterPair?.let {
+        it.first to it.second.getAsType("provider")
+            .typeName
+            .toKTypeName()
+    }
 }
 
-private fun XMethodElement.getPreviewParameterAnnotation(): XAnnotation? {
-    return parameters.firstNotNullOfOrNull { method ->
-        method.findAnnotationBySimpleName(PREVIEW_PARAMETER_SIMPLE_NAME)
-    }
+private fun XMethodElement.getPreviewParameterAnnotation(): Pair<String, XAnnotation>? {
+    return parameters.mapNotNull { parameter ->
+        val previewParamAnnotation = parameter.findAnnotationBySimpleName(PREVIEW_PARAMETER_SIMPLE_NAME)
+        previewParamAnnotation?.let {
+            parameter.name to previewParamAnnotation
+        }
+    }.firstOrNull()
 }
 
 internal fun getShowkaseColorMetadata(
