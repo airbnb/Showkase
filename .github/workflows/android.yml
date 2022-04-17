@@ -75,3 +75,12 @@ jobs:
           target: ${{ matrix.target }}
           arch: x86_64
           script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          path: sample/build/reports/shot/debug/Api${{ matrix.api-level }}/verification/
+
+
+

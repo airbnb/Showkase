@@ -1,4 +1,4 @@
-package com.vinaygaba.showkase_screenshot_testing_shot
+package com.airbnb.android.showkase.screenshot.testing.shot
 
 import android.graphics.Bitmap
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest

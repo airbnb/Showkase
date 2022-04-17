@@ -81,7 +81,6 @@ dependencies {
         kapt project(':showkase-processor')
         kaptAndroidTest project(':showkase-processor')
     }
-//    androidTestImplementation project(':showkase-screenshot-testing')
     androidTestImplementation project(':showkase-screenshot-testing-shot')
 
     // Support Libraries
