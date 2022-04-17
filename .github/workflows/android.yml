@@ -74,7 +74,7 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
-          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
+          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -Precord
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
