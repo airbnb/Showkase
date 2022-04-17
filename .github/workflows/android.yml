@@ -49,23 +49,23 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Run UI Tests w/ KAPT
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          emulator-build: 7425822
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=false
-
-      - name: Run UI Tests w/ KSP
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          emulator-build: 7425822
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
+#      - name: Run UI Tests w/ KAPT
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          emulator-build: 7425822
+#          api-level: ${{ matrix.api-level }}
+#          target: ${{ matrix.target }}
+#          arch: x86_64
+#          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=false
+#
+#      - name: Run UI Tests w/ KSP
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          emulator-build: 7425822
+#          api-level: ${{ matrix.api-level }}
+#          target: ${{ matrix.target }}
+#          arch: x86_64
+#          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
 
       - name: Run Screenshot Tests
         uses: reactivecircus/android-emulator-runner@v2
