@@ -57,7 +57,7 @@ dependencies {
     api project(':showkase')
     api deps.compose.uiTest
     api project(':showkase-screenshot-testing')
-    api "com.karumi:shot-android:5.13.0"
+    api deps.test.shotAndroid
 
     // Testing
     api deps.test.androidXTestCore

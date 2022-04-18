@@ -22,8 +22,6 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
     }
 
@@ -73,7 +71,6 @@ dependencies {
         kapt project(':showkase-processor')
         kaptAndroidTest project(':showkase-processor')
     }
-    androidTestImplementation project(':showkase-screenshot-testing-shot')
 
     // Support Libraries
     implementation deps.support.appCompat
@@ -99,4 +96,5 @@ dependencies {
     // Testing
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
+    androidTestImplementation project(':showkase-screenshot-testing-shot')
 }
