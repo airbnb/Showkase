@@ -2,24 +2,23 @@
 package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
-import com.airbnb.android.showkase_processor_testing.ParameterProvider
+import com.airbnb.android.showkase_processor_testing.NewParameterProvider
 import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
     showkaseName = "name",
     showkaseGroup = "group",
-    showkaseOrder = 2147483647,
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
-    showkaseElementName = "TestComposable",
+    showkaseElementName = "TestComposableWithDefaultParameters",
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
-    previewParameterClass = [ParameterProvider::class],
-    previewParameterName = "text"
+    previewParameterClass = [NewParameterProvider::class],
+    previewParameterName = "bankHeader"
   )
   public fun group_name(): Unit {
   }

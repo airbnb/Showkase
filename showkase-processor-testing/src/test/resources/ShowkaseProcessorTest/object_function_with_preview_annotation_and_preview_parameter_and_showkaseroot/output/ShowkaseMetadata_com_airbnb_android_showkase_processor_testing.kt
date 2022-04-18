@@ -20,7 +20,8 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
-    previewParameterClass = [ParameterProvider::class]
+    previewParameterClass = [ParameterProvider::class],
+    previewParameterName = "text"
   )
   public fun group_name(): Unit {
   }

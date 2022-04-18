@@ -92,6 +92,9 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 showkaseMetadata.previewParameterProviderType?.let {
                     addMember("previewParameterClass = [%T::class]", it)
                 }
+                showkaseMetadata.previewParameterName?.let {
+                    addMember("previewParameterName = %S", it)
+                }
                 showkaseMetadata.showkaseStyleName?.let {
                     addMember("showkaseStyleName = %S", showkaseMetadata.showkaseStyleName)
                 }
