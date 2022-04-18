@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'shot'
 }
-//apply plugin: "com.vanniktech.maven.publish"
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
     compileSdkVersion 31
