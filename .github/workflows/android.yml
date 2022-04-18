@@ -67,32 +67,33 @@ jobs:
 #          arch: x86_64
 #          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
 
-#      - name: Run Screenshot Tests
-#        uses: reactivecircus/android-emulator-runner@v2
-#        with:
-#          emulator-build: 7425822
-#          api-level: ${{ matrix.api-level }}
-#          target: ${{ matrix.target }}
-#          arch: x86_64
-#          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
-
-      - name: Record screenshots
+      - name: Run Screenshot Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           emulator-build: 7425822
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
-          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -Precord
+          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
+
+#      - name: Record screenshots
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          emulator-build: 7425822
+#          api-level: ${{ matrix.api-level }}
+#          target: ${{ matrix.target }}
+#          arch: x86_64
+#          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -Precord
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
-        with:
-          name: Api${{ matrix.api-level }}
-          path: sample/screenshots/debug/Api${{ matrix.api-level }}
 #        with:
-#          name: reports
-#          path: sample/build/reports/shot/debug/Api${{ matrix.api-level }}/verification/
+#          name: Api${{ matrix.api-level }}
+#          path: sample/screenshots/debug/Api${{ matrix.api-level }}
+        with:
+          name: reports
+          path: sample/build/reports/shot/debug/Api${{ matrix.api-level }}/verification/
+          retention-days: 1
 
 
 
