@@ -181,12 +181,11 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
 
 @Composable
 private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
-    val customConfiguration = Configuration(LocalConfiguration.current).apply {
+    val darkModeConfiguration = Configuration(LocalConfiguration.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
-
     ComponentCardTitle("${metadata.componentName} [Dark Mode]")
-    CompositionLocalProvider(LocalConfiguration provides customConfiguration) {
+    CompositionLocalProvider(LocalConfiguration provides darkModeConfiguration) {
         ComponentCard(metadata)
     }
 }
