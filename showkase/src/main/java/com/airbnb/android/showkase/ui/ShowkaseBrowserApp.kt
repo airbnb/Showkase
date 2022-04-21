@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,12 +18,14 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
@@ -52,26 +55,31 @@ internal fun ShowkaseBrowserApp(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
-    val navController = rememberNavController()
-    Scaffold(
-        drawerContent = null,
-        topBar = {
-            ShowkaseAppBar(navController, showkaseBrowserScreenMetadata)
-        },
-        content = {
-            Column(
-                modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
-            ) {
-                ShowkaseBodyContent(
-                    navController,
-                    groupedComponentMap,
-                    groupedColorsMap,
-                    groupedTypographyMap,
-                    showkaseBrowserScreenMetadata
-                )
+    val lightModeConfiguration = Configuration(LocalConfiguration.current).apply {
+        uiMode = Configuration.UI_MODE_NIGHT_NO
+    }
+    CompositionLocalProvider(LocalConfiguration provides lightModeConfiguration) {
+        val navController = rememberNavController()
+        Scaffold(
+            drawerContent = null,
+            topBar = {
+                ShowkaseAppBar(navController, showkaseBrowserScreenMetadata)
+            },
+            content = {
+                Column(
+                    modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
+                ) {
+                    ShowkaseBodyContent(
+                        navController,
+                        groupedComponentMap,
+                        groupedColorsMap,
+                        groupedTypographyMap,
+                        showkaseBrowserScreenMetadata
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
