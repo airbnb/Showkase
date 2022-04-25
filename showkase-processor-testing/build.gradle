@@ -10,12 +10,6 @@ android {
     packagingOptions {
         exclude 'META-INF/gradle/incremental.annotation.processors'
         exclude("META-INF/*.kotlin_module")
-        // Added to avoid this error -
-        // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
-        // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
-        // > 2 files found with path 'META-INF/AL2.0' from inputs:
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/LGPL2.1'
     }
     defaultConfig {
         minSdkVersion 26
@@ -40,6 +34,15 @@ android {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
         kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+
     configurations {
         all {
             // work around this error:
@@ -50,10 +53,7 @@ android {
 }
 
 dependencies {
-    // Allows this module to access the annotation processor related classes. Otherwise those are
-    // only available in java library modules. Inspiration -
-    // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
-    testImplementation files('libs/rt.jar')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Support Libraries
     implementation deps.support.appCompat

@@ -63,8 +63,6 @@ android {
     }
     configurations {
         all {
-            // work around this error:
-            // Duplicate class org.intellij.lang.annotations.Identifier found in modules annotations-12.0 (com.intellij:annotations:12.0) and annotations-13.0 (org.jetbrains:annotations:13.0)
             exclude group: "com.intellij", module: "annotations"
         }
     }
