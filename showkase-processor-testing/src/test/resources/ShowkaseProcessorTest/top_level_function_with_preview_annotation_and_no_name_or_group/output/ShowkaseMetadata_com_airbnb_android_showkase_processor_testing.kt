@@ -18,6 +18,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun Default_Group_TestComposable(): Unit {
+  public fun DefaultGroupTestComposable(): Unit {
   }
 }

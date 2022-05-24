@@ -19,6 +19,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [ShowkaseObject::class],
     showkaseMetadataType = "COLOR"
   )
-  public fun group_name(): Unit {
+  public fun groupname(): Unit {
   }
 }

@@ -18,7 +18,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun group1_name1(): Unit {
+  public fun group1name1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -34,6 +34,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun group1_name2(): Unit {
+  public fun group1name2(): Unit {
   }
 }

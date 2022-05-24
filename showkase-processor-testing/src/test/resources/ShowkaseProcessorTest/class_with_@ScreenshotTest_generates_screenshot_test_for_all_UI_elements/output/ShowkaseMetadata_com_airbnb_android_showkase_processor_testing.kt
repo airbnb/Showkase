@@ -18,7 +18,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun group1_name1(): Unit {
+  public fun group1name1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -34,7 +34,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false
   )
-  public fun group2_name2(): Unit {
+  public fun group2name2(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -49,7 +49,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseKDoc = "",
     showkaseMetadataType = "COLOR"
   )
-  public fun color_name(): Unit {
+  public fun colorname(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -64,6 +64,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseKDoc = "",
     showkaseMetadataType = "TYPOGRAPHY"
   )
-  public fun typography_name(): Unit {
+  public fun typographyname(): Unit {
   }
 }
