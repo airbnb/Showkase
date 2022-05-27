@@ -22,6 +22,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     previewParameterClass = [ParameterProvider::class],
     previewParameterName = "text"
   )
-  public fun group_name(): Unit {
+  public fun groupname(): Unit {
   }
 }
