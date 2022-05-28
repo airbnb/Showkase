@@ -1,10 +1,11 @@
+rootProject.name = "Showkase"
 include ':showkase'
 include ':showkase-processor'
 include ':showkase-processor-testing'
 include ':showkase-annotation'
 include ':sample'
-rootProject.name = "Showkase"
 include ':sample-submodule'
 include ':showkase-screenshot-testing'
 include ':showkase-browser-testing'
 include ':showkase-browser-testing-submodule'
+include ':showkase-screenshot-testing-shot'
