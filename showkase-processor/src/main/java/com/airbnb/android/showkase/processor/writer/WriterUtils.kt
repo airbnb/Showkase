@@ -32,16 +32,18 @@ internal fun getFileBuilder(
 
 internal fun getPropertyList(className: ClassName, propertyName: String): PropertySpec.Builder {
     val parameterizedList = className.getCodegenMetadataParameterizedList()
-    
+
     return PropertySpec.builder(propertyName, parameterizedList)
 }
 
 internal fun getShowkaseProviderInterfaceFunction(
     methodName: String,
-    returnPropertyName: String
+    returnPropertyName: String,
+    returnType: TypeName,
 ) = FunSpec.builder(methodName)
     .addModifiers(KModifier.OVERRIDE)
     .addStatement("return $returnPropertyName")
+    .returns(returnType)
     .build()
 
 @Suppress("LongParameterList")
