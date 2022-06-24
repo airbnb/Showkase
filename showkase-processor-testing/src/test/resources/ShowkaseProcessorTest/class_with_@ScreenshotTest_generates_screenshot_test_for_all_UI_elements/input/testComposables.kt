@@ -10,20 +10,20 @@ import androidx.compose.ui.text.font.FontFamily
 
 @ShowkaseComposable(name = "name1", group = "group1")
 @Composable
-fun TestComposable1() {
+public fun TestComposable1() {
     
 }
 
 @ShowkaseComposable(name = "name2", group = "group2")
 @Composable
-fun TestComposable2() {
+public fun TestComposable2() {
     
 }
 
 @ShowkaseColor("name", "color")
-val red = Color(0xffff0000)
+public val red: Color = Color(0xffff0000)
 
 @ShowkaseTypography("name", "typography")
-val title = TextStyle(
+public val title: TextStyle = TextStyle(
     fontFamily = FontFamily.Cursive
 )

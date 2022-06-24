@@ -5,6 +5,6 @@ import androidx.compose.ui.text.font.FontFamily
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
 
 @ShowkaseTypography(group = "group")
-val title = TextStyle(
+public val title: TextStyle = TextStyle(
     fontFamily = FontFamily.Cursive
 )

@@ -8,13 +8,13 @@ import com.airbnb.android.showkase.annotation.ShowkaseTypography
 
 @ShowkaseComposable("name", "component")
 @Composable
-fun TestComposable() {
+public fun TestComposable() {
     
 }
 
-class WrapperClass {
+public class WrapperClass {
     @ShowkaseTypography("name", "typography")
-    val title = TextStyle(
+    public val title: TextStyle = TextStyle(
         fontFamily = FontFamily.Cursive
     )
 }

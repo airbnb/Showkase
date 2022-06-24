@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 
 @ShowkaseComposable(group = "group")
 @Composable
-fun testComposable() {
+public fun testComposable() {
     
 }

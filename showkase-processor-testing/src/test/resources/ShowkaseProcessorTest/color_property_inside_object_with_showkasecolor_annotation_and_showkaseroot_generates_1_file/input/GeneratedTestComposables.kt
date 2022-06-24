@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 
-object WrapperClass {
+public object WrapperClass {
     @ShowkaseColor("name", "group")
-    val color = Color(0xffff0000)
+    public val color: Color = Color(0xffff0000)
 }

@@ -6,12 +6,12 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
 @Preview("name1", "group1")
 @Composable
-fun TestComposable1() {
+public fun TestComposable1() {
     
 }
 
 @ShowkaseComposable("name2", "group1")
 @Composable
-fun TestComposable2() {
+public fun TestComposable2() {
     
 }
