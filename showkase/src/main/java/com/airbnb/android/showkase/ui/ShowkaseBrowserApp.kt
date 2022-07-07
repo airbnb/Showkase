@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -91,8 +92,7 @@ internal fun ShowkaseAppBar(
     Row(
         Modifier.fillMaxWidth()
             .graphicsLayer(shadowElevation = 4f)
-            .padding(padding2x)
-            .height(64.dp),
+            .padding(padding2x),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -198,7 +198,9 @@ fun ToolbarTitle(
             fontSize = 20.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
-        )
+        ),
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis
     )
 }
 
