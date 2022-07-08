@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'shot'
 }
 
 if (project.hasProperty('useKsp')) {
@@ -21,8 +22,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
     }
 
     buildTypes {
@@ -56,14 +56,6 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/gradle/incremental.annotation.processors'
     }
-
-//    Seeing two apps being installed simultaneously so commenting this until then
-//    TODO(vinaygaba): Figure out product flavor stuff
-//    flavorDimensions "browser"
-//    productFlavors {
-//        browser {
-//        }
-//    }
 }
 
 dependencies {
@@ -79,7 +71,6 @@ dependencies {
         kapt project(':showkase-processor')
         kaptAndroidTest project(':showkase-processor')
     }
-    androidTestImplementation project(':showkase-screenshot-testing')
 
     // Support Libraries
     implementation deps.support.appCompat
@@ -105,7 +96,5 @@ dependencies {
     // Testing
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
-
-//    TODO(vinaygaba): Figure out product flavor stuff so that showkase can start as a separate app
-//    browserApi(project(':browser'))
+    androidTestImplementation project(':showkase-screenshot-testing-shot')
 }

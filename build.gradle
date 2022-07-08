@@ -32,6 +32,7 @@ buildscript {
             'strikt':'0.33.0',
             'xprocessing':'2.4.2',
             'corektx':'1.7.0',
+            'shot': '5.13.0'
     ]
     ext.deps = [
             'compose': [
@@ -73,6 +74,7 @@ buildscript {
                     'junitImplementation': "androidx.test.ext:junit:${versions.junitImplementation}",
                     'androidxTestRunner': "androidx.test:runner:${versions.testRunner}",
                     'strikt':"io.strikt:strikt-core:${versions.strikt}",
+                    'shotAndroid': "com.karumi:shot-android:${versions.shot}"
             ],
             'material': [
                     'material':"com.google.android.material:material:${versions.material}",
@@ -90,6 +92,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "com.karumi:shot:${versions.shot}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
