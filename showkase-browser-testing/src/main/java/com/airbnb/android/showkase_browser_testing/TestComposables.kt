@@ -34,6 +34,15 @@ fun TestComposable4() {
     BasicText(text = "Test Composable4")
 }
 
+@ShowkaseComposable(
+    "Composable6 Button Component wih a lot of extra stuff like spacing and such",
+    "Group4"
+)
+@Composable
+fun TestComposable6() {
+    BasicText(text = "Test Composable6")
+}
+
 class WrapperComposableClass {
     @ShowkaseComposable("Composable5", "Group3")
     @Composable

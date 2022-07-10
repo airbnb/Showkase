@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -21,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,11 +29,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -186,21 +189,34 @@ private fun ShowkaseAppBarTitle(
     }
 }
 
+val LineCountKey = SemanticsPropertyKey<Int>("lineCount")
+var SemanticsPropertyReceiver.lineCountVal by LineCountKey
+
 @Composable
 fun ToolbarTitle(
     string: String,
     modifier: Modifier
 ) {
+    val lineCount = remember {
+        mutableStateOf(0)
+    }
+
     Text(
         text = string,
-        modifier = modifier,
+        modifier = modifier then Modifier
+            .semantics {
+                lineCountVal = lineCount.value
+            },
         style = TextStyle(
             fontSize = 20.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
         ),
         maxLines = 3,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        onTextLayout = {
+            lineCount.value = it.lineCount
+        }
     )
 }
 
