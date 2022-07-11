@@ -29,8 +29,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.SemanticsPropertyKey
-import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -50,6 +48,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
+import com.airbnb.android.showkase.ui.SemanticsUtils.lineCountVal
 
 @Composable
 internal fun ShowkaseBrowserApp(
@@ -189,8 +188,6 @@ private fun ShowkaseAppBarTitle(
     }
 }
 
-val LineCountKey = SemanticsPropertyKey<Int>("lineCount")
-var SemanticsPropertyReceiver.lineCountVal by LineCountKey
 
 @Composable
 fun ToolbarTitle(
