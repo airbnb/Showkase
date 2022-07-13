@@ -195,7 +195,7 @@ internal fun composePreviewFunctionLambdaCodeBlock(
             } ?: "${composeFunctionName}()"
             CodeBlock.Builder()
                 .add(
-                    "\ncomponent = @%T { %T().${composableFunctionString} }",
+                    "\ncomponent = @%T {\n    %T().${composableFunctionString}\n}",
                     ShowkaseBrowserWriter.COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()
@@ -207,7 +207,7 @@ internal fun composePreviewFunctionLambdaCodeBlock(
             } ?: "${composeFunctionName}()"
             CodeBlock.Builder()
                 .add(
-                    "\ncomponent = @%T { %T.${composableFunctionString} }",
+                    "\ncomponent = @%T {\n    %T.${composableFunctionString}\n}",
                     ShowkaseBrowserWriter.COMPOSE_CLASS_NAME, enclosingClass
                 )
                 .build()

@@ -95,23 +95,9 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 add(".apply {")
                 doubleIndent()
                 showkaseMetadataWithParameterList.forEachIndexed { _, withParameterMetadata ->
-                    addLineBreak()
-                    add(
-                        "%T().values.iterator().asSequence().forEachIndexed { index, previewParam -> ",
-                        withParameterMetadata.previewParameterProviderType
-                    )
-                    doubleIndent()
-                    addLineBreak()
-                    add("add(")
-                    addLineBreak()
-                    doubleIndent()
-                    addShowkaseBrowserComponent(withParameterMetadata, true)
-                    closeRoundBracket()
-                    doubleUnindent()
-                    closeRoundBracket()
-                    doubleUnindent()
-                    closeCurlyBraces()
+                    addProviderComponent(withParameterMetadata)
                 }
+                doubleUnindent()
                 doubleUnindent()
                 closeCurlyBraces()
             }
@@ -119,6 +105,42 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
 
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
         return componentListProperty
+    }
+
+    private fun CodeBlock.Builder.addProviderComponent(withParameterMetadata: ShowkaseMetadata.Component) {
+        addLineBreak()
+        add(
+            "%T()",
+            withParameterMetadata.previewParameterProviderType
+        )
+        doubleIndent()
+        addLineBreak()
+        add(
+            ".values"
+        )
+        addLineBreak()
+        add(
+            ".iterator()"
+        )
+        addLineBreak()
+        add(
+            ".asSequence()"
+        )
+        addLineBreak()
+        add(
+            ".forEachIndexed { index, previewParam ->"
+        )
+        doubleIndent()
+        addLineBreak()
+        add("add(")
+        addLineBreak()
+        doubleIndent()
+        addShowkaseBrowserComponent(withParameterMetadata, true)
+        closeRoundBracket()
+        doubleUnindent()
+        closeRoundBracket()
+        doubleUnindent()
+        closeCurlyBraces()
     }
 
     private fun initializeColorProperty(
