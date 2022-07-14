@@ -5,6 +5,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onChildren
@@ -106,5 +107,14 @@ internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity
     value: Int
 ) {
     onNode(SemanticsMatcher.expectValue(LineCountKey, value)).assertExists()
+}
+
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyButtonWithTagIsDisplayedAndEnabled(
+    tag: String
+) {
+    onNodeWithTag(tag)
+        .assertExists("Node with tag: $tag does not exist")
+        .assertIsDisplayed()
+        .assertIsEnabled()
 }
 

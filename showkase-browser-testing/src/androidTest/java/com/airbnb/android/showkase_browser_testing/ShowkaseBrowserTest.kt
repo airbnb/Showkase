@@ -476,4 +476,72 @@ class ShowcaseBrowserTest {
             verifyLineCountIsValue(3)
         }
     }
+
+    @Test
+    fun search_field_has_enabled_close_button() {
+        composeTestRule.apply {
+            // Assert that all the categories are displayed on the screen and that they are clickable.
+            verifyLandingScreen()
+
+            // Tap on the "Components" row
+            clickRowWithText("Components (7)")
+
+            // Tap on the search icon
+            clickRowWithTag("SearchIcon")
+
+            waitForIdle()
+
+            // Check that the search close button is displayed and clickable
+            verifyButtonWithTagIsDisplayedAndEnabled("close_search_bar_tag")
+
+            // Click the close button
+            clickRowWithTag("close_search_bar_tag")
+
+            waitForIdle()
+
+            // Check that the search icon is displayed again
+            verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
+        }
+    }
+
+    @Test
+    fun clear_search_field_clears_the_field() {
+        composeTestRule.apply {
+            // Assert that all the categories are displayed on the screen and that they are clickable.
+            verifyLandingScreen()
+
+            // Tap on the "Components" row
+            clickRowWithText("Components (7)")
+
+            waitForIdle()
+
+            // Tap on the search icon
+            clickRowWithTag("SearchIcon")
+
+            waitForIdle()
+
+            // Check that the search close button is displayed and clickable
+            verifyButtonWithTagIsDisplayedAndEnabled("close_search_bar_tag")
+
+            // Enter "Bod" in the search field
+            inputTextWithTag("SearchTextField", "Bod")
+
+            // Check that the clear search field button is enabled when there is input text
+            verifyButtonWithTagIsDisplayedAndEnabled("clear_search_field")
+
+            // Click to clear the text
+            clickRowWithTag("clear_search_field")
+
+            // Check that only the label is displayed
+            verifyRowsWithTextAreDisplayed("Search")
+
+            waitForIdle()
+
+            // Click the close button
+            clickRowWithTag("close_search_bar_tag")
+
+            // Check that the search icon is displayed again
+            verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
+        }
+    }
 }
