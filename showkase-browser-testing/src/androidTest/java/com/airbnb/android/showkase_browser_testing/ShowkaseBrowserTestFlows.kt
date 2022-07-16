@@ -1,6 +1,7 @@
 package com.airbnb.android.showkase_browser_testing
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
@@ -14,6 +15,7 @@ import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.airbnb.android.showkase.ui.SemanticsUtils.LineCountKey
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.clickRowWithText(
@@ -77,7 +79,7 @@ internal fun <T : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule
     }
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyLandingScreen() {
-    verifyRowsWithTextAreDisplayed("Components (6)", "Typography (13)", "Colors (4)")
+    verifyRowsWithTextAreDisplayed("Components (7)", "Typography (13)", "Colors (4)")
 }
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyTypographyDetailScreen() {
@@ -99,3 +101,10 @@ internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity
         "Primary", "Primary Variant", "Secondary", "Secondary Variant"
     )
 }
+
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyLineCountIsValue(
+    value: Int
+) {
+    onNode(SemanticsMatcher.expectValue(LineCountKey, value)).assertExists()
+}
+
