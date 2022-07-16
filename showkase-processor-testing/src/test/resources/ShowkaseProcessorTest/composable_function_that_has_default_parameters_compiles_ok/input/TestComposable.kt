@@ -7,14 +7,14 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
 @ShowkaseComposable(name = "name", group = "group")
 @Composable
-fun TestComposableWithDefaultParameters(
+public fun TestComposableWithDefaultParameters(
     age: Int = 5,
     @PreviewParameter(provider = NewParameterProvider::class) bankHeader: BankHeader
 ) {
 
 }
 
-class NewParameterProvider : PreviewParameterProvider<BankHeader> {
+public class NewParameterProvider : PreviewParameterProvider<BankHeader> {
     override val values: Sequence<BankHeader>
         get() = sequenceOf(
             BankHeader("Citi", 12),
@@ -26,7 +26,7 @@ class NewParameterProvider : PreviewParameterProvider<BankHeader> {
 
 }
 
-data class BankHeader(
-    val name: String,
-    val age: Int,
+public data class BankHeader(
+    public val name: String,
+    public val age: Int,
 )

@@ -6,7 +6,7 @@ import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
 
 @ShowkaseScreenshot(rootShowkaseClass = TestShowkaseRoot::class)
-abstract class MyScreenshotTest: ShowkaseScreenshotTest {
+public abstract class MyScreenshotTest: ShowkaseScreenshotTest {
     override fun onScreenshot(
         id: String,
         name: String,

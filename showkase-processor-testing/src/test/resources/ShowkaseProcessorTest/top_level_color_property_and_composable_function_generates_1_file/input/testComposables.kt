@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 
 @ShowkaseComposable("name", "component")
 @Composable
-fun TestComposable() {
+public fun TestComposable() {
     
 }
 
 @ShowkaseColor("name", "color")
-val red = Color(0xffff0000)
+public val red: Color = Color(0xffff0000)

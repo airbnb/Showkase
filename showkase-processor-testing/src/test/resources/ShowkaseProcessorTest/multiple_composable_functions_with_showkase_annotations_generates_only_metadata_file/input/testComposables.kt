@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 
 @ShowkaseComposable("name1", "group1")
 @Composable
-fun TestComposable1() {
+public fun TestComposable1() {
     
 }
 
 @ShowkaseComposable("name2", "group1")
 @Composable
-fun TestComposable2() {
+public fun TestComposable2() {
     
 }

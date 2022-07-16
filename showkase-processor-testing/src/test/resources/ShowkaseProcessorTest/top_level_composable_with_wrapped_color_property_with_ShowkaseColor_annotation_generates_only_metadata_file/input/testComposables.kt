@@ -7,11 +7,11 @@ import com.airbnb.android.showkase.annotation.ShowkaseColor
 
 @ShowkaseComposable("name", "component")
 @Composable
-fun TestComposable() {
+public fun TestComposable() {
     
 }
 
-class WrapperClass {
+public class WrapperClass {
     @ShowkaseColor("name", "color")
-    val red = Color(0xffff0000)
+    public val red: Color = Color(0xffff0000)
 }

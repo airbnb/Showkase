@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 
 @Preview("name1", "group1")
 @Composable
-fun TestComposable1() {
+public fun TestComposable1() {
     
 }
 
 @Preview("name2", "group1")
 @Composable
-fun TestComposable2() {
+public fun TestComposable2() {
     
 }

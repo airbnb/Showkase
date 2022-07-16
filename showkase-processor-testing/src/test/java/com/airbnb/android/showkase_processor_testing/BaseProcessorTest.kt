@@ -41,6 +41,7 @@ abstract class BaseProcessorTest {
 
         modes.forEach { mode ->
             val compilation = KotlinCompilation().apply {
+                kotlincArguments = kotlincArguments + "-Xexplicit-api=strict"
                 sources = inputDir.listFiles()?.toList().orEmpty().map { SourceFile.fromPath(it) }
                 when (mode) {
                     Mode.KSP -> {
@@ -91,7 +92,7 @@ abstract class BaseProcessorTest {
         }
         outputDir.mkdirs()
 
-        val generatedSources = when (mode){
+        val generatedSources = when (mode) {
             Mode.KSP -> compilation.kspSourcesDir.walk().filter { it.isFile }.toList()
             Mode.KAPT -> sourcesGeneratedByAnnotationProcessor
         }
