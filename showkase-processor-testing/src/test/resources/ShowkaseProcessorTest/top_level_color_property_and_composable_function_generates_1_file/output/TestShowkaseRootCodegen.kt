@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.`annotation`.ShowkaseRootCodegen
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserIcon
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseProvider
 import kotlin.collections.List
@@ -14,6 +15,7 @@ import kotlin.collections.List
   numComposablesWithPreviewParameter = 0,
   numColors = 1,
   numTypography = 0,
+  numIcons = 0,
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
   public val componentList: List<ShowkaseBrowserComponent> =
@@ -33,14 +35,18 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             colorGroup = "color",
             colorName = "name",
             colorKDoc = "",
-            color = red)
+            color = red,)
       )
 
   public val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
 
+  public val iconList: List<ShowkaseBrowserIcon> = listOf<ShowkaseBrowserIcon>()
+
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> = componentList
 
   public override fun getShowkaseColors(): List<ShowkaseBrowserColor> = colorList
+
+  public override fun getShowkaseIcons(): List<ShowkaseBrowserIcon> = iconList
 
   public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> = typographyList
 }
