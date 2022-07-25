@@ -6,6 +6,7 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.annotation.ShowkaseIcon
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
@@ -15,6 +16,7 @@ import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
+import com.airbnb.android.showkase.processor.models.getShowkaseIconMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
@@ -51,18 +53,21 @@ class ShowkaseProcessor @JvmOverloads constructor(
         ShowkaseTypography::class.java.name,
         ShowkaseRoot::class.java.name,
         ShowkaseScreenshot::class.java.name,
+        ShowkaseIcon::class.java.name,
     )
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
         val colorMetadata = processColorAnnotation(round)
         val typographyMetadata = processTypographyAnnotation(round, environment)
+        val iconMetadata = processIconAnnotation(round, environment)
 
         processShowkaseMetadata(
             roundEnvironment = round,
             componentMetadata = componentMetadata,
             colorMetadata = colorMetadata,
-            typographyMetadata = typographyMetadata
+            typographyMetadata = typographyMetadata,
+            iconMetadata = iconMetadata
         )
     }
 
@@ -162,11 +167,35 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }.toSet()
     }
 
+    private fun processIconAnnotation(
+        roundEnvironment: XRoundEnv,
+        environment: XProcessingEnv
+    ): Set<ShowkaseMetadata> {
+        val imageVectorType by lazy {
+            environment.requireType(TYPE_IMAGE_VECTOR_NAME)
+        }
+
+        val drawableResource by lazy {
+            environment.requireType(Int::class)
+        }
+
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseIcon::class).map { element ->
+            showkaseValidator.validateIconElement(
+                element,
+                ShowkaseIcon::class.java.simpleName,
+                imageVectorType,
+                drawableResource,
+            )
+            element.getShowkaseIconMetadata(element, showkaseValidator)
+        }.toSet()
+    }
+
     private fun processShowkaseMetadata(
         roundEnvironment: XRoundEnv,
         componentMetadata: Set<ShowkaseMetadata.Component>,
         colorMetadata: Set<ShowkaseMetadata>,
-        typographyMetadata: Set<ShowkaseMetadata>
+        typographyMetadata: Set<ShowkaseMetadata>,
+        iconMetadata: Set<ShowkaseMetadata>,
     ) {
         // Showkase root annotation
         val rootElement = getShowkaseRootElement(roundEnvironment, environment)
@@ -179,7 +208,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // If root element is not present in this module, it means that we only need to write
         // the metadata file for this module so that the root module can use this info to
         // include the composables from this module into the final codegen file.
-        writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
+        writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata + iconMetadata)
 
         if (rootElement != null) {
             // This is the module that should aggregate all the other metadata files and
@@ -189,7 +218,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     rootElement,
                     componentMetadata,
                     colorMetadata,
-                    typographyMetadata
+                    typographyMetadata,
+                    iconMetadata
                 )
         }
 
@@ -220,6 +250,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         componentMetadata: Set<ShowkaseMetadata.Component>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>,
+        iconMetadata: Set<ShowkaseMetadata>,
     ): ShowkaseProcessorMetadata {
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(environment)
@@ -229,22 +260,27 @@ class ShowkaseProcessor @JvmOverloads constructor(
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Color>()
         val classpathTypographyMetadata =
             generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
+        val classpathIconMetadata =
+            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Icon>()
 
         val allComponents = componentMetadata + classpathComponentMetadata
         val allColors = colorMetadata + classpathColorMetadata
         val allTypography = typographyMetadata + classpathTypographyMetadata
+        val allIcons = iconMetadata + classpathIconMetadata
 
         writeShowkaseBrowserFiles(
             rootElement,
             allComponents,
             allColors,
             allTypography,
+            allIcons
         )
 
         return ShowkaseProcessorMetadata(
             components = allComponents,
             colors = allColors,
-            typography = allTypography
+            typography = allTypography,
+            icons = allIcons
         )
     }
 
@@ -278,6 +314,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 componentsSize = showkaseMetadataWithoutParameterList.size,
                 showkaseProcessorMetadata.colors.size,
                 showkaseProcessorMetadata.typography.size,
+                showkaseProcessorMetadata.icons.size,
             )
         } else {
             getShowkaseRootCodegenOnClassPath(specifiedRootClassTypeElement)?.let { showkaseRootCodegenAnnotation ->
@@ -286,7 +323,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 ShowkaseTestMetadata(
                     componentsSize = showkaseRootCodegenAnnotation.numComposablesWithoutPreviewParameter,
                     colorsSize = showkaseRootCodegenAnnotation.numColors,
-                    typographySize = showkaseRootCodegenAnnotation.numTypography
+                    typographySize = showkaseRootCodegenAnnotation.numTypography,
+                    iconsSize = showkaseRootCodegenAnnotation.numIcons,
                 )
             } ?: throw ShowkaseProcessorException(
                 "Showkase was not able to find the root class that you" +
@@ -304,6 +342,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             showkaseTestMetadata.componentsSize,
             showkaseTestMetadata.colorsSize,
             showkaseTestMetadata.typographySize,
+            showkaseTestMetadata.iconsSize,
             screenshotTestPackageName,
             rootModulePackageName,
             testClassName,
@@ -348,8 +387,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
         componentsMetadata: Set<ShowkaseMetadata.Component>,
         colorsMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>,
+        iconMetadata: Set<ShowkaseMetadata>,
     ) {
-        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
+        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty() && iconMetadata.isEmpty()) return
         val rootModuleClassName = rootElement.name
         val rootModulePackageName = rootElement.packageName
         showkaseValidator.validateShowkaseComponents(componentsMetadata)
@@ -359,6 +399,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 componentsMetadata,
                 colorsMetadata,
                 typographyMetadata,
+                iconMetadata,
                 rootModulePackageName,
                 rootModuleClassName
             )
@@ -378,6 +419,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
+        iconSize: Int,
         screenshotTestPackageName: String,
         rootModulePackageName: String,
         testClassName: String,
@@ -387,6 +429,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 componentsSize,
                 colorsSize,
                 typographySize,
+                iconSize,
                 screenshotTestPackageName,
                 rootModulePackageName,
                 testClassName
@@ -398,12 +441,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val components: Set<ShowkaseMetadata> = setOf(),
         val colors: Set<ShowkaseMetadata> = setOf(),
         val typography: Set<ShowkaseMetadata> = setOf(),
+        val icons: Set<ShowkaseMetadata> = setOf(),
     )
 
     private data class ShowkaseTestMetadata(
         val componentsSize: Int,
         val colorsSize: Int,
         val typographySize: Int,
+        val iconsSize: Int,
     )
 
     companion object {
@@ -416,6 +461,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         const val PREVIEW_PARAMETER_SIMPLE_NAME = "PreviewParameter"
         const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
         const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
+        const val TYPE_IMAGE_VECTOR_NAME = "androidx.compose.ui.graphics.vector.ImageVector"
     }
 }
 

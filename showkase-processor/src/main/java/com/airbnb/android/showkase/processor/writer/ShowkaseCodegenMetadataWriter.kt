@@ -105,5 +105,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         is ShowkaseMetadata.Typography -> {
             annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.TYPOGRAPHY.name)
         }
+        is ShowkaseMetadata.Icon -> {
+            annotation.addMember("showkaseMetadataType =  %S", ShowkaseMetadataType.ICON.name)
+        }
     }
 }

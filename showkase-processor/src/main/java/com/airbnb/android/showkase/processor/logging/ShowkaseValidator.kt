@@ -216,6 +216,33 @@ internal class ShowkaseValidator {
         }
     }
 
+    internal fun validateIconElement(
+        element: XElement,
+        annotationName: String,
+        iconType: XType,
+        drawResourceType: XType
+    ) {
+        contract {
+            returns() implies (element is XFieldElement)
+        }
+        when {
+            !element.isField() -> {
+                throw ShowkaseProcessorException(
+                    "Only \"ImageVector\" fields can be annotated with $annotationName",
+                    element
+                )
+            }
+            !element.type.isSameType(iconType) && !element.type.isSameType(drawResourceType) -> {
+                throw ShowkaseProcessorException(
+                    "Only \"ImageVector or Drawable Res Integers\" fields can be annotated with $annotationName",
+                    element
+                )
+            }
+            else -> {
+            }
+        }
+    }
+
     internal fun validateShowkaseRootElement(
         elementSet: Set<XElement>,
         environment: XProcessingEnv

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserIcon
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clearActiveSearch

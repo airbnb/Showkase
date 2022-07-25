@@ -7,5 +7,6 @@ annotation class ShowkaseRootCodegen(
     val numComposablesWithoutPreviewParameter: Int,
     val numComposablesWithPreviewParameter: Int,
     val numColors: Int,
-    val numTypography: Int
+    val numTypography: Int,
+    val numIcons: Int,
 )

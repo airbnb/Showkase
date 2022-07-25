@@ -9,9 +9,11 @@ import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
+import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.annotation.ShowkaseIcon
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
@@ -85,6 +87,19 @@ internal sealed class ShowkaseMetadata {
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
     ) : ShowkaseMetadata()
+
+    data class Icon(
+        override val element: XElement,
+        override val packageSimpleName: String,
+        override val packageName: String,
+        override val elementName: String,
+        override val showkaseName: String,
+        override val showkaseGroup: String,
+        override val showkaseKDoc: String,
+        override val enclosingClassName: ClassName? = null,
+        override val insideWrapperClass: Boolean = false,
+        override val insideObject: Boolean = false,
+    ): ShowkaseMetadata()
 }
 
 internal enum class ShowkaseFunctionType {
@@ -100,7 +115,8 @@ internal fun ShowkaseFunctionType.insideObject() = this == ShowkaseFunctionType.
 internal enum class ShowkaseMetadataType {
     COMPONENT,
     COLOR,
-    TYPOGRAPHY
+    TYPOGRAPHY,
+    ICON,
 }
 
 internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement): ShowkaseMetadata {
@@ -156,6 +172,20 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 insideObject = props.insideObject,
                 showkaseKDoc = props.showkaseKDoc,
                 element = element
+            )
+        }
+        ShowkaseMetadataType.ICON -> {
+            ShowkaseMetadata.Icon(
+                packageSimpleName = props.packageSimpleName,
+                packageName = props.packageName,
+                enclosingClassName = enclosingClassType?.typeElement?.className?.toKClassName(),
+                elementName = props.showkaseElementName,
+                showkaseName = props.showkaseName,
+                showkaseGroup = props.showkaseGroup,
+                insideWrapperClass = props.insideWrapperClass,
+                insideObject = props.insideObject,
+                showkaseKDoc = props.showkaseKDoc,
+                element = element,
             )
         }
     }
@@ -364,6 +394,33 @@ internal fun getShowkaseTypographyMetadata(
         enclosingClassName = commonMetadata.enclosingClassName,
         insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
         insideObject = commonMetadata.showkaseFunctionType.insideObject()
+    )
+}
+
+internal fun XElement.getShowkaseIconMetadata(
+    element:XFieldElement,
+    showkaseValidator: ShowkaseValidator
+): ShowkaseMetadata {
+    val showkaseIconAnnotation = element.requireAnnotation(ShowkaseIcon::class).value
+
+    val commonMetadata = element.extractCommonMetadata(showkaseValidator)
+    val showkaseName = getShowkaseName(showkaseIconAnnotation.name, element.name)
+    val showkaseGroup = getShowkaseGroup(
+        showkaseIconAnnotation.group,
+        commonMetadata.enclosingClass
+    )
+
+    return ShowkaseMetadata.Icon(
+        element = element,
+                packageSimpleName = commonMetadata.moduleName,
+                packageName = commonMetadata.packageName,
+                elementName = element.name,
+                showkaseName = showkaseName,
+                showkaseGroup = showkaseGroup,
+                showkaseKDoc = commonMetadata.kDoc,
+                enclosingClassName = commonMetadata.enclosingClassName,
+                insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+                insideObject = commonMetadata.showkaseFunctionType.insideObject(),
     )
 }
 

@@ -27,7 +27,8 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
             val (
                 groupedComponentsList,
                 groupedColorsList,
-                groupedTypographyList
+                groupedTypographyList,
+                groupedIconsList,
             ) = getShowkaseProviderElements(classKey)
             
             val showkaseBrowserScreenMetadata = 
@@ -39,6 +40,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                         groupedComponentsList.groupBy { it.group }, 
                         groupedColorsList.groupBy { it.colorGroup }, 
                         groupedTypographyList.groupBy { it.typographyGroup },
+                        groupedIconsList.groupBy { it.name },
                         showkaseBrowserScreenMetadata)
                 }
                 else -> {
@@ -65,7 +67,8 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
             ShowkaseElementsMetadata(
                 componentList = showkaseMetadata.componentList,
                 colorList = showkaseMetadata.colorList,
-                typographyList = showkaseMetadata.typographyList
+                typographyList = showkaseMetadata.typographyList,
+                iconList = showkaseMetadata.iconList,
             )
         } catch (exception: ClassNotFoundException) {
             ShowkaseElementsMetadata()

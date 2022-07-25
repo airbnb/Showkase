@@ -4,4 +4,5 @@ data class ShowkaseElementsMetadata(
     val componentList: List<ShowkaseBrowserComponent> = listOf(),
     val colorList: List<ShowkaseBrowserColor> = listOf(),
     val typographyList: List<ShowkaseBrowserTypography> = listOf(),
+    val iconList: List<ShowkaseBrowserIcon> = listOf(),
 )

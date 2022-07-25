@@ -1,7 +1,9 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XProcessingEnv
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
+import com.airbnb.android.showkase.processor.ShowkaseProcessor
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -19,6 +21,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
         showkaseColorMetadata: Set<ShowkaseMetadata>,
         showkaseTypographyMetadata: Set<ShowkaseMetadata>,
+        showkaseIconMetadata: Set<ShowkaseMetadata>,
         rootModulePackageName: String,
         rootModuleClassName: String
     ) {
@@ -36,12 +39,15 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         )
         val colorListProperty = initializeColorProperty(showkaseColorMetadata)
         val typographyProperty = initializeTypographyProperty(showkaseTypographyMetadata)
+        val iconProperty =
+            initializeIconProperty(showkaseIconMetadata, SHOWKASE_BROWSER_ICONS_CLASS_NAME)
 
         val showkaseRootCodegenAnnotation = initializeShowkaseRootCodegenAnnotation(
             showkaseMetadataWithoutParameterList.size,
             showkaseMetadataWithParameterList.size,
             showkaseColorMetadata.size,
-            showkaseTypographyMetadata.size
+            showkaseTypographyMetadata.size,
+            showkaseIconMetadata.size
         )
 
         writeFile(
@@ -52,6 +58,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             componentListProperty.build(),
             colorListProperty.build(),
             typographyProperty.build(),
+            iconProperty.build(),
             showkaseComponentMetadata + showkaseColorMetadata + showkaseTypographyMetadata,
             getShowkaseProviderInterfaceFunction(
                 methodName = COMPONENT_INTERFACE_METHOD_NAME,
@@ -67,6 +74,11 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 methodName = TYPOGRAPHY_INTERFACE_METHOD_NAME,
                 returnPropertyName = TYPOGRAPHY_PROPERTY_NAME,
                 returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME)
+            ),
+            getShowkaseProviderInterfaceFunction(
+                methodName = ICON_INTERFACE_METHOD_NAME,
+                returnPropertyName = ICON_PROPERTY_NAME,
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_ICONS_CLASS_NAME)
             ),
             showkaseRootCodegenAnnotation
         )
@@ -238,16 +250,91 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         return typographyListProperty.initializer(typographyListInitializerCodeBlock.build())
     }
 
+    private fun initializeIconProperty(
+        showkaseIconMetadata: Set<ShowkaseMetadata>,
+        returnType: TypeName,
+    ): PropertySpec.Builder {
+        val iconsListProperty = getPropertyList(
+            SHOWKASE_BROWSER_ICONS_CLASS_NAME,
+            ICON_PROPERTY_NAME
+        )
+        val imageVectorType by lazy {
+            environment.requireType(ShowkaseProcessor.TYPE_IMAGE_VECTOR_NAME)
+        }
+
+        val drawableResourceType by lazy {
+            environment.requireType(Int::class)
+        }
+
+        val iconListInitializerCodeBlock =
+            SHOWKASE_BROWSER_ICONS_CLASS_NAME.listInitializerCodeBlock()
+        showkaseIconMetadata.forEachIndexed { index, showkaseMetadata ->
+            val element = showkaseMetadata.element
+            iconListInitializerCodeBlock.apply {
+                addLineBreak()
+                add(
+                    "%T(\n",
+                    SHOWKASE_BROWSER_ICONS_CLASS_NAME
+                )
+                doubleIndent()
+                add(
+                    "group = %S,\nname = %S,\nkDoc = %S,",
+                    showkaseMetadata.showkaseGroup,
+                    showkaseMetadata.showkaseName,
+                    showkaseMetadata.showkaseKDoc
+                )
+
+                if (element is XFieldElement && element.type.isSameType(imageVectorType)) {
+                    add(
+                        showkaseBrowserPropertyValue(
+                            functionPackageName = showkaseMetadata.packageName,
+                            enclosingClass = showkaseMetadata.enclosingClassName,
+                            fieldPropertyName = "imageVector",
+                            fieldName = showkaseMetadata.elementName,
+                            insideWrapperClass = showkaseMetadata.insideWrapperClass,
+                            insideObject = showkaseMetadata.insideObject
+                        )
+                    )
+                }
+
+                if (element is XFieldElement && element.type.isSameType(drawableResourceType)) {
+                    add(
+                        showkaseBrowserPropertyValue(
+                            functionPackageName = showkaseMetadata.packageName,
+                            enclosingClass = showkaseMetadata.enclosingClassName,
+                            fieldPropertyName = "drawableRes",
+                            fieldName = showkaseMetadata.elementName,
+                            insideWrapperClass = showkaseMetadata.insideWrapperClass,
+                            insideObject = showkaseMetadata.insideObject
+                        )
+                    )
+                }
+                doubleUnindent()
+                closeOrContinueListCodeBlock(index, showkaseIconMetadata.size - 1)
+            }
+        }
+        iconListInitializerCodeBlock.apply {
+            unindent()
+            add(")")
+        }
+        return iconsListProperty.initializer(iconListInitializerCodeBlock.build())
+    }
+
     private fun initializeShowkaseRootCodegenAnnotation(
         numComponentsWithoutPreviewParameter: Int,
         numComponentsWithPreviewParameter: Int,
         colorsSize: Int,
         typographySize: Int,
+        iconSize: Int,
     ) = AnnotationSpec.builder(ShowkaseRootCodegen::class)
-        .addMember("numComposablesWithoutPreviewParameter = %L", numComponentsWithoutPreviewParameter)
+        .addMember(
+            "numComposablesWithoutPreviewParameter = %L",
+            numComponentsWithoutPreviewParameter
+        )
         .addMember("numComposablesWithPreviewParameter = %L", numComponentsWithPreviewParameter)
         .addMember("numColors = %L", colorsSize)
         .addMember("numTypography = %L", typographySize)
+        .addMember("numIcons = %L", iconSize)
         .build()
 
     @Suppress("LongParameterList")
@@ -264,19 +351,19 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         enclosingClass == null -> {
             val composeMember = MemberName(functionPackageName, fieldName)
             CodeBlock.Builder()
-                .add("\n$fieldPropertyName = %M", composeMember)
+                .add("\n$fieldPropertyName = %M,", composeMember)
                 .build()
         }
         // It was declared inside a class.
         insideWrapperClass -> {
             CodeBlock.Builder()
-                .add("\n$fieldPropertyName = %T().${fieldName}", enclosingClass)
+                .add("\n$fieldPropertyName = %T().${fieldName},", enclosingClass)
                 .build()
         }
         // It was declared inside an object or a companion object.
         insideObject -> {
             CodeBlock.Builder()
-                .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
+                .add("\n$fieldPropertyName = %T.${fieldName},", enclosingClass)
                 .build()
         }
         else -> throw ShowkaseProcessorException(
@@ -290,10 +377,12 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         private const val COMPONENT_INTERFACE_METHOD_NAME = "getShowkaseComponents"
         private const val COLOR_INTERFACE_METHOD_NAME = "getShowkaseColors"
         private const val TYPOGRAPHY_INTERFACE_METHOD_NAME = "getShowkaseTypography"
+        private const val ICON_INTERFACE_METHOD_NAME = "getShowkaseIcons"
         internal const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.android.showkase.models"
         internal const val COMPONENT_PROPERTY_NAME = "componentList"
         internal const val COLOR_PROPERTY_NAME = "colorList"
         internal const val TYPOGRAPHY_PROPERTY_NAME = "typographyList"
+        internal const val ICON_PROPERTY_NAME = "iconList"
 
         internal val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
         internal val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
@@ -302,6 +391,8 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserColor")
         internal val SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserTypography")
+        internal val SHOWKASE_BROWSER_ICONS_CLASS_NAME =
+            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserIcon")
         internal val SHOWKASE_PROVIDER_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseProvider")
     }

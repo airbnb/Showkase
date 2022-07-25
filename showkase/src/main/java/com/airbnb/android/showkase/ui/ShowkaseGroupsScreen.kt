@@ -7,6 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserIcon
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -131,5 +132,20 @@ internal fun ShowkaseTypographyGroupsScreen(
         ) {
             navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
         }
+    }
+}
+
+@Composable
+internal fun ShowkaseIconGroupScreen(
+    groupedIconsMap: Map<String, List<ShowkaseBrowserIcon>>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    navController: NavHostController,
+) {
+    ShowkaseGroupsScreen(
+        groupedIconsMap,
+        showkaseBrowserScreenMetadata,
+        navController,
+    ) {
+        navController.navigate(ShowkaseCurrentScreen.ICON_IN_A_GROUP)
     }
 }

@@ -12,12 +12,15 @@ internal enum class ShowkaseCurrentScreen {
     COLORS_IN_A_GROUP,
     TYPOGRAPHY_GROUPS,
     TYPOGRAPHY_IN_A_GROUP,
+    ICON_GROUPS,
+    ICON_IN_A_GROUP
 }
 
 internal fun String?.insideGroup() =
     this == ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name ||
             this == ShowkaseCurrentScreen.COLORS_IN_A_GROUP.name ||
-            this == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name
+            this == ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name ||
+            this == ShowkaseCurrentScreen.ICON_IN_A_GROUP.name
 
 internal data class ShowkaseBrowserScreenMetadata(
     val currentGroup: String? = null,

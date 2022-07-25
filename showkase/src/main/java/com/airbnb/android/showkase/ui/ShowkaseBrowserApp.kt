@@ -51,6 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserIcon
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCategory
@@ -64,6 +65,7 @@ internal fun ShowkaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    groupedIconMap: Map<String, List<ShowkaseBrowserIcon>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     val lightModeConfiguration = Configuration(LocalConfiguration.current).apply {
@@ -87,6 +89,7 @@ internal fun ShowkaseBrowserApp(
                         groupedComponentMap,
                         groupedColorsMap,
                         groupedTypographyMap,
+                        groupedIconMap,
                         showkaseBrowserScreenMetadata
                     )
                 }
@@ -227,6 +230,9 @@ private fun AppBarTitle(
         currentRoute == ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name -> {
             ToolbarTitle(context.getString(R.string.typography_category), modifier)
         }
+        currentRoute == ShowkaseCurrentScreen.ICON_GROUPS.name -> {
+            ToolbarTitle(string = context.getString(R.string.icons_category), modifier = modifier)
+        }
         currentRoute.insideGroup() -> {
             ToolbarTitle(currentGroup ?: "currentGroup", modifier)
         }
@@ -349,6 +355,7 @@ internal fun ShowkaseBodyContent(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    groupedIconMap: Map<String, List<ShowkaseBrowserIcon>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     NavHost(
@@ -362,7 +369,8 @@ internal fun ShowkaseBodyContent(
                 getCategoryMetadataMap(
                     groupedComponentMap,
                     groupedColorsMap,
-                    groupedTypographyMap
+                    groupedTypographyMap,
+                    groupedIconMap,
                 )
             )
         }
@@ -415,6 +423,20 @@ internal fun ShowkaseBodyContent(
                 navController
             )
         }
+        composable(ShowkaseCurrentScreen.ICON_GROUPS.name) {
+            ShowkaseIconGroupScreen(
+                groupedIconsMap = groupedIconMap,
+                showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+                navController = navController,
+            )
+        }
+        composable(ShowkaseCurrentScreen.ICON_IN_A_GROUP.name) {
+            ShowkaseIconsInAGroupScreen(
+                groupedIconsMap = groupedIconMap,
+                showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+                navController = navController
+            )
+        }
         composable(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name) {
             ShowkaseTypographyInAGroupScreen(
                 groupedTypographyMap,
@@ -429,10 +451,12 @@ private fun getCategoryMetadataMap(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    groupedIconMap: Map<String, List<ShowkaseBrowserIcon>>
 ) = mapOf(
     ShowkaseCategory.COMPONENTS to groupedComponentMap.flatComponentCount(),
     ShowkaseCategory.COLORS to groupedColorsMap.flatCount(),
-    ShowkaseCategory.TYPOGRAPHY to groupedTypographyMap.flatCount()
+    ShowkaseCategory.TYPOGRAPHY to groupedTypographyMap.flatCount(),
+    ShowkaseCategory.ICONS to groupedIconMap.flatCount(),
 )
 
 private fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()

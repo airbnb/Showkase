@@ -5,6 +5,7 @@ import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.COLOR_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.COMPONENT_PROPERTY_NAME
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.ICON_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.TYPOGRAPHY_PROPERTY_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter.Companion.SHOWKASE_OBJECT_CLASS_NAME
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -20,6 +21,7 @@ internal class ShowkaseScreenshotTestWriter(private val environment: XProcessing
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
+        iconSize: Int,
         screenshotTestPackageName: String,
         rootModulePackageName: String,
         testClassName: String
@@ -40,6 +42,7 @@ internal class ShowkaseScreenshotTestWriter(private val environment: XProcessing
                     addProperty(addStorageRuntimePermissionProperty())
                     addTest(componentsSize, "composable", COMPONENT_PROPERTY_NAME)
                     addTest(typographySize, "typography", TYPOGRAPHY_PROPERTY_NAME)
+                    addTest(iconSize, "icon", ICON_PROPERTY_NAME)
                     addTest(colorsSize, "color", COLOR_PROPERTY_NAME)
                     build()
                 }

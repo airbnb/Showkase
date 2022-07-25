@@ -51,6 +51,9 @@ internal fun ShowkaseCategoriesScreen(
                             ShowkaseCategory.TYPOGRAPHY -> navController.navigate(
                                 ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS
                             )
+                            ShowkaseCategory.ICONS -> navController.navigate(
+                                ShowkaseCurrentScreen.ICON_GROUPS
+                            )
                         }
                     }
                 )
