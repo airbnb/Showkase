@@ -40,7 +40,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                         groupedComponentsList.groupBy { it.group }, 
                         groupedColorsList.groupBy { it.colorGroup }, 
                         groupedTypographyList.groupBy { it.typographyGroup },
-                        groupedIconsList.groupBy { it.name },
+                        groupedIconsList.groupBy { it.group },
                         showkaseBrowserScreenMetadata)
                 }
                 else -> {

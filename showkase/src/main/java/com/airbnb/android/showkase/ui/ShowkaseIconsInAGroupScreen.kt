@@ -15,6 +15,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserIcon
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -86,7 +88,7 @@ internal fun ShowkaseIconsInAGroupScreen(
                                     Icon(
                                         modifier = Modifier.align(Alignment.Center),
                                         painter = painterResource(id = groupIconMetadata.drawableRes),
-                                        contentDescription = groupIconMetadata.name
+                                        contentDescription = groupIconMetadata.name,
                                     )
 
                                 }
