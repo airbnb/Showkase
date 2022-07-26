@@ -15,7 +15,7 @@ import kotlin.collections.List
   numComposablesWithPreviewParameter = 0,
   numColors = 1,
   numTypography = 1,
-  numIcons = 0,
+  numIcons = 1,
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
   public val componentList: List<ShowkaseBrowserComponent> =
@@ -54,7 +54,13 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             textStyle = title,)
       )
 
-  public val iconList: List<ShowkaseBrowserIcon> = listOf<ShowkaseBrowserIcon>()
+  public val iconList: List<ShowkaseBrowserIcon> = listOf<ShowkaseBrowserIcon>(
+        ShowkaseBrowserIcon(
+            group = "icon",
+            name = "name",
+            kDoc = "",
+            imageVector = WrappedClass.icon,)
+      )
 
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> = componentList
 

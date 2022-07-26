@@ -42,6 +42,11 @@ public class MyScreenshotTest_ShowkaseCodegen : MyScreenshotTest() {
   }
 
   @Test
+  public fun icon_screenshot_test_0(): Unit {
+    takeIconScreenshot(Showkase.getMetadata().iconList[0])
+  }
+
+  @Test
   public fun color_screenshot_test_0(): Unit {
     takeColorScreenshot(Showkase.getMetadata().colorList[0])
   }

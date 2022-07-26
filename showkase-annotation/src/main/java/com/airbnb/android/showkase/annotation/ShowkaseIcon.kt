@@ -7,7 +7,7 @@ package com.airbnb.android.showkase.annotation
  * @ShowkaseIcon(name = "Name", group = "Group")
  * val searchIcon = Icons.Filled.Search
  *
- * @ShowkaseColor("Filled Search", "Search")
+ * @ShowkaseIcon("Filled Search", "Search")
  * val searchIcon = Icons.Filled.Search
  *
  * @param name The name that should be used to describe your `Icon` fields. If you don't pass

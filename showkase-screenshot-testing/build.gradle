@@ -61,6 +61,7 @@ dependencies {
     api deps.compose.uiTest
     implementation deps.compose.core
     implementation deps.compose.foundation
+    implementation deps.compose.material
 
     // Testing
     testImplementation deps.test.assertJ

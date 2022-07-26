@@ -2,6 +2,7 @@
 package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase_processor_testing.WrappedClass
 import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
@@ -61,5 +62,20 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "TYPOGRAPHY",
   )
   public fun typographyname(): Unit {
+  }
+
+  @ShowkaseCodegenMetadata(
+    showkaseName = "name",
+    showkaseGroup = "icon",
+    packageName = "com.airbnb.android.showkase_processor_testing",
+    packageSimpleName = "showkase_processor_testing",
+    showkaseElementName = "icon",
+    insideObject = true,
+    insideWrapperClass = false,
+    showkaseKDoc = "",
+    enclosingClass = [WrappedClass::class],
+    showkaseMetadataType =  "ICON"
+  )
+  public fun iconname(): Unit {
   }
 }

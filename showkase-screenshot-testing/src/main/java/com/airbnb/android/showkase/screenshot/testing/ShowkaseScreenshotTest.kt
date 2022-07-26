@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material.Icon
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onRoot
@@ -18,10 +20,11 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserIcon
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.ui.padding4x
 import org.junit.Rule
-import java.util.*
+import java.util.Locale
 
 /**
  *
@@ -136,7 +139,8 @@ interface ShowkaseScreenshotTest {
         composeTestRule.mainClock.autoAdvance = false
         composeTestRule.setContent {
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(250.dp)
                     .background(showkaseBrowserColor.color)
             )
@@ -147,6 +151,50 @@ interface ShowkaseScreenshotTest {
             name = showkaseBrowserColor.colorName,
             group = showkaseBrowserColor.colorGroup,
             screenshotType = ShowkaseScreenshotType.Color,
+            screenshotBitmap = bitmap,
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun takeIconScreenshot(
+        showkaseBrowserIcon: ShowkaseBrowserIcon,
+    ) {
+        // Disable animations for screenshots to make them deterministic
+        composeTestRule.mainClock.autoAdvance = false
+        composeTestRule.setContent {
+            val drawableRes = showkaseBrowserIcon.drawableRes
+            val imageVector = showkaseBrowserIcon.imageVector
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(260.dp),
+            ) {
+                if (imageVector != null) {
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
+                        imageVector = imageVector,
+                        contentDescription = showkaseBrowserIcon.name,
+                    )
+                } else if (drawableRes != null) {
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
+                        painter = painterResource(drawableRes),
+                        contentDescription = showkaseBrowserIcon.name,
+                    )
+                }
+            }
+        }
+
+        val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
+        onScreenshot(
+            id = showkaseBrowserIcon.hashCode().toString(),
+            name = showkaseBrowserIcon.name,
+            group = showkaseBrowserIcon.group,
+            screenshotType = ShowkaseScreenshotType.Icon,
             screenshotBitmap = bitmap,
         )
     }
