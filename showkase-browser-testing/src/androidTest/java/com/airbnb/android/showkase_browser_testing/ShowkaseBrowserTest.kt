@@ -544,4 +544,26 @@ class ShowcaseBrowserTest {
             verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
         }
     }
+
+    @Test
+    fun opening_icons_has_two_icon_groups_and_four_icons() {
+        composeTestRule.apply {
+            // Assert that all the categories are displayed on the screen and that they are clickable.
+            verifyLandingScreen()
+
+            // Tap on the "Icons" row
+            clickRowWithText("Icons (4)")
+
+            waitForIdle()
+
+            // Tap on the "Icons Grouped" row
+            clickRowWithText("Filled Icons (2)")
+
+            waitForIdle()
+
+            verifyRowsWithTextAreDisplayed("Search")
+            verifyRowsWithTextAreDisplayed("Search From Object")
+        }
+
+    }
 }

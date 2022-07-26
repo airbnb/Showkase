@@ -2,7 +2,11 @@ package com.airbnb.android.showkasesample
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Search
@@ -28,4 +32,16 @@ object Icons {
 
     @ShowkaseIcon(group = "Close Icons", name = "Close Icon Outlined")
     val closeIconOutlined = Icons.Outlined.Close
+
+    @ShowkaseIcon(group = "Arrow Icons", name = "Arrow Back")
+    val iconArrowBack = Icons.Filled.ArrowBack
+
+    @ShowkaseIcon(group = "Arrow Icons", name = "Arrow Forward")
+    val iconArrowForward = Icons.Filled.ArrowForward
+
+    @ShowkaseIcon(group = "Arrow Icons", name = "Arrow DropDown")
+    val iconArrowDropDown = Icons.Filled.ArrowDropDown
+
+    @ShowkaseIcon(group = "Arrow Icons", name = "Arrow Play")
+    val iconArrowPlay = Icons.Filled.PlayArrow
 }

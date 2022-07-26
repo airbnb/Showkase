@@ -498,5 +498,32 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `class with @ScreenshotTest generates screenshot test for all UI elements`() {
         compileInputsAndVerifyOutputs()
     }
+
+    @Test
+    fun `icon image vector with showkase icon annotation inside object compiles ok`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `icon drawable int with showkase icon annotation inside object compiles ok`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `icon image vector with showkase icon annotation inside class compiles ok`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `icon drawable int with showkase icon annotation inside class compiles ok`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `showkase icon annotation on incorrect type throws compilation error`() {
+        assertCompilationFails(
+            "Only \"ImageVector or Drawable Res Integers\" fields can be annotated with ShowkaseIcon"
+        )
+    }
 }
 
