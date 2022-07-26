@@ -39,8 +39,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         )
         val colorListProperty = initializeColorProperty(showkaseColorMetadata)
         val typographyProperty = initializeTypographyProperty(showkaseTypographyMetadata)
-        val iconProperty =
-            initializeIconProperty(showkaseIconMetadata, SHOWKASE_BROWSER_ICONS_CLASS_NAME)
+        val iconProperty = initializeIconProperty(showkaseIconMetadata)
 
         val showkaseRootCodegenAnnotation = initializeShowkaseRootCodegenAnnotation(
             showkaseMetadataWithoutParameterList.size,
@@ -250,9 +249,9 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         return typographyListProperty.initializer(typographyListInitializerCodeBlock.build())
     }
 
+    @Suppress("LongMethod")
     private fun initializeIconProperty(
         showkaseIconMetadata: Set<ShowkaseMetadata>,
-        returnType: TypeName,
     ): PropertySpec.Builder {
         val iconsListProperty = getPropertyList(
             SHOWKASE_BROWSER_ICONS_CLASS_NAME,

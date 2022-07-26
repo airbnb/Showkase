@@ -31,6 +31,7 @@ import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 
+@Suppress("LongMethod")
 @Composable
 internal fun ShowkaseIconsInAGroupScreen(
     groupedIconsMap: Map<String, List<ShowkaseBrowserIcon>>,

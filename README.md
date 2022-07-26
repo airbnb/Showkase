@@ -130,6 +130,23 @@ val h1 = TextStyle(
 )
 ```
 
+For `ImageVector` or `DrawableRes` properties that are useful for displaying your icons, you can
+add the `@ShowkaseIcon` annotation to the field:
+
+```kotlin
+@ShowkaseIcon(name = "Custom name for icon", group = "Custom group name")
+val searchIcon = Icons.Filled.Search
+```
+
+or
+
+```kotlin
+@ShowkaseIcon(name = "Custom name for icon", group = "Custom group name")
+@DrawableRes
+val searchIcon = R.drawable.search_icon
+```
+
+
 **Step 3**: Define an implementation of the `ShowkaseRootModule` interface in your **root** module.
  If your setup involves only a single module, add this implementation in that module. Ensure that this 
 implementation is also annotated with the `@ShowkaseRoot` annotation.
@@ -327,8 +344,26 @@ Property Name | Description
 <b>name</b> | The name that should be used to describe your `TextStyle` fields. If you don't pass any value, the name of the textStyle field is used as the name.
 <b>group</b> | The grouping key that will be used to group it with other `TextStyle` fields. This is useful for better organization and discoverability of your typography. If you don't pass any value for the group, the name of the class that wraps this field is used as the group name. If the field is a top level field, the textStyle is added to a "Default Group".
 
+##### 4. @ShowkaseIcon
 
-##### 4. @ShowkaseRoot
+Used to annotate `ImageVector` or `@DrawableRes` properties that should be presented inside the showkase
+browser.
+Here is how you would use it:
+
+```kotlin
+@ShowkaseIcon(name = "Name", group = "Group")
+val searchIcon = Icon.Filled.SearchIcon
+```
+
+or 
+
+```kotlin
+@ShowkaseIcon(name = "Name", group = "Group")
+@DrawableRes
+val searchIcon = R.drawable.search_icon
+```
+
+##### 5. @ShowkaseRoot
 Used to annotate the `ShowkaseRootModule` implementation class. This is needed to let Showkase
 know more about the module that is going to be the root module for aggregating all the Showkase 
 supported UI elements across all the different modules(if you are using a multi-module project). 
@@ -348,7 +383,7 @@ in the app. This is relevant because we generate the Showkase related classes in
 the root module and we need to be able to access the UI elements across all the sub modules. This
  is only possible from the root module as it typically has a dependency on all the sub-modules. 
  
-##### 5. `Showkase` Object
+##### 6. `Showkase` Object
 The `Showkase` object is the receiver for all the helper methods that this library generates. 
 Currently there are a few extension functions that are generated with the `Showkase` object as the 
 receiver. In order to get access to these functions, you need to build the app once so that the 

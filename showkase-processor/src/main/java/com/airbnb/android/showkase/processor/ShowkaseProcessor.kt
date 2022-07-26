@@ -382,6 +382,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ?.getAnnotation(ShowkaseRootCodegen::class)?.value
     }
 
+    @Suppress("ComplexCondition")
     private fun writeShowkaseBrowserFiles(
         rootElement: XTypeElement,
         componentsMetadata: Set<ShowkaseMetadata.Component>,
@@ -389,7 +390,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
         typographyMetadata: Set<ShowkaseMetadata>,
         iconMetadata: Set<ShowkaseMetadata>,
     ) {
-        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty() && iconMetadata.isEmpty()) return
+        if (
+            componentsMetadata.isEmpty() &&
+            colorsMetadata.isEmpty() &&
+            typographyMetadata.isEmpty() &&
+            iconMetadata.isEmpty()
+        ) return
         val rootModuleClassName = rootElement.name
         val rootModulePackageName = rootElement.packageName
         showkaseValidator.validateShowkaseComponents(componentsMetadata)

@@ -119,6 +119,7 @@ internal enum class ShowkaseMetadataType {
     ICON,
 }
 
+@Suppress("LongMethod")
 internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement): ShowkaseMetadata {
     val (enclosingClassType, previewParameterClassType) = getCodegenMetadataTypes()
 
