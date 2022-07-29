@@ -9,7 +9,6 @@ import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
-import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -99,7 +98,13 @@ internal sealed class ShowkaseMetadata {
         override val enclosingClassName: ClassName? = null,
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
+        val iconType: ShowkaseIconType? = null,
     ): ShowkaseMetadata()
+}
+
+sealed interface ShowkaseIconType {
+    data class ImageVectorType(val type: String = "androidx.compose.ui.graphics.vector.ImageVector"): ShowkaseIconType
+    data class DrawableRes(val type: String = Int::class.toString()): ShowkaseIconType
 }
 
 internal enum class ShowkaseFunctionType {
@@ -119,10 +124,11 @@ internal enum class ShowkaseMetadataType {
     ICON,
 }
 
-@Suppress("LongMethod")
-internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement): ShowkaseMetadata {
+@Suppress("LongMethod", "MaxLineLength")
+internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement, vectorImageType: XType, drawResourceType: XType): ShowkaseMetadata {
     val (enclosingClassType, previewParameterClassType) = getCodegenMetadataTypes()
 
+    val iconTypeRef = getAsTypeList("iconType")
     // The box is needed to get all Class values, primitives can be accessed dirctly
     val props = value
 
@@ -187,8 +193,28 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 insideObject = props.insideObject,
                 showkaseKDoc = props.showkaseKDoc,
                 element = element,
+                iconType = getIconTypeFromXType(
+                    iconXType = iconTypeRef.firstOrNull(),
+                    imageVectorType = vectorImageType,
+                    drawResourceType = drawResourceType
+                )
             )
         }
+    }
+}
+
+private fun getIconTypeFromXType(
+    iconXType: XType?,
+    imageVectorType: XType,
+    drawResourceType: XType
+): ShowkaseIconType? {
+    if (iconXType == null) return null
+    return if (iconXType.isSameType(imageVectorType)) {
+        ShowkaseIconType.ImageVectorType()
+    } else if (iconXType.isSameType(drawResourceType)) {
+        ShowkaseIconType.DrawableRes()
+    } else {
+        null
     }
 }
 
@@ -400,7 +426,9 @@ internal fun getShowkaseTypographyMetadata(
 
 internal fun XElement.getShowkaseIconMetadata(
     element:XFieldElement,
-    showkaseValidator: ShowkaseValidator
+    showkaseValidator: ShowkaseValidator,
+    imageVectorType: XType,
+    drawResourceType: XType
 ): ShowkaseMetadata {
     val showkaseIconAnnotation = element.requireAnnotation(ShowkaseIcon::class).value
 
@@ -413,15 +441,20 @@ internal fun XElement.getShowkaseIconMetadata(
 
     return ShowkaseMetadata.Icon(
         element = element,
-                packageSimpleName = commonMetadata.moduleName,
-                packageName = commonMetadata.packageName,
-                elementName = element.name,
-                showkaseName = showkaseName,
-                showkaseGroup = showkaseGroup,
-                showkaseKDoc = commonMetadata.kDoc,
-                enclosingClassName = commonMetadata.enclosingClassName,
-                insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-                insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+        packageSimpleName = commonMetadata.moduleName,
+        packageName = commonMetadata.packageName,
+        elementName = element.name,
+        showkaseName = showkaseName,
+        showkaseGroup = showkaseGroup,
+        showkaseKDoc = commonMetadata.kDoc,
+        enclosingClassName = commonMetadata.enclosingClassName,
+        insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+        insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+        iconType = getIconTypeFromXType(
+            iconXType = element.type,
+            imageVectorType = imageVectorType,
+            drawResourceType = drawResourceType
+        )
     )
 }
 

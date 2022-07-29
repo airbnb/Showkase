@@ -3,9 +3,11 @@ package com.airbnb.android.showkase.processor.writer
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.isTypeElement
 import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.CODEGEN_PACKAGE_NAME
+import com.airbnb.android.showkase.processor.models.ShowkaseIconType
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadataType
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -29,7 +31,14 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             .addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
 
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
-
+        if (
+            showkaseMetadataSet.filterIsInstance<ShowkaseMetadata.Icon>().isNotEmpty()
+        ) {
+            fileBuilder.addImport(
+                "androidx.compose.ui.graphics.vector",
+                "ImageVector"
+            )
+        }
         showkaseMetadataSet.forEach { showkaseMetadata ->
             val name = "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
             val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
@@ -41,6 +50,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             }.filter { it.isLetterOrDigit() }
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
+
             showkaseMetadata.enclosingClassName?.let {
                 annotation.addMember("enclosingClass = [%T::class]", it)
             }
@@ -107,6 +117,13 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         }
         is ShowkaseMetadata.Icon -> {
             annotation.addMember("showkaseMetadataType =  %S", ShowkaseMetadataType.ICON.name)
+            showkaseMetadata.iconType?.let {
+                when (it) {
+                    is ShowkaseIconType.DrawableRes -> annotation.addMember("iconType = [Int::class]")
+                    is ShowkaseIconType.ImageVectorType -> annotation.addMember("iconType = [ImageVector::class]")
+                }
+
+            }
         }
     }
 }

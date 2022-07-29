@@ -1,10 +1,13 @@
 package com.airbnb.android.showkase.processor.writer
 
 import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
 import com.airbnb.android.showkase.processor.ShowkaseProcessor
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
+import com.airbnb.android.showkase.processor.models.ShowkaseIconType
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -282,8 +285,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                     showkaseMetadata.showkaseName,
                     showkaseMetadata.showkaseKDoc
                 )
-
-                if (element is XFieldElement && element.type.isSameType(imageVectorType)) {
+                if ((showkaseMetadata as? ShowkaseMetadata.Icon)?.iconType == ShowkaseIconType.ImageVectorType()) {
                     add(
                         showkaseBrowserPropertyValue(
                             functionPackageName = showkaseMetadata.packageName,
@@ -296,7 +298,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                     )
                 }
 
-                if (element is XFieldElement && element.type.isSameType(drawableResourceType)) {
+                if ((showkaseMetadata as? ShowkaseMetadata.Icon)?.iconType == ShowkaseIconType.DrawableRes()) {
                     add(
                         showkaseBrowserPropertyValue(
                             functionPackageName = showkaseMetadata.packageName,

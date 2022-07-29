@@ -186,7 +186,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 imageVectorType,
                 drawableResource,
             )
-            element.getShowkaseIconMetadata(element, showkaseValidator)
+            element.getShowkaseIconMetadata(element, showkaseValidator, imageVectorType, drawableResource)
         }.toSet()
     }
 
@@ -360,6 +360,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv): Set<ShowkaseMetadata> {
+        val imageVectorType by lazy {
+            environment.requireType(ShowkaseProcessor.TYPE_IMAGE_VECTOR_NAME)
+        }
+
+        val drawableResourceType by lazy {
+            environment.requireType(Int::class)
+        }
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
@@ -370,7 +377,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     else -> element to codegenMetadataAnnotation
                 }
             }
-            .map { it.second.toModel(it.first) }
+            .map { it.second.toModel(it.first, imageVectorType, drawableResourceType) }
             .toSet()
     }
 

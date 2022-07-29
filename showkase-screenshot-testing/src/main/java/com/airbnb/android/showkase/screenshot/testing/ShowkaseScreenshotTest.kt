@@ -185,6 +185,8 @@ interface ShowkaseScreenshotTest {
                         painter = painterResource(drawableRes),
                         contentDescription = showkaseBrowserIcon.name,
                     )
+                } else {
+                    error("Unsupported Type!")
                 }
             }
         }
