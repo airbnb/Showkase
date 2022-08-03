@@ -18,21 +18,24 @@ import kotlin.collections.List
 public class TestShowkaseRootCodegen : ShowkaseProvider {
   public val componentList: List<ShowkaseBrowserComponent> =
       mutableListOf<ShowkaseBrowserComponent>().apply {
-          NewParameterProvider().values.iterator().asSequence().forEachIndexed { index,
-              previewParam -> 
-              add(
-                  ShowkaseBrowserComponent(
-                      group = "group",
-                      componentName = "name",
-                      componentKDoc = "",
-                      componentKey =
-                          """com.airbnb.android.showkase_processor_testing_null_group_name_null_$index""",
-                      isDefaultStyle = false,
-                      component = @Composable { TestComposableWithDefaultParameters(bankHeader =
-                          previewParam) }
+          NewParameterProvider()
+              .values
+              .iterator()
+              .asSequence()
+              .forEachIndexed { index, previewParam ->
+                  add(
+                      ShowkaseBrowserComponent(
+                          group = "group",
+                          componentName = "name",
+                          componentKDoc = "",
+                          componentKey =
+                              """com.airbnb.android.showkase_processor_testing_null_group_name_null_$index""",
+                          isDefaultStyle = false,
+                          component = @Composable { TestComposableWithDefaultParameters(bankHeader =
+                              previewParam) }
+                      )
                   )
-              )
-          }
+              }
       }
 
   public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()

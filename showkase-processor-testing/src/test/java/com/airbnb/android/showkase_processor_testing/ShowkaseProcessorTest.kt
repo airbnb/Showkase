@@ -470,6 +470,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `object function with preview annotation and preview parameter and showkaseroot and_long parameter provider name`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `top level composable and class with @ScreenshotTest generates screenshot test for composable`() {
         compileInputsAndVerifyOutputs()
     }

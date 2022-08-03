@@ -34,7 +34,9 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             componentKey =
                 """com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_group_name_null""",
             isDefaultStyle = false,
-            component = @Composable { WrapperClass.TestComposable() })
+            component = @Composable {
+                WrapperClass.TestComposable()
+            })
       )
 
   public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()

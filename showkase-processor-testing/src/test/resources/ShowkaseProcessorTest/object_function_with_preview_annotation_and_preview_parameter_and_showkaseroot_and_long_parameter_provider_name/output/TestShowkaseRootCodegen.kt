@@ -1,5 +1,5 @@
 // This is an auto-generated file. Please do not edit/modify this file.
-package com.airbnb.android.showkase_processor_testing
+package com.airbnb.android.showkase_processor_testing_my_very_long_name
 
 import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.`annotation`.ShowkaseRootCodegen
@@ -10,39 +10,30 @@ import com.airbnb.android.showkase.models.ShowkaseProvider
 import kotlin.collections.List
 
 @ShowkaseRootCodegen(
-  numComposablesWithoutPreviewParameter = 1,
+  numComposablesWithoutPreviewParameter = 0,
   numComposablesWithPreviewParameter = 1,
   numColors = 0,
   numTypography = 0
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
   public val componentList: List<ShowkaseBrowserComponent> =
-      mutableListOf<ShowkaseBrowserComponent>(
-        ShowkaseBrowserComponent(
-            group = "WrapperClass",
-            componentName = "TestComposable1",
-            componentKDoc = "",
-            componentKey =
-                """com.airbnb.android.showkase_processor_testing_com.airbnb.android.showkase_processor_testing.WrapperClass_WrapperClass_TestComposable1_null""",
-            isDefaultStyle = false,
-            component = @Composable {
-                WrapperClass().TestComposable1()
-            })
-      ).apply {
-          ParameterProvider()
+      mutableListOf<ShowkaseBrowserComponent>().apply {
+          MyVeryLongPackageNameViewStateSomethingSomethingFunnyStuffProvider()
               .values
               .iterator()
               .asSequence()
               .forEachIndexed { index, previewParam ->
                   add(
                       ShowkaseBrowserComponent(
-                          group = "Default Group",
-                          componentName = "TestComposable2",
+                          group = "group",
+                          componentName = "name",
                           componentKDoc = "",
                           componentKey =
-                              """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_null_$index""",
+                              """com.airbnb.android.showkase_processor_testing_my_very_long_name_com.airbnb.android.showkase_processor_testing_my_very_long_name.WrapperClass_group_name_null_$index""",
                           isDefaultStyle = false,
-                          component = @Composable { TestComposable2(text = previewParam) }
+                          component = @Composable {
+                              WrapperClass.TestComposable(text = previewParam)
+                          }
                       )
                   )
               }
