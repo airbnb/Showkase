@@ -28,7 +28,7 @@ internal fun getFileBuilder(
     rootModulePackageName,
     showkaseComponentsListClassName
 )
-    .addComment("This is an auto-generated file. Please do not edit/modify this file.")
+    .addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
 
 internal fun getPropertyList(className: ClassName, propertyName: String): PropertySpec.Builder {
     val parameterizedList = className.getCodegenMetadataParameterizedList()

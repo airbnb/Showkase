@@ -12,7 +12,7 @@ import kotlin.collections.List
   numComposablesWithoutPreviewParameter = 0,
   numComposablesWithPreviewParameter = 0,
   numColors = 1,
-  numTypography = 0
+  numTypography = 0,
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
   public val componentList: List<ShowkaseBrowserComponent> =

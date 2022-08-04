@@ -15,7 +15,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
   public fun group1name1(): Unit {
   }
@@ -30,7 +30,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
   public fun group1name2(): Unit {
   }

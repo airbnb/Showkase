@@ -6,7 +6,8 @@
             android:name="com.airbnb.android.showkase.ui.ShowkaseBrowserActivity"
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:label="ShowkaseBrowserActivity"
-            android:theme="@style/Theme.App.NoActionBar">
+            android:theme="@style/Theme.App.NoActionBar"
+            android:exported="true">
         </activity>
     </application>
 </manifest>

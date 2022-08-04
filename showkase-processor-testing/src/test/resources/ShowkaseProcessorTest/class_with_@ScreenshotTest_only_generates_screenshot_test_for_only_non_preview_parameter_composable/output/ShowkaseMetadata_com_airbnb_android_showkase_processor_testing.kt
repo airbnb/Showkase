@@ -18,7 +18,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseKDoc = "",
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
   public fun WrapperClassTestComposable1(): Unit {
   }
@@ -35,7 +35,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [ParameterProvider::class],
-    previewParameterName = "text"
+    previewParameterName = "text",
   )
   public fun DefaultGroupTestComposable2(): Unit {
   }
