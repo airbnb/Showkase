@@ -1,8 +1,8 @@
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
-class GeneratedTestComposables {
+public class GeneratedTestComposables {
     @ShowkaseComposable("name", "group")
-    fun TestComposable() {
+    public fun TestComposable() {
         
     }
 }

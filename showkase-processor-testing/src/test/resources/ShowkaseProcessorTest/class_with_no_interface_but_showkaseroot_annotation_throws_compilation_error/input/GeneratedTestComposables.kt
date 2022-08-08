@@ -5,11 +5,11 @@ import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 
 @ShowkaseComposable("name", "group")
 @Composable
-fun TestComposable() {
+public fun TestComposable() {
     
 }
 
 @ShowkaseRoot
-class TestClass() {
+public class TestClass() {
 
 }

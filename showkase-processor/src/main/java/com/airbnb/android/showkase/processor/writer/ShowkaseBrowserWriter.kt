@@ -7,7 +7,9 @@ import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 
@@ -52,16 +54,19 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             typographyProperty.build(),
             showkaseComponentMetadata + showkaseColorMetadata + showkaseTypographyMetadata,
             getShowkaseProviderInterfaceFunction(
-                COMPONENT_INTERFACE_METHOD_NAME,
-                COMPONENT_PROPERTY_NAME
+                methodName = COMPONENT_INTERFACE_METHOD_NAME,
+                returnPropertyName = COMPONENT_PROPERTY_NAME,
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME)
             ),
             getShowkaseProviderInterfaceFunction(
-                COLOR_INTERFACE_METHOD_NAME,
-                COLOR_PROPERTY_NAME
+                methodName = COLOR_INTERFACE_METHOD_NAME,
+                returnPropertyName = COLOR_PROPERTY_NAME,
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COLOR_CLASS_NAME)
             ),
             getShowkaseProviderInterfaceFunction(
-                TYPOGRAPHY_INTERFACE_METHOD_NAME,
-                TYPOGRAPHY_PROPERTY_NAME
+                methodName = TYPOGRAPHY_INTERFACE_METHOD_NAME,
+                returnPropertyName = TYPOGRAPHY_PROPERTY_NAME,
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME)
             ),
             showkaseRootCodegenAnnotation
         )
@@ -90,30 +95,52 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 add(".apply {")
                 doubleIndent()
                 showkaseMetadataWithParameterList.forEachIndexed { _, withParameterMetadata ->
-                    addLineBreak()
-                    add(
-                        "%T().values.iterator().asSequence().forEachIndexed { index, previewParam -> ",
-                        withParameterMetadata.previewParameterProviderType
-                    )
-                    doubleIndent()
-                    addLineBreak()
-                    add("add(")
-                    addLineBreak()
-                    doubleIndent()
-                    addShowkaseBrowserComponent(withParameterMetadata, true)
-                    closeRoundBracket()
-                    doubleUnindent()
-                    closeRoundBracket()
-                    doubleUnindent()
-                    closeCurlyBraces()
+                    addProviderComponent(withParameterMetadata)
                 }
+                doubleUnindent()
                 doubleUnindent()
                 closeCurlyBraces()
             }
         }
-        
+
         componentListProperty.initializer(componentListInitializerCodeBlock.build())
         return componentListProperty
+    }
+
+    private fun CodeBlock.Builder.addProviderComponent(withParameterMetadata: ShowkaseMetadata.Component) {
+        addLineBreak()
+        add(
+            "%T()",
+            withParameterMetadata.previewParameterProviderType
+        )
+        doubleIndent()
+        addLineBreak()
+        add(
+            ".values"
+        )
+        addLineBreak()
+        add(
+            ".iterator()"
+        )
+        addLineBreak()
+        add(
+            ".asSequence()"
+        )
+        addLineBreak()
+        add(
+            ".forEachIndexed { index, previewParam ->"
+        )
+        doubleIndent()
+        addLineBreak()
+        add("add(")
+        addLineBreak()
+        doubleIndent()
+        addShowkaseBrowserComponent(withParameterMetadata, true)
+        closeRoundBracket()
+        doubleUnindent()
+        closeRoundBracket()
+        doubleUnindent()
+        closeCurlyBraces()
     }
 
     private fun initializeColorProperty(
@@ -252,8 +279,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
                 .build()
         }
-        else -> throw ShowkaseProcessorException("Your field:${fieldName} is declared in a way that " +
-                "is not supported by Showkase")
+        else -> throw ShowkaseProcessorException(
+            "Your field:${fieldName} is declared in a way that " +
+                    "is not supported by Showkase"
+        )
     }
 
     companion object {

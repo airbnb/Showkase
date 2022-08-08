@@ -28,9 +28,9 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             textStyle = WrapperClass().title)
       )
 
-  public override fun getShowkaseComponents() = componentList
+  public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> = componentList
 
-  public override fun getShowkaseColors() = colorList
+  public override fun getShowkaseColors(): List<ShowkaseBrowserColor> = colorList
 
-  public override fun getShowkaseTypography() = typographyList
+  public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> = typographyList
 }

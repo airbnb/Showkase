@@ -1,15 +1,13 @@
 package com.airbnb.android.showkase_browser_testing
 
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.swipeDown
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.platform.app.InstrumentationRegistry
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
-import com.airbnb.android.showkase_browser_testing.getBrowserIntent
-import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,7 +50,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components (6)")
+            clickRowWithText("Components (7)")
 
             // Verify that all the groups are displayed on the screen
             verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)", "Submodule (1)")
@@ -94,7 +92,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Tap on the "Components" row
-            clickRowWithText("Components (6)")
+            clickRowWithText("Components (7)")
 
             // Select "Group1"
             clickRowWithText("Group1 (2)")
@@ -200,7 +198,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select Components
-            clickRowWithText("Components (6)")
+            clickRowWithText("Components (7)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
@@ -264,7 +262,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select components
-            clickRowWithText("Components (6)")
+            clickRowWithText("Components (7)")
 
             // Select Group 3
             clickRowWithText("Group3 (2)")
@@ -355,7 +353,7 @@ class ShowcaseBrowserTest {
             verifyLandingScreen()
 
             // Select components to go to the component groups screen
-            clickRowWithText("Components (6)")
+            clickRowWithText("Components (7)")
 
             // Click on "Group 1" to go to the components in a group screen
             clickRowWithText("Group1 (2)")
@@ -454,6 +452,96 @@ class ShowcaseBrowserTest {
 
             // Confirm that we are in the right screen
             verifyLandingScreen()
+        }
+    }
+
+    @Test
+    fun components_with_long_names_have_a_correct_top_app_bar() {
+        composeTestRule.apply {
+            // Assert that all the categories are displayed on the screen and that they are clickable.
+            verifyLandingScreen()
+
+            // Tap on the "Components" row
+            clickRowWithText("Components (7)")
+
+            // Select "Group4"
+            clickRowWithText("Group4 (1)")
+
+            // Select Component in question
+            clickRowWithText("Test Composable6")
+
+            waitForIdle()
+
+            //Check that the top app bar wraps 3 lines
+            verifyLineCountIsValue(3)
+        }
+    }
+
+    @Test
+    fun search_field_has_enabled_close_button() {
+        composeTestRule.apply {
+            // Assert that all the categories are displayed on the screen and that they are clickable.
+            verifyLandingScreen()
+
+            // Tap on the "Components" row
+            clickRowWithText("Components (7)")
+
+            // Tap on the search icon
+            clickRowWithTag("SearchIcon")
+
+            waitForIdle()
+
+            // Check that the search close button is displayed and clickable
+            verifyButtonWithTagIsDisplayedAndEnabled("close_search_bar_tag")
+
+            // Click the close button
+            clickRowWithTag("close_search_bar_tag")
+
+            waitForIdle()
+
+            // Check that the search icon is displayed again
+            verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
+        }
+    }
+
+    @Test
+    fun clear_search_field_clears_the_field() {
+        composeTestRule.apply {
+            // Assert that all the categories are displayed on the screen and that they are clickable.
+            verifyLandingScreen()
+
+            // Tap on the "Components" row
+            clickRowWithText("Components (7)")
+
+            waitForIdle()
+
+            // Tap on the search icon
+            clickRowWithTag("SearchIcon")
+
+            waitForIdle()
+
+            // Check that the search close button is displayed and clickable
+            verifyButtonWithTagIsDisplayedAndEnabled("close_search_bar_tag")
+
+            // Enter "Bod" in the search field
+            inputTextWithTag("SearchTextField", "Bod")
+
+            // Check that the clear search field button is enabled when there is input text
+            verifyButtonWithTagIsDisplayedAndEnabled("clear_search_field")
+
+            // Click to clear the text
+            clickRowWithTag("clear_search_field")
+
+            // Check that only the label is displayed
+            verifyRowsWithTextAreDisplayed("Search")
+
+            waitForIdle()
+
+            // Click the close button
+            clickRowWithTag("close_search_bar_tag")
+
+            // Check that the search icon is displayed again
+            verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
         }
     }
 }
