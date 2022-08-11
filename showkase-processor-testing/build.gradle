@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 32
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures

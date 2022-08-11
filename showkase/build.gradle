@@ -4,7 +4,7 @@ buildscript {
     }
     // Maven artifact publish
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.19.0'
     }
 }
 
@@ -15,11 +15,11 @@ plugins {
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

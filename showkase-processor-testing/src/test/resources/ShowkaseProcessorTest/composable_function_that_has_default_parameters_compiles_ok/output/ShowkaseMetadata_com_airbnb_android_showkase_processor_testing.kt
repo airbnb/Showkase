@@ -18,7 +18,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [NewParameterProvider::class],
-    previewParameterName = "bankHeader"
+    previewParameterName = "bankHeader",
   )
   public fun groupname(): Unit {
   }
