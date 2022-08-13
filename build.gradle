@@ -1,25 +1,25 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.KSP_VERSION = '1.6.10-1.0.4'
+    ext.KSP_VERSION = '1.7.0-1.0.6'
 
     ext.versions = [
             'androidXTestCore':'1.4.0',
             'androidXTestRules':'1.4.0',
             'assertJ': '3.16.1',
-            'compose': '1.1.1',
-            'composeActivity': '1.4.0',
-            'composeConstraintLayout': '1.0.0',
-            'composeNavigation': '2.4.1',
+            'compose': '1.2.0',
+            'composeActivity': '1.5.0',
+            'composeConstraintLayout': '1.0.1',
+            'composeNavigation': '2.5.1',
             'detekt': '1.7.4',
             'espresso': '3.2.0',
-            'gradle': '7.0.3',
+            'gradle': '7.2.1',
             'junit' : '4.13',
             'junitImplementation' : '1.1.2',
-            'kotlin': '1.6.10',
-            'kotlinCompilerVersion': '1.6.10',
-            'kotlinCompileTesting': '1.4.7',
-            'kotlinPoet': '1.10.2',
-            'kotlinXMetadata': '0.4.0',
+            'kotlin': '1.7.0',
+            'kotlinCompilerVersion': '1.7.0',
+            'kotlinCompileTesting': '1.4.9',
+            'kotlinPoet': '1.12.0',
+            'kotlinXMetadata': '0.5.0',
             'ksp': "$KSP_VERSION",
             'ktx': '1.1.0',
             'lifecycle':'2.2.0',
@@ -31,7 +31,7 @@ buildscript {
             'material':'1.4.0',
             'mdcComposeThemeAdapter':'1.0.2',
             'strikt':'0.33.0',
-            'xprocessing':'2.4.2',
+            'xprocessing':'2.4.3',
             'corektx':'1.7.0',
             'shot': '5.13.0',
     ]

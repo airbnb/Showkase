@@ -26,7 +26,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             CODEGEN_PACKAGE_NAME,
             generatedClassName
         )
-            .addComment("This is an auto-generated file. Please do not edit/modify this file.")
+            .addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
 
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
