@@ -11,6 +11,7 @@ plugins {
     id 'app.cash.paparazzi' version "1.0.0"
 }
 
+// https://github.com/cashapp/paparazzi/issues/409
 tasks.withType(Test).configureEach { task ->
     task.jvmArgs += [
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
@@ -73,9 +74,15 @@ android {
 dependencies {
     // Showkase
     implementation project(':showkase')
-    ksp project(':showkase-processor')
-    kspAndroidTest project(':showkase-processor')
-    kspTest project(':showkase-processor')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+        kspAndroidTest project(':showkase-processor')
+        kspTest project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+        kaptAndroidTest project(':showkase-processor')
+        kaptTest project(':showkase-processor')
+    }
 
     // Compose
     implementation deps.compose.activityCompose
