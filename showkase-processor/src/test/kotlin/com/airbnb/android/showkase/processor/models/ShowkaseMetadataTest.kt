@@ -20,7 +20,7 @@ class ShowkaseMetadataTest {
             """
             @com.airbnb.android.showkase.processor.models.MyAnnotation
             fun foo() {}
-            
+
             class Bar {
                 fun enclosedFoo() {}
             }
@@ -49,7 +49,7 @@ class ShowkaseMetadataTest {
             """
             @com.airbnb.android.showkase.processor.models.MyAnnotation
             val foo: Int = 0
-            
+
             class Bar {
                 val enclosedFoo: Int = 0
             }

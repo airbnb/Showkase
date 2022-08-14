@@ -21,7 +21,7 @@ if (project.hasProperty('useKsp')) {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
@@ -32,7 +32,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 32
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
         // that the app's state is completely cleared between tests.
@@ -60,6 +60,16 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
     }
+}
+
+// https://github.com/cashapp/paparazzi/issues/409
+// https://github.com/cashapp/paparazzi/issues/409
+tasks.withType(Test).configureEach { task ->
+    task.jvmArgs += [
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+    ]
 }
 
 dependencies {
