@@ -17,6 +17,10 @@ import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.airbnb.android.showkase.models.Showkase
 
+/**
+ * Full credit to Alex Vanyo for creating this sample in the Now In Android app by Google.
+ * PR here - https://github.com/android/nowinandroid/pull/101
+ */
 @RunWith(TestParameterInjector::class)
 class PaparazziSampleScreenshotTest {
 

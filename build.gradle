@@ -175,6 +175,16 @@ subprojects {
     }
 }
 
+// https://github.com/cashapp/paparazzi/issues/409
+// https://github.com/cashapp/paparazzi/issues/409
+tasks.withType(Test).configureEach { task ->
+    task.jvmArgs += [
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+    ]
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

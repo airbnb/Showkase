@@ -11,15 +11,6 @@ plugins {
     id 'app.cash.paparazzi' version "1.0.0"
 }
 
-// https://github.com/cashapp/paparazzi/issues/409
-tasks.withType(Test).configureEach { task ->
-    task.jvmArgs += [
-            "--add-opens=java.base/java.lang=ALL-UNNAMED",
-            "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
-            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
-    ]
-}
-
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
 } else {
