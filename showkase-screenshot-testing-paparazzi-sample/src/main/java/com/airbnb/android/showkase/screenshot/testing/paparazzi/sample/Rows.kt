@@ -33,7 +33,10 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SimpleRow(title: String, subtitle: String) {
+fun SimpleRow(
+    title: String,
+    subtitle: String
+) {
     ShowkaseTheme {
         Card(
             shape = RoundedCornerShape(padding1x),
