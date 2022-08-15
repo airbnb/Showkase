@@ -43,14 +43,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Record Paparazzi Screenshot Tests
-        run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:recordPaparazziDebug -PuseKsp=true --stacktrace
+      - name: Run Paparazzi Screenshot Tests
+        run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
 
       - name: Upload Screenshot Test Report
         uses: actions/upload-artifact@v3
         with:
-          name: screenshot snapshots
-          path: showkase-screenshot-testing-paparazzi-sample/src/test/snapshots/
+          name: reports
+          path: showkase-screenshot-testing-paparazzi-sample/build/reports/paparazzi/
           retention-days: 1
 
   ui-testing:
@@ -127,16 +127,3 @@ jobs:
 #          name: Api${{ matrix.api-level }}
 #          path: sample/screenshots/debug/Api${{ matrix.api-level }}
 #          retention-days: 1
-
-
-
-
-
-#        - name: Run Paparazzi Screenshot Tests
-#            run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
-#        - name: Upload Screenshot Test Report
-#            uses: actions/upload-artifact@v3
-#            with:
-#              name: reports
-#              path: showkase-screenshot-testing-paparazzi-sample/build/reports/paparazzi/
-#              retention-days: 1
