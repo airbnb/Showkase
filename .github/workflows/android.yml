@@ -42,22 +42,16 @@ jobs:
           # https://medium.com/@ychescale9/running-android-instrumented-tests-on-ci-from-bitrise-io-to-github-actions-a611e57ce71f
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
-#        - name: Run Paparazzi Screenshot Tests
-#            run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
-#        - name: Upload Screenshot Test Report
-#            uses: actions/upload-artifact@v3
-#            with:
-#              name: reports
-#              path: showkase-screenshot-testing-paparazzi-sample/build/reports/paparazzi/
-#              retention-days: 1
-        - name: Record Paparazzi Screenshot Tests
-            run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:recordPaparazziDebug -PuseKsp=true --stacktrace
-        - name: Upload Screenshot Test Report
-            uses: actions/upload-artifact@v3
-            with:
-              name: screenshot snapshots
-              path: showkase-screenshot-testing-paparazzi-sample/src/test/snapshots/
-              retention-days: 1
+
+      - name: Record Paparazzi Screenshot Tests
+        run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:recordPaparazziDebug -PuseKsp=true --stacktrace
+
+      - name: Upload Screenshot Test Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshot snapshots
+          path: showkase-screenshot-testing-paparazzi-sample/src/test/snapshots/
+          retention-days: 1
 
   ui-testing:
     runs-on: macos-10.15
@@ -136,3 +130,13 @@ jobs:
 
 
 
+
+
+#        - name: Run Paparazzi Screenshot Tests
+#            run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
+#        - name: Upload Screenshot Test Report
+#            uses: actions/upload-artifact@v3
+#            with:
+#              name: reports
+#              path: showkase-screenshot-testing-paparazzi-sample/build/reports/paparazzi/
+#              retention-days: 1
