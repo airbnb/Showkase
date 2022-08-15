@@ -39,7 +39,7 @@ jobs:
           java-version: 11
 
       - name: Run Paparazzi Screenshot Tests
-        run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --debug
+        run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
 
       - name: Upload Screenshot Test Report
         uses: actions/upload-artifact@v3
