@@ -146,7 +146,7 @@ fun H6TextRowComponentPreview(
 
 // This is here for testing, generating this code into function names would
 // fail dex generation
-@Preview(name = "H6 Text Row & special chars !@#$%^&*()_+", group = "Text")
+@Preview(name = "H6 Text Row & special chars", group = "Text")
 @Composable
 fun H6TextRowComponentPreviewWithSpecialCharInPreview(
     age: String = "15",
