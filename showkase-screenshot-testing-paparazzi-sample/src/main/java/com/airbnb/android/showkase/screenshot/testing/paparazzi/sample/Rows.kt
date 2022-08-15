@@ -154,41 +154,6 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
     }
 }
 
-@Composable
-fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
-    ShowkaseTheme {
-        Column(
-            modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colors.surface)
-        ) {
-            NetworkImage(
-                imageUrl = imageUrl,
-                modifier = Modifier.fillMaxWidth().height(200.dp)
-            )
-            Text(
-                text = title,
-                modifier = Modifier.padding(bottom = padding1x, top = padding1x),
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.onSurface
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = subtitle,
-                modifier = Modifier.padding(bottom = padding2x),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colors.onSurface
-                )
-            )
-
-        }
-    }
-}
-
 @ShowkaseComposable("Bottom Label Row", "Rows")
 @Preview
 @Composable
@@ -197,29 +162,6 @@ fun BottomLabelRowPreview() {
         "This is a title",
         "This is a longer subtitle that can span multiple lines",
         "Label Text"
-    )
-}
-
-/**
- * Use this card when you want to render a product with a hero image at the top. 
- *
- * Example usage:
- *
- * ```
- * @Composable
- * fun MyComposable() {
- *     ProductCardRow()
- * }
- * ```
- */
-@ShowkaseComposable("Product Card", "Rows")
-@Preview
-@Composable
-fun ProductCardRowPreview() {
-    ProductCardRow(
-        "http://a0.muscache.com/im/pictures/ef0ee86b-feba-47f8-8882-014b2a7b6926.jpg?im_w=1200",
-        "Title",
-        LoremIpsum(4).values.joinToString()
     )
 }
 
