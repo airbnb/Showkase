@@ -173,7 +173,7 @@ fun BottomLabelRowPreview() {
 @Composable
 fun SimpleRowPreview() {
     SimpleRow(
-        "Iron Mansss",
+        "Iron Man",
         "Age: 43"
     )
 }
