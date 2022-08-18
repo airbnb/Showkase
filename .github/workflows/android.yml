@@ -46,7 +46,6 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
 
       - name: Run Paparazzi Screenshot Tests
-        continue-on-error: true
         run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
 
       - name: Upload Screenshot Test Report
