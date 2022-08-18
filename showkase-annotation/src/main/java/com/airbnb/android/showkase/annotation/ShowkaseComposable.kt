@@ -56,7 +56,7 @@ package com.airbnb.android.showkase.annotation
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.ANNOTATION_CLASS)
 @Suppress("LongParameterList")
 annotation class ShowkaseComposable(
     val name: String = "",
