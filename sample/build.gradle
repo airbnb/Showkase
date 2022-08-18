@@ -44,7 +44,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.compose}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
 
     }
     // Added to avoid this error -
