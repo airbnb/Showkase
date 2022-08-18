@@ -54,7 +54,14 @@ jobs:
         if: always()
         with:
           name: reports
-          path: showkase-screenshot-testing-paparazzi-sample/build/reports/paparazzi/
+          path: showkase-screenshot-testing-paparazzi-sample/build/reports/tests/testDebugUnitTest/
+          retention-days: 1
+      - name: Upload Screenshot Failure Differences
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: reports
+          path: showkase-screenshot-testing-paparazzi-sample/out/failures/
           retention-days: 1
 
   ui-testing:
