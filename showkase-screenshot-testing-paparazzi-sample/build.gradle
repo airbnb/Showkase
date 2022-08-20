@@ -72,6 +72,64 @@ tasks.withType(Test).configureEach { task ->
     ]
 }
 
+afterEvaluate {
+    /**
+     * KSP does not currently register kotlin generated sources.
+     * https://github.com/google/ksp/issues/37
+     */
+    if (project.extensions.findByType(com.android.build.gradle.LibraryExtension.class) != null) {
+        project.android.libraryVariants.all { variant ->
+            def variantName = variant.name
+            def outputFolder = new File("build/generated/ksp/$variantName/kotlin")
+            variant.addJavaSourceFoldersToModel(outputFolder)
+            android.sourceSets.getAt(variantName).java {
+                srcDir(outputFolder)
+            }
+
+            // Register the generated unit test sources as well, since Scabbard generates trio unit tests with KSP,
+            // and we can't run them from the IDE unless they're registered.
+
+            // Note, there is a nuanced different between the name of the directory on disk and the source set name
+            // in AGP.
+            // eg "debugUnitTest"
+            def testDirectoryName = "${variantName}UnitTest"
+            // eg "testDebug"
+            def testSourceSetName = "test${variantName.capitalize()}"
+
+            // Not every module will have test sources, so finding it is optional.
+            android.sourceSets.findByName(testSourceSetName)?.kotlin {
+                def testOutputFolder = new File("build/generated/ksp/$testDirectoryName/kotlin")
+                srcDir(testOutputFolder)
+            }
+        }
+    } else if (project.extensions.findByType(com.android.build.gradle.AbstractAppExtension.class) != null) {
+        project.android.applicationVariants.all { variant ->
+            def variantName = variant.name
+            def outputFolder = new File("build/generated/ksp/$variantName/kotlin")
+            variant.addJavaSourceFoldersToModel(outputFolder)
+            android.sourceSets.getAt(variantName).java {
+                srcDir(outputFolder)
+            }
+
+            // Register the generated unit test sources as well, since Scabbard generates trio unit tests with KSP,
+            // and we can't run them from the IDE unless they're registered.
+
+            // Note, there is a nuanced different between the name of the directory on disk and the source set name
+            // in AGP.
+            // eg "debugUnitTest"
+            def testDirectoryName = "${variantName}UnitTest"
+            // eg "testDebug"
+            def testSourceSetName = "test${variantName.capitalize()}"
+
+            // Not every module will have test sources, so finding it is optional.
+            android.sourceSets.findByName(testSourceSetName)?.kotlin {
+                def testOutputFolder = new File("build/generated/ksp/$testDirectoryName/kotlin")
+                srcDir(testOutputFolder)
+            }
+        }
+    }
+}
+
 dependencies {
     // Showkase
     implementation project(':showkase')
