@@ -16,6 +16,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.COMPOSABLE_SIMPLE_NAME
+import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.METADATA_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -40,7 +41,7 @@ internal class ShowkaseValidator {
         }
 
         when {
-            !element.isMethod() && !checkElementIsMultiPreview(element, annotationName) -> {
+            !element.isMethod() && !checkElementIsMultiPreview(element) -> {
                 throw ShowkaseProcessorException(
                     "Only composable methods can be annotated with $annotationName",
                     element
@@ -76,9 +77,11 @@ internal class ShowkaseValidator {
         }
     }
 
-    private fun checkElementIsMultiPreview(element: XElement, annotationName: String): Boolean {
+    // This should check if it is an annotation with multiple @Preview annotations
+    private fun checkElementIsMultiPreview(element: XElement): Boolean {
        return element.getAllAnnotations().size >= 2 && element.findAnnotationBySimpleName(
-                PREVIEW_SIMPLE_NAME) != null
+                PREVIEW_SIMPLE_NAME) != null && element.findAnnotationBySimpleName(
+           METADATA_SIMPLE_NAME) == null
     }
 
     // We only allow composable functions who's previews meet the following criteria:

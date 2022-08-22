@@ -3,7 +3,6 @@ package com.airbnb.android.showkase_processor_testing
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
-
 @Preview(
     name = "small font",
     group = "font scales",
