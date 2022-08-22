@@ -17,6 +17,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.COMPOSABLE_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
+import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.isJavac
@@ -39,20 +40,20 @@ internal class ShowkaseValidator {
         }
 
         when {
-            !element.isMethod() -> {
+            !element.isMethod() && !checkElementIsMultiPreview(element, annotationName) -> {
                 throw ShowkaseProcessorException(
                     "Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
             // Only check simple name to avoid costly type resolution
-            element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
+            element.isMethod() && element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
                 throw ShowkaseProcessorException(
                     "Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
-            element.isPrivate() -> {
+            element.isMethod() && element.isPrivate() -> {
                 throw ShowkaseProcessorException(
                     "The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
@@ -62,7 +63,7 @@ internal class ShowkaseValidator {
             }
             // Validate that only a single parameter is passed to these functions. In addition, 
             // the parameter should be annotated with @PreviewParameter.
-            validateComposableParameter(element) -> {
+            element.isMethod() && validateComposableParameter(element) -> {
                 throw ShowkaseProcessorException(
                     "Make sure that the @Composable functions that you annotate with" +
                             " the $annotationName annotation only have a single parameter that is" +
@@ -73,6 +74,11 @@ internal class ShowkaseValidator {
             else -> {
             }
         }
+    }
+
+    private fun checkElementIsMultiPreview(element: XElement, annotationName: String): Boolean {
+       return element.getAllAnnotations().size >= 2 && element.findAnnotationBySimpleName(
+                PREVIEW_SIMPLE_NAME) != null
     }
 
     // We only allow composable functions who's previews meet the following criteria:

@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.isMethod
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -102,10 +103,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element,
                     PREVIEW_SIMPLE_NAME
                 )
-                getShowkaseMetadataFromPreview(
-                    element = element,
-                    showkaseValidator = showkaseValidator
-                )
+                if (element.isMethod()) {
+                    getShowkaseMetadataFromPreview(
+                        element = element,
+                        showkaseValidator = showkaseValidator
+                    )
+                } else {
+                    null
+                }
             }.toSet()
     }
 

@@ -1,5 +1,7 @@
 package com.airbnb.android.showkasesample
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 
@@ -64,6 +67,28 @@ fun PreviewCustomButtonMedium() {
 fun PreviewCustomButtonSmall() {
     CustomButton(
         text = "Button",
+        onClick = {  },
+        size = ButtonSize.Small
+    )
+}
+
+@Preview(
+    name = "Custom Button Light",
+    group = "Button",
+    uiMode = UI_MODE_NIGHT_NO,
+)
+@Preview(
+    name = "Custom Button Dark",
+    group = "Button",
+    uiMode = UI_MODE_NIGHT_YES,
+)
+annotation class CustomButtonPreview
+
+@CustomButtonPreview
+@Composable
+fun PreviewCustomButton() {
+    CustomButton(
+        text = "Button new Preview",
         onClick = {  },
         size = ButtonSize.Small
     )

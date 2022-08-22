@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor.models
 import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XAnnotationBox
 import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XExecutableElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMemberContainer
 import androidx.room.compiler.processing.XMethodElement
