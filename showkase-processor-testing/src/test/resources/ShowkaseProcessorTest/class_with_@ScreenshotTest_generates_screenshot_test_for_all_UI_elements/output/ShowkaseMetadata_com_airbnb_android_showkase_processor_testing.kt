@@ -15,7 +15,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
   public fun group1name1(): Unit {
   }
@@ -30,7 +30,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
   public fun group2name2(): Unit {
   }
@@ -44,7 +44,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    showkaseMetadataType = "COLOR"
+    showkaseMetadataType = "COLOR",
   )
   public fun colorname(): Unit {
   }
@@ -58,7 +58,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    showkaseMetadataType = "TYPOGRAPHY"
+    showkaseMetadataType = "TYPOGRAPHY",
   )
   public fun typographyname(): Unit {
   }

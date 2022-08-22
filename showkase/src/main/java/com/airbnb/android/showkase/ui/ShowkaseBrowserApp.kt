@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
@@ -58,6 +59,7 @@ import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
 import com.airbnb.android.showkase.ui.SemanticsUtils.lineCountVal
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 internal fun ShowkaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,

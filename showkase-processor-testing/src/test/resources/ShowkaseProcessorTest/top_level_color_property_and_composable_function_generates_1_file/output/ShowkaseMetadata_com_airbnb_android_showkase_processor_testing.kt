@@ -15,7 +15,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
   public fun componentname(): Unit {
   }
@@ -29,7 +29,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    showkaseMetadataType = "COLOR"
+    showkaseMetadataType = "COLOR",
   )
   public fun colorname(): Unit {
   }
