@@ -31,7 +31,12 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
-            val name = "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+
+            val name = if (showkaseMetadata is ShowkaseMetadata.Component) {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.componentDistinctName}"
+            } else {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+            }
             val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
                 && showkaseMetadata.showkaseStyleName != null
             ) {
@@ -63,9 +68,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
-    private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata) =
-        AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
-            .addMember("showkaseName = %S", showkaseMetadata.showkaseName)
+    private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata): AnnotationSpec.Builder {
+        val  builder = AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
             .addMember("showkaseGroup = %S", showkaseMetadata.showkaseGroup)
             .addMember("packageName = %S", showkaseMetadata.packageName)
             .addMember("packageSimpleName = %S", showkaseMetadata.packageSimpleName)
@@ -73,6 +77,13 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             .addMember("insideObject = ${showkaseMetadata.insideObject}")
             .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
             .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
+        if (showkaseMetadata is ShowkaseMetadata.Component && showkaseMetadata.componentDistinctName != null) {
+            builder.addMember("showkaseName = %S", showkaseMetadata.componentDistinctName)
+        } else {
+            builder.addMember("showkaseName = %S", showkaseMetadata.showkaseName)
+        }
+        return builder
+    }
 
     private fun addMetadataTypeSpecificProperties(
         showkaseMetadata: ShowkaseMetadata,

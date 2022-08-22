@@ -508,5 +508,10 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `composable function with multiple preview functions compiles`() {
         compileInputsAndVerifyOutputs()
     }
+
+    @Test
+    fun `composable function with multiple preview annotations stacked generates output`() {
+        compileInputsAndVerifyOutputs()
+    }
 }
 

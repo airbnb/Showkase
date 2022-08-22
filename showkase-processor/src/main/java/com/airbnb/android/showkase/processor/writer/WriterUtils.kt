@@ -121,7 +121,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     var componentKey = (showkaseMetadata.packageName +
             "_${showkaseMetadata.enclosingClassName}" +
             "_${showkaseMetadata.showkaseGroup}" +
-            "_${showkaseMetadata.showkaseName}" +
+            "_${showkaseMetadata.componentDistinctName}" +
             "_${showkaseMetadata.showkaseStyleName}").replace(
         SPACE_REGEX,
         ""

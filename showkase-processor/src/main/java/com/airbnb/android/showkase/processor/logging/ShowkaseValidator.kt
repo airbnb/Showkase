@@ -354,7 +354,7 @@ internal class ShowkaseValidator {
     ) {
         val groupedComponents = componentsMetadata.groupBy { it.showkaseGroup }
         groupedComponents.forEach { groupEntry ->
-            val groupedByNameComponents = groupEntry.value.groupBy { it.showkaseName }
+            val groupedByNameComponents = groupEntry.value.groupBy { it.componentDistinctName }
             groupedByNameComponents.forEach { nameEntry ->
                 // Verify that there's at most 1 default style for a given component
                 if (nameEntry.value.filter { it.isDefaultStyle }.size > 1) {
