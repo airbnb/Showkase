@@ -144,6 +144,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `composable previews with parameter providers should indent properly`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `composable function with preview annotation inside class with parameters throws compilation error`() {
         assertCompilationFails("Only classes that don't accept any constructor parameters can " +
                 "hold a @Composable function that's annotated with the @ShowkaseComposable/@Preview " +
