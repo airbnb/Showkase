@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta14-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.1.1-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta14-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.2.0-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
