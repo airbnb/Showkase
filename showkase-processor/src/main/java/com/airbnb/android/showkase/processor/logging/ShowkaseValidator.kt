@@ -75,7 +75,7 @@ internal class ShowkaseValidator {
         }
     }
 
-    // This should check if it is an annotation with multiple @Preview annotations
+    // This should check if it is an annotation that's annotated with @Preview annotation
     internal fun checkElementIsMultiPreview(element: XElement): Boolean {
         return element.isTypeElement() && element.isAnnotationClass()
     }
