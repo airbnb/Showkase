@@ -39,20 +39,20 @@ internal class ShowkaseValidator {
         }
 
         when {
-            !element.isMethod() && !checkElementIsMultiPreview(element) -> {
+            !element.isMethod() -> {
                 throw ShowkaseProcessorException(
                     "Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
             // Only check simple name to avoid costly type resolution
-            element.isMethod() && element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
+            element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
                 throw ShowkaseProcessorException(
                     "Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
-            element.isMethod() && element.isPrivate() -> {
+            element.isPrivate() -> {
                 throw ShowkaseProcessorException(
                     "The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
@@ -62,7 +62,7 @@ internal class ShowkaseValidator {
             }
             // Validate that only a single parameter is passed to these functions. In addition, 
             // the parameter should be annotated with @PreviewParameter.
-            element.isMethod() && validateComposableParameter(element) -> {
+            validateComposableParameter(element) -> {
                 throw ShowkaseProcessorException(
                     "Make sure that the @Composable functions that you annotate with" +
                             " the $annotationName annotation only have a single parameter that is" +

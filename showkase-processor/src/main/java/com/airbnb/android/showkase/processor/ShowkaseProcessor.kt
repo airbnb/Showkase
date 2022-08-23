@@ -3,7 +3,6 @@ package com.airbnb.android.showkase.processor
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
-import androidx.room.compiler.processing.isMethod
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -99,18 +98,17 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
+                if (showkaseValidator.checkElementIsMultiPreview(element)) return@mapNotNull null
                 showkaseValidator.validateComponentElement(
                     element,
                     PREVIEW_SIMPLE_NAME
                 )
-                if (showkaseValidator.checkElementIsMultiPreview(element)) {
-                    null
-                } else {
-                    getShowkaseMetadataFromPreview(
-                        element = element,
-                        showkaseValidator = showkaseValidator
-                    )
-                }
+
+                getShowkaseMetadataFromPreview(
+                    element = element,
+                    showkaseValidator = showkaseValidator
+                )
+
             }.toSet()
     }
 
