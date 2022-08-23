@@ -103,13 +103,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element,
                     PREVIEW_SIMPLE_NAME
                 )
-                if (element.isMethod()) {
+                if (showkaseValidator.checkElementIsMultiPreview(element)) {
+                    null
+                } else {
                     getShowkaseMetadataFromPreview(
                         element = element,
                         showkaseValidator = showkaseValidator
                     )
-                } else {
-                    null
                 }
             }.toSet()
     }
@@ -416,7 +416,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
         const val COMPOSABLE_SIMPLE_NAME = "Composable"
         const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
         const val PREVIEW_SIMPLE_NAME = "Preview"
-        const val METADATA_SIMPLE_NAME = "Metadata"
         const val PREVIEW_PARAMETER_CLASS_NAME =
             "androidx.compose.ui.tooling.preview.PreviewParameter"
         const val PREVIEW_PARAMETER_SIMPLE_NAME = "PreviewParameter"
