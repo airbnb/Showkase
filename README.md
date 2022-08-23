@@ -340,7 +340,7 @@ Here's an example of how you would use it:
 
 ```kotlin
 @ShowkaseRoot
-fun MyRootModule: ShowkaseRootModule
+class MyRootModule: ShowkaseRootModule
 ```
 
 Note: The root module is the main module of your app that has a dependency on all other modules 
