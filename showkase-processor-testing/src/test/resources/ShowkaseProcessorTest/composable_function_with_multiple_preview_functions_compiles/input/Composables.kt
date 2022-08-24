@@ -30,6 +30,7 @@ public annotation class DevicePreviews
 public class Composables {
 
     @FontScalePreviews
+    @Preview(name = "component", group = "component-group")
     @Composable
     public fun Component() {
     }
