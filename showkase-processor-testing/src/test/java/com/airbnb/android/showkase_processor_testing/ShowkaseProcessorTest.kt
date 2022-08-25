@@ -503,5 +503,10 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `class with @ScreenshotTest generates screenshot test for all UI elements`() {
         compileInputsAndVerifyOutputs()
     }
+
+    @Test
+    fun `composable function with multiple preview functions compiles`() {
+        compileInputsAndVerifyOutputs()
+    }
 }
 
