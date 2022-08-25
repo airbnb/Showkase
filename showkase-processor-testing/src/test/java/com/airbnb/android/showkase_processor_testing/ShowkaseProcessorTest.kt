@@ -144,7 +144,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
-    fun `composable previews with parameter providers should indent properly`() {
+    fun `composable previews with multiple parameter providers should indent properly`() {
         compileInputsAndVerifyOutputs()
     }
 
