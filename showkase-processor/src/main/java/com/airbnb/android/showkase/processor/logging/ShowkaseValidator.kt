@@ -75,6 +75,11 @@ internal class ShowkaseValidator {
         }
     }
 
+    // This should check if it is an annotation that's annotated with @Preview annotation
+    internal fun checkElementIsMultiPreview(element: XElement): Boolean {
+        return element.isTypeElement() && element.isAnnotationClass()
+    }
+
     // We only allow composable functions who's previews meet the following criteria:
     // 1. Has no parameters
     // 2. If it has parameters:
