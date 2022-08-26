@@ -220,6 +220,9 @@ internal fun composePreviewFunctionLambdaCodeBlock(
     }
 }
 
+internal fun CodeBlock.Builder.withDoubleIndent(block: CodeBlock.Builder.() -> Unit) =
+    doubleIndent().also(block).doubleUnindent()
+
 internal fun CodeBlock.Builder.doubleIndent() = indent().indent()
 
 internal fun CodeBlock.Builder.doubleUnindent() = unindent().unindent()
