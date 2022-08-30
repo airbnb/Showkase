@@ -12,7 +12,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.*
+import java.util.Locale
 
 internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessingEnv) {
 
@@ -32,8 +32,12 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
 
-            val name = if (showkaseMetadata is ShowkaseMetadata.Component) {
-                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.componentDistinctName}"
+            val name = if (
+                showkaseMetadata is ShowkaseMetadata.Component
+                && showkaseMetadata.componentIndex != null
+                && showkaseMetadata.componentIndex > 0
+            ) {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
             } else {
                 "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
             }
@@ -68,8 +72,9 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
-    private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata): AnnotationSpec.Builder {
-        val  builder = AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
+    private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata): AnnotationSpec.Builder =
+        AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
+            .addMember("showkaseName = %S", showkaseMetadata.showkaseName)
             .addMember("showkaseGroup = %S", showkaseMetadata.showkaseGroup)
             .addMember("packageName = %S", showkaseMetadata.packageName)
             .addMember("packageSimpleName = %S", showkaseMetadata.packageSimpleName)
@@ -77,13 +82,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             .addMember("insideObject = ${showkaseMetadata.insideObject}")
             .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
             .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
-        if (showkaseMetadata is ShowkaseMetadata.Component && showkaseMetadata.componentDistinctName != null) {
-            builder.addMember("showkaseName = %S", showkaseMetadata.componentDistinctName)
-        } else {
-            builder.addMember("showkaseName = %S", showkaseMetadata.showkaseName)
-        }
-        return builder
-    }
+
 
     private fun addMetadataTypeSpecificProperties(
         showkaseMetadata: ShowkaseMetadata,

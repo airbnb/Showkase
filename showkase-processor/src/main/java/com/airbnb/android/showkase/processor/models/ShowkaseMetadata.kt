@@ -53,7 +53,6 @@ internal sealed class ShowkaseMetadata {
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
         val componentIndex: Int? = null,
-        val componentDistinctName: String? = null,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
         val previewParameterProviderType: TypeName? = null,
@@ -211,7 +210,6 @@ internal fun getShowkaseMetadata(
         previewParameterName = previewParameterMetadata?.first,
         previewParameterProviderType = previewParameterMetadata?.second,
         isDefaultStyle = isDefaultStyle,
-        componentDistinctName = element.name,
     )
 }
 
@@ -292,7 +290,6 @@ internal fun getShowkaseMetadataFromPreview(
             previewParameterName = previewParameterMetadata?.first,
             previewParameterProviderType = previewParameterMetadata?.second,
             componentIndex = index,
-            componentDistinctName =  "${element.name}_$index"
         )
     }
 }

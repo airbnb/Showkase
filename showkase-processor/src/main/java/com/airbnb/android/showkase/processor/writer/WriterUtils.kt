@@ -118,10 +118,15 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     showkaseMetadata: ShowkaseMetadata.Component,
     isPreviewParameter: Boolean = false
 ) {
+    val componentName = if (showkaseMetadata.componentIndex != null) {
+        "_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
+    } else {
+        "_${showkaseMetadata.showkaseName}"
+    }
     var componentKey = (showkaseMetadata.packageName +
             "_${showkaseMetadata.enclosingClassName}" +
             "_${showkaseMetadata.showkaseGroup}" +
-            "_${showkaseMetadata.componentDistinctName}" +
+            componentName +
             "_${showkaseMetadata.showkaseStyleName}").replace(
         SPACE_REGEX,
         ""
