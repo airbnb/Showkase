@@ -57,3 +57,14 @@ fun BasicChipBluePreview() {
         modifier = Modifier.background(color = Color.Blue)
     )
 }
+
+
+@ShowkaseComposable(name = "Basic Chip Grey Light", group = "Chips")
+@ShowkaseComposable(name = "Basic Chip Grey Dark", group = "Chips")
+@Composable
+fun BasicChipGreyPreview() {
+    BasicChip(
+        text = "Chip Component",
+        modifier = Modifier.background(color = Color.Gray)
+    )
+}

@@ -83,6 +83,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+
                 showkaseValidator.validateComponentElement(
                     element,
                     ShowkaseComposable::class.java.simpleName
@@ -91,15 +93,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element = element,
                     showkaseValidator = showkaseValidator,
                 )
-            }.toSet()
+            }.flatten().mapNotNull { it }.toSet()
     }
 
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
-        // TODO: Look into making this easier
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
-                if (showkaseValidator.checkElementIsMultiPreview(element)) return@mapNotNull null
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 showkaseValidator.validateComponentElement(
                     element,
                     PREVIEW_SIMPLE_NAME
