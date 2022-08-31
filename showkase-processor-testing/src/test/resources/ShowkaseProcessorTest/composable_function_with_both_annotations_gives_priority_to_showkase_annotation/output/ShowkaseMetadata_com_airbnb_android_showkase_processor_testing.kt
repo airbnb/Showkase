@@ -19,19 +19,4 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   )
   public fun group2name2(): Unit {
   }
-
-  @ShowkaseCodegenMetadata(
-    showkaseName = "name1",
-    showkaseGroup = "group1",
-    packageName = "com.airbnb.android.showkase_processor_testing",
-    packageSimpleName = "showkase_processor_testing",
-    showkaseElementName = "TestComposable1",
-    insideObject = false,
-    insideWrapperClass = false,
-    showkaseKDoc = "",
-    showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false,
-  )
-  public fun group1name1(): Unit {
-  }
 }
