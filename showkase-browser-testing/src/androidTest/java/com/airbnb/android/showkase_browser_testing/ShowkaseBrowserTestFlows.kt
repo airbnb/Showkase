@@ -79,8 +79,12 @@ internal fun <T : ComponentActivity> AndroidComposeTestRule<ActivityScenarioRule
         it.onBackPressed()
     }
 
-internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyLandingScreen() {
-    verifyRowsWithTextAreDisplayed("Components (7)", "Typography (13)", "Colors (4)")
+internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyLandingScreen(
+    components: Int,
+    typography: Int,
+    colors: Int,
+) {
+    verifyRowsWithTextAreDisplayed("Components ($components)", "Typography ($typography)", "Colors ($colors)")
 }
 
 internal fun AndroidComposeTestRule<ActivityScenarioRule<ShowkaseBrowserActivity>, ShowkaseBrowserActivity>.verifyTypographyDetailScreen() {
