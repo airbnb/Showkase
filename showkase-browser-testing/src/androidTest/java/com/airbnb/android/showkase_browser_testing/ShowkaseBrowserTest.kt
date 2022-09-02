@@ -37,6 +37,10 @@ class ShowcaseBrowserTest {
         )
 
     // This will alter now since KSP supports stacked preview annotations and KAPT does not.
+    // It is not supported in KAPT because there is no support for repeatable annotations in KAPT
+    // beyond the source retention KEEP, except for in the new IR backend which was introduced
+    // in Kotlin 1.6. It will be available in the old backend in Kotlin version 1.7.20.
+    // See https://youtrack.jetbrains.com/issue/KT-49682 for more information about this.
     private val componentSize = if (System.getProperty("useKsp") == "true") {
         11
     } else {
