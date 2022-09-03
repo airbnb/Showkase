@@ -47,6 +47,11 @@ class ShowcaseBrowserTest {
         7
     }
 
+    @Before
+    fun setupLog() {
+        println("Use KSP value = ${System.getProperty("useKsp")}")
+    }
+
     @Test
     fun activity_starts_and_all_the_showkase_ui_elements_are_visible_on_the_screen_and_clickable() {
         // Assert that all the categories are displayed on the screen and that they are clickable.
