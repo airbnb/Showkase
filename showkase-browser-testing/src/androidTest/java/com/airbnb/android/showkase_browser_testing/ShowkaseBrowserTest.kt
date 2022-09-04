@@ -6,7 +6,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,15 +40,10 @@ class ShowcaseBrowserTest {
     // beyond the source retention KEEP, except for in the new IR backend which was introduced
     // in Kotlin 1.6. It will be available in the old backend in Kotlin version 1.7.20.
     // See https://youtrack.jetbrains.com/issue/KT-49682 for more information about this.
-    private val componentSize = if (System.getProperty("useKsp") == "true") {
+    private val componentSize = if (BuildConfig.IS_RUNNING_KSP) {
         11
     } else {
         7
-    }
-
-    @Before
-    fun setupLog() {
-        println("Use KSP value = ${System.getProperty("useKsp")}")
     }
 
     @Test
@@ -92,7 +86,8 @@ class ShowcaseBrowserTest {
             verifyLandingScreen(
                 components = componentSize,
                 typography = 13,
-                colors = 4,)
+                colors = 4,
+            )
 
             // Tap on the "Colors" row
             clickRowWithText("Colors (4)")
@@ -109,7 +104,8 @@ class ShowcaseBrowserTest {
             verifyLandingScreen(
                 components = componentSize,
                 typography = 13,
-                colors = 4,)
+                colors = 4,
+            )
 
             // Tap on the "Typography" row
             clickRowWithText("Typography (13)")
@@ -193,7 +189,8 @@ class ShowcaseBrowserTest {
             verifyLandingScreen(
                 components = componentSize,
                 typography = 13,
-                colors = 4,)
+                colors = 4,
+            )
 
             // Tap on the "Colors" row
             clickRowWithText("Colors (4)")
@@ -213,7 +210,8 @@ class ShowcaseBrowserTest {
             verifyLandingScreen(
                 components = componentSize,
                 typography = 13,
-                colors = 4,)
+                colors = 4,
+            )
 
             // Tap on the "Typography" row
             clickRowWithText("Typography (13)")
@@ -242,7 +240,8 @@ class ShowcaseBrowserTest {
             verifyLandingScreen(
                 components = componentSize,
                 typography = 13,
-                colors = 4,)
+                colors = 4,
+            )
 
             // Select Components
             clickRowWithText("Components ($componentSize)")
@@ -267,7 +266,8 @@ class ShowcaseBrowserTest {
             verifyLandingScreen(
                 components = componentSize,
                 typography = 13,
-                colors = 4,)
+                colors = 4,
+            )
 
             // Select Colors
             clickRowWithText("Colors (4)")
