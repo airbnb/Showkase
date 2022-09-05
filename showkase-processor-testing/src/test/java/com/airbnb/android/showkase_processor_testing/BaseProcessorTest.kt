@@ -71,8 +71,10 @@ abstract class BaseProcessorTest {
         }
     }
 
-    protected fun compileInputsAndVerifyOutputs() {
-        compileInputs { mode, compilation, result ->
+    protected fun compileInputsAndVerifyOutputs(
+        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT)
+    ) {
+        compileInputs(modes = modes) { mode, compilation, result ->
             result.assertGeneratedSources(mode, compilation)
         }
     }

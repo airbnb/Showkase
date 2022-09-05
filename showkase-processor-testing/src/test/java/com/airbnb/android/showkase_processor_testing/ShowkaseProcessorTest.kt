@@ -508,5 +508,17 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `composable function with multiple preview functions compiles`() {
         compileInputsAndVerifyOutputs()
     }
+
+    @Test
+    fun `composable function with multiple preview annotations stacked generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
+    }
+
+    @Test
+    fun `composable function with multiple showkasecomposable annotations stacked generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
+    }
 }
 

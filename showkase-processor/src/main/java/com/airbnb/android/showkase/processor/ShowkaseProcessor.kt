@@ -83,6 +83,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+
                 showkaseValidator.validateComponentElement(
                     element,
                     ShowkaseComposable::class.java.simpleName
@@ -91,14 +93,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element = element,
                     showkaseValidator = showkaseValidator,
                 )
-            }.toSet()
+            }.flatten().mapNotNull { it }.toSet()
     }
 
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
-                if (showkaseValidator.checkElementIsMultiPreview(element)) return@mapNotNull null
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 showkaseValidator.validateComponentElement(
                     element,
                     PREVIEW_SIMPLE_NAME
@@ -109,7 +111,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     showkaseValidator = showkaseValidator
                 )
 
-            }.toSet()
+            }.flatten().mapNotNull { it }.toSet()
     }
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
@@ -126,12 +128,21 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 
         // will be null) & the methodName.
-        "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+        if (it.componentIndex != null) {
+            "${it.packageName}_${it.enclosingClassName}_${it.elementName}_${it.componentIndex}"
+        } else {
+
+            "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+        }
     }
         .distinctBy {
             // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app. 
-            "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+            // that they don't show up twice in the browser app.
+            if (it.componentIndex != null) {
+                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
+            } else {
+                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+            }
         }
         .sortedBy {
             "${it.packageName}_${it.enclosingClassName}_${it.elementName}"

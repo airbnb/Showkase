@@ -53,6 +53,20 @@ class WrapperComposableClass {
     }
 }
 
+@ShowkaseComposable("Composable7", "Group7")
+@ShowkaseComposable("Composable8", "Group7")
+@Composable
+fun TestComposable7() {
+    BasicText(text = "Test Composable7and8")
+}
+
+@Preview("Composable9", "Group7")
+@Preview("Composable10", "Group7")
+@Composable
+fun TestComposable8() {
+    BasicText(text = "Test Composable9and10")
+}
+
 // Adding this to see on the UI tests that this compiles.
 // Will remove it when we actually supports MultiPreviewAnnotations.
 @Preview(

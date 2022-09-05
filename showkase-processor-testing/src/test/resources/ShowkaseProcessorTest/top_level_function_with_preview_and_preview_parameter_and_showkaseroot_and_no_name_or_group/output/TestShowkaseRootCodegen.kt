@@ -23,7 +23,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             componentName = "TestComposable",
             componentKDoc = "",
             componentKey =
-                """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""",
+                """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_0_null""",
             isDefaultStyle = false,
             component = @Composable { TestComposable() })
       ).apply {
@@ -38,7 +38,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
                           componentName = "TestComposable2",
                           componentKDoc = "",
                           componentKey =
-                              """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_null_$index""",
+                              """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_0_null_$index""",
                           isDefaultStyle = false,
                           component = @Composable { TestComposable2(text = previewParam) }
                       )
