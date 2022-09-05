@@ -652,7 +652,7 @@ class ShowcaseBrowserTest {
     @Test
     fun stacked_preview_show_up_in_browser() {
         // Stacked previews are only supported from ksp, so this is to bypass kapt on CI
-        if (System.getProperty("useKsp") == "true") {
+        if (BuildConfig.IS_RUNNING_KSP) {
             composeTestRule.apply {
 
                 verifyLandingScreen(
