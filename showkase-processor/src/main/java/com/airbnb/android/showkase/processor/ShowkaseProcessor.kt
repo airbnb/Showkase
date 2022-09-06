@@ -88,12 +88,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
-                val showkaseAnnotation = element.getAnnotation(ShowkaseComposable::class) ?: return@mapNotNull null
-                val showkaseGroup = showkaseAnnotation.value.group
-                val showkaseName = showkaseAnnotation.value.name
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    showkaseGroup to showkaseName,
                     ShowkaseComposable::class.java.simpleName,
                     skipPrivate
                 )
@@ -111,13 +107,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
-                showkaseValidator.validateComponentElementOrSkip(
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    "group" to "name",
                     PREVIEW_SIMPLE_NAME,
                     skipPrivate
                 )
-
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadataFromPreview(
                     element = element,
                     showkaseValidator = showkaseValidator

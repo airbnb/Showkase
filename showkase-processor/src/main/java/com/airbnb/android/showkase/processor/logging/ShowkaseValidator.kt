@@ -32,34 +32,35 @@ internal class ShowkaseValidator {
     @Suppress("ThrowsCount")
     internal fun validateComponentElementOrSkip(
         element: XElement,
-        groupNamePair: Pair<String, String>,
         annotationName: String,
         skipPrivate: Boolean = false
     ): Boolean {
         contract {
             returns() implies (element is XMethodElement)
         }
-        val name = "group: ${groupNamePair.first} name: ${groupNamePair.second}"
         when {
             !element.isMethod() -> {
                 throw ShowkaseProcessorException(
-                    "$name: Only composable methods can be annotated with $annotationName",
-                    element
-                )
-            }
-            // Only check simple name to avoid costly type resolution
-            element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
-                throw ShowkaseProcessorException(
-                    "$name: Only composable methods can be annotated with $annotationName",
+                    "Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
             skipPrivate && element.isPrivate() -> return true
+            // Only check simple name to avoid costly type resolution
+            element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
+                throw ShowkaseProcessorException(
+                    "Only composable methods can be annotated with $annotationName",
+                    element
+                )
+            }
             element.isPrivate() -> {
                 throw ShowkaseProcessorException(
-                    "$name: The methods annotated with " +
+                    "The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
-                            "them otherwise.",
+                            "them otherwise. If you'd like to skip this check and ignore the private " +
+                            "previews, kindly pass skipPrivate=true as an annotation processor option." +
+                            "To learn more about how to set this option, read the Showkase README here- " +
+                            "https://github.com/airbnb/Showkase/blob/master/README.md",
                     element
                 )
             }
@@ -67,7 +68,7 @@ internal class ShowkaseValidator {
             // the parameter should be annotated with @PreviewParameter.
             validateComposableParameter(element) -> {
                 throw ShowkaseProcessorException(
-                    "$name: Make sure that the @Composable functions that you annotate with" +
+                    "Make sure that the @Composable functions that you annotate with" +
                             " the $annotationName annotation only have a single parameter that is" +
                             " annotated with @PreviewParameter.",
                     element

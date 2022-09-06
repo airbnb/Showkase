@@ -1,24 +1,22 @@
 // This is an auto-generated file. Please do not edit/modify this file.
 package com.airbnb.android.showkase
 
-import ShowkaseProcessorTest.private_composable_with_showkase_annotation_and_skipPrivate_option_compiles_ok.input.Composables
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import kotlin.Unit
 
 public class
-    ShowkaseMetadata_showkaseprocessortest_private_composable_with_showkase_annotation_and_skipprivate_option_compiles_ok_input
+    ShowkaseMetadata_showkaseprocessortest_private_composable_with_preview_annotation_and_skipprivate_option_compiles_ok_input
     {
   @ShowkaseCodegenMetadata(
     showkaseName = "name1",
     showkaseGroup = "group1",
     packageName =
-        "ShowkaseProcessorTest.private_composable_with_showkase_annotation_and_skipPrivate_option_compiles_ok.input",
+        "ShowkaseProcessorTest.private_composable_with_preview_annotation_and_skipPrivate_option_compiles_ok.input",
     packageSimpleName = "input",
     showkaseElementName = "TestComposable1",
     insideObject = false,
-    insideWrapperClass = true,
+    insideWrapperClass = false,
     showkaseKDoc = "",
-    enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
@@ -29,13 +27,12 @@ public class
     showkaseName = "name3",
     showkaseGroup = "group3",
     packageName =
-        "ShowkaseProcessorTest.private_composable_with_showkase_annotation_and_skipPrivate_option_compiles_ok.input",
+        "ShowkaseProcessorTest.private_composable_with_preview_annotation_and_skipPrivate_option_compiles_ok.input",
     packageSimpleName = "input",
     showkaseElementName = "TestComposable3",
     insideObject = false,
-    insideWrapperClass = true,
+    insideWrapperClass = false,
     showkaseKDoc = "",
-    enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
