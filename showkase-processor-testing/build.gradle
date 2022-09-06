@@ -49,10 +49,6 @@ android {
     }
 }
 
-ksp {
-    arg("key", "value")
-}
-
 dependencies {
     // Allows this module to access the annotation processor related classes. Otherwise those are
     // only available in java library modules. Inspiration -
@@ -89,6 +85,8 @@ dependencies {
     testImplementation deps.kotlinCompileTestingKsp
 }
 
+// Needed for Java17 otherwise these tests failed to run locally.
+// More info - https://youtrack.jetbrains.com/issue/KT-45545/Kapt-is-not-compatible-with-JDK-16
 tasks.withType(Test) {
     if (JavaVersion.current() >= JavaVersion.VERSION_16) {
         jvmArgs(

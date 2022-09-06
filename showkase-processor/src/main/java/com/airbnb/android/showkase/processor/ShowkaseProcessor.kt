@@ -36,7 +36,7 @@ class ShowkaseProcessorProvider : SymbolProcessorProvider {
     }
 }
 
-@SupportedSourceVersion(SourceVersion.RELEASE_11) // to support Java 8
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 class ShowkaseProcessor @JvmOverloads constructor(
     kspEnvironment: SymbolProcessorEnvironment? = null
 ) : BaseProcessor(kspEnvironment) {
