@@ -30,31 +30,34 @@ import kotlin.contracts.contract
 
 internal class ShowkaseValidator {
     @Suppress("ThrowsCount")
-    internal fun validateComponentElement(
+    internal fun validateComponentElementOrSkip(
         element: XElement,
-        annotationName: String
-    ) {
+        groupNamePair: Pair<String, String>,
+        annotationName: String,
+        skipPrivate: Boolean = false
+    ): Boolean {
         contract {
             returns() implies (element is XMethodElement)
         }
-
+        val name = "group: ${groupNamePair.first} name: ${groupNamePair.second}"
         when {
             !element.isMethod() -> {
                 throw ShowkaseProcessorException(
-                    "Only composable methods can be annotated with $annotationName",
+                    "$name: Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
             // Only check simple name to avoid costly type resolution
             element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
                 throw ShowkaseProcessorException(
-                    "Only composable methods can be annotated with $annotationName",
+                    "$name: Only composable methods can be annotated with $annotationName",
                     element
                 )
             }
+            skipPrivate && element.isPrivate() -> return true
             element.isPrivate() -> {
                 throw ShowkaseProcessorException(
-                    "The methods annotated with " +
+                    "$name: The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
                             "them otherwise.",
                     element
@@ -64,13 +67,14 @@ internal class ShowkaseValidator {
             // the parameter should be annotated with @PreviewParameter.
             validateComposableParameter(element) -> {
                 throw ShowkaseProcessorException(
-                    "Make sure that the @Composable functions that you annotate with" +
+                    "$name: Make sure that the @Composable functions that you annotate with" +
                             " the $annotationName annotation only have a single parameter that is" +
                             " annotated with @PreviewParameter.",
                     element
                 )
             }
             else -> {
+                return false
             }
         }
     }

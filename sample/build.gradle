@@ -57,6 +57,18 @@ android {
         exclude 'META-INF/gradle/incremental.annotation.processors'
     }
 }
+if (project.hasProperty("useKsp")) {
+    ksp {
+        arg("skipPrivate", "true")
+    }
+} else {
+    kapt {
+        arguments {
+            arg("skipPrivate", "false")
+        }
+    }
+}
+
 
 dependencies {
     // Showkase dependencies

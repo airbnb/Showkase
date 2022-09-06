@@ -81,9 +81,23 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `private composable with showkase annotation and skipPrivate option compiles ok`() {
+        val options = mutableMapOf<String, String>()
+        options["skipPrivate"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
+    }
+
+    @Test
     fun `private composable with preview annotation throws compilation error`() {
         assertCompilationFails("The methods annotated with Preview can't be private as Showkase won't be " +
                 "able to access them otherwise.")
+    }
+
+    @Test
+    fun `private composable with preview annotation and skipPrivate option compiles ok`() {
+        val options = mutableMapOf<String, String>()
+        options["skipPrivate"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
     }
 
     @Test
