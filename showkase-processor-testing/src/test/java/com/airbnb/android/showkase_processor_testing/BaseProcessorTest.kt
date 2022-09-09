@@ -76,10 +76,9 @@ abstract class BaseProcessorTest {
     }
 
     protected fun compileInputsAndVerifyOutputs(
-        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
-        options: MutableMap<String, String> = mutableMapOf(),
+        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT)
     ) {
-        compileInputs(modes = modes, options = options) { mode, compilation, result ->
+        compileInputs(modes = modes) { mode, compilation, result ->
             result.assertGeneratedSources(mode, compilation)
         }
     }

@@ -67,8 +67,6 @@ fun TestComposable8() {
     BasicText(text = "Test Composable9and10")
 }
 
-// Adding this to see on the UI tests that this compiles.
-// Will remove it when we actually supports MultiPreviewAnnotations.
 @Preview(
     name = "Custom Text Light",
     group = "Button",

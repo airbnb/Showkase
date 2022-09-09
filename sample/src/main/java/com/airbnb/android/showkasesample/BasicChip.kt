@@ -68,3 +68,13 @@ fun BasicChipGreyPreview() {
         modifier = Modifier.background(color = Color.Gray)
     )
 }
+
+
+@CustomPreview
+@Composable
+fun BasicChipPinkPreview() {
+    BasicChip(
+        text = "Chip Component",
+        modifier = Modifier.background(color = Color.Red)
+    )
+}

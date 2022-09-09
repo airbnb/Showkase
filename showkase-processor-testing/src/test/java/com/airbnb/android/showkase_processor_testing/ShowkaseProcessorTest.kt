@@ -76,8 +76,10 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `private composable with showkase annotation throws compilation error`() {
-        assertCompilationFails("The methods annotated with ShowkaseComposable can't be private as " +
-                "Showkase won't be able to access them otherwise.")
+        assertCompilationFails(
+            "The methods annotated with ShowkaseComposable can't be private as " +
+                    "Showkase won't be able to access them otherwise."
+        )
     }
 
     @Test
@@ -89,8 +91,10 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `private composable with preview annotation throws compilation error`() {
-        assertCompilationFails("The methods annotated with Preview can't be private as Showkase won't be " +
-                "able to access them otherwise.")
+        assertCompilationFails(
+            "The methods annotated with Preview can't be private as Showkase won't be " +
+                    "able to access them otherwise."
+        )
     }
 
     @Test
@@ -140,21 +144,27 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function that has non preview parameters and preview annotation throws Exception`() {
-        assertCompilationFails("Make sure that the @Composable functions that you annotate with the Preview " +
-                "annotation only have a single parameter that is annotated with @PreviewParameter.")
+        assertCompilationFails(
+            "Make sure that the @Composable functions that you annotate with the Preview " +
+                    "annotation only have a single parameter that is annotated with @PreviewParameter."
+        )
     }
 
     @Test
     fun `composable function with partial default parameters throws compilation error`() {
-        assertCompilationFails("Make sure that the @Composable functions that you annotate with the Preview " +
-                "annotation only have a single parameter that is annotated with @PreviewParameter.")
+        assertCompilationFails(
+            "Make sure that the @Composable functions that you annotate with the Preview " +
+                    "annotation only have a single parameter that is annotated with @PreviewParameter."
+        )
     }
 
     @Test
     fun `composable function with showkase annotation inside class with parameters throws compilation error`() {
-        assertCompilationFails("Only classes that don't accept any constructor parameters can " +
-                "hold a @Composable function that's annotated with the @ShowkaseComposable/@Preview " +
-                "annotation")
+        assertCompilationFails(
+            "Only classes that don't accept any constructor parameters can " +
+                    "hold a @Composable function that's annotated with the @ShowkaseComposable/@Preview " +
+                    "annotation"
+        )
     }
 
     @Test
@@ -164,9 +174,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with preview annotation inside class with parameters throws compilation error`() {
-        assertCompilationFails("Only classes that don't accept any constructor parameters can " +
-                "hold a @Composable function that's annotated with the @ShowkaseComposable/@Preview " +
-                "annotation")
+        assertCompilationFails(
+            "Only classes that don't accept any constructor parameters can " +
+                    "hold a @Composable function that's annotated with the @ShowkaseComposable/@Preview " +
+                    "annotation"
+        )
     }
 
     @Test
@@ -534,5 +546,41 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         // This functionality is only supported with KSP for now.
         compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
-}
 
+    @Test
+    fun `composable function with custom annotations stacked in different module generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(
+            modes = listOf(Mode.KSP),
+            options = mutableMapOf(
+                "MultipreviewTypes" to
+                        "com.airbnb.android.showkase_processor_testing_submodule.CustomPreviewAnnotation"
+            )
+        )
+    }
+
+    @Test
+    fun `composable function with custom annotations stacked in same module generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(
+            modes = listOf(Mode.KSP),
+            options = mutableMapOf(
+                "MultipreviewTypes" to
+                        "com.airbnb.android.showkase_processor_testing.InternalCustomPreviewAnnotation"
+            )
+        )
+    }
+
+    @Test
+    fun `composable function with two custom annotations stacked in same module generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(
+            modes = listOf(Mode.KSP),
+            options = mutableMapOf(
+                "MultipreviewTypes" to
+                        "com.airbnb.android.showkase_processor_testing.InternalPreviewOne," +
+                        "com.airbnb.android.showkase_processor_testing.InternalPreviewTwo"
+            )
+        )
+    }
+}

@@ -49,6 +49,10 @@ android {
     }
 }
 
+ksp {
+    arg("MultipreviewTypes", "com.airbnb.android.showkase.screenshot.testing.MyCustomAnnotation")
+}
+
 dependencies {
     // Allows this module to access the annotation processor related classes. Otherwise those are
     // only available in java library modules. Inspiration -
@@ -61,6 +65,7 @@ dependencies {
     // Showkase
     implementation project(':showkase')
     implementation project(':showkase-processor')
+    implementation project(':showkase-processor-testing-submodule')
     implementation project(':showkase-screenshot-testing')
 
     // KSP

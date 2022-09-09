@@ -1,18 +1,12 @@
 package com.airbnb.android.showkase.processor.models
 
-import androidx.room.compiler.processing.XAnnotation
-import androidx.room.compiler.processing.XAnnotationBox
-import androidx.room.compiler.processing.XElement
-import androidx.room.compiler.processing.XFieldElement
-import androidx.room.compiler.processing.XMemberContainer
-import androidx.room.compiler.processing.XMethodElement
-import androidx.room.compiler.processing.XType
-import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.*
 import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
+import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_CLASS_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -267,6 +261,59 @@ internal fun getShowkaseMetadataFromPreview(
         val showkaseName = getShowkaseName(
             annotation.getAsString("name"),
             element.name
+        )
+        val showkaseGroup = getShowkaseGroup(
+            annotation.getAsString("group"),
+            commonMetadata.enclosingClass,
+        )
+
+        val width = annotation.getAsInt("widthDp")
+        val height = annotation.getAsInt("heightDp")
+
+        val previewParameterMetadata = element.getPreviewParameterMetadata()
+
+        ShowkaseMetadata.Component(
+            packageSimpleName = commonMetadata.moduleName,
+            packageName = commonMetadata.packageName,
+            enclosingClassName = commonMetadata.enclosingClassName,
+            elementName = element.name,
+            showkaseKDoc = commonMetadata.kDoc,
+            showkaseName = showkaseName,
+            showkaseGroup = showkaseGroup,
+            showkaseWidthDp = if (width == -1) null else width,
+            showkaseHeightDp = if (height == -1) null else width,
+            insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+            insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+            element = element,
+            previewParameterName = previewParameterMetadata?.first,
+            previewParameterProviderType = previewParameterMetadata?.second,
+            componentIndex = index,
+        )
+    }
+}
+
+@Suppress("LongParameterList", "LongMethod")
+internal fun getShowkaseMetadataFromCustomAnnotation(
+    element: XMethodElement,
+    showkaseValidator: ShowkaseValidator,
+    annotationName: String,
+    roundEnv: XRoundEnv,
+): List<ShowkaseMetadata.Component?> {
+    val customAnnotation = element.requireAnnotationBySimpleName(annotationName)
+
+    val previewAnnotations = customAnnotation.map {
+//        it.typeElement.getAnnotations(PREVIEW_CLASS_NAME)
+        it.typeElement.requireAnnotationBySimpleName(PREVIEW_SIMPLE_NAME)
+    }.flatten()
+
+    val showkaseComosableAnnotation = element.getAnnotation(ShowkaseComposable::class)?.value
+    // If this component was configured to be skipped, return early
+    if (showkaseComosableAnnotation != null && showkaseComosableAnnotation.skip) return listOf() // Will be mapped out
+    return previewAnnotations.mapIndexed { index, annotation ->
+        val commonMetadata = element.extractCommonMetadata(showkaseValidator)
+        val showkaseName = getShowkaseName(
+            annotation.getAsString("name"),
+            element.kindName()
         )
         val showkaseGroup = getShowkaseGroup(
             annotation.getAsString("group"),

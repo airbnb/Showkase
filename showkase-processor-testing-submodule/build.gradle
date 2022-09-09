@@ -1,19 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-if (project.hasProperty('useKsp')) {
-    apply plugin: 'com.google.devtools.ksp'
-} else {
-    apply plugin: 'kotlin-kapt'
-    kapt {
-        correctErrorTypes = true
-    }
-}
-
-ksp {
-    arg("MultipreviewTypes", "com.airbnb.android.showkase_browser_testing.CustomButtonPreview")
-}
-
 android {
     compileSdkVersion 32
     // Added to avoid this error -
@@ -23,8 +10,13 @@ android {
     packagingOptions {
         exclude 'META-INF/gradle/incremental.annotation.processors'
         exclude("META-INF/*.kotlin_module")
+        // Added to avoid this error -
+        // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+        // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+        // > 2 files found with path 'META-INF/AL2.0' from inputs:
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
     }
-
     defaultConfig {
         minSdkVersion 26
         targetSdkVersion 32
@@ -33,12 +25,6 @@ android {
         // "pm clear" command after each test invocation. This command ensures
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
-        
-        if (project.hasProperty('useKsp')) {
-            buildConfigField "boolean", "IS_RUNNING_KSP", "true"
-        } else {
-            buildConfigField "boolean", "IS_RUNNING_KSP", "false"
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -52,15 +38,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
-    }
-    // Added to avoid this error -
-    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
-    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
-    // > 2 files found with path 'META-INF/AL2.0' from inputs:
-    packagingOptions {
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/LGPL2.1'
+        kotlinCompilerExtensionVersion "${versions.compose}"
     }
     configurations {
         all {
@@ -72,20 +50,16 @@ android {
 }
 
 dependencies {
+    // Allows this module to access the annotation processor related classes. Otherwise those are
+    // only available in java library modules. Inspiration -
+    // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
+    testImplementation files('libs/rt.jar')
+
     // Support Libraries
     implementation deps.support.appCompat
-    // Submodule for testing
-    implementation project(':showkase-browser-testing-submodule')
 
-    // Showkase
-    implementation project(':showkase')
-    if (project.hasProperty('useKsp')) {
-        ksp project(':showkase-processor')
-    } else {
-        kapt project(':showkase-processor')
-    }
-    implementation project(':showkase-processor')
-    implementation project(':showkase-screenshot-testing')
+    // KSP
+    implementation deps.ksp
 
     // Compose
     implementation deps.compose.activityCompose
@@ -93,15 +67,11 @@ dependencies {
     implementation deps.compose.core
     implementation deps.compose.foundation
     implementation deps.compose.tooling
-    androidTestImplementation deps.compose.uiTest
-
-    // Material
-    implementation deps.material.material
-    implementation deps.material.mdcComposeThemeAdapter
 
     // Testing
-    androidTestImplementation deps.test.junitImplementation
-    androidTestImplementation deps.test.androidXTestCore
-    androidTestImplementation deps.test.androidXTestRules
-    androidTestImplementation deps.test.androidxTestRunner
+    testImplementation deps.test.assertJ
+    testImplementation deps.test.googleTruth
+    testImplementation deps.test.junit
+    testImplementation deps.kotlinCompileTesting
+    testImplementation deps.kotlinCompileTestingKsp
 }

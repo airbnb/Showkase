@@ -70,6 +70,10 @@ if (project.hasProperty("useKsp")) {
 }
 
 
+ksp {
+    arg("MultipreviewTypes", "com.airbnb.android.showkasesample.CustomPreview")
+}
+
 dependencies {
     // Showkase dependencies
     // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 

@@ -3,22 +3,11 @@ package com.airbnb.android.showkase.processor
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
-import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
-import com.airbnb.android.showkase.annotation.ShowkaseColor
-import com.airbnb.android.showkase.annotation.ShowkaseComposable
-import com.airbnb.android.showkase.annotation.ShowkaseRoot
-import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
-import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
-import com.airbnb.android.showkase.annotation.ShowkaseTypography
+import com.airbnb.android.showkase.annotation.*
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
-import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
-import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
-import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
-import com.airbnb.android.showkase.processor.models.toModel
+import com.airbnb.android.showkase.processor.models.*
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
@@ -44,14 +33,30 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private val logger = ShowkaseExceptionLogger()
     private val showkaseValidator = ShowkaseValidator()
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String> = mutableSetOf(
-        ShowkaseComposable::class.java.name,
-        PREVIEW_CLASS_NAME,
-        ShowkaseColor::class.java.name,
-        ShowkaseTypography::class.java.name,
-        ShowkaseRoot::class.java.name,
-        ShowkaseScreenshot::class.java.name,
-    )
+    override fun getSupportedAnnotationTypes(): MutableSet<String> = supportedAnnotationTypes()
+
+    private fun supportedAnnotationTypes(): MutableSet<String> {
+        val set = mutableSetOf(
+            ShowkaseComposable::class.java.name,
+            PREVIEW_CLASS_NAME,
+            ShowkaseColor::class.java.name,
+            ShowkaseTypography::class.java.name,
+            ShowkaseRoot::class.java.name,
+            ShowkaseScreenshot::class.java.name,
+        )
+        getSupportedMultipreviewTypes()?.let {
+            set.addAll(it)
+        }
+
+        return set
+    }
+
+    private fun getSupportedMultipreviewTypes(): Set<String>? {
+        return environment
+            .options["MultipreviewTypes"]
+            ?.split(",")?.map { it.replace(" ", "") }
+            ?.toSet()
+    }
 
     override fun getSupportedOptions(): MutableSet<String> {
         return mutableSetOf("skipPrivatePreviews")
@@ -76,7 +81,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processComponentAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
-        return (showkaseComposablesMetadata + previewComposablesMetadata)
+        val customAnnotationMetadata = processCustomAnnotation(roundEnvironment)
+        return (showkaseComposablesMetadata + previewComposablesMetadata + customAnnotationMetadata)
             .dedupeAndSort()
             .toSet()
     }
@@ -119,6 +125,36 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 )
 
             }.flatten().mapNotNull { it }.toSet()
+    }
+
+    private fun processCustomAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
+        val supportedCustomAnnotationTypes =
+            getSupportedMultipreviewTypes()?.toList() ?: return emptySet()
+        val elementsAnnotatedWithCustomAnnotation =
+            supportedCustomAnnotationTypes.map { roundEnvironment.getElementsAnnotatedWith(it) }
+                .flatten()
+        val elementAnnotationMap =
+            supportedCustomAnnotationTypes.zip(elementsAnnotatedWithCustomAnnotation).toMap()
+        val metadataSet = elementAnnotationMap.map { (annotation, element) ->
+            showkaseValidator.validateComponentElement(
+                element,
+                annotation,
+            )
+
+            getShowkaseMetadataFromCustomAnnotation(
+                element = element,
+                showkaseValidator = showkaseValidator,
+                annotation.getCustomAnnotationSimpleName(),
+                roundEnvironment,
+            )
+
+        }.flatten().mapNotNull { it }.toSet()
+
+        return metadataSet
+    }
+
+    private fun String.getCustomAnnotationSimpleName(): String {
+        return this.split(".").last()
     }
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
