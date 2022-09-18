@@ -1,6 +1,8 @@
 package com.airbnb.android.showkase.processor
 
-import androidx.room.compiler.processing.*
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.android.showkase.annotation.*
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
@@ -14,11 +16,6 @@ import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeSpec
-import java.util.*
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 
@@ -69,12 +66,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
         set.addAll(
             environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
                 .flatMap { it.getEnclosedElements() }.mapNotNull {
-                when (val annotation =
-                    it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)) {
-                    null -> null
-                    else -> annotation.value.supportTypeQualifiedName
-                }
-            }.toSet()
+                    when (val annotation =
+                        it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)) {
+                        null -> null
+                        else -> annotation.value.supportTypeQualifiedName
+                    }
+                }.toSet()
         )
         environment
             .options["MultipreviewTypes"]
@@ -111,7 +108,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // This is for getting custom annotations from the supported types.
         val customAnnotationMetadata = processCustomAnnotation(roundEnvironment)
 
-        val customAnnotationMetadataFromClassPath = processCustomAnnotationFromClasspath(roundEnvironment)
+        val customAnnotationMetadataFromClassPath =
+            processCustomAnnotationFromClasspath(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata + customAnnotationMetadata + customAnnotationMetadataFromClassPath)
             .dedupeAndSort()
             .toSet()
@@ -144,7 +142,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
                     // Here we write to metadata to aggregate custom annotation data
-                    writeCustomAnnotationElementToMetadata(element)
+                    ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+                        element
+                    )
                     return@mapNotNull null
                 }
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
@@ -167,41 +167,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     // TODO: Move to writer
-    // This is to aggregate metadata for the custom annotation annotated with Preview
-    private fun writeCustomAnnotationElementToMetadata(element: XElement) {
-        val moduleName = "Showkase_test_testy_$element"
-        val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
-        val previewAnnotations =
-            element.getAllAnnotations().filter { it.name == PREVIEW_SIMPLE_NAME }
-        if (!element.isTypeElement()) return
-        ShowkaseBrowserWriter(environment).apply {
 
-            val functions = previewAnnotations.mapIndexed { index, xAnnotation ->
-                FunSpec.builder("${xAnnotation.name}_$index")
-                    .addAnnotation(
-                        AnnotationSpec.builder(
-                            ShowkaseMultiPreviewCodegenMetadata::class
-                        ).addMember("previewName = %S", xAnnotation.get("name"))
-                            .addMember("previewGroup = %S", xAnnotation.get("group"))
-                            .addMember("supportTypeQualifiedName = %S", element.qualifiedName)
-                            .addMember("showkaseWidth = %L", xAnnotation.getAsInt("widthDp"))
-                            .addMember("showkaseHeight = %L", xAnnotation.getAsInt("heightDp"))
-                            .addMember("packageName = %S", element.packageName)
-                            .build()
-                    ).build()
-            }
-
-            val fileBuilder = FileSpec.builder(
-                CODEGEN_PACKAGE_NAME,
-                generatedClassName
-            )
-            fileBuilder.addType(
-                TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
-            )
-
-            fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
-        }
-    }
 
     private fun processCustomAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         val supportedCustomAnnotationTypes =
@@ -212,7 +178,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val elementAnnotationMap =
             supportedCustomAnnotationTypes.zip(elementsAnnotatedWithCustomAnnotation).toMap()
         val metadataSet = elementAnnotationMap.map { (annotation, element) ->
-            writeCustomAnnotationElementToMetadata(element)
+            ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(element)
             showkaseValidator.validateComponentElement(
                 element,
                 annotation,
@@ -246,32 +212,39 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 }
             }
         return supportedCustomPreview.mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
-            roundEnvironment.getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName).mapIndexed { elementIndex, xElement ->
-                showkaseValidator.validateComponentElement(
-                    xElement,
-                    customPreviewMetadata.supportTypeQualifiedName,
-                )
-                val commonMetadata = xElement.extractCommonMetadata(showkaseValidator)
-                val previewParamMetadata = xElement.getPreviewParameterMetadata()
-                ShowkaseMetadata.Component(
-                    element = xElement,
-                    elementName = xElement.name,
-                    packageName = commonMetadata.packageName,
-                    packageSimpleName = commonMetadata.moduleName,
-                    showkaseName = getShowkaseName("${customPreviewMetadata.previewName}_$elementIndex", xElement.name),
-                    insideObject = commonMetadata.showkaseFunctionType.insideObject(),
-                    previewParameterName = customPreviewMetadata.previewName,
-                    previewParameterProviderType = previewParamMetadata?.second,
-                    showkaseGroup = getShowkaseGroup(customPreviewMetadata.previewGroup, commonMetadata.enclosingClass),
-                    showkaseKDoc = commonMetadata.kDoc,
-                    enclosingClassName = commonMetadata.enclosingClassName,
-                    componentIndex = elementIndex + index, // Need this to be unique because of filtering algorithm. TOOD: Find a better way to do this
-                    insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT,
-                    showkaseHeightDp = if (customPreviewMetadata.showkaseHeight == -1) null else customPreviewMetadata.showkaseHeight,
-                    showkaseWidthDp = if (customPreviewMetadata.showkaseWidth == -1) null else customPreviewMetadata.showkaseWidth,
-                )
+            roundEnvironment.getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
+                .mapIndexed { elementIndex, xElement ->
+                    showkaseValidator.validateComponentElement(
+                        xElement,
+                        customPreviewMetadata.supportTypeQualifiedName,
+                    )
+                    val commonMetadata = xElement.extractCommonMetadata(showkaseValidator)
+                    val previewParamMetadata = xElement.getPreviewParameterMetadata()
+                    ShowkaseMetadata.Component(
+                        element = xElement,
+                        elementName = xElement.name,
+                        packageName = commonMetadata.packageName,
+                        packageSimpleName = commonMetadata.moduleName,
+                        showkaseName = getShowkaseName(
+                            "${customPreviewMetadata.previewName}_$elementIndex",
+                            xElement.name
+                        ),
+                        insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+                        previewParameterName = customPreviewMetadata.previewName,
+                        previewParameterProviderType = previewParamMetadata?.second,
+                        showkaseGroup = getShowkaseGroup(
+                            customPreviewMetadata.previewGroup,
+                            commonMetadata.enclosingClass
+                        ),
+                        showkaseKDoc = commonMetadata.kDoc,
+                        enclosingClassName = commonMetadata.enclosingClassName,
+                        componentIndex = elementIndex + index, // Need this to be unique because of filtering algorithm. TOOD: Find a better way to do this
+                        insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT,
+                        showkaseHeightDp = if (customPreviewMetadata.showkaseHeight == -1) null else customPreviewMetadata.showkaseHeight,
+                        showkaseWidthDp = if (customPreviewMetadata.showkaseWidth == -1) null else customPreviewMetadata.showkaseWidth,
+                    )
 
-            }
+                }
         }.flatten().toSet()
     }
 
@@ -373,49 +346,19 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     colorMetadata,
                     typographyMetadata
                 )
-            writeSupportedAnnotationTypesToFile(roundEnvironment)
 
         }
 
         if (customPreviewAnnotations != null) {
-            writeCustomAnnotationElementToMetadata(customPreviewAnnotations)
+            ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+                customPreviewAnnotations
+            )
         }
 
         if (screenshotTestElement != null) {
             // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
             writeScreenshotTestFiles(screenshotTestElement, rootElement, showkaseProcessorMetadata)
         }
-    }
-
-    // This is just to test what kinda types are supported at this point
-    private fun writeSupportedAnnotationTypesToFile(roundEnvironment: XRoundEnv) {
-        val moduleName = "Showkase_test_testy_"
-        val generatedClassName = "ShowkaseMetadatas_${moduleName.lowercase(Locale.getDefault())}"
-
-        val fileBuilder = FileSpec.builder(
-            CODEGEN_PACKAGE_NAME,
-            generatedClassName
-        )
-        val supportedCustomPreview = environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
-            .flatMap { it.getEnclosedElements() }.mapNotNull {
-                when (val annotation =
-                    it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)) {
-                    null -> null
-                    else -> annotation.value
-                }
-            }
-
-        val function = supportedCustomPreview.flatMapIndexed {index, s ->
-            roundEnvironment.getElementsAnnotatedWith(s.supportTypeQualifiedName).mapIndexed { index, xElement ->
-
-                FunSpec.builder("${xElement.toString().replace(".", "_")}_${s.previewName}_${s.previewGroup}_$index").build()
-            }
-        }
-        fileBuilder.addType(
-            TypeSpec.classBuilder(generatedClassName).addFunctions(function).build()
-        )
-
-        fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
     private fun getShowkaseRootElement(

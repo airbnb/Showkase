@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.submodule.showkasesample.CustomPreviewAnnotation
+import com.airbnb.android.submodule.showkasesample.CustomSizeAnnotation
 
 @Composable
 fun BasicChip(
@@ -70,6 +71,14 @@ fun BasicChipGreyPreview() {
     )
 }
 
+@CustomSizeAnnotation
+@Composable
+fun BasicChipGreenCustomSizePreview() {
+    BasicChip(
+        text = "Chip Component",
+        modifier = Modifier.background(color = Color.Green)
+    )
+}
 
 @CustomPreviewAnnotation
 @Composable

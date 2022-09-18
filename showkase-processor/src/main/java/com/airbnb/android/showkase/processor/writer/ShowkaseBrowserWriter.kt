@@ -1,17 +1,14 @@
 package com.airbnb.android.showkase.processor.writer
 
-import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.*
+import com.airbnb.android.showkase.annotation.ShowkaseMultiPreviewCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
+import com.airbnb.android.showkase.processor.ShowkaseProcessor
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.LIST
-import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
+import java.util.*
 
 internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     @Suppress("LongMethod")
@@ -70,6 +67,40 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             ),
             showkaseRootCodegenAnnotation
         )
+    }
+
+    // This is to aggregate metadata for the custom annotation annotated with Preview
+    internal fun writeCustomAnnotationElementToMetadata(element: XElement) {
+        val moduleName = "Showkase_test_testy_$element"
+        val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
+        val previewAnnotations =
+            element.getAllAnnotations().filter { it.name == ShowkaseProcessor.PREVIEW_SIMPLE_NAME }
+        if (!element.isTypeElement()) return
+
+        val functions = previewAnnotations.mapIndexed { index, xAnnotation ->
+            FunSpec.builder("${xAnnotation.name}_$index")
+                .addAnnotation(
+                    AnnotationSpec.builder(
+                        ShowkaseMultiPreviewCodegenMetadata::class
+                    ).addMember("previewName = %S", xAnnotation.get("name"))
+                        .addMember("previewGroup = %S", xAnnotation.get("group"))
+                        .addMember("supportTypeQualifiedName = %S", element.qualifiedName)
+                        .addMember("showkaseWidth = %L", xAnnotation.getAsInt("widthDp"))
+                        .addMember("showkaseHeight = %L", xAnnotation.getAsInt("heightDp"))
+                        .addMember("packageName = %S", element.packageName)
+                        .build()
+                ).build()
+        }
+        val fileBuilder = FileSpec.builder(
+            ShowkaseProcessor.CODEGEN_PACKAGE_NAME,
+            generatedClassName
+        )
+        fileBuilder.addType(
+            TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
+        )
+
+        fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
+
     }
 
     private fun initializeComponentProperty(
@@ -244,7 +275,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         colorsSize: Int,
         typographySize: Int,
     ) = AnnotationSpec.builder(ShowkaseRootCodegen::class)
-        .addMember("numComposablesWithoutPreviewParameter = %L", numComponentsWithoutPreviewParameter)
+        .addMember(
+            "numComposablesWithoutPreviewParameter = %L",
+            numComponentsWithoutPreviewParameter
+        )
         .addMember("numComposablesWithPreviewParameter = %L", numComponentsWithPreviewParameter)
         .addMember("numColors = %L", colorsSize)
         .addMember("numTypography = %L", typographySize)
