@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.submodule.showkasesample.CustomPreviewAnnotation
 
 @Composable
 fun BasicChip(
@@ -70,7 +71,7 @@ fun BasicChipGreyPreview() {
 }
 
 
-@CustomPreview
+@CustomPreviewAnnotation
 @Composable
 fun BasicChipPinkPreview() {
     BasicChip(

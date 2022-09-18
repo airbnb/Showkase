@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.submodule.showkasesample.CustomPreviewAnnotation
 
 @Composable
 fun CustomButton(
@@ -52,6 +53,16 @@ fun PreviewCustomButtonDefault() {
 @ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Medium")
 @Composable
 fun PreviewCustomButtonMedium() {
+    CustomButton(
+        text = "Button",
+        onClick = { },
+        size = ButtonSize.Medium
+    )
+}
+
+@CustomPreviewAnnotation
+@Composable
+fun PreviewCustomButtonMediumCustomPreviewTest() {
     CustomButton(
         text = "Button",
         onClick = { },

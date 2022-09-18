@@ -546,7 +546,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         // This functionality is only supported with KSP for now.
         compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
-    
+
     @Test
     fun `composable function with custom annotations stacked in same module generates output`() {
         // This functionality is only supported with KSP for now.

@@ -302,7 +302,6 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
     val customAnnotation = element.requireAnnotationBySimpleName(annotationName)
 
     val previewAnnotations = customAnnotation.map {
-//        it.typeElement.getAnnotations(PREVIEW_CLASS_NAME)
         it.typeElement.requireAnnotationBySimpleName(PREVIEW_SIMPLE_NAME)
     }.flatten()
 

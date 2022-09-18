@@ -302,7 +302,10 @@ internal class ShowkaseValidator {
             }
         }
     }
-
+    internal fun validateCustomAnnotation(customAnnotationElements: Set<XElement>, environment: XProcessingEnv) {
+        if (customAnnotationElements.isEmpty()) return
+        // TODO: Write validator
+    }
     internal fun validateShowkaseTestElement(
         elements: Collection<XTypeElement>,
         environment: XProcessingEnv,

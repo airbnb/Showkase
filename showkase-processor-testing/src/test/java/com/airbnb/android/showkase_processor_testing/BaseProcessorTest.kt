@@ -114,6 +114,7 @@ abstract class BaseProcessorTest {
 
             generatedSources.forEach { actualFile ->
                 println("Generated: ${actualFile.name}")
+                println("File : ${actualFile.readText()}")
                 val expectedFile = File(outputDir, actualFile.name)
                 assertThat(expectedFile).exists()
                 assertThat(actualFile).hasSameTextualContentAs(expectedFile)

@@ -3,14 +3,14 @@ plugins {
     id 'kotlin-android'
 }
 
-if (project.hasProperty('useKsp')) {
+//if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
-} else {
-    apply plugin: 'kotlin-kapt'
-    kapt {
-        correctErrorTypes = true
-    }
-}
+//} else {
+//    apply plugin: 'kotlin-kapt'
+//    kapt {
+//        correctErrorTypes = true
+//    }
+//}
 
 android {
     compileSdkVersion 32
@@ -61,11 +61,11 @@ dependencies {
     
     // Showkase
     implementation project(':showkase')
-    if (project.hasProperty('useKsp')) {
+    //if (project.hasProperty('useKsp')) {
         ksp project(':showkase-processor')
-    } else {
-        kapt project(':showkase-processor')
-    }
+    //} else {
+    //    kapt project(':showkase-processor')
+    //}
 
     // Compose
     implementation deps.compose.activityCompose
