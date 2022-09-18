@@ -71,7 +71,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
 
     // This is to aggregate metadata for the custom annotation annotated with Preview
     internal fun writeCustomAnnotationElementToMetadata(element: XElement) {
-        val moduleName = "Showkase_test_testy_$element"
+        val moduleName = "Showkase_${element.toString().replace(".","_")}"
         val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         val previewAnnotations =
             element.getAllAnnotations().filter { it.name == ShowkaseProcessor.PREVIEW_SIMPLE_NAME }

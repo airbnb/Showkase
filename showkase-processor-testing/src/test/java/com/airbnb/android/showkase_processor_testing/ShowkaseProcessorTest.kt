@@ -532,7 +532,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with multiple preview functions compiles`() {
-        compileInputsAndVerifyOutputs()
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
 
     @Test

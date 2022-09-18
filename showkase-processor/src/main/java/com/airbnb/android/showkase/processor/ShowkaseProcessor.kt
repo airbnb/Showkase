@@ -170,14 +170,22 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
 
     private fun processCustomAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
-        val supportedCustomAnnotationTypes =
-            getSupportedMultipreviewTypes().toList()
+        val supportedCustomAnnotationTypes = getSupportedMultipreviewTypes().toList()
         val elementsAnnotatedWithCustomAnnotation =
             supportedCustomAnnotationTypes.map { roundEnvironment.getElementsAnnotatedWith(it) }
                 .flatten()
         val elementAnnotationMap =
             supportedCustomAnnotationTypes.zip(elementsAnnotatedWithCustomAnnotation).toMap()
-        val metadataSet = elementAnnotationMap.map { (annotation, element) ->
+        val metadataSet = elementAnnotationMap.mapNotNull { (annotation, element) ->
+            if (showkaseValidator.checkElementIsAnnotationClass(element)) {
+                // Here we write to metadata to aggregate custom annotation data.
+                // In this case, it would be a custom annotation that is annotated
+                // with something custom. Eg. CombinedPreview.
+                ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+                    element
+                )
+                return@mapNotNull null
+            }
             ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(element)
             showkaseValidator.validateComponentElement(
                 element,
@@ -214,6 +222,15 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return supportedCustomPreview.mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
             roundEnvironment.getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
                 .mapIndexed { elementIndex, xElement ->
+                    if (showkaseValidator.checkElementIsAnnotationClass(xElement)) {
+                        // Here we write to metadata to aggregate custom annotation data.
+                        // In this case, it would be a custom annotation that is annotated
+                        // with something custom. Eg. CombinedPreview.
+                        ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+                            xElement
+                        )
+                        return@mapIndexed null
+                    }
                     showkaseValidator.validateComponentElement(
                         xElement,
                         customPreviewMetadata.supportTypeQualifiedName,
@@ -245,7 +262,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     )
 
                 }
-        }.flatten().toSet()
+        }.flatten().mapNotNull { it }.toSet()
     }
 
     private fun String.getCustomAnnotationSimpleName(): String {
