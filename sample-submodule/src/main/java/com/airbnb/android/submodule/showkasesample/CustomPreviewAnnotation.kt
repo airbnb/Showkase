@@ -8,5 +8,5 @@ import androidx.compose.ui.tooling.preview.Preview
  *
  */
 @Preview(name = "names1", group = "CustomPreviewAnnotationGroup")
-@Preview(name = "names2", group = "CustomPreviewAnnotationGroup")
+@Preview(name = "names2", group = "CustomPreviewAnnotationGroup", widthDp = 200)
 annotation class CustomPreviewAnnotation

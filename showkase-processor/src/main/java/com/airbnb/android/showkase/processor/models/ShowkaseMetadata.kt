@@ -344,7 +344,7 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
     }
 }
 
-private fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName>? {
+internal fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName>? {
     val previewParameterPair = getPreviewParameterAnnotation()
     return previewParameterPair?.let {
         it.first to it.second.getAsType("provider")

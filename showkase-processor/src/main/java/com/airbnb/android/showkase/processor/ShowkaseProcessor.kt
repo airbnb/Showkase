@@ -233,7 +233,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processCustomAnnotationFromClasspath(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         // In this function we are checking generated classpath for MultiPreview codegen annotations.
         // We also check the current module if there is any composables that are annotated with the qualified name
-        // from the annotation from classpath. We also use the fields from the classpath annotation to build
+        // from the annotation from classpath. We use the fields from the classpath annotation to build
         // common data for the ShowkasMetadata.
 
         // Supported annotations from classpath
@@ -245,36 +245,34 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     else -> annotation.value
                 }
             }
-        return supportedCustomPreview.flatMap { customPreviewMetadata ->
-            roundEnvironment.getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName).mapIndexed { index, xElement ->
+        return supportedCustomPreview.mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
+            roundEnvironment.getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName).mapIndexed { elementIndex, xElement ->
                 showkaseValidator.validateComponentElement(
                     xElement,
                     customPreviewMetadata.supportTypeQualifiedName,
                 )
                 val commonMetadata = xElement.extractCommonMetadata(showkaseValidator)
-                //val previewParamMetadata = xElement
+                val previewParamMetadata = xElement.getPreviewParameterMetadata()
                 ShowkaseMetadata.Component(
                     element = xElement,
                     elementName = xElement.name,
                     packageName = commonMetadata.packageName,
                     packageSimpleName = commonMetadata.moduleName,
-                    showkaseName = customPreviewMetadata.previewName,
+                    showkaseName = getShowkaseName("${customPreviewMetadata.previewName}_$elementIndex", xElement.name),
                     insideObject = commonMetadata.showkaseFunctionType.insideObject(),
                     previewParameterName = customPreviewMetadata.previewName,
-                    previewParameterProviderType = null,
-                    showkaseGroup = customPreviewMetadata.previewGroup,
+                    previewParameterProviderType = previewParamMetadata?.second,
+                    showkaseGroup = getShowkaseGroup(customPreviewMetadata.previewGroup, commonMetadata.enclosingClass),
                     showkaseKDoc = commonMetadata.kDoc,
                     enclosingClassName = commonMetadata.enclosingClassName,
-                    componentIndex = index,
+                    componentIndex = elementIndex + index, // Need this to be unique because of filtering algorithm. TOOD: Find a better way to do this
                     insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT,
                     showkaseHeightDp = if (customPreviewMetadata.showkaseHeight == -1) null else customPreviewMetadata.showkaseHeight,
                     showkaseWidthDp = if (customPreviewMetadata.showkaseWidth == -1) null else customPreviewMetadata.showkaseWidth,
-                    showkaseStyleName = "",
                 )
 
             }
-        }.toSet()
-
+        }.flatten().toSet()
     }
 
     private fun String.getCustomAnnotationSimpleName(): String {
