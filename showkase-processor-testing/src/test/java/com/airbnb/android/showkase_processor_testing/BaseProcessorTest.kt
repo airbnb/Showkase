@@ -3,7 +3,11 @@ package com.airbnb.android.showkase_processor_testing
 import com.airbnb.android.showkase.processor.ShowkaseProcessor
 import com.airbnb.android.showkase.processor.ShowkaseProcessorProvider
 import com.google.common.io.Resources
-import com.tschuchort.compiletesting.*
+import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.kspSourcesDir
+import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import java.io.File
