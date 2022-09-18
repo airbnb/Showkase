@@ -83,7 +83,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `private composable with showkase annotation and skipPrivate option compiles ok`() {
         val options = mutableMapOf<String, String>()
-        options["skipPrivate"] = "true"
+        options["skipPrivatePreviews"] = "true"
         compileInputsAndVerifyOutputs(options = options)
     }
 
@@ -96,7 +96,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `private composable with preview annotation and skipPrivate option compiles ok`() {
         val options = mutableMapOf<String, String>()
-        options["skipPrivate"] = "true"
+        options["skipPrivatePreviews"] = "true"
         compileInputsAndVerifyOutputs(options = options)
     }
 

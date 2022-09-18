@@ -54,7 +54,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     )
 
     override fun getSupportedOptions(): MutableSet<String> {
-        return mutableSetOf("skipPrivate")
+        return mutableSetOf("skipPrivatePreviews")
     }
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
@@ -84,14 +84,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processShowkaseAnnotation(
         roundEnvironment: XRoundEnv
     ): Set<ShowkaseMetadata.Component> {
-        val skipPrivate = environment.options["skipPrivate"] == "true"
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
                     ShowkaseComposable::class.java.simpleName,
-                    skipPrivate
+                    skipPrivatePreviews
                 )
                 if (skipElement) return@mapNotNull null
                 getShowkaseMetadata(
@@ -103,14 +103,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
-        val skipPrivate = environment.options["skipPrivate"] == "true"
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
                     PREVIEW_SIMPLE_NAME,
-                    skipPrivate
+                    skipPrivatePreviews
                 )
                 if (skipElement) return@mapNotNull null
                 getShowkaseMetadataFromPreview(

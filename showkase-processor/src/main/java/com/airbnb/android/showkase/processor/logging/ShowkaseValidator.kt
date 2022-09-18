@@ -33,7 +33,7 @@ internal class ShowkaseValidator {
     internal fun validateComponentElementOrSkip(
         element: XElement,
         annotationName: String,
-        skipPrivate: Boolean = false
+        skipPrivatePreviews: Boolean = false
     ): Boolean {
         contract {
             returns() implies (element is XMethodElement)
@@ -45,7 +45,7 @@ internal class ShowkaseValidator {
                     element
                 )
             }
-            skipPrivate && element.isPrivate() -> return true
+            skipPrivatePreviews && element.isPrivate() -> return true
             // Only check simple name to avoid costly type resolution
             element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
                 throw ShowkaseProcessorException(
@@ -58,7 +58,7 @@ internal class ShowkaseValidator {
                     "The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
                             "them otherwise. If you'd like to skip this check and ignore the private " +
-                            "previews, kindly pass skipPrivate=true as an annotation processor option." +
+                            "previews, kindly pass skipPrivatePreviews=true as an annotation processor option." +
                             "To learn more about how to set this option, read the Showkase README here- " +
                             "https://github.com/airbnb/Showkase/blob/master/README.md",
                     element

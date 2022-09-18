@@ -59,12 +59,12 @@ android {
 }
 if (project.hasProperty("useKsp")) {
     ksp {
-        arg("skipPrivate", "true")
+        arg("skipPrivatePreviews", "true")
     }
 } else {
     kapt {
         arguments {
-            arg("skipPrivate", "true")
+            arg("skipPrivatePreviews", "true")
         }
     }
 }
