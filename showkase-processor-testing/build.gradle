@@ -65,7 +65,6 @@ dependencies {
     // Showkase
     implementation project(':showkase')
     implementation project(':showkase-processor')
-    implementation project(':showkase-processor-testing-submodule')
     implementation project(':showkase-screenshot-testing')
 
     // KSP
