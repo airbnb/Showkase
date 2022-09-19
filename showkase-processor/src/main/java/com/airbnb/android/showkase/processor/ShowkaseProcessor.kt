@@ -36,7 +36,7 @@ class ShowkaseProcessorProvider : SymbolProcessorProvider {
     }
 }
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 class ShowkaseProcessor @JvmOverloads constructor(
     kspEnvironment: SymbolProcessorEnvironment? = null
 ) : BaseProcessor(kspEnvironment) {
@@ -53,11 +53,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
         ShowkaseScreenshot::class.java.name,
     )
 
+    override fun getSupportedOptions(): MutableSet<String> {
+        return mutableSetOf("skipPrivatePreviews")
+    }
+
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
         val colorMetadata = processColorAnnotation(round)
         val typographyMetadata = processTypographyAnnotation(round, environment)
-
         processShowkaseMetadata(
             roundEnvironment = round,
             componentMetadata = componentMetadata,
@@ -81,14 +84,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processShowkaseAnnotation(
         roundEnvironment: XRoundEnv
     ): Set<ShowkaseMetadata.Component> {
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
-
-                showkaseValidator.validateComponentElement(
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    ShowkaseComposable::class.java.simpleName
+                    ShowkaseComposable::class.java.simpleName,
+                    skipPrivatePreviews
                 )
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadata(
                     element = element,
                     showkaseValidator = showkaseValidator,
@@ -98,14 +103,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
-                showkaseValidator.validateComponentElement(
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    PREVIEW_SIMPLE_NAME
+                    PREVIEW_SIMPLE_NAME,
+                    skipPrivatePreviews
                 )
-
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadataFromPreview(
                     element = element,
                     showkaseValidator = showkaseValidator

@@ -61,7 +61,7 @@ fun PreviewCustomButtonMedium() {
 
 @ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Small")
 @Composable
-fun PreviewCustomButtonSmall() {
+private fun PreviewCustomButtonSmall() {
     CustomButton(
         text = "Button",
         onClick = { },

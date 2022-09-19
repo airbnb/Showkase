@@ -5,6 +5,7 @@ import com.airbnb.android.showkase.processor.ShowkaseProcessorProvider
 import com.google.common.io.Resources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspArgs
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
@@ -32,6 +33,7 @@ abstract class BaseProcessorTest {
      */
     protected fun compileInputs(
         modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        options: MutableMap<String, String> = mutableMapOf(),
         onCompilation: (mode: Mode, compilation: KotlinCompilation, result: KotlinCompilation.Result) -> Unit
     ) {
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
@@ -46,9 +48,11 @@ abstract class BaseProcessorTest {
                 when (mode) {
                     Mode.KSP -> {
                         symbolProcessorProviders = listOf(ShowkaseProcessorProvider())
+                        kspArgs = options
                     }
                     Mode.KAPT -> {
                         annotationProcessors = listOf(ShowkaseProcessor())
+                        kaptArgs = options
                     }
                 }
                 inheritClassPath = true
@@ -72,9 +76,10 @@ abstract class BaseProcessorTest {
     }
 
     protected fun compileInputsAndVerifyOutputs(
-        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT)
+        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        options: MutableMap<String, String> = mutableMapOf(),
     ) {
-        compileInputs(modes = modes) { mode, compilation, result ->
+        compileInputs(modes = modes, options = options) { mode, compilation, result ->
             result.assertGeneratedSources(mode, compilation)
         }
     }
