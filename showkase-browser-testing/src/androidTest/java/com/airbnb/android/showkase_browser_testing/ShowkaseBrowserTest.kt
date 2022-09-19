@@ -656,12 +656,12 @@ class ShowcaseBrowserTest {
             composeTestRule.apply {
 
                 verifyLandingScreen(
-                    components = 11,
+                    components = componentSize,
                     typography = 13,
                     colors = 4,
                 )
                 // Tap on the "Components" row
-                clickRowWithText("Components (11)")
+                clickRowWithText("Components ($componentSize)")
 
                 waitForIdle()
 
