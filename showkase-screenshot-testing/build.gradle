@@ -55,10 +55,6 @@ android {
     }
 }
 
-ksp {
-    arg("MultipreviewTypes", "com.airbnb.android.showkase.screenshot.testing.MyCustomAnnotation")
-}
-
 dependencies {
     // Showkase
     api project(':showkase')

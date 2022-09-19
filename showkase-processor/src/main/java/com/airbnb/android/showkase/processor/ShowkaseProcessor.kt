@@ -1,14 +1,32 @@
 package com.airbnb.android.showkase.processor
 
-import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
-import com.airbnb.android.showkase.annotation.*
+import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase.annotation.ShowkaseColor
+import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.annotation.ShowkaseMultiPreviewCodegenMetadata
+import com.airbnb.android.showkase.annotation.ShowkaseRoot
+import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
+import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
-import com.airbnb.android.showkase.processor.models.*
+import com.airbnb.android.showkase.processor.models.ShowkaseFunctionType
+import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.android.showkase.processor.models.extractCommonMetadata
+import com.airbnb.android.showkase.processor.models.getPreviewParameterMetadata
+import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
+import com.airbnb.android.showkase.processor.models.getShowkaseGroup
+import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
+import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromCustomAnnotation
+import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
+import com.airbnb.android.showkase.processor.models.getShowkaseName
+import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
+import com.airbnb.android.showkase.processor.models.insideObject
+import com.airbnb.android.showkase.processor.models.toModel
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
@@ -111,7 +129,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // This is for getting custom annotations from the supported types.
         val customAnnotationMetadata = processCustomAnnotation(roundEnvironment)
 
-        return (showkaseComposablesMetadata + previewComposablesMetadata + customAnnotationMetadata + customAnnotationMetadataFromClassPath)
+        return (
+                showkaseComposablesMetadata +
+                        previewComposablesMetadata +
+                        customAnnotationMetadata +
+                        customAnnotationMetadataFromClassPath
+                )
             .dedupeAndSort()
             .toSet()
     }
@@ -209,6 +232,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return metadataSet
     }
 
+    @Suppress("LongMethod")
     private fun processCustomAnnotationFromClasspath(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         // In this function we are checking generated classpath for MultiPreview codegen annotations.
         // We also check the current module if there is any composables that are annotated with the qualified name
@@ -224,50 +248,65 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     else -> annotation.value
                 }
             }
-        return supportedCustomPreview.mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
-            roundEnvironment.getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
-                .mapIndexed { elementIndex, xElement ->
-                    if (showkaseValidator.checkElementIsAnnotationClass(xElement)) {
-                        // Here we write to metadata to aggregate custom annotation data.
-                        // In this case, it would be a custom annotation that is annotated
-                        // with something custom. Eg. CombinedPreview.
-                        ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
-                            xElement
+        return supportedCustomPreview
+            .mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
+                roundEnvironment
+                    .getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
+                    .mapIndexed { elementIndex, xElement ->
+                        if (showkaseValidator.checkElementIsAnnotationClass(xElement)) {
+                            // Here we write to metadata to aggregate custom annotation data.
+                            // In this case, it would be a custom annotation that is annotated
+                            // with something custom. Eg. CombinedPreview.
+                            ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+                                xElement
+                            )
+                            return@mapIndexed null
+                        }
+                        showkaseValidator.validateComponentElementOrSkip(
+                            xElement,
+                            customPreviewMetadata.supportTypeQualifiedName,
                         )
-                        return@mapIndexed null
-                    }
-                    showkaseValidator.validateComponentElementOrSkip(
-                        xElement,
-                        customPreviewMetadata.supportTypeQualifiedName,
-                    )
-                    val commonMetadata = xElement.extractCommonMetadata(showkaseValidator)
-                    val previewParamMetadata = xElement.getPreviewParameterMetadata()
-                    ShowkaseMetadata.Component(
-                        element = xElement,
-                        elementName = xElement.name,
-                        packageName = commonMetadata.packageName,
-                        packageSimpleName = commonMetadata.moduleName,
-                        showkaseName = getShowkaseName(
-                            "${customPreviewMetadata.previewName}_$elementIndex",
-                            xElement.name
-                        ),
-                        insideObject = commonMetadata.showkaseFunctionType.insideObject(),
-                        previewParameterName = customPreviewMetadata.previewName,
-                        previewParameterProviderType = previewParamMetadata?.second,
-                        showkaseGroup = getShowkaseGroup(
-                            customPreviewMetadata.previewGroup,
-                            commonMetadata.enclosingClass
-                        ),
-                        showkaseKDoc = commonMetadata.kDoc,
-                        enclosingClassName = commonMetadata.enclosingClassName,
-                        componentIndex = elementIndex + index, // Need this to be unique because of filtering algorithm. TOOD: Find a better way to do this
-                        insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT,
-                        showkaseHeightDp = if (customPreviewMetadata.showkaseHeight == -1) null else customPreviewMetadata.showkaseHeight,
-                        showkaseWidthDp = if (customPreviewMetadata.showkaseWidth == -1) null else customPreviewMetadata.showkaseWidth,
-                    )
+                        val commonMetadata = xElement.extractCommonMetadata(showkaseValidator)
+                        val previewParamMetadata = xElement.getPreviewParameterMetadata()
+                        val isInsideObject =
+                            commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT
+                        val heightDp = if (customPreviewMetadata.showkaseHeight == -1){
+                            null
+                        } else {
+                            customPreviewMetadata.showkaseHeight
+                        }
+                        val widthDp = if (customPreviewMetadata.showkaseWidth == -1){
+                            null
+                        } else {
+                            customPreviewMetadata.showkaseWidth
+                        }
+                        ShowkaseMetadata.Component(
+                            element = xElement,
+                            elementName = xElement.name,
+                            packageName = commonMetadata.packageName,
+                            packageSimpleName = commonMetadata.moduleName,
+                            showkaseName = getShowkaseName(
+                                "${customPreviewMetadata.previewName}_$elementIndex",
+                                xElement.name
+                            ),
+                            insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+                            previewParameterName = customPreviewMetadata.previewName,
+                            previewParameterProviderType = previewParamMetadata?.second,
+                            showkaseGroup = getShowkaseGroup(
+                                customPreviewMetadata.previewGroup,
+                                commonMetadata.enclosingClass
+                            ),
+                            showkaseKDoc = commonMetadata.kDoc,
+                            enclosingClassName = commonMetadata.enclosingClassName,
+                            // Need this to be unique because of filtering algorithm. TOOD: Find a better way to do this
+                            componentIndex = elementIndex + index,
+                            insideWrapperClass = isInsideObject,
+                            showkaseHeightDp = heightDp,
+                            showkaseWidthDp = widthDp,
+                        )
 
-                }
-        }.flatten().mapNotNull { it }.toSet()
+                    }
+            }.flatten().mapNotNull { it }.toSet()
     }
 
     private fun String.getCustomAnnotationSimpleName(): String {

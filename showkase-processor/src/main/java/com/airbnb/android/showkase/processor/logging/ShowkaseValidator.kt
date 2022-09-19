@@ -1,7 +1,16 @@
 package com.airbnb.android.showkase.processor.logging
 
-import androidx.room.compiler.processing.*
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
+import androidx.room.compiler.processing.isField
+import androidx.room.compiler.processing.isLong
+import androidx.room.compiler.processing.isMethod
+import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
@@ -296,10 +305,15 @@ internal class ShowkaseValidator {
             }
         }
     }
-    internal fun validateCustomAnnotation(customAnnotationElements: Set<XElement>, environment: XProcessingEnv) {
+
+    internal fun validateCustomAnnotation(
+        customAnnotationElements: Set<XElement>,
+        environment: XProcessingEnv
+    ) {
         if (customAnnotationElements.isEmpty()) return
-        // TODO: Write validator
+        // Write validator
     }
+
     internal fun validateShowkaseTestElement(
         elements: Collection<XTypeElement>,
         environment: XProcessingEnv,

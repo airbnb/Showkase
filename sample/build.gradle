@@ -4,14 +4,14 @@ plugins {
     id 'shot'
 }
 
-//if (project.hasProperty('useKsp')) {
+if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
-//} else {
-//    apply plugin: 'kotlin-kapt'
-//    kapt {
-//        correctErrorTypes = true
-//    }
-//}
+} else {
+    apply plugin: 'kotlin-kapt'
+    kapt {
+        correctErrorTypes = true
+    }
+}
 
 android {
     compileSdkVersion 32
@@ -80,13 +80,13 @@ dependencies {
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
     implementation project(':sample-submodule')
-    //if (project.hasProperty('useKsp')) {
+    if (project.hasProperty('useKsp')) {
         ksp project(':showkase-processor')
         kspAndroidTest project(':showkase-processor')
-    //} else {
-    //    kapt project(':showkase-processor')
-    //    kaptAndroidTest project(':showkase-processor')
-    //}
+    } else {
+        kapt project(':showkase-processor')
+        kaptAndroidTest project(':showkase-processor')
+    }
 
     // Support Libraries
     implementation deps.support.appCompat

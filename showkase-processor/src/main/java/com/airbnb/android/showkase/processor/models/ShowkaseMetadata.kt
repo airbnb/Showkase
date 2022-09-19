@@ -1,12 +1,19 @@
 package com.airbnb.android.showkase.processor.models
 
-import androidx.room.compiler.processing.*
+import androidx.room.compiler.processing.XAnnotation
+import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XMemberContainer
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
-import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_CLASS_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -355,7 +362,8 @@ internal fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName
 
 private fun XMethodElement.getPreviewParameterAnnotation(): Pair<String, XAnnotation>? {
     return parameters.mapNotNull { parameter ->
-        val previewParamAnnotation = parameter.findAnnotationBySimpleName(PREVIEW_PARAMETER_SIMPLE_NAME)
+        val previewParamAnnotation =
+            parameter.findAnnotationBySimpleName(PREVIEW_PARAMETER_SIMPLE_NAME)
         previewParamAnnotation?.let {
             parameter.name to previewParamAnnotation
         }
