@@ -7,22 +7,9 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(name = "Custom Preview One Second", group = "Custom Previews")
 public annotation class InternalPreviewOne
 
-
 @Preview(name = "Custom Preview Two First", group = "Custom Previews")
 @Preview(name = "Custom Preview Two Second", group = "Custom Previews")
 public annotation class InternalPreviewTwo
-
-@InternalPreviewOne
-@Composable
-public fun CustomInternalAnnotationPreviewOne() {
-
-}
-
-@InternalPreviewTwo
-@Composable
-public fun CustomInternalAnnotationPreviewTwo() {
-
-}
 
 @InternalPreviewOne
 @InternalPreviewTwo

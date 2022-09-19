@@ -41,7 +41,7 @@ class ShowcaseBrowserTest {
     // in Kotlin 1.6. It will be available in the old backend in Kotlin version 1.7.20.
     // See https://youtrack.jetbrains.com/issue/KT-49682 for more information about this.
     private val componentSize = if (BuildConfig.IS_RUNNING_KSP) {
-        13
+        15
     } else {
         7
     }

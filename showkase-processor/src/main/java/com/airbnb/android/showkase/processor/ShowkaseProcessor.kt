@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.processor
 
+import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
@@ -44,9 +45,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ShowkaseRoot::class.java.name,
             ShowkaseScreenshot::class.java.name,
         )
-        //getSupportedMultipreviewTypes().let {
-        //    set.addAll(it)
-        //}
 
         environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }
@@ -105,11 +103,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
+
+        // This is for getting custom annotations from class path
+        val customAnnotationMetadataFromClassPath =
+            processCustomAnnotationFromClasspath(roundEnvironment)
+
         // This is for getting custom annotations from the supported types.
         val customAnnotationMetadata = processCustomAnnotation(roundEnvironment)
 
-        val customAnnotationMetadataFromClassPath =
-            processCustomAnnotationFromClasspath(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata + customAnnotationMetadata + customAnnotationMetadataFromClassPath)
             .dedupeAndSort()
             .toSet()
@@ -145,7 +146,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
                         element
                     )
-                    return@mapNotNull null
+                    return@mapNotNull processCustomAnnotation(roundEnvironment, element)
                 }
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
@@ -153,10 +154,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     skipPrivatePreviews
                 )
                 if (skipElement) return@mapNotNull null
-                showkaseValidator.validateComponentElement(
-                    element,
-                    PREVIEW_SIMPLE_NAME
-                )
 
                 getShowkaseMetadataFromPreview(
                     element = element,
@@ -166,16 +163,24 @@ class ShowkaseProcessor @JvmOverloads constructor(
             }.flatten().mapNotNull { it }.toSet()
     }
 
-    // TODO: Move to writer
+    // The reason for this method to take both an annotation and to check for supported types
+    // Is that we want to check if the custom annotation is used in the same module
+    // as it was discovered.
+    private fun processCustomAnnotation(
+        roundEnvironment: XRoundEnv,
+        annotation: XTypeElement? = null
+    ): Set<ShowkaseMetadata.Component> {
+        val supportedTypes = mutableListOf<String>()
+        if (annotation != null) supportedTypes.add(annotation.qualifiedName)
+        supportedTypes.addAll(getSupportedMultipreviewTypes())
 
-
-    private fun processCustomAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
-        val supportedCustomAnnotationTypes = getSupportedMultipreviewTypes().toList()
         val elementsAnnotatedWithCustomAnnotation =
-            supportedCustomAnnotationTypes.map { roundEnvironment.getElementsAnnotatedWith(it) }
+            supportedTypes.map { roundEnvironment.getElementsAnnotatedWith(it) }
                 .flatten()
         val elementAnnotationMap =
-            supportedCustomAnnotationTypes.zip(elementsAnnotatedWithCustomAnnotation).toMap()
+            supportedTypes.zip(elementsAnnotatedWithCustomAnnotation).toMap()
+                .toMutableMap()
+
         val metadataSet = elementAnnotationMap.mapNotNull { (annotation, element) ->
             if (showkaseValidator.checkElementIsAnnotationClass(element)) {
                 // Here we write to metadata to aggregate custom annotation data.
@@ -184,10 +189,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
                     element
                 )
-                return@mapNotNull null
+                return@mapNotNull processCustomAnnotation(roundEnvironment, element)
             }
             ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(element)
-            showkaseValidator.validateComponentElement(
+            showkaseValidator.validateComponentElementOrSkip(
                 element,
                 annotation,
             )
@@ -231,7 +236,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                         )
                         return@mapIndexed null
                     }
-                    showkaseValidator.validateComponentElement(
+                    showkaseValidator.validateComponentElementOrSkip(
                         xElement,
                         customPreviewMetadata.supportTypeQualifiedName,
                     )

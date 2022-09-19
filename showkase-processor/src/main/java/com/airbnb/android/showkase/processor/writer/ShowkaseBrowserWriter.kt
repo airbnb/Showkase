@@ -71,11 +71,18 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
 
     // This is to aggregate metadata for the custom annotation annotated with Preview
     internal fun writeCustomAnnotationElementToMetadata(element: XElement) {
-        val moduleName = "Showkase_${element.toString().replace(".","_")}"
+        val moduleName = "Showkase_${element.toString().replace(".", "_")}"
         val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
+        FileSpec
         val previewAnnotations =
             element.getAllAnnotations().filter { it.name == ShowkaseProcessor.PREVIEW_SIMPLE_NAME }
         if (!element.isTypeElement()) return
+        if (element.isAnnotationClass() && element.qualifiedName == ShowkaseProcessor.PREVIEW_CLASS_NAME) return
+
+        val fileBuilder = FileSpec.builder(
+            ShowkaseProcessor.CODEGEN_PACKAGE_NAME,
+            generatedClassName
+        )
 
         val functions = previewAnnotations.mapIndexed { index, xAnnotation ->
             FunSpec.builder("${xAnnotation.name}_$index")
@@ -91,15 +98,15 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                         .build()
                 ).build()
         }
-        val fileBuilder = FileSpec.builder(
-            ShowkaseProcessor.CODEGEN_PACKAGE_NAME,
-            generatedClassName
-        )
+
         fileBuilder.addType(
             TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
         )
-
-        fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
+        try {
+            fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
+        } catch (fileExists: FileAlreadyExistsException) {
+            // Then the annotation already exists in a file and we don't want to write to it.
+        }
 
     }
 

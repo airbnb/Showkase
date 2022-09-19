@@ -62,7 +62,28 @@ fun PreviewCustomButtonMedium() {
 
 @CustomPreviewAnnotation
 @Composable
-fun PreviewCustomButtonMediumCustomPreviewTest() {
+fun PreviewCustomButtonMediumCustomPreviewExternalTest() {
+    CustomButton(
+        text = "Button",
+        onClick = { },
+        size = ButtonSize.Medium
+    )
+}
+
+@CustomPreview
+@Composable
+fun PreviewCustomButtonMediumCustomPreviewInternalTest() {
+    CustomButton(
+        text = "Button",
+        onClick = { },
+        size = ButtonSize.Medium
+    )
+}
+
+@CustomPreview
+@CustomPreviewAnnotation
+@Composable
+fun PreviewCustomButtonMediumCustomPreviewCombinedTest() {
     CustomButton(
         text = "Button",
         onClick = { },
