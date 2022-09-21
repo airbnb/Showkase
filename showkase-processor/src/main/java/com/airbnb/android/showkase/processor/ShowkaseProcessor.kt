@@ -23,7 +23,6 @@ import com.airbnb.android.showkase.processor.models.getShowkaseGroup
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromCustomAnnotation
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
-import com.airbnb.android.showkase.processor.models.getShowkaseName
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.models.insideObject
 import com.airbnb.android.showkase.processor.models.toModel
@@ -224,7 +223,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 element = element,
                 showkaseValidator = showkaseValidator,
                 annotation.getCustomAnnotationSimpleName(),
-                roundEnvironment,
             )
 
         }.flatten().mapNotNull { it }.toSet()
@@ -270,12 +268,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
                         val previewParamMetadata = xElement.getPreviewParameterMetadata()
                         val isInsideObject =
                             commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT
-                        val heightDp = if (customPreviewMetadata.showkaseHeight == -1){
+                        val heightDp = if (customPreviewMetadata.showkaseHeight == -1) {
                             null
                         } else {
                             customPreviewMetadata.showkaseHeight
                         }
-                        val widthDp = if (customPreviewMetadata.showkaseWidth == -1){
+                        val widthDp = if (customPreviewMetadata.showkaseWidth == -1) {
                             null
                         } else {
                             customPreviewMetadata.showkaseWidth
@@ -285,10 +283,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                             elementName = xElement.name,
                             packageName = commonMetadata.packageName,
                             packageSimpleName = commonMetadata.moduleName,
-                            showkaseName = getShowkaseName(
-                                "${customPreviewMetadata.previewName}_$elementIndex",
-                                xElement.name
-                            ),
+                            showkaseName = "${xElement.name} - ${customPreviewMetadata.previewName}",
                             insideObject = commonMetadata.showkaseFunctionType.insideObject(),
                             previewParameterName = customPreviewMetadata.previewName,
                             previewParameterProviderType = previewParamMetadata?.second,

@@ -6,7 +6,7 @@ import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
-    showkaseName = "Custom Preview First",
+    showkaseName = "CustomInternalAnnotationPreview - Custom Preview First",
     showkaseGroup = "Custom Previews",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
@@ -17,11 +17,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun CustomPreviewsCustomPreviewFirst(): Unit {
+  public fun CustomPreviewsCustomInternalAnnotationPreviewCustomPreviewFirst(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
-    showkaseName = "Custom Preview Second",
+    showkaseName = "CustomInternalAnnotationPreview - Custom Preview Second",
     showkaseGroup = "Custom Previews",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
@@ -32,6 +32,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun CustomPreviewsCustomPreviewSecond1(): Unit {
+  public fun CustomPreviewsCustomInternalAnnotationPreviewCustomPreviewSecond1(): Unit {
   }
 }

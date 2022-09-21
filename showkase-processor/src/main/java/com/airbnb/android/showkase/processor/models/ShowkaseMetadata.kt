@@ -304,7 +304,6 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
     element: XMethodElement,
     showkaseValidator: ShowkaseValidator,
     annotationName: String,
-    roundEnv: XRoundEnv,
 ): List<ShowkaseMetadata.Component?> {
     val customAnnotation = element.requireAnnotationBySimpleName(annotationName)
 
@@ -317,10 +316,12 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
     if (showkaseComosableAnnotation != null && showkaseComosableAnnotation.skip) return listOf() // Will be mapped out
     return previewAnnotations.mapIndexed { index, annotation ->
         val commonMetadata = element.extractCommonMetadata(showkaseValidator)
-        val showkaseName = getShowkaseName(
-            annotation.getAsString("name"),
-            element.kindName()
-        )
+
+        val annotationNameParam = annotation.getAsString("name")
+        val annotationHasName = annotationNameParam.isNotEmpty()
+        val showkaseNameFromAnnotation = if (annotationHasName) annotationNameParam else index
+
+        val showkaseName = "${element.name} - $showkaseNameFromAnnotation"
         val showkaseGroup = getShowkaseGroup(
             annotation.getAsString("group"),
             commonMetadata.enclosingClass,

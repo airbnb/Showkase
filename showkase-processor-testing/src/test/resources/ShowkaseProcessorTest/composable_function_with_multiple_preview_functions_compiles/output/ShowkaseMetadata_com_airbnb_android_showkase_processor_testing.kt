@@ -7,7 +7,7 @@ import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
-    showkaseName = "small font",
+    showkaseName = "Component - small font",
     showkaseGroup = "font scales",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
@@ -19,11 +19,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun fontscalessmallfont(): Unit {
+  public fun fontscalesComponentsmallfont(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
-    showkaseName = "large font",
+    showkaseName = "Component - large font",
     showkaseGroup = "font scales",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
@@ -35,11 +35,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun fontscaleslargefont1(): Unit {
+  public fun fontscalesComponentlargefont1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
-    showkaseName = "dark theme",
+    showkaseName = "HelloWorldPreview - dark theme",
     showkaseGroup = "themes",
     packageName = "com.airbnb.android.showkase_processor_testing",
     packageSimpleName = "showkase_processor_testing",
@@ -50,6 +50,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun themesdarktheme(): Unit {
+  public fun themesHelloWorldPreviewdarktheme(): Unit {
   }
 }

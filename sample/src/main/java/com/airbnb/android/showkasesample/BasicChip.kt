@@ -88,3 +88,25 @@ fun BasicChipPinkPreview() {
         modifier = Modifier.background(color = Color.Red)
     )
 }
+
+@Preview
+@Preview
+annotation class CustomDefaultPreview
+
+@CustomDefaultPreview
+@Composable
+fun BasicChipCyanPreview() {
+    BasicChip(
+        text = "Chip Component",
+        modifier = Modifier.background(color = Color.Cyan)
+    )
+}
+
+@CustomDefaultPreview
+@Composable
+fun BasicChipBlackPreview() {
+    BasicChip(
+        text = "Chip Component",
+        modifier = Modifier.background(color = Color.Black)
+    )
+}
