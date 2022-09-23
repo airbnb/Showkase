@@ -85,14 +85,6 @@ implementation "com.airbnb.android:showkase:1.0.0-beta14"
 ksp "com.airbnb.android:showkase-processor:1.0.0-beta14"
 ```
 
-In addition, you will also need to pass a flag to the gradle command that you use to build/run with showkase. 
-Here's an example of what this would look like:
-
-```
-./gradlew sample:clean sample:build -i -PuseKsp=true
-```
-
-
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
 
