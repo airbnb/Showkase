@@ -1,5 +1,6 @@
 package com.airbnb.android.showkasesample
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,8 @@ fun SimpleRow(title: String, subtitle: String) {
     ShowkaseTheme {
         Card(
             shape = RoundedCornerShape(padding1x),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(padding2x)
         ) {
             ListItem(text = {
@@ -58,7 +60,8 @@ fun SimpleRow(title: String, subtitle: String) {
                 )
             }, icon = {
                 Column(
-                    modifier = Modifier.width(60.dp)
+                    modifier = Modifier
+                        .width(60.dp)
                         .height(60.dp)
                         .background(color = Color.Gray)
                 ) {}
@@ -71,7 +74,8 @@ fun SimpleRow(title: String, subtitle: String) {
 fun TitleSubtitleThumbnailRow() {
     ShowkaseTheme {
         Card(
-            modifier = Modifier.height(120.dp)
+            modifier = Modifier
+                .height(120.dp)
                 .fillMaxWidth()
                 .padding(padding2x),
             shape = RoundedCornerShape(padding1x)
@@ -95,7 +99,8 @@ fun TitleSubtitleThumbnailRow() {
                     start.linkTo(image.end, margin = padding4x)
                 })
 
-                Column(modifier = Modifier.height(72.dp)
+                Column(modifier = Modifier
+                    .height(72.dp)
                     .width(72.dp)
                     .background(color = Color.Gray)
                     .constrainAs(image) {
@@ -112,7 +117,8 @@ fun TitleSubtitleThumbnailRow() {
 fun BottomLabelRow(title: String, subtitle: String, label: String) {
     ShowkaseTheme {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .background(color = MaterialTheme.colors.surface)
                 .padding(padding4x)
         ) {
@@ -158,11 +164,15 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
 fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
     ShowkaseTheme {
         Column(
-            modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colors.surface)
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colors.surface)
         ) {
             NetworkImage(
                 imageUrl = imageUrl,
-                modifier = Modifier.fillMaxWidth().height(200.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
             )
             Text(
                 text = title,
@@ -186,6 +196,7 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
             )
 
         }
+        BackHandler(onBack = {  })
     }
 }
 
