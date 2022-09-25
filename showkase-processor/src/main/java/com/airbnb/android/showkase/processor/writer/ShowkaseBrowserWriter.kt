@@ -93,12 +93,11 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
 
             if (showkaseMetadataWithParameterList.isNotEmpty()) {
                 add(".apply {")
-                doubleIndent()
-                showkaseMetadataWithParameterList.forEachIndexed { _, withParameterMetadata ->
-                    addProviderComponent(withParameterMetadata)
+                withDoubleIndent {
+                    showkaseMetadataWithParameterList.forEachIndexed { _, withParameterMetadata ->
+                        addProviderComponent(withParameterMetadata)
+                    }
                 }
-                doubleUnindent()
-                doubleUnindent()
                 closeCurlyBraces()
             }
         }
@@ -113,34 +112,35 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             "%T()",
             withParameterMetadata.previewParameterProviderType
         )
-        doubleIndent()
-        addLineBreak()
-        add(
-            ".values"
-        )
-        addLineBreak()
-        add(
-            ".iterator()"
-        )
-        addLineBreak()
-        add(
-            ".asSequence()"
-        )
-        addLineBreak()
-        add(
-            ".forEachIndexed { index, previewParam ->"
-        )
-        doubleIndent()
-        addLineBreak()
-        add("add(")
-        addLineBreak()
-        doubleIndent()
-        addShowkaseBrowserComponent(withParameterMetadata, true)
-        closeRoundBracket()
-        doubleUnindent()
-        closeRoundBracket()
-        doubleUnindent()
-        closeCurlyBraces()
+        withDoubleIndent {
+            addLineBreak()
+            add(
+                ".values"
+            )
+            addLineBreak()
+            add(
+                ".iterator()"
+            )
+            addLineBreak()
+            add(
+                ".asSequence()"
+            )
+            addLineBreak()
+            add(
+                ".forEachIndexed { index, previewParam ->"
+            )
+            withDoubleIndent {
+                addLineBreak()
+                add("add(")
+                addLineBreak()
+                withDoubleIndent {
+                    addShowkaseBrowserComponent(withParameterMetadata, true)
+                    closeRoundBracket()
+                }
+                closeRoundBracket()
+            }
+            closeCurlyBraces()
+        }
     }
 
     private fun initializeColorProperty(

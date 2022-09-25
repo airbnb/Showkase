@@ -98,14 +98,17 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
+                if (showkaseValidator.checkElementIsMultiPreview(element)) return@mapNotNull null
                 showkaseValidator.validateComponentElement(
                     element,
                     PREVIEW_SIMPLE_NAME
                 )
+
                 getShowkaseMetadataFromPreview(
                     element = element,
                     showkaseValidator = showkaseValidator
                 )
+
             }.toSet()
     }
 
