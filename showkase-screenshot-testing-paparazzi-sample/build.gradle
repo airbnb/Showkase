@@ -86,9 +86,7 @@ afterEvaluate {
                 srcDir(outputFolder)
             }
 
-            // Register the generated unit test sources as well, since Scabbard generates trio unit tests with KSP,
-            // and we can't run them from the IDE unless they're registered.
-
+            // Register the generated unit test sources as well
             // Note, there is a nuanced different between the name of the directory on disk and the source set name
             // in AGP.
             // eg "debugUnitTest"
@@ -111,9 +109,7 @@ afterEvaluate {
                 srcDir(outputFolder)
             }
 
-            // Register the generated unit test sources as well, since Scabbard generates trio unit tests with KSP,
-            // and we can't run them from the IDE unless they're registered.
-
+            // Register the generated unit test sources as well
             // Note, there is a nuanced different between the name of the directory on disk and the source set name
             // in AGP.
             // eg "debugUnitTest"
