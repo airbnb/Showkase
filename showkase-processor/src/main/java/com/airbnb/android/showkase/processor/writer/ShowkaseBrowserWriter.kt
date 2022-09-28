@@ -1,6 +1,5 @@
 package com.airbnb.android.showkase.processor.writer
 
-import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv

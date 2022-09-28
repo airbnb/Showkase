@@ -54,15 +54,15 @@ class WrapperComposableClass {
     }
 }
 
-@ShowkaseComposable("Composable7", "Group7")
-@ShowkaseComposable("Composable8", "Group7")
+@ShowkaseComposable("Composable7", "A Stacked Annotations")
+@ShowkaseComposable("Composable8", "A Stacked Annotations")
 @Composable
 fun TestComposable7() {
     BasicText(text = "Test Composable7and8")
 }
 
-@Preview("Composable9", "Group7")
-@Preview("Composable10", "Group7")
+@Preview("Composable9", "A Stacked Annotations")
+@Preview("Composable10", "A Stacked Annotations")
 @Composable
 fun TestComposable8() {
     BasicText(text = "Test Composable9and10")

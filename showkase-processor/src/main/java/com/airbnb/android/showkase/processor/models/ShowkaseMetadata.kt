@@ -6,7 +6,6 @@ import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMemberContainer
 import androidx.room.compiler.processing.XMethodElement
-import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
@@ -15,7 +14,6 @@ import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseMultiPreviewCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
-import com.airbnb.android.showkase.processor.ShowkaseProcessor
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -23,7 +21,6 @@ import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.android.showkase.processor.utils.findAnnotationBySimpleName
 import com.airbnb.android.showkase.processor.utils.getFieldWithReflection
 import com.airbnb.android.showkase.processor.utils.requireAnnotationBySimpleName
-import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.javapoet.toKClassName
@@ -31,7 +28,6 @@ import com.squareup.kotlinpoet.javapoet.toKTypeName
 import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Locale
-import javax.annotation.processing.ProcessingEnvironment
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {

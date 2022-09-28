@@ -111,8 +111,10 @@ internal class ShowkaseScreenshotTestWriter(private val environment: XProcessing
         private val CREATE_COMPOSE_RULE_CLASS_NAME = ClassName(JUNIT4_PACKAGE, "createComposeRule")
         private val INSTRUMENTATION_REGISTRY_CLASS_NAME =
             ClassName("androidx.test.platform.app", "InstrumentationRegistry")
-        private val GRANT_PERMISSION_RULE_CLASS_NAME = ClassName("androidx.test.rule",
-            "GrantPermissionRule")
+        private val GRANT_PERMISSION_RULE_CLASS_NAME = ClassName(
+            "androidx.test.rule",
+            "GrantPermissionRule"
+        )
         private val JVM_FIELD_CLASS_NAME = ClassName("kotlin.jvm", "JvmField")
         private val MANIFEST_CLASS_NAME = ClassName("android", "Manifest")
     }

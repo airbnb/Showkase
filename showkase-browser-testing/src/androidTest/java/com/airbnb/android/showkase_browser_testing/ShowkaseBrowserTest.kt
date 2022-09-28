@@ -1,7 +1,11 @@
 package com.airbnb.android.showkase_browser_testing
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performGesture
+import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.airbnb.android.showkase.models.Showkase
@@ -70,12 +74,21 @@ class ShowcaseBrowserTest {
             clickRowWithText("Components ($componentSize)")
 
             // Verify that all the groups are displayed on the screen
-            verifyRowsWithTextAreDisplayed(
-                "Group1 (2)",
-                "Group2 (1)",
-                "Group3 (2)",
-                "Submodule (1)"
-            )
+            if (BuildConfig.IS_RUNNING_KSP) {
+                verifyRowsWithTextAreDisplayed(
+                    "Button (4)",
+                    "Chips (1)",
+                    "CustomExternalPreview (4)",
+                    "Group1 (2)"
+                )
+            } else {
+                verifyRowsWithTextAreDisplayed(
+                    "Group1 (2)",
+                    "Group2 (1)",
+                    "Group3 (2)",
+                    "Submodule (1)"
+                )
+            }
         }
     }
 
@@ -665,7 +678,7 @@ class ShowcaseBrowserTest {
 
                 waitForIdle()
 
-                clickRowWithText("Group7 (4)")
+                clickRowWithText("A Stacked Annotations (4)")
 
                 waitForIdle()
 
@@ -676,6 +689,92 @@ class ShowcaseBrowserTest {
                 onNodeWithText("Composable10").assertIsDisplayed()
 
             }
+        }
+    }
+
+    @Test
+    fun combined_custom_annotation_previews_are_generated_correctly() {
+        if (BuildConfig.IS_RUNNING_KSP) {
+            composeTestRule.apply {
+                verifyLandingScreen(
+                    components = componentSize,
+                    typography = 13,
+                    colors = 4,
+                )
+
+                // Tap on the "Components" row
+                clickRowWithText("Components ($componentSize)")
+
+                waitForIdle()
+
+                clickRowWithText("CustomExternalPreview (4)")
+
+                waitForIdle()
+
+                // Verify that combined are treated as different composables. The reason these are
+                // only two is that the other two is in another group.
+                onNodeWithText("PreviewCombinedCustomAnnotation - CustomPreview one - 1").assertIsDisplayed()
+                onNodeWithText("PreviewCombinedCustomAnnotation - CustomPreview two - 1").assertIsDisplayed()
+
+                // Verify that we have made managed to make previews from custom annotation in other module
+                onNodeWithText("PreviewCustomTextWithCustomAnnotationFromOtherModule - CustomPreview one - 0").assertIsDisplayed()
+                onNodeWithText("PreviewCustomTextWithCustomAnnotationFromOtherModule - CustomPreview two - 0").assertIsDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun internal_custom_annotation_preview_are_generated_correctly() {
+        if (BuildConfig.IS_RUNNING_KSP) {
+            composeTestRule.apply {
+                verifyLandingScreen(
+                    components = componentSize,
+                    typography = 13,
+                    colors = 4,
+                )
+
+                // Tap on the "Components" row
+                clickRowWithText("Components ($componentSize)")
+
+                waitForIdle()
+
+                clickRowWithText("Button (4)")
+
+                waitForIdle()
+
+                // Check that we have generated the previews for single internal custom annotation
+                onNodeWithText("PreviewCustomText - Custom Text Light").assertIsDisplayed()
+                onNodeWithText("PreviewCustomText - Custom Text Dark").assertIsDisplayed()
+
+                // Check that we have generated the previews from combined internal custom annotation
+                // The reason this is only two and not four is that they are placed in different
+                // groups. That is because the previews have different groups set.
+                onNodeWithText("PreviewCombinedCustomAnnotation - Custom Text Dark").assertIsDisplayed()
+                onNodeWithText("PreviewCombinedCustomAnnotation - Custom Text Light").assertIsDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun combined_preview_with_single_preview_generates_the_single_preview() {
+        // This should work with both KSP and KAPT.
+        composeTestRule.apply {
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            clickRowWithText("Chips (1)")
+
+            waitForIdle()
+
+            onNodeWithText("Custom Text Dark From Combined Previews").assertIsDisplayed()
         }
     }
 }
