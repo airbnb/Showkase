@@ -85,7 +85,7 @@ class ShowcaseBrowserTest {
                 verifyRowsWithTextAreDisplayed(
                     "Group1 (2)",
                     "Group2 (1)",
-                    "Group3 (2)",
+                    "Group3 (3)",
                     "Submodule (1)"
                 )
             }
@@ -268,7 +268,7 @@ class ShowcaseBrowserTest {
             // Ensure that only Group1 (2) is visible on the screen. The rest of the groups should not be 
             // visble anymore
             verifyRowsWithTextAreDisplayed("Group1 (2)")
-            verifyRowsWithTextDoesNotExist("Group2 (1)", "Group3 (2)")
+            verifyRowsWithTextDoesNotExist("Group2 (1)", "Group3 (3)")
         }
     }
 
@@ -336,7 +336,7 @@ class ShowcaseBrowserTest {
             clickRowWithText("Components ($componentSize)")
 
             // Select Group 3
-            clickRowWithText("Group3 (2)")
+            clickRowWithText("Group3 (3)")
 
             // Verify the right composables are visible on the screen
             verifyRowsWithTextAreDisplayed("Test Composable4", "Test Composable5")
@@ -472,7 +472,7 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (3)")
 
             // Go back to the landing screen
             goBack()
@@ -574,7 +574,7 @@ class ShowcaseBrowserTest {
             clickRowWithText("Components ($componentSize)")
 
             // Select "Group4"
-            clickRowWithText("Group4 (1)")
+            clickRowWithText("Group3 (3)")
 
             // Select Component in question
             clickRowWithText("Test Composable6")

@@ -39,7 +39,7 @@ fun TestComposable4() {
 
 @ShowkaseComposable(
     "Composable6 Button Component wih a lot of extra stuff like spacing and such",
-    "Group4"
+    "Group3"
 )
 @Composable
 fun TestComposable6() {
