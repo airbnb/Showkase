@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.processor.writer
 
+import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
@@ -86,7 +87,8 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     // This is to aggregate metadata for the custom annotation annotated with Preview
     internal fun writeCustomAnnotationElementToMetadata(element: XElement) {
         val moduleName = "Showkase_${element.toString().replace(".", "_")}"
-        val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
+        val generatedClassName =
+            "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         FileSpec
         val previewAnnotations =
             element.getAllAnnotations().filter { it.name == ShowkaseProcessor.PREVIEW_SIMPLE_NAME }
@@ -101,9 +103,9 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         val functions = previewAnnotations.mapIndexed { index, xAnnotation ->
             FunSpec.builder("${xAnnotation.name}_$index")
                 .addAnnotation(
-                    AnnotationSpec.builder(
-                        ShowkaseMultiPreviewCodegenMetadata::class
-                    ).addMember("previewName = %S", xAnnotation.get("name"))
+                    AnnotationSpec
+                        .builder(ShowkaseMultiPreviewCodegenMetadata::class)
+                        .addMember("previewName = %S", xAnnotation.get("name"))
                         .addMember("previewGroup = %S", xAnnotation.get("group"))
                         .addMember("supportTypeQualifiedName = %S", element.qualifiedName)
                         .addMember("showkaseWidth = %L", xAnnotation.getAsInt("widthDp"))

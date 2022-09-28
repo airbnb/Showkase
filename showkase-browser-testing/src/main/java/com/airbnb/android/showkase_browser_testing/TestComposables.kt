@@ -92,5 +92,19 @@ fun PreviewCustomTextWithCustomAnnotationFromOtherModule() {
     BasicText(text = "MultiPreviewAnnotation from other module!")
 }
 
+
+
+@Preview(
+    name = "Custom Text Dark From Combined Previews",
+    group = "Chips",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@CustomButtonPreview
+@CustomPreviewAnnotation
+@Composable
+fun PreviewCombinedCustomAnnotation() {
+    BasicText(text = "Combined multi preview annotation test")
+}
+
 @ShowkaseRoot
 class MyRootModule: ShowkaseRootModule

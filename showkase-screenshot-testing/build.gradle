@@ -69,15 +69,4 @@ dependencies {
     api deps.test.androidXTestCore
     api deps.test.androidXTestRules
     api deps.test.androidxTestRunner
-
-    // Compose
-    implementation deps.compose.activityCompose
-    implementation deps.compose.composeRuntime
-    implementation deps.compose.composeNavigation
-    implementation deps.compose.core
-    implementation deps.compose.foundation
-    implementation deps.compose.tooling
-    implementation deps.compose.layout
-    implementation deps.compose.material
-    androidTestImplementation deps.compose.uiTest
 }

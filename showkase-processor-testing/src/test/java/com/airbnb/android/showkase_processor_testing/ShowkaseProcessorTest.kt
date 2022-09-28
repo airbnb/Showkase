@@ -552,24 +552,14 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         // This functionality is only supported with KSP for now.
         compileInputsAndVerifyOutputs(
             modes = listOf(Mode.KSP),
-            options = mutableMapOf(
-                "MultipreviewTypes" to
-                        "com.airbnb.android.showkase_processor_testing.InternalCustomPreviewAnnotation"
-            )
         )
     }
 
-    // TODO: Check why this is not generating 4 showkase composables
     @Test
     fun `composable function with two custom annotations stacked in same module generates output`() {
         // This functionality is only supported with KSP for now.
         compileInputsAndVerifyOutputs(
             modes = listOf(Mode.KSP),
-            options = mutableMapOf(
-                "MultipreviewTypes" to
-                        "com.airbnb.android.showkase_processor_testing.InternalPreviewOne," +
-                        "com.airbnb.android.showkase_processor_testing.InternalPreviewTwo"
-            )
         )
     }
 }
