@@ -1,3 +1,4 @@
+@file:Suppress("MatchingDeclarationName")
 package com.airbnb.android.submodule.showkasesample
 
 import androidx.compose.ui.tooling.preview.Preview

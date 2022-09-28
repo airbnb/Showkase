@@ -1,10 +1,8 @@
 package com.airbnb.android.showkase.processor
 
-import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
-import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -23,7 +21,6 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromCusto
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.models.toModel
-import com.airbnb.android.showkase.processor.utils.requireAnnotationBySimpleName
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
@@ -32,8 +29,6 @@ import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
-import com.squareup.kotlinpoet.FileSpec
-import java.util.Locale
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 
@@ -197,6 +192,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     // The reason for this method to take both an annotation and to check for supported types
     // Is that we want to check if the custom annotation is used in the same module
     // as it was discovered.
+    @Suppress("ReturnCount")
     private fun processCustomAnnotation(
         roundEnvironment: XRoundEnv,
         annotation: XTypeElement? = null
@@ -207,7 +203,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         return supportedTypes.map { supportedAnnotation ->
             val elementsAnnotated = roundEnvironment.getElementsAnnotatedWith(supportedAnnotation)
-            return@map elementsAnnotated.map elementScope@ { element ->
+            return@map elementsAnnotated.map elementScope@{ element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
                     // Here we write to metadata to aggregate custom annotation data.
                     // In this case, it would be a custom annotation that is annotated
@@ -222,7 +218,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element,
                     supportedAnnotation,
                 )
-                 return@elementScope getShowkaseMetadataFromCustomAnnotation(
+                return@elementScope getShowkaseMetadataFromCustomAnnotation(
                     element = element,
                     showkaseValidator = showkaseValidator,
                     supportedAnnotation.getCustomAnnotationSimpleName(),
@@ -278,24 +274,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
                     }
             }.flatten().mapNotNull { it }.toSet()
-    }
-
-    // Todo: Remove this
-    fun writeDebugFile(supportedCustomType: String) {
-        val moduleName = "Showkase_Debug}"
-        val generatedClassName =
-            "ShowkaseMetadata_debug${moduleName.lowercase(Locale.getDefault())}"
-        val fileBuilder = FileSpec.builder(
-            ShowkaseProcessor.CODEGEN_PACKAGE_NAME,
-            supportedCustomType
-        )
-        try {
-
-            fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
-        } catch (_: Exception) {
-
-        }
-
     }
 
     private fun String.getCustomAnnotationSimpleName(): String {

@@ -43,7 +43,7 @@ class ShowcaseBrowserTest {
     private val componentSize = if (BuildConfig.IS_RUNNING_KSP) {
         20
     } else {
-        7
+        8
     }
 
     @Test

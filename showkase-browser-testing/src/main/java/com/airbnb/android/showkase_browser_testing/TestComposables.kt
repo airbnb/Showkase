@@ -93,7 +93,6 @@ fun PreviewCustomTextWithCustomAnnotationFromOtherModule() {
 }
 
 
-
 @Preview(
     name = "Custom Text Dark From Combined Previews",
     group = "Chips",
