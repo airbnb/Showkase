@@ -126,11 +126,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         // This is for getting custom annotations from the supported types.
         val customAnnotationMetadata = processCustomAnnotation(roundEnvironment)
-        previewComposablesMetadata.forEach {
-
-            //writeDebugFile(it.showkaseName)
-        }
-
 
         return (
                 showkaseComposablesMetadata +
@@ -364,13 +359,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
         if (rootElement != null) {
             // This is the module that should aggregate all the other metadata files and
             // also use the showkaseMetadata set from the current round to write the final file.
-            showkaseProcessorMetadata =
-                writeShowkaseFiles(
-                    rootElement,
-                    componentMetadata,
-                    colorMetadata,
-                    typographyMetadata
-                )
+            showkaseProcessorMetadata = writeShowkaseFiles(
+                rootElement,
+                componentMetadata,
+                colorMetadata,
+                typographyMetadata
+            )
 
         }
 
