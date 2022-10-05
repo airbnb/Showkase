@@ -94,7 +94,7 @@ jobs:
 #          target: ${{ matrix.target }}
 #          arch: x86_64
 #          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -Precord
-
+#
 #      - name: Upload screenshots in an artifact
 #        uses: actions/upload-artifact@v3
 #        with:

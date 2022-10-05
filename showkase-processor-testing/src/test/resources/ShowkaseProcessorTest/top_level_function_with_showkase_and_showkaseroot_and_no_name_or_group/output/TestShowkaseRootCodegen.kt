@@ -23,7 +23,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
             componentName = "TestComposable",
             componentKDoc = "",
             componentKey =
-                """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_null""",
+                """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable_0_null""",
             isDefaultStyle = false,
             component = @Composable { TestComposable() })
       )

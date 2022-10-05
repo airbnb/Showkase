@@ -36,7 +36,7 @@ class ShowkaseProcessorProvider : SymbolProcessorProvider {
     }
 }
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 class ShowkaseProcessor @JvmOverloads constructor(
     kspEnvironment: SymbolProcessorEnvironment? = null
 ) : BaseProcessor(kspEnvironment) {
@@ -53,11 +53,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
         ShowkaseScreenshot::class.java.name,
     )
 
+    override fun getSupportedOptions(): MutableSet<String> {
+        return mutableSetOf("skipPrivatePreviews")
+    }
+
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
         val colorMetadata = processColorAnnotation(round)
         val typographyMetadata = processTypographyAnnotation(round, environment)
-
         processShowkaseMetadata(
             roundEnvironment = round,
             componentMetadata = componentMetadata,
@@ -81,32 +84,41 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processShowkaseAnnotation(
         roundEnvironment: XRoundEnv
     ): Set<ShowkaseMetadata.Component> {
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
-                showkaseValidator.validateComponentElement(
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    ShowkaseComposable::class.java.simpleName
+                    ShowkaseComposable::class.java.simpleName,
+                    skipPrivatePreviews
                 )
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadata(
                     element = element,
                     showkaseValidator = showkaseValidator,
                 )
-            }.toSet()
+            }.flatten().mapNotNull { it }.toSet()
     }
 
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
-                showkaseValidator.validateComponentElement(
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    PREVIEW_SIMPLE_NAME
+                    PREVIEW_SIMPLE_NAME,
+                    skipPrivatePreviews
                 )
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadataFromPreview(
                     element = element,
                     showkaseValidator = showkaseValidator
                 )
-            }.toSet()
+
+            }.flatten().mapNotNull { it }.toSet()
     }
 
     private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
@@ -123,12 +135,21 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 
         // will be null) & the methodName.
-        "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+        if (it.componentIndex != null) {
+            "${it.packageName}_${it.enclosingClassName}_${it.elementName}_${it.componentIndex}"
+        } else {
+
+            "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+        }
     }
         .distinctBy {
             // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app. 
-            "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+            // that they don't show up twice in the browser app.
+            if (it.componentIndex != null) {
+                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
+            } else {
+                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+            }
         }
         .sortedBy {
             "${it.packageName}_${it.enclosingClassName}_${it.elementName}"

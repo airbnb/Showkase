@@ -9,8 +9,8 @@ fun XAnnotated.findAnnotationBySimpleName(simpleName: String): XAnnotation? {
     return getAllAnnotations().find { it.name == simpleName }
 }
 
-fun XAnnotated.requireAnnotationBySimpleName(simpleName: String): XAnnotation {
-    return getAllAnnotations().find { it.name == simpleName }
+fun XAnnotated.requireAnnotationBySimpleName(simpleName: String): List<XAnnotation> {
+    return getAllAnnotations().filter { it.name == simpleName }
         ?: throw ShowkaseProcessorException(
             "No annotation named $simpleName found",
             this as? XElement
