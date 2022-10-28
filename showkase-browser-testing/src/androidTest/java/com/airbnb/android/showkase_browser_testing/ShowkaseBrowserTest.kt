@@ -1,9 +1,7 @@
 package com.airbnb.android.showkase_browser_testing
 
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performGesture
-import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.airbnb.android.showkase.models.Showkase
@@ -37,23 +35,47 @@ class ShowcaseBrowserTest {
             }
         )
 
+    // This will alter now since KSP supports stacked preview annotations and KAPT does not.
+    // It is not supported in KAPT because there is no support for repeatable annotations in KAPT
+    // beyond the source retention KEEP, except for in the new IR backend which was introduced
+    // in Kotlin 1.6. It will be available in the old backend in Kotlin version 1.7.20.
+    // See https://youtrack.jetbrains.com/issue/KT-49682 for more information about this.
+    private val componentSize = if (BuildConfig.IS_RUNNING_KSP) {
+        11
+    } else {
+        7
+    }
+
     @Test
     fun activity_starts_and_all_the_showkase_ui_elements_are_visible_on_the_screen_and_clickable() {
         // Assert that all the categories are displayed on the screen and that they are clickable.
-        composeTestRule.verifyLandingScreen()
+        composeTestRule.verifyLandingScreen(
+            components = componentSize,
+            typography = 13,
+            colors = 4,
+        )
     }
 
     @Test
     fun clicking_components_takes_you_to_a_screen_with_groups_of_components() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Components" row
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Verify that all the groups are displayed on the screen
-            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)", "Submodule (1)")
+            verifyRowsWithTextAreDisplayed(
+                "Group1 (2)",
+                "Group2 (1)",
+                "Group3 (2)",
+                "Submodule (1)"
+            )
         }
     }
 
@@ -61,7 +83,11 @@ class ShowcaseBrowserTest {
     fun clicking_colors_takes_you_to_a_screen_with_groups_of_colors() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Colors" row
             clickRowWithText("Colors (4)")
@@ -75,7 +101,11 @@ class ShowcaseBrowserTest {
     fun clicking_typography_takes_you_to_a_screen_with_groups_of_typography() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Typography" row
             clickRowWithText("Typography (13)")
@@ -89,10 +119,14 @@ class ShowcaseBrowserTest {
     fun opening_component_detail_screen_has_5_permutations_displayed() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Components" row
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Select "Group1"
             clickRowWithText("Group1 (2)")
@@ -152,7 +186,11 @@ class ShowcaseBrowserTest {
     fun selecting_color_group_has_colors_displayed() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Colors" row
             clickRowWithText("Colors (4)")
@@ -169,7 +207,11 @@ class ShowcaseBrowserTest {
     fun selecting_typography_group_has_colors_displayed() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Typography" row
             clickRowWithText("Typography (13)")
@@ -195,10 +237,14 @@ class ShowcaseBrowserTest {
     fun entering_text_in_search_bar_filters_the_visible_groups_of_components() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select Components
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
@@ -217,7 +263,11 @@ class ShowcaseBrowserTest {
     fun entering_text_in_search_bar_filters_the_visible_groups_of_colors() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select Colors
             clickRowWithText("Colors (4)")
@@ -237,7 +287,11 @@ class ShowcaseBrowserTest {
     fun entering_text_in_search_bar_filters_the_visible_groups_of_typography() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select Typography
             clickRowWithText("Typography (13)")
@@ -259,10 +313,14 @@ class ShowcaseBrowserTest {
     fun entering_text_in_search_bar_filters_the_visible_components() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select components
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Select Group 3
             clickRowWithText("Group3 (2)")
@@ -287,7 +345,11 @@ class ShowcaseBrowserTest {
     fun entering_text_in_search_bar_filters_the_visible_colors() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select "Colors"
             clickRowWithText("Colors (4)")
@@ -315,7 +377,11 @@ class ShowcaseBrowserTest {
     fun entering_text_in_search_bar_filters_the_visible_typography() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select "Typography"
             clickRowWithText("Typography (13)")
@@ -341,8 +407,10 @@ class ShowcaseBrowserTest {
             // Ensure that only "Body1" & "Body2" is visible on the screen. The rest of the groups should
             // not be visble anymore
             verifyRowsWithTextAreDisplayed("Body1", "Body2")
-            verifyRowsWithTextDoesNotExist("H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1",
-                "Subtitle2")
+            verifyRowsWithTextDoesNotExist(
+                "H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1",
+                "Subtitle2"
+            )
         }
     }
 
@@ -350,14 +418,18 @@ class ShowcaseBrowserTest {
     fun navigating_to_component_leaf_screen_and_back_works_ok() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select components to go to the component groups screen
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Click on "Group 1" to go to the components in a group screen
             clickRowWithText("Group1 (2)")
-            
+
             // Click on "Test Composable1" to go to the component styles screen
             clickRowWithText("Test Composable1")
 
@@ -393,7 +465,11 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
         }
     }
 
@@ -401,7 +477,11 @@ class ShowcaseBrowserTest {
     fun navigating_to_color_leaf_screen_and_back_works_ok() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select "Colors" to go to the color groups screen
             clickRowWithText("Colors (4)")
@@ -422,7 +502,11 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
         }
     }
 
@@ -430,7 +514,11 @@ class ShowcaseBrowserTest {
     fun navigating_to_typography_leaf_screen_and_back_works_ok() {
         composeTestRule.apply {
             // Ensure all the categories are visible
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Select "Typography" to go to the typography groups screen
             clickRowWithText("Typography (13)")
@@ -451,7 +539,11 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
         }
     }
 
@@ -459,10 +551,14 @@ class ShowcaseBrowserTest {
     fun components_with_long_names_have_a_correct_top_app_bar() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Components" row
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Select "Group4"
             clickRowWithText("Group4 (1)")
@@ -481,10 +577,14 @@ class ShowcaseBrowserTest {
     fun search_field_has_enabled_close_button() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Components" row
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             // Tap on the search icon
             clickRowWithTag("SearchIcon")
@@ -508,10 +608,14 @@ class ShowcaseBrowserTest {
     fun clear_search_field_clears_the_field() {
         composeTestRule.apply {
             // Assert that all the categories are displayed on the screen and that they are clickable.
-            verifyLandingScreen()
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
 
             // Tap on the "Components" row
-            clickRowWithText("Components (7)")
+            clickRowWithText("Components ($componentSize)")
 
             waitForIdle()
 
@@ -542,6 +646,36 @@ class ShowcaseBrowserTest {
 
             // Check that the search icon is displayed again
             verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
+        }
+    }
+
+    @Test
+    fun stacked_preview_show_up_in_browser() {
+        // Stacked previews are only supported from ksp, so this is to bypass kapt on CI
+        if (BuildConfig.IS_RUNNING_KSP) {
+            composeTestRule.apply {
+
+                verifyLandingScreen(
+                    components = 11,
+                    typography = 13,
+                    colors = 4,
+                )
+                // Tap on the "Components" row
+                clickRowWithText("Components (11)")
+
+                waitForIdle()
+
+                clickRowWithText("Group7 (4)")
+
+                waitForIdle()
+
+                // Verify that they are all displayed and treated as different components
+                onNodeWithText("Composable7").assertIsDisplayed()
+                onNodeWithText("Composable8").assertIsDisplayed()
+                onNodeWithText("Composable9").assertIsDisplayed()
+                onNodeWithText("Composable10").assertIsDisplayed()
+
+            }
         }
     }
 }

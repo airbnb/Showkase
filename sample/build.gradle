@@ -44,7 +44,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.compose}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
 
     }
     // Added to avoid this error -
@@ -57,6 +57,18 @@ android {
         exclude 'META-INF/gradle/incremental.annotation.processors'
     }
 }
+if (project.hasProperty("useKsp")) {
+    ksp {
+        arg("skipPrivatePreviews", "true")
+    }
+} else {
+    kapt {
+        arguments {
+            arg("skipPrivatePreviews", "true")
+        }
+    }
+}
+
 
 dependencies {
     // Showkase dependencies

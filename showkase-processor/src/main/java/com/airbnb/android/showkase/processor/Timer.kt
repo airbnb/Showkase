@@ -33,7 +33,7 @@ class Timer(val name: String) {
             }
         }
 
-        messager.printMessage(Diagnostic.Kind.NOTE, message)
+        messager.printMessage(Diagnostic.Kind.OTHER, message)
     }
 
     private class TimingStep(val durationNanos: Long, val description: String)

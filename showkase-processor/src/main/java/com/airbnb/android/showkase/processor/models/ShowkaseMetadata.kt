@@ -52,6 +52,7 @@ internal sealed class ShowkaseMetadata {
         override val enclosingClassName: ClassName? = null,
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
+        val componentIndex: Int? = null,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
         val previewParameterProviderType: TypeName? = null,
@@ -176,40 +177,44 @@ private fun Int.parseAnnotationProperty() = when (this) {
 internal fun getShowkaseMetadata(
     element: XMethodElement,
     showkaseValidator: ShowkaseValidator
-): ShowkaseMetadata.Component? {
-    val showkaseAnnotation = element.requireAnnotation(ShowkaseComposable::class).value
-    // If this component was configured to be skipped, return early
-    if (showkaseAnnotation.skip) return null
+): List<ShowkaseMetadata.Component?> {
+    val showkaseAnnotations = element.getAnnotations(ShowkaseComposable::class)
 
     val commonMetadata = element.extractCommonMetadata(showkaseValidator)
-    val showkaseName = getShowkaseName(showkaseAnnotation.name, element.name)
-    val showkaseGroup = getShowkaseGroup(
-        showkaseAnnotation.group,
-        commonMetadata.enclosingClass,
-    )
-    val isDefaultStyle = showkaseAnnotation.defaultStyle
-    val showkaseStyleName = getShowkaseStyleName(showkaseAnnotation.styleName, isDefaultStyle)
-
     val previewParameterMetadata = element.getPreviewParameterMetadata()
 
-    return ShowkaseMetadata.Component(
-        packageSimpleName = commonMetadata.moduleName,
-        packageName = commonMetadata.packageName,
-        enclosingClassName = commonMetadata.enclosingClassName,
-        elementName = element.name,
-        showkaseName = showkaseName,
-        showkaseGroup = showkaseGroup,
-        showkaseStyleName = showkaseStyleName,
-        showkaseWidthDp = showkaseAnnotation.widthDp.parseAnnotationProperty(),
-        showkaseHeightDp = showkaseAnnotation.heightDp.parseAnnotationProperty(),
-        insideObject = commonMetadata.showkaseFunctionType.insideObject(),
-        insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        element = element,
-        showkaseKDoc = commonMetadata.kDoc,
-        previewParameterName = previewParameterMetadata?.first,
-        previewParameterProviderType = previewParameterMetadata?.second,
-        isDefaultStyle = isDefaultStyle
-    )
+    return showkaseAnnotations.mapNotNull { annotation ->
+        // If this component was configured to be skipped, return early
+        if (annotation.value.skip) return@mapNotNull null
+
+        val showkaseName = getShowkaseName(annotation.value.name, element.name)
+        val showkaseGroup = getShowkaseGroup(
+            annotation.value.group,
+            commonMetadata.enclosingClass,
+        )
+        val isDefaultStyle = annotation.value.defaultStyle
+        val showkaseStyleName = getShowkaseStyleName(annotation.value.styleName, isDefaultStyle)
+
+        ShowkaseMetadata.Component(
+            packageSimpleName = commonMetadata.moduleName,
+            packageName = commonMetadata.packageName,
+            enclosingClassName = commonMetadata.enclosingClassName,
+            elementName = element.name,
+            showkaseName = showkaseName,
+            showkaseGroup = showkaseGroup,
+            showkaseStyleName = showkaseStyleName,
+            showkaseWidthDp = annotation.value.widthDp.parseAnnotationProperty(),
+            showkaseHeightDp = annotation.value.heightDp.parseAnnotationProperty(),
+            insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+            insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+            element = element,
+            showkaseKDoc = commonMetadata.kDoc,
+            previewParameterName = previewParameterMetadata?.first,
+            previewParameterProviderType = previewParameterMetadata?.second,
+            isDefaultStyle = isDefaultStyle,
+            componentIndex = showkaseAnnotations.indexOf(annotation),
+        )
+    }
 }
 
 internal fun XMethodElement.extractCommonMetadata(showkaseValidator: ShowkaseValidator): CommonMetadata {
@@ -251,44 +256,46 @@ internal data class CommonMetadata(
 internal fun getShowkaseMetadataFromPreview(
     element: XMethodElement,
     showkaseValidator: ShowkaseValidator,
-): ShowkaseMetadata.Component? {
-    val previewAnnotation = element.requireAnnotationBySimpleName(PREVIEW_SIMPLE_NAME)
+): List<ShowkaseMetadata.Component?> {
+    val previewAnnotations = element.requireAnnotationBySimpleName(PREVIEW_SIMPLE_NAME)
 
     val showkaseComosableAnnotation = element.getAnnotation(ShowkaseComposable::class)?.value
     // If this component was configured to be skipped, return early
-    if (showkaseComosableAnnotation != null && showkaseComosableAnnotation.skip) return null
+    if (showkaseComosableAnnotation != null && showkaseComosableAnnotation.skip) return listOf() // Will be mapped out
+    return previewAnnotations.mapIndexed { index, annotation ->
+        val commonMetadata = element.extractCommonMetadata(showkaseValidator)
+        val showkaseName = getShowkaseName(
+            annotation.getAsString("name"),
+            element.name
+        )
+        val showkaseGroup = getShowkaseGroup(
+            annotation.getAsString("group"),
+            commonMetadata.enclosingClass,
+        )
 
-    val commonMetadata = element.extractCommonMetadata(showkaseValidator)
-    val showkaseName = getShowkaseName(
-        previewAnnotation.getAsString("name"),
-        element.name
-    )
-    val showkaseGroup = getShowkaseGroup(
-        previewAnnotation.getAsString("group"),
-        commonMetadata.enclosingClass,
-    )
+        val width = annotation.getAsInt("widthDp")
+        val height = annotation.getAsInt("heightDp")
 
-    val width = previewAnnotation.getAsInt("widthDp")
-    val height = previewAnnotation.getAsInt("heightDp")
+        val previewParameterMetadata = element.getPreviewParameterMetadata()
 
-    val previewParameterMetadata = element.getPreviewParameterMetadata()
-
-    return ShowkaseMetadata.Component(
-        packageSimpleName = commonMetadata.moduleName,
-        packageName = commonMetadata.packageName,
-        enclosingClassName = commonMetadata.enclosingClassName,
-        elementName = element.name,
-        showkaseKDoc = commonMetadata.kDoc,
-        showkaseName = showkaseName,
-        showkaseGroup = showkaseGroup,
-        showkaseWidthDp = if (width == -1) null else width,
-        showkaseHeightDp = if (height == -1) null else width,
-        insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
-        insideObject = commonMetadata.showkaseFunctionType.insideObject(),
-        element = element,
-        previewParameterName = previewParameterMetadata?.first,
-        previewParameterProviderType = previewParameterMetadata?.second
-    )
+        ShowkaseMetadata.Component(
+            packageSimpleName = commonMetadata.moduleName,
+            packageName = commonMetadata.packageName,
+            enclosingClassName = commonMetadata.enclosingClassName,
+            elementName = element.name,
+            showkaseKDoc = commonMetadata.kDoc,
+            showkaseName = showkaseName,
+            showkaseGroup = showkaseGroup,
+            showkaseWidthDp = if (width == -1) null else width,
+            showkaseHeightDp = if (height == -1) null else width,
+            insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
+            insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+            element = element,
+            previewParameterName = previewParameterMetadata?.first,
+            previewParameterProviderType = previewParameterMetadata?.second,
+            componentIndex = index,
+        )
+    }
 }
 
 private fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName>? {

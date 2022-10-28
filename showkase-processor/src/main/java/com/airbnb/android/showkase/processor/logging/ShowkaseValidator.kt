@@ -30,14 +30,14 @@ import kotlin.contracts.contract
 
 internal class ShowkaseValidator {
     @Suppress("ThrowsCount")
-    internal fun validateComponentElement(
+    internal fun validateComponentElementOrSkip(
         element: XElement,
-        annotationName: String
-    ) {
+        annotationName: String,
+        skipPrivatePreviews: Boolean = false
+    ): Boolean {
         contract {
             returns() implies (element is XMethodElement)
         }
-
         when {
             !element.isMethod() -> {
                 throw ShowkaseProcessorException(
@@ -45,6 +45,7 @@ internal class ShowkaseValidator {
                     element
                 )
             }
+            skipPrivatePreviews && element.isPrivate() -> return true
             // Only check simple name to avoid costly type resolution
             element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
                 throw ShowkaseProcessorException(
@@ -56,7 +57,10 @@ internal class ShowkaseValidator {
                 throw ShowkaseProcessorException(
                     "The methods annotated with " +
                             "$annotationName can't be private as Showkase won't be able to access " +
-                            "them otherwise.",
+                            "them otherwise. If you'd like to skip this check and ignore the private " +
+                            "previews, kindly pass skipPrivatePreviews=true as an annotation processor option." +
+                            "To learn more about how to set this option, read the Showkase README here- " +
+                            "https://github.com/airbnb/Showkase/blob/master/README.md",
                     element
                 )
             }
@@ -71,12 +75,13 @@ internal class ShowkaseValidator {
                 )
             }
             else -> {
+                return false
             }
         }
     }
 
-    // This should check if it is an annotation that's annotated with @Preview annotation
-    internal fun checkElementIsMultiPreview(element: XElement): Boolean {
+    // This should check if it is an annotation that's annotated with @Preview or @ShowkaseComposable annotation
+    internal fun checkElementIsAnnotationClass(element: XElement): Boolean {
         return element.isTypeElement() && element.isAnnotationClass()
     }
 

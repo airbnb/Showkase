@@ -20,6 +20,7 @@ android {
         exclude 'META-INF/gradle/incremental.annotation.processors'
         exclude("META-INF/*.kotlin_module")
     }
+
     defaultConfig {
         minSdkVersion 26
         targetSdkVersion 32
@@ -28,6 +29,12 @@ android {
         // "pm clear" command after each test invocation. This command ensures
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
+        
+        if (project.hasProperty('useKsp')) {
+            buildConfigField "boolean", "IS_RUNNING_KSP", "true"
+        } else {
+            buildConfigField "boolean", "IS_RUNNING_KSP", "false"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -41,7 +48,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.compose}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.

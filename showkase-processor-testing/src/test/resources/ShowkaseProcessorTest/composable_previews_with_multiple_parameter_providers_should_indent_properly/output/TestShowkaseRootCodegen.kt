@@ -34,7 +34,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
                               "Composable1 Usage of an integer preview parameter provider",
                           componentKDoc = "",
                           componentKey =
-                              """com.airbnb.android.showkase_browser_testing_null_Group1_Composable1Usageofanintegerpreviewparameterprovider_null_$index""",
+                              """com.airbnb.android.showkase_browser_testing_null_Group1_Composable1Usageofanintegerpreviewparameterprovider_0_null_$index""",
                           isDefaultStyle = false,
                           component = @Composable { TestComposable1(n = previewParam) }
                       )
@@ -51,7 +51,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
                           componentName = "Composable2 Usage of a char preview parameter provider",
                           componentKDoc = "",
                           componentKey =
-                              """com.airbnb.android.showkase_browser_testing_null_Group1_Composable2Usageofacharpreviewparameterprovider_null_$index""",
+                              """com.airbnb.android.showkase_browser_testing_null_Group1_Composable2Usageofacharpreviewparameterprovider_0_null_$index""",
                           isDefaultStyle = false,
                           component = @Composable { TestComposable2(c = previewParam) }
                       )

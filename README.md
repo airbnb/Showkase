@@ -85,14 +85,6 @@ implementation "com.airbnb.android:showkase:1.0.0-beta14"
 ksp "com.airbnb.android:showkase-processor:1.0.0-beta14"
 ```
 
-In addition, you will also need to pass a flag to the gradle command that you use to build/run with showkase. 
-Here's an example of what this would look like:
-
-```
-./gradlew sample:clean sample:build -i -PuseKsp=true
-```
-
-
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
 
@@ -173,6 +165,7 @@ to understand the behavior when you don't pass any properties.
 **Note:** Make sure that you add this annotation to only those functions that meet the following criteria:
 - Functions that don't have any parameters
 - If it does have a parameter, it has to be annotated with `@PreviewParameter` that is provided a `PreviewParameterProvider` implementation.
+- Stacked `@Preview` and `ShowkaseComposable` annotations are only supported with KSP at the moment. This is because of this [issue](https://youtrack.jetbrains.com/issue/KT-49682).
 
 This is identical to how `@Preview` works in Compose as well so Showkase just adheres to the same rules. 
 

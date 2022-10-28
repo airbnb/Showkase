@@ -29,7 +29,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
                           componentName = "name",
                           componentKDoc = "",
                           componentKey =
-                              """com.airbnb.android.showkase_processor_testing_null_group_name_null_$index""",
+                              """com.airbnb.android.showkase_processor_testing_null_group_name_0_null_$index""",
                           isDefaultStyle = false,
                           component = @Composable { TestComposableWithDefaultParameters(bankHeader =
                               previewParam) }
