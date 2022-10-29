@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.submodule.showkasesample.CircleShapePreview
+import com.airbnb.android.submodule.two.showkasesample.SquarePreview
 
 @Preview(name = "Square 200 by 200", group = "Shape", widthDp = 200, heightDp = 200)
 @Preview(name = "Square 400 by 400", group = "Shape", widthDp = 400, heightDp = 400)
@@ -80,6 +81,7 @@ fun RoundRectanglePreview(
 }
 
 @ShapePreview
+@SquarePreview
 @Composable
 fun SquarePreview(
     @PreviewParameter(ShapeColorProvider::class) color: Color,
