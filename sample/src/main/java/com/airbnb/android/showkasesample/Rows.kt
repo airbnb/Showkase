@@ -196,7 +196,6 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
             )
 
         }
-        BackHandler(onBack = {  })
     }
 }
 
@@ -252,3 +251,14 @@ fun TitleSubtitleThumbnailRowPreview() {
         TitleSubtitleThumbnailRow()
     }
 }
+
+@ShowkaseComposable@ShowkaseComposable("Title Subtitle with Thumbnail and Back Handler", "Rows")
+@Preview
+@Composable
+fun TitleSubtitleThumbnailRow_WithBackHandling_Preview() {
+    Column {
+        TitleSubtitleThumbnailRow()
+    }
+    BackHandler(onBack = {  })
+}
+

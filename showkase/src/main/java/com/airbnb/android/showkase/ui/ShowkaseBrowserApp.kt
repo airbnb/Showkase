@@ -75,14 +75,19 @@ internal fun ShowkaseBrowserApp(
         uiMode = Configuration.UI_MODE_NIGHT_NO
     }
     val lifecycleOwner = LocalLifecycleOwner.current
-    CompositionLocalProvider(
-        LocalConfiguration provides lightModeConfiguration,
-        LocalInspectionMode provides true,
-        LocalOnBackPressedDispatcherOwner provides object: OnBackPressedDispatcherOwner {
+    val backPressedDispatcherOwner = remember {
+        object : OnBackPressedDispatcherOwner {
             override fun getLifecycle() = lifecycleOwner.lifecycle
 
             override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
         }
+    }
+    CompositionLocalProvider(
+        LocalConfiguration provides lightModeConfiguration,
+        LocalInspectionMode provides true,
+        // This is added to make sure that the navigation of the ShowkaseBrowser does not break
+        // when one of the previews has a back press handler in the implementation of the component.
+        LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner
     ) {
         val navController = rememberNavController()
         Scaffold(
