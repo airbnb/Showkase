@@ -255,7 +255,7 @@ fun TitleSubtitleThumbnailRowPreview() {
 @ShowkaseComposable@ShowkaseComposable("Title Subtitle with Thumbnail and Back Handler", "Rows")
 @Preview
 @Composable
-fun TitleSubtitleThumbnailRow_WithBackHandling_Preview() {
+fun TitleSubtitleThumbnailRowWithBackHandlingPreview() {
     Column {
         TitleSubtitleThumbnailRow()
     }
