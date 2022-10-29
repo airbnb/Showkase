@@ -10,6 +10,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.vinaygaba.showkase_browser_testing_submodule.CustomPreviewAnnotation
+import com.vinaygaba.showkase_browser_testing_submodule.two.SquarePreview
 
 @ShowkaseComposable("Composable1", "Group1")
 @Composable
@@ -86,6 +87,7 @@ fun PreviewCustomText() {
     BasicText(text = "MultiPreviewAnnotation!")
 }
 
+@SquarePreview
 @CustomPreviewAnnotation
 @Composable
 fun PreviewCustomTextWithCustomAnnotationFromOtherModule() {
