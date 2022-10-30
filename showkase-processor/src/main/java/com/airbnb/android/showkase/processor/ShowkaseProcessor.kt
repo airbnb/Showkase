@@ -49,7 +49,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     override fun getSupportedAnnotationTypes(): MutableSet<String> = supportedAnnotationTypes()
 
     private fun supportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf<String>(
+        val set = mutableSetOf<String>(
             ShowkaseComposable::class.java.name,
             PREVIEW_CLASS_NAME,
             ShowkaseColor::class.java.name,
@@ -57,6 +57,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ShowkaseRoot::class.java.name,
             ShowkaseScreenshot::class.java.name,
         )
+        set.addAll(getSupportedMultipreviewTypes())
+        return set
     }
 
     private fun getSupportedMultipreviewTypes(): Set<String> {
@@ -189,14 +191,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             val elementsAnnotated = roundEnvironment.getElementsAnnotatedWith(supportedAnnotation)
             return@map elementsAnnotated.map elementScope@{ element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
-                    // Here we write to metadata to aggregate custom annotation data.
-                    // In this case, it would be a custom annotation that is annotated
-                    // with something custom. Eg. CombinedPreview.
-                    ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
-                        element
-                    )
                     return@elementScope processCustomAnnotation(roundEnvironment, element).toSet()
-
                 }
                 showkaseValidator.validateComponentElementOrSkip(
                     element,
