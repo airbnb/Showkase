@@ -49,7 +49,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     override fun getSupportedAnnotationTypes(): MutableSet<String> = supportedAnnotationTypes()
 
     private fun supportedAnnotationTypes(): MutableSet<String> {
-        val set = mutableSetOf(
+        return mutableSetOf<String>(
             ShowkaseComposable::class.java.name,
             PREVIEW_CLASS_NAME,
             ShowkaseColor::class.java.name,
@@ -57,17 +57,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ShowkaseRoot::class.java.name,
             ShowkaseScreenshot::class.java.name,
         )
-
-        environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
-            .flatMap { it.getEnclosedElements() }
-            .map {
-                it.getAnnotations(ShowkaseMultiPreviewCodegenMetadata::class)
-                    .forEach { annotation ->
-                        set.add(annotation.value.supportTypeQualifiedName)
-                    }
-            }
-
-        return set
     }
 
     private fun getSupportedMultipreviewTypes(): Set<String> {
