@@ -93,3 +93,15 @@ fun SquarePreview(
             .clip(RectangleShape)
     )
 }
+
+@Preview(name = "Repeatable Square Preview 1", group = "Shape")
+@Preview(name = "Repeatable Square Preview 2", group = "Shape")
+@Composable
+fun RepeatableSquarePreview() {
+    Box(
+        Modifier
+            .background(Color.Cyan)
+            .fillMaxSize()
+            .clip(RectangleShape)
+    )
+}

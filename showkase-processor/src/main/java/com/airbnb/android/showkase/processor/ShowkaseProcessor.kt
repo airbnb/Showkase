@@ -57,7 +57,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ShowkaseRoot::class.java.name,
             ShowkaseScreenshot::class.java.name,
         )
-        set.addAll(getSupportedMultipreviewTypes())
+
+        environment
+            .options["MultiPreviewTypes"]
+            ?.split(",")?.map { it.replace(" ", "") }
+            ?.toSet()?.let { set.addAll(it) }
         return set
     }
 
@@ -66,11 +70,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         // This is to check if we have generated any types that we want to support.
         set.addAll(getSupportedMultiPreviewTypesFromClassPath())
-
-        environment
-            .options["MultiPreviewTypes"]
-            ?.split(",")?.map { it.replace(" ", "") }
-            ?.toSet()?.let { set.addAll(it) }
         return set
     }
 

@@ -65,6 +65,7 @@ if (project.hasProperty("useKsp")) {
     kapt {
         arguments {
             arg("skipPrivatePreviews", "true")
+            arg("MultiPreviewTypes", "com.airbnb.android.showkasesample.ShapePreview")
         }
     }
 }
