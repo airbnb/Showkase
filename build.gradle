@@ -90,7 +90,6 @@ buildscript {
         google()
         mavenCentral()
         gradlePluginPortal()
-        jcenter()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
