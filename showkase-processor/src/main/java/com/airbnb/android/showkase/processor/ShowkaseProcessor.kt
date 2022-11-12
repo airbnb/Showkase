@@ -64,26 +64,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ?.toSet()?.let { set.addAll(it) }
         return set
     }
-
-    private fun getSupportedMultipreviewTypes(): Set<String> {
-        val set = mutableSetOf<String>()
-
-        // This is to check if we have generated any types that we want to support.
-        set.addAll(getSupportedMultiPreviewTypesFromClassPath())
-        return set
-    }
-
-    private fun getSupportedMultiPreviewTypesFromClassPath() =
-        environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
-            .flatMap { it.getEnclosedElements() }.mapNotNull {
-                when (
-                    val annotation = it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)
-                ) {
-                    null -> null
-                    else -> annotation.value.supportTypeQualifiedName
-                }
-            }.toSet()
-
     override fun getSupportedOptions(): MutableSet<String> {
         return mutableSetOf("skipPrivatePreviews")
     }
@@ -173,6 +153,25 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
             }.flatten().mapNotNull { it }.toSet()
     }
+
+    private fun getSupportedMultipreviewTypes(): Set<String> {
+        val set = mutableSetOf<String>()
+
+        // This is to check if we have generated any types that we want to support.
+        set.addAll(getSupportedMultiPreviewTypesFromClassPath())
+        return set
+    }
+
+    private fun getSupportedMultiPreviewTypesFromClassPath() =
+        environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .flatMap { it.getEnclosedElements() }.mapNotNull {
+                when (
+                    val annotation = it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)
+                ) {
+                    null -> null
+                    else -> annotation.value.supportTypeQualifiedName
+                }
+            }.toSet()
 
     // The reason for this method to take both an annotation and to check for supported types
     // Is that we want to check if the custom annotation is used in the same module
