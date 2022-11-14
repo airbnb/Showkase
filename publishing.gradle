@@ -1,0 +1,26 @@
+apply plugin: 'com.vanniktech.maven.publish'
+
+// https://vanniktech.github.io/gradle-maven-publish-plugin/other/
+publishing {
+    repositories {
+        maven {
+            // The "name" value creates a task like `publishAllPublicationsTo[Name]Repository
+            // In this case, publishAllPublicationsToAirbnbArtifactoryRepository
+            name = 'airbnbArtifactory'
+            url = version.toString().endsWith("SNAPSHOT") ? "https://artifactory.d.musta.ch/artifactory/maven-airbnb-snapshots" : "https://artifactory.d.musta.ch/artifactory/maven-airbnb-releases"
+            credentials {
+                username = getProperty("ARTIFACTORY_USERNAME")
+                password = getProperty("ARTIFACTORY_PASSWORD")
+            }
+        }
+    }
+}
+
+mavenPublishing {
+    if (findProperty("doNotSignRelease").toString().toBoolean()) {
+        println("Skipping release signing")
+    } else {
+        println("Signing release with gpg")
+//        signAllPublications()
+    }
+}

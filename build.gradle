@@ -88,7 +88,6 @@ buildscript {
     ]
     repositories {
         google()
-        mavenCentral()
         gradlePluginPortal()
         jcenter()
     }
@@ -96,6 +95,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.karumi:shot:${versions.shot}"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -105,6 +105,7 @@ buildscript {
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.7.4"
     id "com.google.devtools.ksp" version "$KSP_VERSION"
+    id "com.vanniktech.maven.publish" version "0.22.0"
 }
 
 allprojects {
@@ -116,6 +117,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}
