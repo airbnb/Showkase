@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,8 +66,8 @@ fun CirclePreview(
  * This is some KDoc to show how to implement our nice custom
  * composable
  */
-@Preview(name = "Desktop Preview", group = "Shape", device = Devices.DESKTOP)
-@DevicePreview
+//@Preview(name = "Desktop Preview", group = "Shape", device = Devices.DESKTOP)
+//@DevicePreview
 @ShapePreview
 @Composable
 fun RoundRectanglePreview(
@@ -81,7 +82,7 @@ fun RoundRectanglePreview(
 }
 
 @ShapePreview
-@SquarePreview
+//@SquarePreview
 @Composable
 fun SquarePreview(
     @PreviewParameter(ShapeColorProvider::class) color: Color,
@@ -104,4 +105,10 @@ fun RepeatableSquarePreview() {
             .fillMaxSize()
             .clip(RectangleShape)
     )
+}
+
+@ShapePreview
+@Composable
+fun MyShapePreview() {
+    Text("Text")
 }

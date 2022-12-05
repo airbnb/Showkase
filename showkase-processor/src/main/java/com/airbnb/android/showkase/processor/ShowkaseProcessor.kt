@@ -91,8 +91,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
 
         // This is for getting custom annotations from class path
-        val customAnnotationMetadataFromClassPath =
-            processCustomAnnotationFromClasspath(roundEnvironment)
+//        val customAnnotationMetadataFromClassPath =
+//            processCustomAnnotationFromClasspath(roundEnvironment)
 
         // This is for getting custom annotations from the supported types.
         val customAnnotationMetadata = processCustomAnnotation(roundEnvironment)
@@ -100,8 +100,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return (
                 showkaseComposablesMetadata +
                         previewComposablesMetadata +
-                        customAnnotationMetadata +
-                        customAnnotationMetadataFromClassPath
+                        customAnnotationMetadata
+//                        + customAnnotationMetadataFromClassPath
                 )
             .dedupeAndSort()
             .toSet()
@@ -113,7 +113,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
-                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+//                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
                     ShowkaseComposable::class.java.simpleName,
@@ -132,13 +132,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
-                if (showkaseValidator.checkElementIsAnnotationClass(element)) {
-                    // Here we write to metadata to aggregate custom annotation data
-                    ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
-                        element
-                    )
-                    return@mapNotNull processCustomAnnotation(roundEnvironment, element)
-                }
+//                if (showkaseValidator.checkElementIsAnnotationClass(element)) {
+//                    // Here we write to metadata to aggregate custom annotation data
+//                    ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+//                        element
+//                    )
+//                    return@mapNotNull processCustomAnnotation(roundEnvironment, element)
+//                }
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
                     PREVIEW_SIMPLE_NAME,
@@ -154,13 +154,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
             }.flatten().mapNotNull { it }.toSet()
     }
 
-    private fun getSupportedMultipreviewTypes(): Set<String> {
-        val set = mutableSetOf<String>()
-
-        // This is to check if we have generated any types that we want to support.
-        set.addAll(getSupportedMultiPreviewTypesFromClassPath())
-        return set
-    }
+//    private fun getSupportedMultipreviewTypes(): Set<String> {
+//        val set = mutableSetOf<String>()
+//
+//        // This is to check if we have generated any types that we want to support.
+//        set.addAll(getSupportedMultiPreviewTypesFromClassPath())
+//        return set
+//    }
 
     private fun getSupportedMultiPreviewTypesFromClassPath() =
         environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
@@ -183,14 +183,18 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         val supportedTypes = mutableListOf<String>()
         if (annotation != null) supportedTypes.add(annotation.qualifiedName)
-        supportedTypes.addAll(getSupportedMultipreviewTypes())
+//        supportedTypes.addAll(getSupportedMultipreviewTypes())
+        environment
+            .options["MultiPreviewTypes"]
+            ?.split(",")?.map { it.replace(" ", "") }
+            ?.toSet()?.let { supportedTypes.addAll(it) }
 
         return supportedTypes.map { supportedAnnotation ->
             val elementsAnnotated = roundEnvironment.getElementsAnnotatedWith(supportedAnnotation)
             return@map elementsAnnotated.map elementScope@{ element ->
-                if (showkaseValidator.checkElementIsAnnotationClass(element)) {
-                    return@elementScope processCustomAnnotation(roundEnvironment, element).toSet()
-                }
+//                if (showkaseValidator.checkElementIsAnnotationClass(element)) {
+//                    return@elementScope processCustomAnnotation(roundEnvironment, element).toSet()
+//                }
                 showkaseValidator.validateComponentElementOrSkip(
                     element,
                     supportedAnnotation,

@@ -40,19 +40,20 @@ internal class ShowkaseValidator {
         }
         when {
             !element.isMethod() -> {
-                throw ShowkaseProcessorException(
-                    "Only composable methods can be annotated with $annotationName",
-                    element
-                )
+                return true
+//                throw ShowkaseProcessorException(
+//                    "Only composable methods can be annotated with $annotationName",
+//                    element
+//                )
             }
             skipPrivatePreviews && element.isPrivate() -> return true
             // Only check simple name to avoid costly type resolution
-            element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
-                throw ShowkaseProcessorException(
-                    "Only composable methods can be annotated with $annotationName",
-                    element
-                )
-            }
+//            element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
+//                throw ShowkaseProcessorException(
+//                    "Only composable methods can be annotated with $annotationName",
+//                    element
+//                )
+//            }
             element.isPrivate() -> {
                 throw ShowkaseProcessorException(
                     "The methods annotated with " +
