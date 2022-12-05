@@ -4,10 +4,6 @@ apply plugin: 'com.vanniktech.maven.publish'
 publishing {
     repositories {
         maven {
-            // The "name" value creates a task like `publishAllPublicationsTo[Name]Repository
-            // In this case, publishAllPublicationsToAirbnbArtifactoryRepository
-            name = 'airbnbArtifactory'
-            url = version.toString().endsWith("SNAPSHOT") ? "https://artifactory.d.musta.ch/artifactory/maven-airbnb-snapshots" : "https://artifactory.d.musta.ch/artifactory/maven-airbnb-releases"
             credentials {
                 username = getProperty("mavenCentralUsername") ? getProperty("mavenCentralUsername") : ""
                 password = getProperty("mavenCentralPassword") ? getProperty("mavenCentralPassword") : ""
