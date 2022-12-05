@@ -15,12 +15,3 @@ publishing {
         }
     }
 }
-
-mavenPublishing {
-    if (findProperty("doNotSignRelease").toString().toBoolean()) {
-        println("Skipping release signing")
-    } else {
-        println("Signing release with gpg")
-//        signAllPublications()
-    }
-}
