@@ -9,8 +9,8 @@ publishing {
             name = 'airbnbArtifactory'
             url = version.toString().endsWith("SNAPSHOT") ? "https://artifactory.d.musta.ch/artifactory/maven-airbnb-snapshots" : "https://artifactory.d.musta.ch/artifactory/maven-airbnb-releases"
             credentials {
-                username = getProperty("ARTIFACTORY_USERNAME")
-                password = getProperty("ARTIFACTORY_PASSWORD")
+                username = getProperty("mavenCentralUsername") ? getProperty("mavenCentralUsername") : ""
+                password = getProperty("mavenCentralPassword") ? getProperty("mavenCentralPassword") : ""
             }
         }
     }
