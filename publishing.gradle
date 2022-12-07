@@ -2,12 +2,12 @@ apply plugin: 'com.vanniktech.maven.publish'
 
 // https://vanniktech.github.io/gradle-maven-publish-plugin/other/
 publishing {
-    repositories {
-        maven {
-            credentials {
-                username = getProperty("mavenCentralUsername") ? getProperty("mavenCentralUsername") : ""
-                password = getProperty("mavenCentralPassword") ? getProperty("mavenCentralPassword") : ""
-            }
-        }
-    }
+//    repositories {
+//        maven {
+//            credentials {
+//                username = getProperty("mavenCentralUsername") ? getProperty("mavenCentralUsername") : ""
+//                password = getProperty("mavenCentralPassword") ? getProperty("mavenCentralPassword") : ""
+//            }
+//        }
+//    }
 }
