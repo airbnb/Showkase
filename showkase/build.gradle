@@ -1,18 +1,8 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    // Maven artifact publish
-    dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.19.0'
-    }
-}
-
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-apply plugin: "com.vanniktech.maven.publish"
+apply from: "$rootDir/publishing.gradle"
 
 android {
     compileSdkVersion 32
