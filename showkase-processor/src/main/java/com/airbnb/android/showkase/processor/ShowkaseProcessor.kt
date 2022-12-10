@@ -23,6 +23,7 @@ import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -375,9 +376,22 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootModulePackageName = rootElement.packageName
         showkaseValidator.validateShowkaseComponents(componentsMetadata)
 
+        val (componentPropertyNames, colorPropertyNames, typographyPropertyNames) =
+            ShowkaseBrowserPropertyWriter(environment).generateMetadataPropertyFile(
+                componentsMetadata,
+                colorsMetadata,
+                typographyMetadata,
+                rootModulePackageName,
+                rootModuleClassName
+            )
+
         ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
                 componentsMetadata,
+                componentPropertyNames.first,
+                componentPropertyNames.second,
+                colorPropertyNames,
+                typographyPropertyNames,
                 colorsMetadata,
                 typographyMetadata,
                 rootModulePackageName,
