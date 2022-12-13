@@ -38,12 +38,13 @@ internal fun getPropertyList(className: ClassName, propertyName: String): Proper
 
 internal fun getShowkaseProviderInterfaceFunction(
     methodName: String,
-    returnPropertyName: String,
+    codeBlock: CodeBlock,
     returnType: TypeName,
 ) = FunSpec.builder(methodName)
     .addModifiers(KModifier.OVERRIDE)
-    .addStatement("return $returnPropertyName")
-    .returns(returnType)
+    .clearBody()
+    .addCode(codeBlock)
+//    .returns(returnType)
     .build()
 
 @Suppress("LongParameterList")
@@ -52,9 +53,6 @@ internal fun writeFile(
     fileBuilder: FileSpec.Builder,
     superInterfaceClassName: ClassName,
     showkaseComponentsListClassName: String,
-    componentListProperty: PropertySpec,
-    colorListProperty: PropertySpec,
-    typographyListProperty: PropertySpec,
     showkaseMetadata: Set<ShowkaseMetadata>,
     componentInterfaceFunction: FunSpec,
     colorInterfaceFunction: FunSpec,
@@ -69,9 +67,6 @@ internal fun writeFile(
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
                 addFunction(typographyInterfaceFunction)
-                addProperty(componentListProperty)
-                addProperty(colorListProperty)
-                addProperty(typographyListProperty)
                 showkaseMetadata.forEach { addOriginatingElement(it.element) }
                 build()
             }
@@ -83,19 +78,19 @@ internal fun writeFile(
 internal fun ClassName.listInitializerCodeBlock(): CodeBlock.Builder {
     return CodeBlock.Builder()
         .add(
-            "listOf<%T>(",
+            "return listOf<%T>(",
             this
         )
-        .indent()
+        .doubleIndent()
 }
 
 internal fun ClassName.mutableListInitializerCodeBlock(): CodeBlock.Builder {
     return CodeBlock.Builder()
         .add(
-            "mutableListOf<%T>(",
+            "return mutableListOf<%T>(",
             this
         )
-        .indent()
+        .doubleIndent()
 }
 
 internal fun ClassName.getCodegenMetadataParameterizedList() = List::class

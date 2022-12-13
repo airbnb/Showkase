@@ -2,23 +2,19 @@ package com.airbnb.android.showkase.processor.writer
 
 import androidx.room.compiler.processing.XProcessingEnv
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
-import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.LIST
-import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
 
 internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     @Suppress("LongMethod")
     internal fun generateShowkaseBrowserFile(
         showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
-        withoutParameterPropertyNames: List<String>,
-        withParameterPropertyNames: List<String>,
+        withoutParameterComponentPropertyNames: List<String>,
+        withParameterComponentPropertyNames: List<String>,
         colorsParameterPropertyNames: List<String>,
         typographyParameterPropertyNames: List<String>,
         showkaseColorMetadata: Set<ShowkaseMetadata>,
@@ -28,24 +24,18 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     ) {
         val showkaseComponentsListClassName = "${rootModuleClassName}$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
-
-        val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
-            showkaseComponentMetadata
-                .partition {
-                    it.previewParameterProviderType != null
-                }
-        val componentListProperty = initializeComponentProperty(
-            withoutParameterPropertyNames,
-            withParameterPropertyNames
+        val componentCodeBlock = initializeComponentCodeBlock(
+            withoutParameterComponentPropertyNames,
+            withParameterComponentPropertyNames
         )
-        val colorListProperty = initializeColorProperty(colorsParameterPropertyNames)
-        val typographyProperty = initializeTypographyProperty(typographyParameterPropertyNames)
+        val colorCodeBlock = initializeColorCodeBlock(colorsParameterPropertyNames)
+        val typographyCodeBlock = initializeTypographyCodeBlock(typographyParameterPropertyNames)
 
         val showkaseRootCodegenAnnotation = initializeShowkaseRootCodegenAnnotation(
-            showkaseMetadataWithoutParameterList.size,
-            showkaseMetadataWithParameterList.size,
-            showkaseColorMetadata.size,
-            showkaseTypographyMetadata.size
+            withoutParameterComponentPropertyNames.size,
+            withParameterComponentPropertyNames.size,
+            colorsParameterPropertyNames.size,
+            typographyParameterPropertyNames.size
         )
 
         writeFile(
@@ -53,36 +43,30 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             fileBuilder,
             SHOWKASE_PROVIDER_CLASS_NAME,
             showkaseComponentsListClassName,
-            componentListProperty.build(),
-            colorListProperty.build(),
-            typographyProperty.build(),
             showkaseComponentMetadata + showkaseColorMetadata + showkaseTypographyMetadata,
             getShowkaseProviderInterfaceFunction(
                 methodName = COMPONENT_INTERFACE_METHOD_NAME,
-                returnPropertyName = COMPONENT_PROPERTY_NAME,
-                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME)
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME),
+                codeBlock = componentCodeBlock
             ),
             getShowkaseProviderInterfaceFunction(
                 methodName = COLOR_INTERFACE_METHOD_NAME,
-                returnPropertyName = COLOR_PROPERTY_NAME,
-                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COLOR_CLASS_NAME)
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COLOR_CLASS_NAME),
+                codeBlock = colorCodeBlock
             ),
             getShowkaseProviderInterfaceFunction(
                 methodName = TYPOGRAPHY_INTERFACE_METHOD_NAME,
-                returnPropertyName = TYPOGRAPHY_PROPERTY_NAME,
-                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME)
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME),
+                codeBlock = typographyCodeBlock
             ),
             showkaseRootCodegenAnnotation
         )
     }
 
-    private fun initializeComponentProperty(
+    private fun initializeComponentCodeBlock(
         withoutParameterPropertyNames: List<String>,
         withParameterPropertyNames: List<String>,
-    ): PropertySpec.Builder {
-        val componentListProperty =
-            getPropertyList(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME, COMPONENT_PROPERTY_NAME)
-
+    ): CodeBlock {
         val componentListInitializerCodeBlock =
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.mutableListInitializerCodeBlock()
 
@@ -92,7 +76,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 add("%L,", property)
                 addLineBreak()
             }
-            unindent()
+            doubleUnindent()
             add(")")
 
             if (withParameterPropertyNames.isNotEmpty()) {
@@ -110,8 +94,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             }
         }
 
-        componentListProperty.initializer(componentListInitializerCodeBlock.build())
-        return componentListProperty
+        return componentListInitializerCodeBlock.build()
     }
 
     private fun CodeBlock.Builder.addProviderComponent(withParameterMetadata: ShowkaseMetadata.Component) {
@@ -151,52 +134,38 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         }
     }
 
-    private fun initializeColorProperty(
+    private fun initializeColorCodeBlock(
         colorsParameterPropertyNames: List<String>,
-    ): PropertySpec.Builder {
-        val colorListProperty =
-            getPropertyList(
-                SHOWKASE_BROWSER_COLOR_CLASS_NAME,
-                COLOR_PROPERTY_NAME
-            )
-
+    ): CodeBlock {
         val colorListInitializerCodeBlock =
             SHOWKASE_BROWSER_COLOR_CLASS_NAME.listInitializerCodeBlock()
 
-        colorListInitializerCodeBlock.apply {
+        return colorListInitializerCodeBlock.apply {
             addLineBreak()
             colorsParameterPropertyNames.forEachIndexed { index, property ->
                 add("%L,", property)
                 addLineBreak()
             }
-            unindent()
+            doubleUnindent()
             add(")")
-        }
-        colorListProperty.initializer(colorListInitializerCodeBlock.build())
-        return colorListProperty
+        }.build()
     }
 
-    private fun initializeTypographyProperty(
+    private fun initializeTypographyCodeBlock(
         typographyParameterPropertyNames: List<String>,
-    ): PropertySpec.Builder {
-        val typographyListProperty = getPropertyList(
-            SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME,
-            TYPOGRAPHY_PROPERTY_NAME
-        )
+    ): CodeBlock {
         val typographyListInitializerCodeBlock =
             SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME.listInitializerCodeBlock()
 
-        typographyListInitializerCodeBlock.apply {
+        return typographyListInitializerCodeBlock.apply {
             addLineBreak()
             typographyParameterPropertyNames.forEachIndexed { index, property ->
                 add("%L,", property)
                 addLineBreak()
             }
-            unindent()
+            doubleUnindent()
             add(")")
-        }
-        typographyListProperty.initializer(typographyListInitializerCodeBlock.build())
-        return typographyListProperty
+        }.build()
     }
 
     private fun initializeShowkaseRootCodegenAnnotation(

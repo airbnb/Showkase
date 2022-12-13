@@ -382,7 +382,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 colorsMetadata,
                 typographyMetadata,
                 rootModulePackageName,
-                rootModuleClassName
             )
 
         ShowkaseBrowserWriter(environment).apply {
