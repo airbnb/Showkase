@@ -10,7 +10,7 @@ import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "LongParameterList")
     internal fun generateShowkaseBrowserFile(
         showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
         withoutParameterComponentPropertyNames: List<String>,

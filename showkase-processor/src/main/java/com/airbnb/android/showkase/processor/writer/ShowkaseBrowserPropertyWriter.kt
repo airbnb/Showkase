@@ -30,7 +30,8 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
             showkaseMetadataWithoutParameterList.mapIndexed { index, showkaseMetadata ->
                 val propertyName = generatePropertyNameFromComponentMetadata(showkaseMetadata)
                 val fileBuilder = getFileBuilder(rootModulePackageName, propertyName)
-                val property = getPropertyForComponentWithoutParameter(propertyName, showkaseMetadata)
+                val property =
+                    getPropertyForComponentWithoutParameter(propertyName, showkaseMetadata)
 
                 fileBuilder.addPropertyAndGenerateFile(property)
                 return@mapIndexed propertyName
@@ -150,7 +151,8 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         val name =
             if (showkaseMetadata.componentIndex != null && showkaseMetadata.componentIndex > 0
             ) {
-                "${showkaseMetadata.packageName}_${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
+                "${showkaseMetadata.packageName}_${showkaseMetadata.showkaseGroup}_" +
+                        "${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
             } else {
                 "${showkaseMetadata.packageName}_${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
             }
