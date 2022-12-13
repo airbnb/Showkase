@@ -67,8 +67,11 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         withoutParameterPropertyNames: List<String>,
         withParameterPropertyNames: List<String>,
     ): CodeBlock {
-        val componentListInitializerCodeBlock =
+        val componentListInitializerCodeBlock = if (withParameterPropertyNames.isNotEmpty()) {
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.mutableListInitializerCodeBlock()
+        } else {
+            SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.listInitializerCodeBlock()
+        }
 
         componentListInitializerCodeBlock.apply {
             addLineBreak()

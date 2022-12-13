@@ -17,7 +17,7 @@ import kotlin.collections.List
 public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
-    return mutableListOf<ShowkaseBrowserComponent>(
+    return listOf<ShowkaseBrowserComponent>(
         comairbnbandroidshowkaseprocessortestinggroupname,
     )
   }
