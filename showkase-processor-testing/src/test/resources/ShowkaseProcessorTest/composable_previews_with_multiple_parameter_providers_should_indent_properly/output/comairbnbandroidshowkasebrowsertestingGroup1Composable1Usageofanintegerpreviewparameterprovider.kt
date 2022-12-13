@@ -7,8 +7,9 @@ import com.airbnb.android.showkase_browser_testing.IntegerParameterProvider
 import com.airbnb.android.showkase_browser_testing.TestComposable1
 import kotlin.collections.List
 
-public val Group1Composable1Usageofanintegerpreviewparameterprovider: List<ShowkaseBrowserComponent>
-    = 
+public
+    val comairbnbandroidshowkasebrowsertestingGroup1Composable1Usageofanintegerpreviewparameterprovider:
+    List<ShowkaseBrowserComponent> = 
     IntegerParameterProvider()
         .values
         .iterator()

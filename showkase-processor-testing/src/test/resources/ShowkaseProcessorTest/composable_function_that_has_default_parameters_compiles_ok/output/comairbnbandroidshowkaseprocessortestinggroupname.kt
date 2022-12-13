@@ -5,20 +5,21 @@ import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import kotlin.collections.List
 
-public val DefaultGroupTestComposable2: List<ShowkaseBrowserComponent> = 
-    ParameterProvider()
+public val comairbnbandroidshowkaseprocessortestinggroupname: List<ShowkaseBrowserComponent> = 
+    NewParameterProvider()
         .values
         .iterator()
         .asSequence()
         .mapIndexed { index, previewParam ->
                 ShowkaseBrowserComponent(
-                    group = "Default Group",
-                    componentName = "TestComposable2",
+                    group = "group",
+                    componentName = "name",
                     componentKDoc = "",
                     componentKey =
-                        """com.airbnb.android.showkase_processor_testing_null_DefaultGroup_TestComposable2_0_null_$index""",
+                        """com.airbnb.android.showkase_processor_testing_null_group_name_0_null_$index""",
                     isDefaultStyle = false,
-                    component = @Composable { TestComposable2(text = previewParam) }
+                    component = @Composable { TestComposableWithDefaultParameters(bankHeader =
+                        previewParam) }
                 )
         }
         .toList()

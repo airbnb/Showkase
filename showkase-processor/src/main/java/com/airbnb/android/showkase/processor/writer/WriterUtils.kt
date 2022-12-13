@@ -44,7 +44,7 @@ internal fun getShowkaseProviderInterfaceFunction(
     .addModifiers(KModifier.OVERRIDE)
     .clearBody()
     .addCode(codeBlock)
-//    .returns(returnType)
+    .returns(returnType)
     .build()
 
 @Suppress("LongParameterList")
@@ -77,6 +77,7 @@ internal fun writeFile(
 
 internal fun ClassName.listInitializerCodeBlock(): CodeBlock.Builder {
     return CodeBlock.Builder()
+        .addLineBreak()
         .add(
             "return listOf<%T>(",
             this
@@ -86,6 +87,7 @@ internal fun ClassName.listInitializerCodeBlock(): CodeBlock.Builder {
 
 internal fun ClassName.mutableListInitializerCodeBlock(): CodeBlock.Builder {
     return CodeBlock.Builder()
+        .addLineBreak()
         .add(
             "return mutableListOf<%T>(",
             this

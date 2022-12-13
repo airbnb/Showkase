@@ -2,6 +2,7 @@ package com.airbnb.android.showkase.processor.writer
 
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
@@ -84,7 +85,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
 
     private fun getPropertyForMetadata(
         propertyName: String,
-        colorMetadata: ShowkaseMetadata,
+        showkaseMetadata: ShowkaseMetadata,
         propertyClassName: ClassName,
         showkaseMetadataCodeblock: CodeBlock.Builder.(ShowkaseMetadata) -> Unit
     ) = PropertySpec.builder(
@@ -92,12 +93,13 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         propertyClassName
     ).initializer(
         CodeBlock.Builder().apply {
-            showkaseMetadataCodeblock(colorMetadata)
+            showkaseMetadataCodeblock(showkaseMetadata)
             addLineBreak()
             add(")")
         }
             .build()
     )
+        .addOriginatingElement(showkaseMetadata.element)
         .build()
 
     private fun getPropertyForComponentWithoutParameter(
@@ -116,6 +118,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                 }
                     .build()
             )
+            .addOriginatingElement(showkaseMetadata.element)
             .build()
         return property
     }
@@ -137,6 +140,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     .build()
             )
         }
+            .addOriginatingElement(showkaseMetadata.element)
             .build()
     }
 
@@ -163,7 +167,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
             .filter { it.isLetterOrDigit() }
 
     private fun FileSpec.Builder.addPropertyAndGenerateFile(
-        propertySpec: PropertySpec
+        propertySpec: PropertySpec,
     ) {
         addProperty(propertySpec)
         build()

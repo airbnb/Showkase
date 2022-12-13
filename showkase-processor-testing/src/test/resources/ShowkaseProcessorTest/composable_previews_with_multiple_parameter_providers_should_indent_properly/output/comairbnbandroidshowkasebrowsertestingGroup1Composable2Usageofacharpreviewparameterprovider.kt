@@ -7,7 +7,9 @@ import com.airbnb.android.showkase_browser_testing.CharParameterProvider
 import com.airbnb.android.showkase_browser_testing.TestComposable2
 import kotlin.collections.List
 
-public val Group1Composable2Usageofacharpreviewparameterprovider: List<ShowkaseBrowserComponent> = 
+public
+    val comairbnbandroidshowkasebrowsertestingGroup1Composable2Usageofacharpreviewparameterprovider:
+    List<ShowkaseBrowserComponent> = 
     CharParameterProvider()
         .values
         .iterator()

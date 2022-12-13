@@ -15,22 +15,24 @@ import kotlin.collections.List
   numTypography = 0,
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
-  public val componentList: List<ShowkaseBrowserComponent> =
-      mutableListOf<ShowkaseBrowserComponent>(
+  public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
+
+    return mutableListOf<ShowkaseBrowserComponent>(
         comairbnbandroidshowkaseprocessortestingWrapperClassTestComposable1,
-      ).apply {
-          addAll(DefaultGroupTestComposable2)
-      }
+    ).apply {
+        addAll(comairbnbandroidshowkaseprocessortestingDefaultGroupTestComposable2)
+    }
+  }
 
-  public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>(
-      )
+  public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
-  public val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>(
-      )
+    return listOf<ShowkaseBrowserColor>(
+    )
+  }
 
-  public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> = componentList
+  public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
-  public override fun getShowkaseColors(): List<ShowkaseBrowserColor> = colorList
-
-  public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> = typographyList
+    return listOf<ShowkaseBrowserTypography>(
+    )
+  }
 }

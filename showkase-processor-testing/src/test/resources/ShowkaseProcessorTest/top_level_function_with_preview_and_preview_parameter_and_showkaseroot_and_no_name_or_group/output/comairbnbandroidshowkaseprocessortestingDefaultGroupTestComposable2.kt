@@ -5,7 +5,8 @@ import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import kotlin.collections.List
 
-public val DefaultGroupTestComposable2: List<ShowkaseBrowserComponent> = 
+public val comairbnbandroidshowkaseprocessortestingDefaultGroupTestComposable2:
+    List<ShowkaseBrowserComponent> = 
     ParameterProvider()
         .values
         .iterator()
