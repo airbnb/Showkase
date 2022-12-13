@@ -97,43 +97,6 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         return componentListInitializerCodeBlock.build()
     }
 
-    private fun CodeBlock.Builder.addProviderComponent(withParameterMetadata: ShowkaseMetadata.Component) {
-        addLineBreak()
-        add(
-            "%T()",
-            withParameterMetadata.previewParameterProviderType
-        )
-        withDoubleIndent {
-            addLineBreak()
-            add(
-                ".values"
-            )
-            addLineBreak()
-            add(
-                ".iterator()"
-            )
-            addLineBreak()
-            add(
-                ".asSequence()"
-            )
-            addLineBreak()
-            add(
-                ".forEachIndexed { index, previewParam ->"
-            )
-            withDoubleIndent {
-                addLineBreak()
-                add("add(")
-                addLineBreak()
-                withDoubleIndent {
-                    addShowkaseBrowserComponent(withParameterMetadata, true)
-                    closeRoundBracket()
-                }
-                closeRoundBracket()
-            }
-            closeCurlyBraces()
-        }
-    }
-
     private fun initializeColorCodeBlock(
         colorsParameterPropertyNames: List<String>,
     ): CodeBlock {

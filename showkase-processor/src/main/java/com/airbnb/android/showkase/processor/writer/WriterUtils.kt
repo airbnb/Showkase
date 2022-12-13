@@ -99,18 +99,6 @@ internal fun ClassName.getCodegenMetadataParameterizedList() = List::class
     .asClassName()
     .parameterizedBy(this)
 
-internal fun CodeBlock.Builder.closeOrContinueListCodeBlock(
-    index: Int,
-    finalIndex: Int
-) {
-    if (index == finalIndex) {
-        add(")")
-        addLineBreak()
-    } else {
-        add("),")
-    }
-}
-
 internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     showkaseMetadata: ShowkaseMetadata.Component,
     isPreviewParameter: Boolean = false
