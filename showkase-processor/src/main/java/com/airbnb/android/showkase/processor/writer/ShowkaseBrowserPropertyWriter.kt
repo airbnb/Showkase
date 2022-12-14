@@ -13,12 +13,12 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.asTypeName
 
 class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
-    internal fun generateMetadataPropertyFile(
+    internal fun generateMetadataPropertyFiles(
         showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
         showkaseColorMetadata: Set<ShowkaseMetadata>,
         showkaseTypographyMetadata: Set<ShowkaseMetadata>,
         rootModulePackageName: String,
-    ): Triple<Pair<List<String>, List<String>>, List<String>, List<String>> {
+    ): ShowkaseBrowserProperties {
         val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
             showkaseComponentMetadata
                 .partition {
@@ -77,10 +77,11 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                 return@mapIndexed typographyPropertyName
             }
 
-        return Triple(
-            (withoutParameterPropertyNames to withParameterPropertyNames),
-            colorPropertyNames,
-            typographyPropertyNames
+        return ShowkaseBrowserProperties(
+            componentsWithoutPreviewParameters = withoutParameterPropertyNames,
+            componentsWithPreviewParameters = withParameterPropertyNames,
+            colors = colorPropertyNames,
+            typography = typographyPropertyNames
         )
     }
 
@@ -212,3 +213,10 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         }
     }
 }
+
+internal data class ShowkaseBrowserProperties(
+    val componentsWithoutPreviewParameters: List<String>,
+    val componentsWithPreviewParameters: List<String>,
+    val colors: List<String>,
+    val typography: List<String>,
+)

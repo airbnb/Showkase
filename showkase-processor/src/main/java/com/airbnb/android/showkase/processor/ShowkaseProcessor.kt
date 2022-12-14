@@ -376,8 +376,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootModulePackageName = rootElement.packageName
         showkaseValidator.validateShowkaseComponents(componentsMetadata)
 
-        val (componentPropertyNames, colorPropertyNames, typographyPropertyNames) =
-            ShowkaseBrowserPropertyWriter(environment).generateMetadataPropertyFile(
+        val browserPropertyNames =
+            ShowkaseBrowserPropertyWriter(environment).generateMetadataPropertyFiles(
                 componentsMetadata,
                 colorsMetadata,
                 typographyMetadata,
@@ -387,10 +387,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
         ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
                 componentsMetadata,
-                componentPropertyNames.first,
-                componentPropertyNames.second,
-                colorPropertyNames,
-                typographyPropertyNames,
+                browserPropertyNames.componentsWithoutPreviewParameters,
+                browserPropertyNames.componentsWithPreviewParameters,
+                browserPropertyNames.colors,
+                browserPropertyNames.typography,
                 colorsMetadata,
                 typographyMetadata,
                 rootModulePackageName,
