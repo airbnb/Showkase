@@ -173,7 +173,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
     ) {
         addProperty(propertySpec)
         build()
-            .writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
+            .writeTo(environment.filer, mode = XFiler.Mode.Isolating)
     }
 
     private fun CodeBlock.Builder.addPreviewProviderComponent(withParameterMetadata: ShowkaseMetadata.Component) {
