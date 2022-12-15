@@ -4,8 +4,8 @@ import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
-import com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata
-import com.airbnb.android.showkase.processor.ShowkaseCodegenMetadataType
+import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadata
+import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadataType
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -15,6 +15,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.asTypeName
 
 class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
+    @Suppress("LongMethod")
     internal fun generateMetadataPropertyFiles(
         componentMetadata: Set<ShowkaseMetadata.Component>,
         colorMetadata: Set<ShowkaseMetadata>,
@@ -36,11 +37,11 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     getPropertyForComponentWithoutParameter(propertyName, showkaseMetadata)
 
                 fileBuilder.addPropertyAndGenerateFile(property)
-                return@mapIndexed ShowkaseCodegenMetadata(
+                return@mapIndexed ShowkaseGeneratedMetadata(
                     element = showkaseMetadata.element,
                     propertyName = propertyName,
                     propertyPackage = packageName,
-                    type = ShowkaseCodegenMetadataType.COMPONENTS_WITHOUT_PARAMETER
+                    type = ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
                 )
             }
 
@@ -53,11 +54,11 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
 
                 fileBuilder.addPropertyAndGenerateFile(property)
 
-                return@mapIndexed ShowkaseCodegenMetadata(
+                return@mapIndexed ShowkaseGeneratedMetadata(
                     element = showkaseMetadata.element,
                     propertyName = propertyName,
                     propertyPackage = packageName,
-                    type = ShowkaseCodegenMetadataType.COMPONENTS_WITH_PARAMETER
+                    type = ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER
                 )
             }
 
@@ -72,11 +73,11 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
             ) { addShowkaseBrowserColor(color) }
 
             fileBuilder.addPropertyAndGenerateFile(colorProperty)
-            return@mapIndexed ShowkaseCodegenMetadata(
+            return@mapIndexed ShowkaseGeneratedMetadata(
                 element = color.element,
                 propertyName = propertyName,
                 propertyPackage = packageName,
-                type = ShowkaseCodegenMetadataType.COLOR
+                type = ShowkaseGeneratedMetadataType.COLOR
             )
         }
 
@@ -91,11 +92,11 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     ShowkaseBrowserWriter.SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME
                 ) { addShowkaseBrowserTypography(typography) }
                 fileBuilder.addPropertyAndGenerateFile(typographyProperty)
-                return@mapIndexed ShowkaseCodegenMetadata(
+                return@mapIndexed ShowkaseGeneratedMetadata(
                     element = typography.element,
                     propertyName = propertyName,
                     propertyPackage = packageName,
-                    type = ShowkaseCodegenMetadataType.COLOR
+                    type = ShowkaseGeneratedMetadataType.COLOR
                 )
             }
 
@@ -214,10 +215,10 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
 }
 
 internal data class ShowkaseBrowserProperties(
-    val componentsWithoutPreviewParameters: List<ShowkaseCodegenMetadata> = listOf(),
-    val componentsWithPreviewParameters: List<ShowkaseCodegenMetadata> = listOf(),
-    val colors: List<ShowkaseCodegenMetadata> = listOf(),
-    val typography: List<ShowkaseCodegenMetadata> = listOf(),
+    val componentsWithoutPreviewParameters: List<ShowkaseGeneratedMetadata> = listOf(),
+    val componentsWithPreviewParameters: List<ShowkaseGeneratedMetadata> = listOf(),
+    val colors: List<ShowkaseGeneratedMetadata> = listOf(),
+    val typography: List<ShowkaseGeneratedMetadata> = listOf(),
 ) {
     fun isEmpty() = componentsWithPreviewParameters.isEmpty() &&
             componentsWithoutPreviewParameters.isEmpty() &&
@@ -228,8 +229,10 @@ internal data class ShowkaseBrowserProperties(
 
     operator fun plus(other: ShowkaseBrowserProperties): ShowkaseBrowserProperties {
         return ShowkaseBrowserProperties(
-            componentsWithoutPreviewParameters = componentsWithoutPreviewParameters + other.componentsWithoutPreviewParameters,
-            componentsWithPreviewParameters = componentsWithPreviewParameters + other.componentsWithPreviewParameters,
+            componentsWithoutPreviewParameters = componentsWithoutPreviewParameters +
+                    other.componentsWithoutPreviewParameters,
+            componentsWithPreviewParameters = componentsWithPreviewParameters +
+                    other.componentsWithPreviewParameters,
             colors = colors + other.colors,
             typography = typography + other.typography
         )

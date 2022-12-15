@@ -262,18 +262,18 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(environment)
         val classpathComponentsWithoutParameter = generatedShowkaseMetadataOnClasspath.filter {
-            it.type == ShowkaseCodegenMetadataType.COMPONENTS_WITHOUT_PARAMETER
+            it.type == ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
         }
         val classpathComponentsWithParameter = generatedShowkaseMetadataOnClasspath.filter {
-            it.type == ShowkaseCodegenMetadataType.COMPONENTS_WITH_PARAMETER
+            it.type == ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER
         }
         val classpathColors =
             generatedShowkaseMetadataOnClasspath.filter {
-                it.type == ShowkaseCodegenMetadataType.COLOR
+                it.type == ShowkaseGeneratedMetadataType.COLOR
             }
         val classpathTypography =
             generatedShowkaseMetadataOnClasspath.filter {
-                it.type == ShowkaseCodegenMetadataType.TYPOGRAPHY
+                it.type == ShowkaseGeneratedMetadataType.TYPOGRAPHY
             }
 
         val classpathShowkaseBrowserProperties = ShowkaseBrowserProperties(
@@ -361,7 +361,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
             )
     }
 
-    private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv): Set<com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata> {
+    private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv):
+            Set<ShowkaseGeneratedMetadata> {
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
@@ -373,29 +374,30 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 }
             }
             .map {
-                it.second.toRandomDataClass(it.first)
+                it.second.toShowkaseGeneratedMetadata(it.first)
             }
             .toSet()
     }
 
-    internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toRandomDataClass(element: XElement): com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata {
+    private fun XAnnotationBox<ShowkaseCodegenMetadata>.toShowkaseGeneratedMetadata(element: XElement):
+            ShowkaseGeneratedMetadata {
         val (_, previewParameterClassType) = getCodegenMetadataTypes()
 
         // The box is needed to get all Class values, primitives can be accessed dirctly
         val props = value
         val type = ShowkaseMetadataType.valueOf(props.showkaseMetadataType)
 
-        return ShowkaseCodegenMetadata(
+        return ShowkaseGeneratedMetadata(
             element = element,
             propertyName = props.generatedPropertyName,
             propertyPackage = props.packageName,
             type = when(type) {
-                ShowkaseMetadataType.COLOR -> ShowkaseCodegenMetadataType.COLOR
-                ShowkaseMetadataType.TYPOGRAPHY -> ShowkaseCodegenMetadataType.TYPOGRAPHY
+                ShowkaseMetadataType.COLOR -> ShowkaseGeneratedMetadataType.COLOR
+                ShowkaseMetadataType.TYPOGRAPHY -> ShowkaseGeneratedMetadataType.TYPOGRAPHY
                 ShowkaseMetadataType.COMPONENT -> if (previewParameterClassType != null) {
-                    ShowkaseCodegenMetadataType.COMPONENTS_WITH_PARAMETER
+                    ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER
                 } else {
-                    ShowkaseCodegenMetadataType.COMPONENTS_WITHOUT_PARAMETER
+                    ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
                 }
             }
         )
@@ -418,15 +420,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         // TODO: Figure out where to do this validation instead
         // showkaseValidator.validateShowkaseComponents(componentsMetadata)
-
-        // Not needed anymore as it's handled when generating the metadata file
-//        val browserPropertyNames =
-//            ShowkaseBrowserPropertyWriter(environment).generateMetadataPropertyFiles(
-//                componentsMetadata,
-//                colorsMetadata,
-//                typographyMetadata,
-//                rootModulePackageName,
-//            )
 
         ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
@@ -484,14 +477,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 }
 
-internal data class ShowkaseCodegenMetadata(
+internal data class ShowkaseGeneratedMetadata(
     val propertyName: String,
     val propertyPackage: String,
-    val type: ShowkaseCodegenMetadataType,
+    val type: ShowkaseGeneratedMetadataType,
     val element: XElement,
 )
 
-internal enum class ShowkaseCodegenMetadataType {
+internal enum class ShowkaseGeneratedMetadataType {
     COMPONENTS_WITH_PARAMETER,
     COMPONENTS_WITHOUT_PARAMETER,
     COLOR,

@@ -2,7 +2,7 @@ package com.airbnb.android.showkase.processor.writer
 
 import androidx.room.compiler.processing.XProcessingEnv
 import com.airbnb.android.showkase.annotation.ShowkaseRootCodegen
-import com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadata
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -59,8 +59,8 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     }
 
     private fun initializeComponentCodeBlock(
-        withoutParameterPropertyNames: List<ShowkaseCodegenMetadata>,
-        withParameterPropertyNames: List<ShowkaseCodegenMetadata>,
+        withoutParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
+        withParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
     ): CodeBlock {
         val componentListInitializerCodeBlock = if (withParameterPropertyNames.isNotEmpty()) {
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.mutableListInitializerCodeBlock()
@@ -96,7 +96,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     }
 
     private fun initializeColorCodeBlock(
-        colorsParameterPropertyNames: List<ShowkaseCodegenMetadata>,
+        colorsParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
     ): CodeBlock {
         val colorListInitializerCodeBlock =
             SHOWKASE_BROWSER_COLOR_CLASS_NAME.listInitializerCodeBlock()
@@ -113,7 +113,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     }
 
     private fun initializeTypographyCodeBlock(
-        typographyParameterPropertyNames: List<ShowkaseCodegenMetadata>,
+        typographyParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
     ): CodeBlock {
         val typographyListInitializerCodeBlock =
             SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME.listInitializerCodeBlock()
