@@ -418,7 +418,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootModuleClassName = rootElement.name
         val rootModulePackageName = rootElement.packageName
 
-        // TODO: Figure out where to do this validation instead
+        // TODO(vinaygaba): Figure out where to do this validation instead
         // showkaseValidator.validateShowkaseComponents(componentsMetadata)
 
         ShowkaseBrowserWriter(environment).apply {
