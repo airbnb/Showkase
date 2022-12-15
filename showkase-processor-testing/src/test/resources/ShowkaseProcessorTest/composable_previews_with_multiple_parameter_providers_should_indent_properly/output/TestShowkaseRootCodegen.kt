@@ -6,6 +6,8 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseProvider
+import com.airbnb.android.showkase_browser_testing.comairbnbandroidshowkasebrowsertestingGroup1Composable1Usageofanintegerpreviewparameterprovider
+import com.airbnb.android.showkase_browser_testing.comairbnbandroidshowkasebrowsertestingGroup1Composable2Usageofacharpreviewparameterprovider
 import kotlin.collections.List
 
 @ShowkaseRootCodegen(

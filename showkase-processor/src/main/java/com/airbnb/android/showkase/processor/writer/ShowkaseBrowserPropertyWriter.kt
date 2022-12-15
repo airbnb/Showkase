@@ -4,6 +4,8 @@ import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
+import com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata
+import com.airbnb.android.showkase.processor.ShowkaseCodegenMetadataType
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -14,13 +16,13 @@ import com.squareup.kotlinpoet.asTypeName
 
 class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
     internal fun generateMetadataPropertyFiles(
-        showkaseComponentMetadata: Set<ShowkaseMetadata.Component>,
-        showkaseColorMetadata: Set<ShowkaseMetadata>,
-        showkaseTypographyMetadata: Set<ShowkaseMetadata>,
-        rootModulePackageName: String,
+        componentMetadata: Set<ShowkaseMetadata.Component>,
+        colorMetadata: Set<ShowkaseMetadata>,
+        typographyMetadata: Set<ShowkaseMetadata>,
+        packageName: String,
     ): ShowkaseBrowserProperties {
         val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
-            showkaseComponentMetadata
+            componentMetadata
                 .partition {
                     it.previewParameterProviderType != null
                 }
@@ -28,53 +30,73 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         // Generate top level property file for components without preview parameter provider
         val withoutParameterPropertyNames =
             showkaseMetadataWithoutParameterList.mapIndexed { index, showkaseMetadata ->
-                val propertyName = generatePropertyNameFromComponentMetadata(showkaseMetadata)
-                val fileBuilder = getFileBuilder(rootModulePackageName, propertyName)
+                val propertyName = generatePropertyNameFromMetadata(showkaseMetadata)
+                val fileBuilder = getFileBuilder(packageName, propertyName)
                 val property =
                     getPropertyForComponentWithoutParameter(propertyName, showkaseMetadata)
 
                 fileBuilder.addPropertyAndGenerateFile(property)
-                return@mapIndexed propertyName
+                return@mapIndexed ShowkaseCodegenMetadata(
+                    element = showkaseMetadata.element,
+                    propertyName = propertyName,
+                    propertyPackage = packageName,
+                    type = ShowkaseCodegenMetadataType.COMPONENTS_WITHOUT_PARAMETER
+                )
             }
 
         // Generate top level property file for components with preview parameter provider
         val withParameterPropertyNames =
             showkaseMetadataWithParameterList.mapIndexed { index, showkaseMetadata ->
-                val propertyName = generatePropertyNameFromComponentMetadata(showkaseMetadata)
-                val fileBuilder = getFileBuilder(rootModulePackageName, propertyName)
+                val propertyName = generatePropertyNameFromMetadata(showkaseMetadata)
+                val fileBuilder = getFileBuilder(packageName, propertyName)
                 val property = getPropertyForComponentWithParameter(propertyName, showkaseMetadata)
 
                 fileBuilder.addPropertyAndGenerateFile(property)
 
-                return@mapIndexed propertyName
+                return@mapIndexed ShowkaseCodegenMetadata(
+                    element = showkaseMetadata.element,
+                    propertyName = propertyName,
+                    propertyPackage = packageName,
+                    type = ShowkaseCodegenMetadataType.COMPONENTS_WITH_PARAMETER
+                )
             }
 
         // Generate top level property file for colors
-        val colorPropertyNames = showkaseColorMetadata.mapIndexed { index, colorMetadata ->
-            val propertyName = generatePropertyNameFromMetadata(colorMetadata)
-            val fileBuilder = getFileBuilder(rootModulePackageName, propertyName)
+        val colorPropertyNames = colorMetadata.mapIndexed { index, color ->
+            val propertyName = generatePropertyNameFromMetadata(color)
+            val fileBuilder = getFileBuilder(packageName, propertyName)
             val colorProperty = getPropertyForMetadata(
                 propertyName,
-                colorMetadata,
+                color,
                 ShowkaseBrowserWriter.SHOWKASE_BROWSER_COLOR_CLASS_NAME
-            ) { addShowkaseBrowserColor(colorMetadata) }
+            ) { addShowkaseBrowserColor(color) }
 
             fileBuilder.addPropertyAndGenerateFile(colorProperty)
-            return@mapIndexed propertyName
+            return@mapIndexed ShowkaseCodegenMetadata(
+                element = color.element,
+                propertyName = propertyName,
+                propertyPackage = packageName,
+                type = ShowkaseCodegenMetadataType.COLOR
+            )
         }
 
         // Generate top level property file for typography
         val typographyPropertyNames =
-            showkaseTypographyMetadata.mapIndexed { index, typographyMetadata ->
-                val typographyPropertyName = generatePropertyNameFromMetadata(typographyMetadata)
-                val fileBuilder = getFileBuilder(rootModulePackageName, typographyPropertyName)
+            typographyMetadata.mapIndexed { index, typography ->
+                val propertyName = generatePropertyNameFromMetadata(typography)
+                val fileBuilder = getFileBuilder(packageName, propertyName)
                 val typographyProperty = getPropertyForMetadata(
-                    typographyPropertyName,
-                    typographyMetadata,
+                    propertyName,
+                    typography,
                     ShowkaseBrowserWriter.SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME
-                ) { addShowkaseBrowserTypography(typographyMetadata) }
+                ) { addShowkaseBrowserTypography(typography) }
                 fileBuilder.addPropertyAndGenerateFile(typographyProperty)
-                return@mapIndexed typographyPropertyName
+                return@mapIndexed ShowkaseCodegenMetadata(
+                    element = typography.element,
+                    propertyName = propertyName,
+                    propertyPackage = packageName,
+                    type = ShowkaseCodegenMetadataType.COLOR
+                )
             }
 
         return ShowkaseBrowserProperties(
@@ -146,29 +168,6 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
             .build()
     }
 
-    private fun generatePropertyNameFromComponentMetadata(
-        showkaseMetadata: ShowkaseMetadata.Component,
-    ): String {
-        val name =
-            if (showkaseMetadata.componentIndex != null && showkaseMetadata.componentIndex > 0
-            ) {
-                "${showkaseMetadata.packageName}_${showkaseMetadata.showkaseGroup}_" +
-                        "${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
-            } else {
-                "${showkaseMetadata.packageName}_${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
-            }
-        val propertyName = if (showkaseMetadata.showkaseStyleName != null) {
-            "${name}_${showkaseMetadata.showkaseStyleName}"
-        } else {
-            name
-        }.filter { it.isLetterOrDigit() }
-        return propertyName
-    }
-
-    private fun generatePropertyNameFromMetadata(colorMetadata: ShowkaseMetadata) =
-        "${colorMetadata.packageName}_${colorMetadata.showkaseGroup}_${colorMetadata.showkaseName}"
-            .filter { it.isLetterOrDigit() }
-
     private fun FileSpec.Builder.addPropertyAndGenerateFile(
         propertySpec: PropertySpec,
     ) {
@@ -215,8 +214,24 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
 }
 
 internal data class ShowkaseBrowserProperties(
-    val componentsWithoutPreviewParameters: List<String>,
-    val componentsWithPreviewParameters: List<String>,
-    val colors: List<String>,
-    val typography: List<String>,
-)
+    val componentsWithoutPreviewParameters: List<ShowkaseCodegenMetadata> = listOf(),
+    val componentsWithPreviewParameters: List<ShowkaseCodegenMetadata> = listOf(),
+    val colors: List<ShowkaseCodegenMetadata> = listOf(),
+    val typography: List<ShowkaseCodegenMetadata> = listOf(),
+) {
+    fun isEmpty() = componentsWithPreviewParameters.isEmpty() &&
+            componentsWithoutPreviewParameters.isEmpty() &&
+            colors.isEmpty() &&
+            typography.isEmpty()
+
+    fun zip() = componentsWithPreviewParameters + componentsWithPreviewParameters + colors + typography
+
+    operator fun plus(other: ShowkaseBrowserProperties): ShowkaseBrowserProperties {
+        return ShowkaseBrowserProperties(
+            componentsWithoutPreviewParameters = componentsWithoutPreviewParameters + other.componentsWithoutPreviewParameters,
+            componentsWithPreviewParameters = componentsWithPreviewParameters + other.componentsWithPreviewParameters,
+            colors = colors + other.colors,
+            typography = typography + other.typography
+        )
+    }
+}

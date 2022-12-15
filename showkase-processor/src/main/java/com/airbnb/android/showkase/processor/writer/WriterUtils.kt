@@ -53,7 +53,7 @@ internal fun writeFile(
     fileBuilder: FileSpec.Builder,
     superInterfaceClassName: ClassName,
     showkaseComponentsListClassName: String,
-    showkaseMetadata: Set<ShowkaseMetadata>,
+    allShowkaseBrowserProperties: ShowkaseBrowserProperties,
     componentInterfaceFunction: FunSpec,
     colorInterfaceFunction: FunSpec,
     typographyInterfaceFunction: FunSpec,
@@ -67,7 +67,7 @@ internal fun writeFile(
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
                 addFunction(typographyInterfaceFunction)
-                showkaseMetadata.forEach { addOriginatingElement(it.element) }
+                allShowkaseBrowserProperties.zip().forEach { addOriginatingElement(it.element) }
                 build()
             }
         )
@@ -301,6 +301,33 @@ internal fun showkaseBrowserPropertyValue(
         "Your field:${fieldName} is declared in a way that " +
                 "is not supported by Showkase"
     )
+}
+
+internal fun generatePropertyNameFromMetadata(
+    metadata: ShowkaseMetadata,
+): String {
+    return when(metadata) {
+        is ShowkaseMetadata.Component -> {
+            val name =
+                if (metadata.componentIndex != null && metadata.componentIndex > 0
+                ) {
+                    "${metadata.packageName}_${metadata.showkaseGroup}_" +
+                            "${metadata.showkaseName}_${metadata.componentIndex}"
+                } else {
+                    "${metadata.packageName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+                }
+            val propertyName = if (metadata.showkaseStyleName != null) {
+                "${name}_${metadata.showkaseStyleName}"
+            } else {
+                name
+            }.filter { it.isLetterOrDigit() }
+            propertyName
+        }
+        else -> {
+            "${metadata.packageName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+                .filter { it.isLetterOrDigit() }
+        }
+    }
 }
 
 internal fun CodeBlock.Builder.withDoubleIndent(block: CodeBlock.Builder.() -> Unit) =

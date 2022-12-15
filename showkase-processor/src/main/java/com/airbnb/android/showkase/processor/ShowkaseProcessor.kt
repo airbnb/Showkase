@@ -1,5 +1,7 @@
 package com.airbnb.android.showkase.processor
 
+import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
@@ -14,11 +16,13 @@ import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorExcepti
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.android.showkase.processor.models.ShowkaseMetadataType
+import com.airbnb.android.showkase.processor.models.getCodegenMetadataTypes
 import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
-import com.airbnb.android.showkase.processor.models.toModel
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
@@ -122,9 +126,25 @@ class ShowkaseProcessor @JvmOverloads constructor(
             }.flatten().mapNotNull { it }.toSet()
     }
 
-    private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
+    private fun writeMetadataFile(
+        componentMetadata: Set<ShowkaseMetadata.Component>,
+        colorMetadata: Set<ShowkaseMetadata>,
+        typographyMetadata: Set<ShowkaseMetadata>,
+    ): ShowkaseBrowserProperties {
+        val aggregateMetadataList = componentMetadata + colorMetadata + typographyMetadata
+        if (aggregateMetadataList.isEmpty()) return ShowkaseBrowserProperties()
+
+        val packageName = aggregateMetadataList.first().packageName
         ShowkaseCodegenMetadataWriter(environment).apply {
-            generateShowkaseCodegenFunctions(uniqueComposablesMetadata)
+            generateShowkaseCodegenFunctions(aggregateMetadataList)
+        }
+        ShowkaseBrowserPropertyWriter(environment).apply {
+            return generateMetadataPropertyFiles(
+                componentMetadata = componentMetadata,
+                colorMetadata = colorMetadata,
+                typographyMetadata = typographyMetadata,
+                packageName
+            )
         }
     }
 
@@ -196,28 +216,26 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // Showkase test annotation
         val screenshotTestElement = getShowkaseScreenshotTestElement(roundEnvironment)
 
-        var showkaseProcessorMetadata = ShowkaseProcessorMetadata()
+        var showkaseBrowserProperties = ShowkaseBrowserProperties()
 
         // If root element is not present in this module, it means that we only need to write
         // the metadata file for this module so that the root module can use this info to
         // include the composables from this module into the final codegen file.
-        writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
+        val currentShowkaseBrowserProperties =
+            writeMetadataFile(componentMetadata, colorMetadata, typographyMetadata)
 
         if (rootElement != null) {
             // This is the module that should aggregate all the other metadata files and
             // also use the showkaseMetadata set from the current round to write the final file.
-            showkaseProcessorMetadata =
-                writeShowkaseFiles(
-                    rootElement,
-                    componentMetadata,
-                    colorMetadata,
-                    typographyMetadata
-                )
+            showkaseBrowserProperties = writeShowkaseFiles(
+                rootElement,
+                currentShowkaseBrowserProperties
+            )
         }
 
         if (screenshotTestElement != null) {
             // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
-            writeScreenshotTestFiles(screenshotTestElement, rootElement, showkaseProcessorMetadata)
+            writeScreenshotTestFiles(screenshotTestElement, rootElement, showkaseBrowserProperties)
         }
     }
 
@@ -239,41 +257,41 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     private fun writeShowkaseFiles(
         rootElement: XTypeElement,
-        componentMetadata: Set<ShowkaseMetadata.Component>,
-        colorMetadata: Set<ShowkaseMetadata>,
-        typographyMetadata: Set<ShowkaseMetadata>,
-    ): ShowkaseProcessorMetadata {
+        currentShowkaseBrowserProperties: ShowkaseBrowserProperties,
+    ): ShowkaseBrowserProperties {
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(environment)
-        val classpathComponentMetadata =
-            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Component>()
-        val classpathColorMetadata =
-            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Color>()
-        val classpathTypographyMetadata =
-            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
+        val classpathComponentsWithoutParameter = generatedShowkaseMetadataOnClasspath.filter {
+            it.type == ShowkaseCodegenMetadataType.COMPONENTS_WITHOUT_PARAMETER
+        }
+        val classpathComponentsWithParameter = generatedShowkaseMetadataOnClasspath.filter {
+            it.type == ShowkaseCodegenMetadataType.COMPONENTS_WITH_PARAMETER
+        }
+        val classpathColors =
+            generatedShowkaseMetadataOnClasspath.filter {
+                it.type == ShowkaseCodegenMetadataType.COLOR
+            }
+        val classpathTypography =
+            generatedShowkaseMetadataOnClasspath.filter {
+                it.type == ShowkaseCodegenMetadataType.TYPOGRAPHY
+            }
 
-        val allComponents = componentMetadata + classpathComponentMetadata
-        val allColors = colorMetadata + classpathColorMetadata
-        val allTypography = typographyMetadata + classpathTypographyMetadata
-
-        writeShowkaseBrowserFiles(
-            rootElement,
-            allComponents,
-            allColors,
-            allTypography,
+        val classpathShowkaseBrowserProperties = ShowkaseBrowserProperties(
+            componentsWithoutPreviewParameters = classpathComponentsWithoutParameter,
+            componentsWithPreviewParameters = classpathComponentsWithParameter,
+            colors = classpathColors,
+            typography = classpathTypography
         )
+        val allShowkaseBrowserProperties = currentShowkaseBrowserProperties + classpathShowkaseBrowserProperties
+        writeShowkaseBrowserFiles(rootElement, allShowkaseBrowserProperties)
 
-        return ShowkaseProcessorMetadata(
-            components = allComponents,
-            colors = allColors,
-            typography = allTypography
-        )
+        return allShowkaseBrowserProperties
     }
 
     private fun writeScreenshotTestFiles(
         screenshotTestElement: XTypeElement,
         rootElement: XTypeElement?,
-        showkaseProcessorMetadata: ShowkaseProcessorMetadata,
+        showkaseBrowserProperties: ShowkaseBrowserProperties,
     ) {
         val testClassName = screenshotTestElement.name
         val screenshotTestPackageName = screenshotTestElement.packageName
@@ -291,15 +309,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
             // If the specified root element is the being processed in the current processing round,
             // use it directly instead of looking for it in the class path. This is because it won't
             // be availabe in the classpath just yet.
-            val (_, showkaseMetadataWithoutParameterList) =
-                showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
-                    .partition {
-                        it.previewParameterProviderType != null
-                    }
+
+//            val (_, showkaseMetadataWithoutParameterList) =
+//                showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
+//                    .partition {
+//                        it.previewParameterProviderType != null
+//                    }
             ShowkaseTestMetadata(
-                componentsSize = showkaseMetadataWithoutParameterList.size,
-                showkaseProcessorMetadata.colors.size,
-                showkaseProcessorMetadata.typography.size,
+                componentsSize = showkaseBrowserProperties.componentsWithoutPreviewParameters.size,
+                showkaseBrowserProperties.colors.size,
+                showkaseBrowserProperties.typography.size,
             )
         } else {
             getShowkaseRootCodegenOnClassPath(specifiedRootClassTypeElement)?.let { showkaseRootCodegenAnnotation ->
@@ -342,7 +361,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             )
     }
 
-    private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv): Set<ShowkaseMetadata> {
+    private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv): Set<com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata> {
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
@@ -353,10 +372,34 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     else -> element to codegenMetadataAnnotation
                 }
             }
-            .map { it.second.toModel(it.first) }
+            .map {
+                it.second.toRandomDataClass(it.first)
+            }
             .toSet()
     }
 
+    internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toRandomDataClass(element: XElement): com.airbnb.android.showkase.processor.ShowkaseCodegenMetadata {
+        val (_, previewParameterClassType) = getCodegenMetadataTypes()
+
+        // The box is needed to get all Class values, primitives can be accessed dirctly
+        val props = value
+        val type = ShowkaseMetadataType.valueOf(props.showkaseMetadataType)
+
+        return ShowkaseCodegenMetadata(
+            element = element,
+            propertyName = props.generatedPropertyName,
+            propertyPackage = props.packageName,
+            type = when(type) {
+                ShowkaseMetadataType.COLOR -> ShowkaseCodegenMetadataType.COLOR
+                ShowkaseMetadataType.TYPOGRAPHY -> ShowkaseCodegenMetadataType.TYPOGRAPHY
+                ShowkaseMetadataType.COMPONENT -> if (previewParameterClassType != null) {
+                    ShowkaseCodegenMetadataType.COMPONENTS_WITH_PARAMETER
+                } else {
+                    ShowkaseCodegenMetadataType.COMPONENTS_WITHOUT_PARAMETER
+                }
+            }
+        )
+    }
     private fun getShowkaseRootCodegenOnClassPath(
         specifiedRootClassTypeElement: XTypeElement
     ): ShowkaseRootCodegen? {
@@ -367,32 +410,27 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     private fun writeShowkaseBrowserFiles(
         rootElement: XTypeElement,
-        componentsMetadata: Set<ShowkaseMetadata.Component>,
-        colorsMetadata: Set<ShowkaseMetadata>,
-        typographyMetadata: Set<ShowkaseMetadata>,
+        allShowkaseBrowserProperties: ShowkaseBrowserProperties,
     ) {
-        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
+        if (allShowkaseBrowserProperties.isEmpty()) return
         val rootModuleClassName = rootElement.name
         val rootModulePackageName = rootElement.packageName
-        showkaseValidator.validateShowkaseComponents(componentsMetadata)
 
-        val browserPropertyNames =
-            ShowkaseBrowserPropertyWriter(environment).generateMetadataPropertyFiles(
-                componentsMetadata,
-                colorsMetadata,
-                typographyMetadata,
-                rootModulePackageName,
-            )
+        // TODO: Figure out where to do this validation instead
+        // showkaseValidator.validateShowkaseComponents(componentsMetadata)
+
+        // Not needed anymore as it's handled when generating the metadata file
+//        val browserPropertyNames =
+//            ShowkaseBrowserPropertyWriter(environment).generateMetadataPropertyFiles(
+//                componentsMetadata,
+//                colorsMetadata,
+//                typographyMetadata,
+//                rootModulePackageName,
+//            )
 
         ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
-                componentsMetadata,
-                browserPropertyNames.componentsWithoutPreviewParameters,
-                browserPropertyNames.componentsWithPreviewParameters,
-                browserPropertyNames.colors,
-                browserPropertyNames.typography,
-                colorsMetadata,
-                typographyMetadata,
+                allShowkaseBrowserProperties,
                 rootModulePackageName,
                 rootModuleClassName
             )
@@ -428,18 +466,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
     }
 
-    private data class ShowkaseProcessorMetadata(
-        val components: Set<ShowkaseMetadata> = setOf(),
-        val colors: Set<ShowkaseMetadata> = setOf(),
-        val typography: Set<ShowkaseMetadata> = setOf(),
-    )
-
     private data class ShowkaseTestMetadata(
         val componentsSize: Int,
         val colorsSize: Int,
         val typographySize: Int,
     )
-
     companion object {
         const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
         const val COMPOSABLE_SIMPLE_NAME = "Composable"
@@ -451,5 +482,19 @@ class ShowkaseProcessor @JvmOverloads constructor(
         const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
         const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
     }
+}
+
+internal data class ShowkaseCodegenMetadata(
+    val propertyName: String,
+    val propertyPackage: String,
+    val type: ShowkaseCodegenMetadataType,
+    val element: XElement,
+)
+
+internal enum class ShowkaseCodegenMetadataType {
+    COMPONENTS_WITH_PARAMETER,
+    COMPONENTS_WITHOUT_PARAMETER,
+    COLOR,
+    TYPOGRAPHY
 }
 

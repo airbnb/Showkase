@@ -1,10 +1,8 @@
 // This is an auto-generated file. Please do not edit/modify this file.
-package com.airbnb.android.showkase_processor_testing
+package com.airbnb.android.showkase_browser_testing
 
 import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
-import com.airbnb.android.showkase_browser_testing.IntegerParameterProvider
-import com.airbnb.android.showkase_browser_testing.TestComposable1
 import kotlin.collections.List
 
 public
