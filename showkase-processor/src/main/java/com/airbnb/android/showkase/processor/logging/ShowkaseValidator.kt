@@ -18,10 +18,10 @@ import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.COMPOSABLE_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
-import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.isJavac
 import com.airbnb.android.showkase.processor.utils.findAnnotationBySimpleName
 import com.airbnb.android.showkase.processor.utils.kotlinMetadata
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
 import kotlinx.metadata.Flag
 import kotlinx.metadata.KmFunction
 import kotlinx.metadata.jvm.KotlinClassMetadata
@@ -355,11 +355,13 @@ internal class ShowkaseValidator {
     }
 
     internal fun validateShowkaseComponents(
-        componentsMetadata: Set<ShowkaseMetadata.Component>
+        componentsMetadata: ShowkaseBrowserProperties
     ) {
-        val groupedComponents = componentsMetadata.groupBy { it.showkaseGroup }
+        val components = componentsMetadata.componentsWithPreviewParameters +
+                componentsMetadata.componentsWithoutPreviewParameters
+        val groupedComponents = components.groupBy { it.group }
         groupedComponents.forEach { groupEntry ->
-            val groupedByNameComponents = groupEntry.value.groupBy { it.showkaseName }
+            val groupedByNameComponents = groupEntry.value.groupBy { it.name }
             groupedByNameComponents.forEach { nameEntry ->
                 // Verify that there's at most 1 default style for a given component
                 if (nameEntry.value.filter { it.isDefaultStyle }.size > 1) {

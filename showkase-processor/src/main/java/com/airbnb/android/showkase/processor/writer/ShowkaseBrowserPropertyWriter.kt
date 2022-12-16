@@ -41,7 +41,10 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     element = showkaseMetadata.element,
                     propertyName = propertyName,
                     propertyPackage = packageName,
-                    type = ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
+                    type = ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER,
+                    group = showkaseMetadata.showkaseGroup,
+                    name = showkaseMetadata.showkaseName,
+                    isDefaultStyle = showkaseMetadata.isDefaultStyle,
                 )
             }
 
@@ -58,7 +61,10 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     element = showkaseMetadata.element,
                     propertyName = propertyName,
                     propertyPackage = packageName,
-                    type = ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER
+                    type = ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER,
+                    group = showkaseMetadata.showkaseGroup,
+                    name = showkaseMetadata.showkaseName,
+                    isDefaultStyle = showkaseMetadata.isDefaultStyle,
                 )
             }
 
@@ -77,7 +83,9 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                 element = color.element,
                 propertyName = propertyName,
                 propertyPackage = packageName,
-                type = ShowkaseGeneratedMetadataType.COLOR
+                type = ShowkaseGeneratedMetadataType.COLOR,
+                group = color.showkaseGroup,
+                name = color.showkaseName,
             )
         }
 
@@ -96,7 +104,9 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     element = typography.element,
                     propertyName = propertyName,
                     propertyPackage = packageName,
-                    type = ShowkaseGeneratedMetadataType.COLOR
+                    type = ShowkaseGeneratedMetadataType.COLOR,
+                    group = typography.showkaseGroup,
+                    name = typography.showkaseName,
                 )
             }
 

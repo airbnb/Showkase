@@ -309,12 +309,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
             // If the specified root element is the being processed in the current processing round,
             // use it directly instead of looking for it in the class path. This is because it won't
             // be availabe in the classpath just yet.
-
-//            val (_, showkaseMetadataWithoutParameterList) =
-//                showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
-//                    .partition {
-//                        it.previewParameterProviderType != null
-//                    }
             ShowkaseTestMetadata(
                 componentsSize = showkaseBrowserProperties.componentsWithoutPreviewParameters.size,
                 showkaseBrowserProperties.colors.size,
@@ -399,7 +393,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 } else {
                     ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
                 }
-            }
+            },
+            group = props.showkaseGroup,
+            name = props.showkaseName,
+            isDefaultStyle = props.isDefaultStyle,
         )
     }
     private fun getShowkaseRootCodegenOnClassPath(
@@ -418,8 +415,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootModuleClassName = rootElement.name
         val rootModulePackageName = rootElement.packageName
 
-        // TODO(vinaygaba): Figure out where to do this validation instead
-        // showkaseValidator.validateShowkaseComponents(componentsMetadata)
+        showkaseValidator.validateShowkaseComponents(allShowkaseBrowserProperties)
 
         ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
@@ -482,6 +478,10 @@ internal data class ShowkaseGeneratedMetadata(
     val propertyPackage: String,
     val type: ShowkaseGeneratedMetadataType,
     val element: XElement,
+    val group: String,
+    val name: String,
+    // This property is only used for components
+    val isDefaultStyle: Boolean = false
 )
 
 internal enum class ShowkaseGeneratedMetadataType {
