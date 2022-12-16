@@ -42,7 +42,6 @@ internal fun getShowkaseProviderInterfaceFunction(
     returnType: TypeName,
 ) = FunSpec.builder(methodName)
     .addModifiers(KModifier.OVERRIDE)
-    .clearBody()
     .addCode(codeBlock)
     .returns(returnType)
     .build()
