@@ -166,6 +166,24 @@ to understand the behavior when you don't pass any properties.
 - Functions that don't have any parameters
 - If it does have a parameter, it has to be annotated with `@PreviewParameter` that is provided a `PreviewParameterProvider` implementation.
 - Stacked `@Preview` and `ShowkaseComposable` annotations are only supported with KSP at the moment. This is because of this [issue](https://youtrack.jetbrains.com/issue/KT-49682).
+- If you use `@Preview` to generate UI in the Showkase app, you have to make them public functions.  If you would like to have private previews, but skip them in during compilation, you can add `skipPrivatePreview`compiler flag:
+
+If you use KSP:
+```
+ksp {
+ arg("skipPrivatePreviews", "true")
+}
+```
+
+If you use KAPT:
+```
+kapt {
+ arguments {
+  arg("skipPrivatePreviews", "true")
+ }
+}
+```
+
 
 This is identical to how `@Preview` works in Compose as well so Showkase just adheres to the same rules. 
 
