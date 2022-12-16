@@ -287,7 +287,7 @@ internal fun getShowkaseMetadataFromPreview(
             showkaseName = showkaseName,
             showkaseGroup = showkaseGroup,
             showkaseWidthDp = if (width == -1) null else width,
-            showkaseHeightDp = if (height == -1) null else width,
+            showkaseHeightDp = if (height == -1) null else height,
             insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
             insideObject = commonMetadata.showkaseFunctionType.insideObject(),
             element = element,
