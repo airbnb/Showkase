@@ -14,6 +14,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroup1name1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
@@ -29,6 +30,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroup2name2",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )

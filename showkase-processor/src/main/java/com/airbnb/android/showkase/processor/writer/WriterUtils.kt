@@ -38,11 +38,11 @@ internal fun getPropertyList(className: ClassName, propertyName: String): Proper
 
 internal fun getShowkaseProviderInterfaceFunction(
     methodName: String,
-    returnPropertyName: String,
+    codeBlock: CodeBlock,
     returnType: TypeName,
 ) = FunSpec.builder(methodName)
     .addModifiers(KModifier.OVERRIDE)
-    .addStatement("return $returnPropertyName")
+    .addCode(codeBlock)
     .returns(returnType)
     .build()
 
@@ -52,10 +52,7 @@ internal fun writeFile(
     fileBuilder: FileSpec.Builder,
     superInterfaceClassName: ClassName,
     showkaseComponentsListClassName: String,
-    componentListProperty: PropertySpec,
-    colorListProperty: PropertySpec,
-    typographyListProperty: PropertySpec,
-    showkaseMetadata: Set<ShowkaseMetadata>,
+    allShowkaseBrowserProperties: ShowkaseBrowserProperties,
     componentInterfaceFunction: FunSpec,
     colorInterfaceFunction: FunSpec,
     typographyInterfaceFunction: FunSpec,
@@ -69,10 +66,7 @@ internal fun writeFile(
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
                 addFunction(typographyInterfaceFunction)
-                addProperty(componentListProperty)
-                addProperty(colorListProperty)
-                addProperty(typographyListProperty)
-                showkaseMetadata.forEach { addOriginatingElement(it.element) }
+                allShowkaseBrowserProperties.zip().forEach { addOriginatingElement(it.element) }
                 build()
             }
         )
@@ -82,37 +76,27 @@ internal fun writeFile(
 
 internal fun ClassName.listInitializerCodeBlock(): CodeBlock.Builder {
     return CodeBlock.Builder()
+        .addLineBreak()
         .add(
-            "listOf<%T>(",
+            "return listOf<%T>(",
             this
         )
-        .indent()
+        .doubleIndent()
 }
 
 internal fun ClassName.mutableListInitializerCodeBlock(): CodeBlock.Builder {
     return CodeBlock.Builder()
+        .addLineBreak()
         .add(
-            "mutableListOf<%T>(",
+            "return mutableListOf<%T>(",
             this
         )
-        .indent()
+        .doubleIndent()
 }
 
 internal fun ClassName.getCodegenMetadataParameterizedList() = List::class
     .asClassName()
     .parameterizedBy(this)
-
-internal fun CodeBlock.Builder.closeOrContinueListCodeBlock(
-    index: Int,
-    finalIndex: Int
-) {
-    if (index == finalIndex) {
-        add(")")
-        addLineBreak()
-    } else {
-        add("),")
-    }
-}
 
 internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     showkaseMetadata: ShowkaseMetadata.Component,
@@ -217,11 +201,131 @@ internal fun composePreviewFunctionLambdaCodeBlock(
                 )
                 .build()
         }
+
         else -> throw ShowkaseProcessorException(
             "Your @ShowkaseComposable/@Preview " +
                     "function:${composeFunctionName} is declared in a way that is not supported by " +
                     "Showkase"
         )
+    }
+}
+
+internal fun CodeBlock.Builder.addShowkaseBrowserColor(
+    showkaseMetadata: ShowkaseMetadata,
+) {
+    addLineBreak()
+    add(
+        "%T(\n",
+        ShowkaseBrowserWriter.SHOWKASE_BROWSER_COLOR_CLASS_NAME
+    )
+    doubleIndent()
+    add(
+        "colorGroup = %S,\ncolorName = %S,\ncolorKDoc = %S,",
+        showkaseMetadata.showkaseGroup,
+        showkaseMetadata.showkaseName,
+        showkaseMetadata.showkaseKDoc
+    )
+    add(
+        showkaseBrowserPropertyValue(
+            showkaseMetadata.packageName,
+            showkaseMetadata.enclosingClassName,
+            "color",
+            showkaseMetadata.elementName,
+            showkaseMetadata.insideWrapperClass,
+            showkaseMetadata.insideObject
+        )
+    )
+    doubleUnindent()
+}
+
+internal fun CodeBlock.Builder.addShowkaseBrowserTypography(
+    showkaseMetadata: ShowkaseMetadata,
+) {
+    addLineBreak()
+    add(
+        "%T(\n",
+        ShowkaseBrowserWriter.SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME
+    )
+    doubleIndent()
+    add(
+        "typographyGroup = %S,\ntypographyName = %S,\ntypographyKDoc = %S,",
+        showkaseMetadata.showkaseGroup,
+        showkaseMetadata.showkaseName,
+        showkaseMetadata.showkaseKDoc
+    )
+    add(
+        showkaseBrowserPropertyValue(
+            showkaseMetadata.packageName,
+            showkaseMetadata.enclosingClassName,
+            "textStyle",
+            showkaseMetadata.elementName,
+            showkaseMetadata.insideWrapperClass,
+            showkaseMetadata.insideObject
+        )
+    )
+    doubleUnindent()
+}
+
+@Suppress("LongParameterList")
+internal fun showkaseBrowserPropertyValue(
+    functionPackageName: String,
+    enclosingClass: TypeName? = null,
+    fieldPropertyName: String,
+    fieldName: String,
+    insideWrapperClass: Boolean,
+    insideObject: Boolean
+) = when {
+    // When enclosingClass is null, it denotes that the method was a top-level method
+    // declaration.
+    enclosingClass == null -> {
+        val composeMember = MemberName(functionPackageName, fieldName)
+        CodeBlock.Builder()
+            .add("\n$fieldPropertyName = %M", composeMember)
+            .build()
+    }
+    // It was declared inside a class.
+    insideWrapperClass -> {
+        CodeBlock.Builder()
+            .add("\n$fieldPropertyName = %T().${fieldName}", enclosingClass)
+            .build()
+    }
+    // It was declared inside an object or a companion object.
+    insideObject -> {
+        CodeBlock.Builder()
+            .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
+            .build()
+    }
+
+    else -> throw ShowkaseProcessorException(
+        "Your field:${fieldName} is declared in a way that " +
+                "is not supported by Showkase"
+    )
+}
+
+internal fun generatePropertyNameFromMetadata(
+    metadata: ShowkaseMetadata,
+): String {
+    return when(metadata) {
+        is ShowkaseMetadata.Component -> {
+            val name =
+                if (metadata.componentIndex != null && metadata.componentIndex > 0
+                ) {
+                    "${metadata.packageName}_${metadata.showkaseGroup}_" +
+                            "${metadata.showkaseName}_${metadata.componentIndex}"
+                } else {
+                    "${metadata.packageName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+                }
+            val propertyName = if (metadata.showkaseStyleName != null) {
+                "${name}_${metadata.showkaseStyleName}"
+            } else {
+                name
+            }.filter { it.isLetterOrDigit() }
+            propertyName
+        }
+        else -> {
+            "${metadata.packageName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+                .filter { it.isLetterOrDigit() }
+        }
     }
 }
 

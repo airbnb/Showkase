@@ -16,6 +16,8 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_browser_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName =
+        "comairbnbandroidshowkasebrowsertestingGroup1Composable1Usageofanintegerpreviewparameterprovider",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [IntegerParameterProvider::class],
@@ -33,6 +35,8 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_browser_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName =
+        "comairbnbandroidshowkasebrowsertestingGroup1Composable2Usageofacharpreviewparameterprovider",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [CharParameterProvider::class],

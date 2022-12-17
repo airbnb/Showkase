@@ -162,7 +162,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
     }
 }
 
-private fun XAnnotationBox<ShowkaseCodegenMetadata>.getCodegenMetadataTypes(): Pair<XType?, XType?> {
+internal fun XAnnotationBox<ShowkaseCodegenMetadata>.getCodegenMetadataTypes(): Pair<XType?, XType?> {
     return Pair(
         getAsTypeList("enclosingClass").firstOrNull(),
         getAsTypeList("previewParameterClass").firstOrNull()
