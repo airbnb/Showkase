@@ -1,7 +1,6 @@
 // This is an auto-generated file. Please do not edit/modify this file.
 package com.airbnb.android.showkase_processor_testing_my_very_long_name
 
-import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.`annotation`.ShowkaseRootCodegen
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -16,36 +15,23 @@ import kotlin.collections.List
   numTypography = 0,
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
-  public val componentList: List<ShowkaseBrowserComponent> =
-      mutableListOf<ShowkaseBrowserComponent>().apply {
-          MyVeryLongPackageNameViewStateSomethingSomethingFunnyStuffProvider()
-              .values
-              .iterator()
-              .asSequence()
-              .forEachIndexed { index, previewParam ->
-                  add(
-                      ShowkaseBrowserComponent(
-                          group = "group",
-                          componentName = "name",
-                          componentKDoc = "",
-                          componentKey =
-                              """com.airbnb.android.showkase_processor_testing_my_very_long_name_com.airbnb.android.showkase_processor_testing_my_very_long_name.WrapperClass_group_name_0_null_$index""",
-                          isDefaultStyle = false,
-                          component = @Composable {
-                              WrapperClass.TestComposable(text = previewParam)
-                          }
-                      )
-                  )
-              }
-      }
+  public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
-  public val colorList: List<ShowkaseBrowserColor> = listOf<ShowkaseBrowserColor>()
+    return mutableListOf<ShowkaseBrowserComponent>(
+    ).apply {
+        addAll(comairbnbandroidshowkaseprocessortestingmyverylongnamegroupname)
+    }
+  }
 
-  public val typographyList: List<ShowkaseBrowserTypography> = listOf<ShowkaseBrowserTypography>()
+  public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
-  public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> = componentList
+    return listOf<ShowkaseBrowserColor>(
+    )
+  }
 
-  public override fun getShowkaseColors(): List<ShowkaseBrowserColor> = colorList
+  public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
-  public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> = typographyList
+    return listOf<ShowkaseBrowserTypography>(
+    )
+  }
 }

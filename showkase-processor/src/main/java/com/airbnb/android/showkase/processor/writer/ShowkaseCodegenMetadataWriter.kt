@@ -19,7 +19,6 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
     ) {
-        if (showkaseMetadataSet.isEmpty()) return
         val moduleName = showkaseMetadataSet.first().packageName.replace(".", "_")
         val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         val fileBuilder = FileSpec.builder(
@@ -82,6 +81,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             .addMember("insideObject = ${showkaseMetadata.insideObject}")
             .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
             .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
+            .addMember("generatedPropertyName = %S", generatePropertyNameFromMetadata(showkaseMetadata))
 
 
     private fun addMetadataTypeSpecificProperties(

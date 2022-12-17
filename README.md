@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta14-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.2.0-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta15-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.2.0-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -75,14 +75,14 @@ Showkase supports both ksp and kapt. By default, it uses kapt as we only recentl
 #### If you are using kapt
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta14"
-kapt "com.airbnb.android:showkase-processor:1.0.0-beta14"
+implementation "com.airbnb.android:showkase:1.0.0-beta15"
+kapt "com.airbnb.android:showkase-processor:1.0.0-beta15"
 ```
 
 #### If you are using ksp
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta14"
-ksp "com.airbnb.android:showkase-processor:1.0.0-beta14"
+implementation "com.airbnb.android:showkase:1.0.0-beta15"
+ksp "com.airbnb.android:showkase-processor:1.0.0-beta15"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -166,6 +166,24 @@ to understand the behavior when you don't pass any properties.
 - Functions that don't have any parameters
 - If it does have a parameter, it has to be annotated with `@PreviewParameter` that is provided a `PreviewParameterProvider` implementation.
 - Stacked `@Preview` and `ShowkaseComposable` annotations are only supported with KSP at the moment. This is because of this [issue](https://youtrack.jetbrains.com/issue/KT-49682).
+- If you use `@Preview` to generate UI in the Showkase app, you have to make them public functions.  If you would like to have private previews, but skip them in during compilation, you can add `skipPrivatePreview`compiler flag:
+
+If you use KSP:
+```
+ksp {
+ arg("skipPrivatePreviews", "true")
+}
+```
+
+If you use KAPT:
+```
+kapt {
+ arguments {
+  arg("skipPrivatePreviews", "true")
+ }
+}
+```
+
 
 This is identical to how `@Preview` works in Compose as well so Showkase just adheres to the same rules. 
 

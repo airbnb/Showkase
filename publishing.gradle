@@ -1,0 +1,16 @@
+apply plugin: 'com.vanniktech.maven.publish'
+
+// https://vanniktech.github.io/gradle-maven-publish-plugin/other/
+publishing {
+    // Uncomment to configure custom maven repository
+//    repositories {
+//        maven {
+//            name = ""
+//            url = ""
+//            credentials {
+//                username = getProperty("mavenCentralUsername")
+//                password = getProperty("mavenCentralPassword")
+//            }
+//        }
+//    }
+}

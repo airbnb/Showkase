@@ -257,7 +257,17 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `top level composable function with showkase and showkaseroot with width and height`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `top level composable function with preview and showkaseroot generates 1 file`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `top level composable function with preview and showkaseroot with width and height`() {
         compileInputsAndVerifyOutputs()
     }
 

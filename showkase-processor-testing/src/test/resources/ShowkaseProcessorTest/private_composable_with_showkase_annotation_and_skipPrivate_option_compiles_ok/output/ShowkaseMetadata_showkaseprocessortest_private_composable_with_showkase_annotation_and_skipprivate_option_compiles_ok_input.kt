@@ -18,6 +18,8 @@ public class
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
+    generatedPropertyName =
+        "ShowkaseProcessorTestprivatecomposablewithshowkaseannotationandskipPrivateoptioncompilesokinputgroup1name1",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
@@ -35,6 +37,8 @@ public class
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
+    generatedPropertyName =
+        "ShowkaseProcessorTestprivatecomposablewithshowkaseannotationandskipPrivateoptioncompilesokinputgroup3name3",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,

@@ -6,6 +6,11 @@ plugins {
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
+    kotlin {
+        sourceSets.configureEach {
+            kotlin.srcDirs += "build/generated/ksp/${it.name}/kotlin"
+        }
+    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
@@ -31,7 +36,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -72,7 +77,7 @@ if (project.hasProperty("useKsp")) {
 
 dependencies {
     // Showkase dependencies
-    // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 
+    // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors.
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
     implementation project(':sample-submodule')

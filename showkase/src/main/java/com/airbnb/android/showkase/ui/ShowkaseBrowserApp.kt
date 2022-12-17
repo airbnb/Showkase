@@ -2,6 +2,9 @@ package com.airbnb.android.showkase.ui
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.OnBackPressedDispatcherOwner
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandIn
@@ -35,6 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -70,7 +75,21 @@ internal fun ShowkaseBrowserApp(
     val lightModeConfiguration = Configuration(LocalConfiguration.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_NO
     }
-    CompositionLocalProvider(LocalConfiguration provides lightModeConfiguration) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val backPressedDispatcherOwner = remember {
+        object : OnBackPressedDispatcherOwner {
+            override fun getLifecycle() = lifecycleOwner.lifecycle
+
+            override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
+        }
+    }
+    CompositionLocalProvider(
+        LocalConfiguration provides lightModeConfiguration,
+        LocalInspectionMode provides true,
+        // This is added to make sure that the navigation of the ShowkaseBrowser does not break
+        // when one of the previews has a back press handler in the implementation of the component.
+        LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner
+    ) {
         val navController = rememberNavController()
         Scaffold(
             drawerContent = null,
