@@ -137,6 +137,7 @@ dependencies {
         kaptAndroidTest project(':showkase-processor')
         kaptTest project(':showkase-processor')
     }
+    api project(':showkase-screenshot-testing')
 
     // Compose
     implementation deps.compose.activityCompose
@@ -152,6 +153,8 @@ dependencies {
 
     // Image loading
     implementation deps.imageLoading.picasso
+
+    implementation "app.cash.paparazzi:paparazzi:1.0.0"
 
     // Testing
     testImplementation deps.test.junit
