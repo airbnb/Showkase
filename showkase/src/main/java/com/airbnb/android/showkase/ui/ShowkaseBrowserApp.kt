@@ -523,7 +523,6 @@ private fun NavGraphBuilder.typographyNavGraph(
     }
 }
 
-@Suppress("LongMethod")
 private fun NavGraphBuilder.fullNavGraph(
     navController: NavHostController,
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
