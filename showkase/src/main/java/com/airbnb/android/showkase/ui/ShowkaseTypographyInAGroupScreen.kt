@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
@@ -26,6 +28,7 @@ internal fun ShowkaseTypographyInAGroupScreen(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
+    val activity = LocalContext.current as AppCompatActivity
     val groupTypographyList =
         groupedTypographyMap[showkaseBrowserScreenMetadata.value.currentGroup]
             ?.sortedBy { it.typographyName } ?: return
@@ -54,13 +57,18 @@ internal fun ShowkaseTypographyInAGroupScreen(
         )
     }
     BackButtonHandler {
-        goBackFromTypographyInAGroupScreen(showkaseBrowserScreenMetadata, groupedTypographyMap.size == 1, navController)
+        goBackFromTypographyInAGroupScreen(
+            activity,
+            showkaseBrowserScreenMetadata,
+            groupedTypographyMap.size == 1, navController
+        )
     }
 }
 
 private fun goBackFromTypographyInAGroupScreen(
+    activity: AppCompatActivity,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    noGroups : Boolean,
+    noGroups: Boolean,
     navController: NavHostController
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
@@ -68,7 +76,11 @@ private fun goBackFromTypographyInAGroupScreen(
         isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
         noGroups -> {
             showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+            if (navController.currentDestination?.id == navController.graph.startDestinationId) {
+                activity.finish()
+            } else {
+                navController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+            }
         }
         else -> {
             showkaseBrowserScreenMetadata.clear()
