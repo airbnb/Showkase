@@ -20,7 +20,6 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         componentMetadata: Set<ShowkaseMetadata.Component>,
         colorMetadata: Set<ShowkaseMetadata>,
         typographyMetadata: Set<ShowkaseMetadata>,
-        packageName: String,
     ): ShowkaseBrowserProperties {
         val (showkaseMetadataWithParameterList, showkaseMetadataWithoutParameterList) =
             componentMetadata
@@ -32,7 +31,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         val withoutParameterPropertyNames =
             showkaseMetadataWithoutParameterList.mapIndexed { index, showkaseMetadata ->
                 val propertyName = generatePropertyNameFromMetadata(showkaseMetadata)
-                val fileBuilder = getFileBuilder(packageName, propertyName)
+                val fileBuilder = getFileBuilder(showkaseMetadata.packageName, propertyName)
                 val property =
                     getPropertyForComponentWithoutParameter(propertyName, showkaseMetadata)
 
@@ -40,7 +39,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                 return@mapIndexed ShowkaseGeneratedMetadata(
                     element = showkaseMetadata.element,
                     propertyName = propertyName,
-                    propertyPackage = packageName,
+                    propertyPackage = showkaseMetadata.packageName,
                     type = ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER,
                     group = showkaseMetadata.showkaseGroup,
                     name = showkaseMetadata.showkaseName,
@@ -52,7 +51,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         val withParameterPropertyNames =
             showkaseMetadataWithParameterList.mapIndexed { index, showkaseMetadata ->
                 val propertyName = generatePropertyNameFromMetadata(showkaseMetadata)
-                val fileBuilder = getFileBuilder(packageName, propertyName)
+                val fileBuilder = getFileBuilder(showkaseMetadata.packageName, propertyName)
                 val property = getPropertyForComponentWithParameter(propertyName, showkaseMetadata)
 
                 fileBuilder.addPropertyAndGenerateFile(property)
@@ -60,7 +59,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                 return@mapIndexed ShowkaseGeneratedMetadata(
                     element = showkaseMetadata.element,
                     propertyName = propertyName,
-                    propertyPackage = packageName,
+                    propertyPackage = showkaseMetadata.packageName,
                     type = ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER,
                     group = showkaseMetadata.showkaseGroup,
                     name = showkaseMetadata.showkaseName,
@@ -71,7 +70,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         // Generate top level property file for colors
         val colorPropertyNames = colorMetadata.mapIndexed { index, color ->
             val propertyName = generatePropertyNameFromMetadata(color)
-            val fileBuilder = getFileBuilder(packageName, propertyName)
+            val fileBuilder = getFileBuilder(color.packageName, propertyName)
             val colorProperty = getPropertyForMetadata(
                 propertyName,
                 color,
@@ -82,7 +81,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
             return@mapIndexed ShowkaseGeneratedMetadata(
                 element = color.element,
                 propertyName = propertyName,
-                propertyPackage = packageName,
+                propertyPackage = color.packageName,
                 type = ShowkaseGeneratedMetadataType.COLOR,
                 group = color.showkaseGroup,
                 name = color.showkaseName,
@@ -93,7 +92,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         val typographyPropertyNames =
             typographyMetadata.mapIndexed { index, typography ->
                 val propertyName = generatePropertyNameFromMetadata(typography)
-                val fileBuilder = getFileBuilder(packageName, propertyName)
+                val fileBuilder = getFileBuilder(typography.packageName, propertyName)
                 val typographyProperty = getPropertyForMetadata(
                     propertyName,
                     typography,
@@ -103,7 +102,7 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                 return@mapIndexed ShowkaseGeneratedMetadata(
                     element = typography.element,
                     propertyName = propertyName,
-                    propertyPackage = packageName,
+                    propertyPackage = typography.packageName,
                     type = ShowkaseGeneratedMetadataType.COLOR,
                     group = typography.showkaseGroup,
                     name = typography.showkaseName,

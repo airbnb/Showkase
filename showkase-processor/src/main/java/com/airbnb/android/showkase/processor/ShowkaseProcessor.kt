@@ -134,7 +134,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val aggregateMetadataList = componentMetadata + colorMetadata + typographyMetadata
         if (aggregateMetadataList.isEmpty()) return ShowkaseBrowserProperties()
 
-        val packageName = aggregateMetadataList.first().packageName
         ShowkaseCodegenMetadataWriter(environment).apply {
             generateShowkaseCodegenFunctions(aggregateMetadataList)
         }
@@ -143,7 +142,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 componentMetadata = componentMetadata,
                 colorMetadata = colorMetadata,
                 typographyMetadata = typographyMetadata,
-                packageName
             )
         }
     }
