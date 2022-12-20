@@ -49,7 +49,7 @@ internal fun ShowkaseGroupsScreen(
     }
     val activity = LocalContext.current as AppCompatActivity
     BackButtonHandler {
-        goBackToCategoriesScreen(activity, showkaseBrowserScreenMetadata, navController)
+        goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController) { activity.finish() }
     }
 }
 

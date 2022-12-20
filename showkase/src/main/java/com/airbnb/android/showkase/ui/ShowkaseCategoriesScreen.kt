@@ -74,17 +74,16 @@ private fun goBackFromCategoriesScreen(
 }
 
 internal fun goBackToCategoriesScreen(
-    activity: AppCompatActivity,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController
+    navController: NavHostController,
+    onBackPressOnRoot: () -> Unit
 ) {
-
     when {
         showkaseBrowserScreenMetadata.value.isSearchActive -> {
             showkaseBrowserScreenMetadata.clearActiveSearch()
         }
         navController.currentDestination?.id == navController.graph.startDestinationId -> {
-            activity.finish()
+            onBackPressOnRoot()
         }
         else -> {
             showkaseBrowserScreenMetadata.clear()

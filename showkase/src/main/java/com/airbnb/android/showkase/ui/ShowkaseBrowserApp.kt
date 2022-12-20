@@ -395,11 +395,11 @@ private fun startDestination(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
 ) = when {
-    isOnlyComponents(groupedColorsMap, groupedTypographyMap, groupedComponentMap) ->
+    groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
         ShowkaseCurrentScreen.COMPONENT_GROUPS.name
-    isOnlyColors(groupedColorsMap, groupedTypographyMap, groupedComponentMap) ->
+    groupedColorsMap.isOnlyCategory(groupedTypographyMap, groupedComponentMap) ->
         ShowkaseCurrentScreen.COLOR_GROUPS.name
-    isOnlyTypography(groupedColorsMap, groupedTypographyMap, groupedComponentMap) ->
+    groupedTypographyMap.isOnlyCategory(groupedColorsMap, groupedComponentMap) ->
         ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name
     else ->
         ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name
@@ -412,11 +412,11 @@ private fun NavGraphBuilder.navGraph(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
 ) = when {
-    isOnlyComponents(groupedColorsMap, groupedTypographyMap, groupedComponentMap) ->
+    groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
         componentsNavGraph(navController, groupedComponentMap, showkaseBrowserScreenMetadata)
-    isOnlyColors(groupedColorsMap, groupedTypographyMap, groupedComponentMap) ->
+    groupedColorsMap.isOnlyCategory(groupedTypographyMap, groupedComponentMap) ->
         colorsNavGraph(navController, groupedColorsMap, showkaseBrowserScreenMetadata)
-    isOnlyTypography(groupedColorsMap, groupedTypographyMap, groupedComponentMap) ->
+    groupedTypographyMap.isOnlyCategory(groupedColorsMap, groupedComponentMap) ->
         typographyNavGraph(navController, groupedTypographyMap, showkaseBrowserScreenMetadata)
     else ->
         fullNavGraph(
@@ -428,23 +428,10 @@ private fun NavGraphBuilder.navGraph(
         )
 }
 
-private fun isOnlyTypography(
-    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
-) = groupedColorsMap.values.isEmpty() && !groupedTypographyMap.values.isEmpty() && groupedComponentMap.values.isEmpty()
-
-private fun isOnlyColors(
-    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
-) = !groupedColorsMap.values.isEmpty() && groupedTypographyMap.values.isEmpty() && groupedComponentMap.values.isEmpty()
-
-private fun isOnlyComponents(
-    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
-) = groupedColorsMap.values.isEmpty() && groupedTypographyMap.values.isEmpty() && !groupedComponentMap.values.isEmpty()
+private fun Map<String, List<*>>.isOnlyCategory(
+    otherCategoryMap1: Map<String, List<*>>,
+    otherCategoryMap2: Map<String, List<*>>
+) = this.values.isNotEmpty() && otherCategoryMap1.isEmpty() && otherCategoryMap2.isEmpty()
 
 private fun NavGraphBuilder.componentsNavGraph(
     navController: NavHostController,
