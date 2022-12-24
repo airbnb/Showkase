@@ -213,7 +213,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootElement = getShowkaseRootElement(roundEnvironment, environment)
 
         // Showkase test annotation
-        val screenshotTestElement = getShowkaseScreenshotTestElement(roundEnvironment)
+        val (screenshotTestElement, screenshotTestType) = getShowkaseScreenshotTestElement(roundEnvironment)
 
         var showkaseBrowserProperties = ShowkaseBrowserProperties()
 
@@ -232,9 +232,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
             )
         }
 
-        if (screenshotTestElement != null) {
+        if (screenshotTestElement != null && screenshotTestType != null) {
             // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
-            writeScreenshotTestFiles(screenshotTestElement, rootElement, showkaseBrowserProperties)
+            writeScreenshotTestFiles(screenshotTestElement, screenshotTestType, rootElement,
+                showkaseBrowserProperties)
         }
     }
 
@@ -247,11 +248,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return showkaseRootElements.singleOrNull() as XTypeElement?
     }
 
-    private fun getShowkaseScreenshotTestElement(roundEnvironment: XRoundEnv): XTypeElement? {
+    private fun getShowkaseScreenshotTestElement(
+        roundEnvironment: XRoundEnv
+    ): Pair<XTypeElement?, ScreenshotTestType?> {
         val testElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshot::class)
             .filterIsInstance<XTypeElement>()
-        //showkaseValidator.validateShowkaseTestElement(testElements, environment)
-        return testElements.singleOrNull()
+        val screenshotTestType = showkaseValidator.validateShowkaseTestElement(testElements, environment)
+        return testElements.singleOrNull() to screenshotTestType
     }
 
     private fun writeShowkaseFiles(
@@ -289,6 +292,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     private fun writeScreenshotTestFiles(
         screenshotTestElement: XTypeElement,
+        screenshotTestType: ScreenshotTestType,
         rootElement: XTypeElement?,
         showkaseBrowserProperties: ShowkaseBrowserProperties,
     ) {
@@ -330,11 +334,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
 
         writeShowkaseScreenshotTestFile(
-            // We only handle composables without preview parameter for screenshots. This is because
-            // there's no way to get information about how many previews are dynamically generated using
-            // preview parameter as it happens on run time and our codegen doesn't get enough information
-            // to be able to predict how many extra composables the preview parameters extrapolate to.
-            // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
+            screenshotTestType,
             showkaseTestMetadata.componentsSize,
             showkaseTestMetadata.colorsSize,
             showkaseTestMetadata.typographySize,
@@ -435,6 +435,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     @Suppress("LongParameterList")
     private fun writeShowkaseScreenshotTestFile(
+        screenshotTestType: ScreenshotTestType,
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
@@ -442,19 +443,34 @@ class ShowkaseProcessor @JvmOverloads constructor(
         rootModulePackageName: String,
         testClassName: String,
     ) {
-        /*ShowkaseScreenshotTestWriter(environment).apply {
-            generateScreenshotTests(
-                componentsSize,
-                colorsSize,
-                typographySize,
-                screenshotTestPackageName,
-                rootModulePackageName,
-                testClassName
-            )
-        }*/
-
-        PaparazziShowkaseScreenshotTestWriter(environment).apply {
-            generateScreenshotTests(screenshotTestPackageName, rootModulePackageName, testClassName)
+        when(screenshotTestType) {
+            // We only handle composables without preview parameter for screenshots. This is because
+            // there's no way to get information about how many previews are dynamically generated using
+            // preview parameter as it happens on run time and our codegen doesn't get enough information
+            // to be able to predict how many extra composables the preview parameters extrapolate to.
+            // TODO(vinaygaba): Add screenshot testing support for composabable with preview
+            //  parameters as well
+            ScreenshotTestType.SHOWKASE -> {
+                ShowkaseScreenshotTestWriter(environment).apply {
+                    generateScreenshotTests(
+                        componentsSize,
+                        colorsSize,
+                        typographySize,
+                        screenshotTestPackageName,
+                        rootModulePackageName,
+                        testClassName
+                    )
+                }
+            }
+            ScreenshotTestType.PAPARAZZI_SHOWKASE -> {
+                PaparazziShowkaseScreenshotTestWriter(environment).apply {
+                    generateScreenshotTests(
+                        screenshotTestPackageName,
+                        rootModulePackageName,
+                        testClassName
+                    )
+                }
+            }
         }
     }
 
@@ -464,15 +480,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val typographySize: Int,
     )
     companion object {
-        const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
-        const val COMPOSABLE_SIMPLE_NAME = "Composable"
-        const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
-        const val PREVIEW_SIMPLE_NAME = "Preview"
-        const val PREVIEW_PARAMETER_CLASS_NAME =
-            "androidx.compose.ui.tooling.preview.PreviewParameter"
-        const val PREVIEW_PARAMETER_SIMPLE_NAME = "PreviewParameter"
-        const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
-        const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
+        internal const val COMPOSABLE_SIMPLE_NAME = "Composable"
+        internal const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
+        internal const val PREVIEW_SIMPLE_NAME = "Preview"
+        internal const val PREVIEW_PARAMETER_SIMPLE_NAME = "PreviewParameter"
+        internal const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
+        internal const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
     }
 }
 
@@ -492,5 +505,10 @@ internal enum class ShowkaseGeneratedMetadataType {
     COMPONENTS_WITHOUT_PARAMETER,
     COLOR,
     TYPOGRAPHY
+}
+
+internal enum class ScreenshotTestType {
+    SHOWKASE,
+    PAPARAZZI_SHOWKASE
 }
 

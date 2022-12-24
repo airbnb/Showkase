@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.screenshot.testing.paparazzi
 
+import android.content.res.Configuration
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -12,6 +13,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -38,20 +40,30 @@ interface PaparazziShowkaseScreenshotTest {
 
         fun layoutDirections(): List<LayoutDirection> = listOf(LayoutDirection.Ltr)
 
+        fun uiModes(): List<PaparazziShowkaseUIMode> = listOf(PaparazziShowkaseUIMode.DEFAULT)
     }
 
     fun takePaparazziSnapshot(
         paparazzi: Paparazzi,
         testPreview: PaparazziShowkaseTestPreview,
         direction: LayoutDirection,
+        mode: PaparazziShowkaseUIMode
     ) {
         paparazzi.snapshot{
             val lifecycleOwner = LocalLifecycleOwner.current
+            val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
+                Configuration(LocalConfiguration.current).apply {
+                    uiMode = Configuration.UI_MODE_NIGHT_YES
+                }
+            } else {
+                LocalConfiguration.current
+            }
             CompositionLocalProvider(
                 LocalInspectionMode provides true,
                 LocalDensity provides Density(
                     density = LocalDensity.current.density,
                 ),
+                LocalConfiguration provides configuration,
                 LocalLayoutDirection provides direction,
                 // Needed so that UI that uses it don't crash during screenshot tests
                 LocalOnBackPressedDispatcherOwner provides object: OnBackPressedDispatcherOwner {
@@ -121,4 +133,9 @@ data class PaparazziShowkaseDeviceConfig(
     val deviceConfig: DeviceConfig
 ) {
     override fun toString() = uniqueIdentifier
+}
+
+enum class PaparazziShowkaseUIMode {
+    DEFAULT,
+    DARK
 }

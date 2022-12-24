@@ -90,6 +90,11 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                         LIST.parameterizedBy(LAYOUT_DIRECTION_CLASS_NAME),
                         "layoutDirections"
                     )
+                    addProvider(
+                        "PaparazziShowkaseUIModeProvider",
+                        LIST.parameterizedBy(UI_MODE_CLASS_NAME),
+                        "uiModes"
+                    )
                     addTest()
                     build()
                 }
@@ -169,6 +174,15 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                         )
                         .build()
                 )
+                .addParameter(
+                    ParameterSpec.builder("uiMode", UI_MODE_CLASS_NAME)
+                        .addAnnotation(
+                            AnnotationSpec.builder(TEST_PARAMETER_CLASS_NAME)
+                                .addMember("valuesProvider = %N::class", "PaparazziShowkaseUIModeProvider")
+                                .build()
+                        )
+                        .build()
+                )
                 .addCode(
                     "%N.unsafeUpdateConfig(%N.deviceConfig.copy(softButtons = false))",
                     "paparazzi",
@@ -176,10 +190,11 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                 )
                 .addCode("\n")
                 .addCode(
-                    "takePaparazziSnapshot(%N, %N, %N)",
+                    "takePaparazziSnapshot(%N, %N, %N, %N)",
                     "paparazzi",
                     "elementPreview",
-                    "direction"
+                    "direction",
+                    "uiMode"
                 )
                 .build()
         )
@@ -225,6 +240,10 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
         private val DEVICE_CONFIG_CLASS_NAME = ClassName(
             PAPARAZZI_SHOWKASE_ARTIFACT_PACKAGE_NAME,
             "PaparazziShowkaseDeviceConfig"
+        )
+        private val UI_MODE_CLASS_NAME = ClassName(
+            PAPARAZZI_SHOWKASE_ARTIFACT_PACKAGE_NAME,
+            "PaparazziShowkaseUIMode"
         )
         private val LAYOUT_DIRECTION_CLASS_NAME = ClassName(
             "androidx.compose.ui.unit",

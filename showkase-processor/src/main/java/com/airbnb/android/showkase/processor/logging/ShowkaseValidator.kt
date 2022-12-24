@@ -15,6 +15,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+import com.airbnb.android.showkase.processor.ScreenshotTestType
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.COMPOSABLE_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -306,8 +307,8 @@ internal class ShowkaseValidator {
     internal fun validateShowkaseTestElement(
         elements: Collection<XTypeElement>,
         environment: XProcessingEnv,
-    ) {
-        if (elements.isEmpty()) return
+    ): ScreenshotTestType? {
+        if (elements.isEmpty()) return null
 
         val showkaseScreenshotAnnotationName = ShowkaseScreenshot::class.java.simpleName
 
@@ -332,11 +333,21 @@ internal class ShowkaseValidator {
 
                 // Validate that the class annotated with @ShowkaseScreenshot extends the
                 // ShowkaseScreenshotTest interface
-                requireInterface(
-                    element = element,
-                    interfaceType = showkaseScreenshotTestTypeMirror,
-                    annotationName = showkaseScreenshotAnnotationName,
-                )
+                val isShowkaseScreenshotTest =
+                    showkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
+                val isPaparazziShowkaseScreenshotTest =
+                    paparazziShowkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
+                if (!(isShowkaseScreenshotTest || isPaparazziShowkaseScreenshotTest)) {
+                    throw ShowkaseProcessorException(
+                        "Only an implementation of ${showkaseScreenshotTestTypeMirror.typeName} or " +
+                                "${paparazziShowkaseScreenshotTestTypeMirror.typeName}can be annotated " +
+                                "with @$showkaseScreenshotAnnotationName",
+                        element
+                    )
+                }
+
+                return if (isShowkaseScreenshotTest) ScreenshotTestType.SHOWKASE else
+                    ScreenshotTestType.PAPARAZZI_SHOWKASE
 
                 // TODO(vinaygaba): Validate that the passed root class is annotated with @ShowkaseRoot
                 // and implements [ShowkaseRootModule]
