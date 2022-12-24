@@ -101,10 +101,10 @@ internal class ShowkaseScreenshotTestWriter(private val environment: XProcessing
     companion object {
         private const val JUNIT_ORG = "org.junit"
         private const val JUNIT_RUNNER = "$JUNIT_ORG.runner"
-        private val RUNWITH_CLASSNAME = ClassName(JUNIT_RUNNER, "RunWith")
+        internal val RUNWITH_CLASSNAME = ClassName(JUNIT_RUNNER, "RunWith")
         private val JUNIT_CLASSNAME = ClassName("${JUNIT_RUNNER}s", "JUnit4")
-        private val JUNIT_TEST = ClassName(JUNIT_ORG, "Test")
-        private val RULE_CLASSNAME = ClassName(JUNIT_ORG, "Rule")
+        internal val JUNIT_TEST = ClassName(JUNIT_ORG, "Test")
+        internal val RULE_CLASSNAME = ClassName(JUNIT_ORG, "Rule")
         private const val JUNIT4_PACKAGE = "androidx.compose.ui.test.junit4"
         private val COMPOSE_CONTENT_TEST_RULE_CLASS_NAME =
             ClassName(JUNIT4_PACKAGE, "ComposeContentTestRule")

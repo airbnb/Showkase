@@ -323,6 +323,8 @@ internal class ShowkaseValidator {
                 val element = elements.first()
                 val showkaseScreenshotTestTypeMirror = environment
                     .requireType(SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
+                val paparazziShowkaseScreenshotTestTypeMirror = environment
+                    .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
 
                 // Validate that the class annotated with @ShowkaseScreenshotTest is an abstract/open
                 // class
@@ -377,5 +379,7 @@ internal class ShowkaseValidator {
     companion object {
         private const val SHOWKASE_SCREENSHOT_TEST_CLASS_NAME =
             "com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest"
+        private const val PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME =
+            "com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest"
     }
 }

@@ -22,6 +22,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
+import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
@@ -249,7 +250,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun getShowkaseScreenshotTestElement(roundEnvironment: XRoundEnv): XTypeElement? {
         val testElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshot::class)
             .filterIsInstance<XTypeElement>()
-        showkaseValidator.validateShowkaseTestElement(testElements, environment)
+        //showkaseValidator.validateShowkaseTestElement(testElements, environment)
         return testElements.singleOrNull()
     }
 
@@ -441,7 +442,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         rootModulePackageName: String,
         testClassName: String,
     ) {
-        ShowkaseScreenshotTestWriter(environment).apply {
+        /*ShowkaseScreenshotTestWriter(environment).apply {
             generateScreenshotTests(
                 componentsSize,
                 colorsSize,
@@ -450,6 +451,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 rootModulePackageName,
                 testClassName
             )
+        }*/
+
+        PaparazziShowkaseScreenshotTestWriter(environment).apply {
+            generateScreenshotTests(screenshotTestPackageName, rootModulePackageName, testClassName)
         }
     }
 

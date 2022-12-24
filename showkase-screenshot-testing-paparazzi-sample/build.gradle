@@ -159,6 +159,7 @@ dependencies {
     // Testing
     testImplementation deps.test.junit
     testImplementation deps.test.junitImplementation
-    testImplementation deps.test.testParameterInjector
+    implementation deps.test.testParameterInjector
     testImplementation deps.compose.uiTest
+    testImplementation project(':showkase-screenshot-testing-paparazzi')
 }

@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+apply from: "$rootDir/publishing.gradle"
+
+android {
+    namespace 'com.airbnb.android.showkase.screenshot.testing.paparazzi'
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 32
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+        ]
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
+    }
+}
+
+dependencies {
+    // Showkase
+    api project(':showkase')
+    api deps.test.paparazzi
+    api deps.compose.foundation
+    api deps.compose.activityCompose
+
+    // Testing
+    api deps.test.testParameterInjector
+    api deps.test.androidXTestRules
+    api deps.test.androidxTestRunner
+}
