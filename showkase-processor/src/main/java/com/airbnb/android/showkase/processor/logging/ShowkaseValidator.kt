@@ -345,6 +345,10 @@ internal class ShowkaseValidator {
                         element
                     )
                 }
+                if (isPaparazziShowkaseScreenshotTest) {
+                    validatePaparazziShowkaseScreenshotTest(environment, element,
+                        paparazziShowkaseScreenshotTestTypeMirror)
+                }
 
                 return if (isShowkaseScreenshotTest) ScreenshotTestType.SHOWKASE else
                     ScreenshotTestType.PAPARAZZI_SHOWKASE
@@ -352,6 +356,37 @@ internal class ShowkaseValidator {
                 // TODO(vinaygaba): Validate that the passed root class is annotated with @ShowkaseRoot
                 // and implements [ShowkaseRootModule]
             }
+        }
+    }
+
+    private fun validatePaparazziShowkaseScreenshotTest(
+        environment: XProcessingEnv,
+        element: XTypeElement,
+        paparazziShowkaseScreenshotTestTypeMirror: XType
+    ) {
+        val paparazziShowkaseScreenshotTestCompanionType = environment
+            .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_COMPANION_CLASS_NAME)
+
+        val companionObjectTypeElements = element.getEnclosedTypeElements().filter {
+            it.isCompanionObject()
+        }
+        if (companionObjectTypeElements.isEmpty()) {
+            throw ShowkaseProcessorException(
+                "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} interface " +
+                        "should have a companion object that implements the " +
+                        "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface.",
+                element
+            )
+        }
+
+        if (!paparazziShowkaseScreenshotTestCompanionType
+                .isAssignableFrom(companionObjectTypeElements[0].type)) {
+            throw ShowkaseProcessorException(
+                "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} interface " +
+                        "should have a companion object that implements the " +
+                        "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface.",
+                element
+            )
         }
     }
 
@@ -392,5 +427,7 @@ internal class ShowkaseValidator {
             "com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest"
         private const val PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME =
             "com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest"
+        private const val PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_COMPANION_CLASS_NAME =
+            "com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest.CompanionObject"
     }
 }
