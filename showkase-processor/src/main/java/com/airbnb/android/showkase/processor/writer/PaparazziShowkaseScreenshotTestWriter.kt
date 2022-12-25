@@ -59,8 +59,8 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
-    private fun addPreviewProvider() {
-        with(TypeSpec.objectBuilder("PaparazziShowkasePreviewProvider")) {
+    private fun TypeSpec.Builder.addPreviewProvider() {
+        addType(with(TypeSpec.objectBuilder("PaparazziShowkasePreviewProvider")) {
             addSuperinterface(TEST_PARAMETER_VALUES_PROVIDER_CLASSNAME)
             addModifiers(KModifier.PRIVATE)
             addFunction(
@@ -102,7 +102,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                     .build()
             )
             build()
-        }
+        })
     }
 
     private fun TypeSpec.Builder.addProvider(
@@ -153,7 +153,10 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                     )
                         .addAnnotation(
                             AnnotationSpec.builder(TEST_PARAMETER_CLASS_NAME)
-                                .addMember("valuesProvider = %N::class", "PaparazziShowkasePreviewProvider")
+                                .addMember(
+                                    "valuesProvider = %N::class",
+                                    "PaparazziShowkasePreviewProvider"
+                                )
                                 .build()
                         )
                         .build()
@@ -163,7 +166,10 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                     ParameterSpec.builder("config", DEVICE_CONFIG_CLASS_NAME)
                         .addAnnotation(
                             AnnotationSpec.builder(TEST_PARAMETER_CLASS_NAME)
-                                .addMember("valuesProvider = %N::class", "PaparazziShowkaseDeviceConfigProvider")
+                                .addMember(
+                                    "valuesProvider = %N::class",
+                                    "PaparazziShowkaseDeviceConfigProvider"
+                                )
                                 .build()
                         )
                         .build()
@@ -172,7 +178,10 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                     ParameterSpec.builder("direction", LAYOUT_DIRECTION_CLASS_NAME)
                         .addAnnotation(
                             AnnotationSpec.builder(TEST_PARAMETER_CLASS_NAME)
-                                .addMember("valuesProvider = %N::class", "PaparazziShowkaseLayoutDirectionProvider")
+                                .addMember(
+                                    "valuesProvider = %N::class",
+                                    "PaparazziShowkaseLayoutDirectionProvider"
+                                )
                                 .build()
                         )
                         .build()
@@ -181,7 +190,10 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                     ParameterSpec.builder("uiMode", UI_MODE_CLASS_NAME)
                         .addAnnotation(
                             AnnotationSpec.builder(TEST_PARAMETER_CLASS_NAME)
-                                .addMember("valuesProvider = %N::class", "PaparazziShowkaseUIModeProvider")
+                                .addMember(
+                                    "valuesProvider = %N::class",
+                                    "PaparazziShowkaseUIModeProvider"
+                                )
                                 .build()
                         )
                         .build()
