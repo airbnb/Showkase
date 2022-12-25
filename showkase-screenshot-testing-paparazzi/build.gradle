@@ -4,6 +4,19 @@ plugins {
 }
 apply from: "$rootDir/publishing.gradle"
 
+// Added to resolve this error
+// /home/runner/work/Showkase/Showkase/showkase-screenshot-testing-paparazzi/build.gradle:
+// Error: commons-logging defines classes that conflict with classes now provided by Android.
+// Solutions include finding newer versions or alternative libraries that don't have the same
+// problem (for example, for httpclient use HttpUrlConnection or okhttp instead), or repackaging
+// the library using something like jarjar. [DuplicatePlatformClasses]
+configurations {
+    all {
+        exclude module: 'httpclient'
+        exclude module: 'commons-logging'
+    }
+}
+
 android {
     namespace 'com.airbnb.android.showkase.screenshot.testing.paparazzi'
     compileSdk 32
