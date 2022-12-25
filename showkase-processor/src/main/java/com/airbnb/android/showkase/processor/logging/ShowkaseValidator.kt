@@ -334,8 +334,8 @@ internal class ShowkaseValidator {
                 val isShowkaseScreenshotTest =
                     showkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
 
-                if (isShowkaseScreenshotTest) {
-                   return ScreenshotTestType.SHOWKASE
+                return if (isShowkaseScreenshotTest) {
+                   ScreenshotTestType.SHOWKASE
                 } else if (
                     environment.findType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
                         ?.isAssignableFrom(element.type) == true
@@ -345,7 +345,7 @@ internal class ShowkaseValidator {
                     validatePaparazziShowkaseScreenshotTest(environment, element,
                         paparazziShowkaseScreenshotTestTypeMirror)
 
-                   return ScreenshotTestType.PAPARAZZI_SHOWKASE
+                   ScreenshotTestType.PAPARAZZI_SHOWKASE
                 } else {
                     throw ShowkaseProcessorException(
                         "Only an implementation of com.airbnb.android.showkase.screenshot.testing" +
