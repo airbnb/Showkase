@@ -4,16 +4,31 @@ plugins {
 }
 apply from: "$rootDir/publishing.gradle"
 
-// Added to resolve this error
-// /home/runner/work/Showkase/Showkase/showkase-screenshot-testing-paparazzi/build.gradle:
-// Error: commons-logging defines classes that conflict with classes now provided by Android.
-// Solutions include finding newer versions or alternative libraries that don't have the same
-// problem (for example, for httpclient use HttpUrlConnection or okhttp instead), or repackaging
-// the library using something like jarjar. [DuplicatePlatformClasses]
 configurations {
     all {
+        // Added to resolve this error
+        // /home/runner/work/Showkase/Showkase/showkase-screenshot-testing-paparazzi/build.gradle:
+        // Error: commons-logging defines classes that conflict with classes now provided by Android.
+        // Solutions include finding newer versions or alternative libraries that don't have the same
+        // problem (for example, for httpclient use HttpUrlConnection or okhttp instead), or repackaging
+        // the library using something like jarjar. [DuplicatePlatformClasses]
         exclude module: 'httpclient'
         exclude module: 'commons-logging'
+
+        // Added to resolve errors of the type
+        // Caused by: java.lang.RuntimeException: Duplicate class
+        // com.google.protobuf.AbstractMessageLite found in modules protobuf-java-3.4.0
+        // (com.google.protobuf:protobuf-java:3.4.0) and protobuf-lite-3.0.1
+        // (com.google.protobuf:protobuf-lite:3.0.1)
+        exclude module: 'protobuf-lite'
+        // Duplicate class javax.activation.ActivationDataFlavor found in modules
+        // javax.activation-1.2.0 (com.sun.activation:javax.activation:1.2.0) and
+        // javax.activation-api-1.2.0 (javax.activation:javax.activation-api:1.2.0)
+        exclude module: 'javax.activation'
+        // Duplicate class org.hamcrest.BaseDescription found in modules hamcrest-core-1.3
+        // (org.hamcrest:hamcrest-core:1.3) and layoutlib-native-jdk11-2021.2.1-patch1-fa3aa65
+        // (app.cash.paparazzi:layoutlib-native-jdk11:2021.2.1-patch1-fa3aa65)
+        exclude module: 'hamcrest-core'
     }
 }
 
