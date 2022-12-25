@@ -154,8 +154,6 @@ dependencies {
     // Image loading
     implementation deps.imageLoading.picasso
 
-    implementation "app.cash.paparazzi:paparazzi:1.0.0"
-
     // Testing
     testImplementation deps.test.junit
     testImplementation deps.test.junitImplementation

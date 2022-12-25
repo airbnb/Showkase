@@ -55,9 +55,9 @@ android {
 dependencies {
     // Showkase
     api project(':showkase')
-    api deps.test.paparazzi
     api deps.compose.foundation
     api deps.compose.activityCompose
+    implementation deps.test.paparazzi
 
     // Testing
     api deps.test.testParameterInjector
