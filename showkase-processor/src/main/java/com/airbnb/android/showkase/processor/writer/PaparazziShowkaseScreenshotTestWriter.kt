@@ -35,51 +35,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                             .build()
                     )
                     addProperty(addPaparazziTestRuleProperty())
-                    addType(
-                        with(TypeSpec.objectBuilder("PaparazziShowkasePreviewProvider")) {
-                            addSuperinterface(TEST_PARAMETER_VALUES_PROVIDER_CLASSNAME)
-                            addModifiers(KModifier.PRIVATE)
-                            addFunction(
-                                FunSpec.builder("provideValues")
-                                    .addModifiers(KModifier.OVERRIDE)
-                                    .returns(
-                                        LIST.parameterizedBy(
-                                            PAPARAZZI_SHOWKASE_TEST_PREVIEW_CLASS_NAME
-                                        )
-                                    )
-                                    .addCode(
-                                        CodeBlock.builder()
-                                            .add(
-                                                "val metadata = %T.getMetadata()",
-                                                ShowkaseExtensionFunctionsWriter.SHOWKASE_OBJECT_CLASS_NAME
-                                            )
-                                            .addLineBreak()
-                                            .add(
-                                                "val components = %N.componentList.map(::%T)",
-                                                "metadata",
-                                                COMPONENT_TEST_PREVIEW_CLASS_NAME
-                                            )
-                                            .addLineBreak()
-                                            .add(
-                                                "val colors = %N.colorList.map(::%T)",
-                                                "metadata",
-                                                COLOR_TEST_PREVIEW_CLASS_NAME
-                                            )
-                                            .addLineBreak()
-                                            .add(
-                                                "val typography = %N.typographyList.map(::%T)",
-                                                "metadata",
-                                                TYPOGRAPHY_TEST_PREVIEW_CLASS_NAME
-                                            )
-                                            .addLineBreak()
-                                            .add("return components + colors + typography")
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            build()
-                        }
-                    )
+                    addPreviewProvider()
                     addProvider(
                         "PaparazziShowkaseDeviceConfigProvider",
                         LIST.parameterizedBy(DEVICE_CONFIG_CLASS_NAME),
@@ -101,6 +57,52 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
             )
 
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
+    }
+
+    private fun addPreviewProvider() {
+        with(TypeSpec.objectBuilder("PaparazziShowkasePreviewProvider")) {
+            addSuperinterface(TEST_PARAMETER_VALUES_PROVIDER_CLASSNAME)
+            addModifiers(KModifier.PRIVATE)
+            addFunction(
+                FunSpec.builder("provideValues")
+                    .addModifiers(KModifier.OVERRIDE)
+                    .returns(
+                        LIST.parameterizedBy(
+                            PAPARAZZI_SHOWKASE_TEST_PREVIEW_CLASS_NAME
+                        )
+                    )
+                    .addCode(
+                        CodeBlock.builder()
+                            .add(
+                                "val metadata = %T.getMetadata()",
+                                ShowkaseExtensionFunctionsWriter.SHOWKASE_OBJECT_CLASS_NAME
+                            )
+                            .addLineBreak()
+                            .add(
+                                "val components = %N.componentList.map(::%T)",
+                                "metadata",
+                                COMPONENT_TEST_PREVIEW_CLASS_NAME
+                            )
+                            .addLineBreak()
+                            .add(
+                                "val colors = %N.colorList.map(::%T)",
+                                "metadata",
+                                COLOR_TEST_PREVIEW_CLASS_NAME
+                            )
+                            .addLineBreak()
+                            .add(
+                                "val typography = %N.typographyList.map(::%T)",
+                                "metadata",
+                                TYPOGRAPHY_TEST_PREVIEW_CLASS_NAME
+                            )
+                            .addLineBreak()
+                            .add("return components + colors + typography")
+                            .build()
+                    )
+                    .build()
+            )
+            build()
+        }
     }
 
     private fun TypeSpec.Builder.addProvider(
@@ -137,6 +139,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
             .initializer("%N()", "providePaparazzi")
             .build()
 
+    @Suppress("LongMethod")
     private fun TypeSpec.Builder.addTest() {
         addFunction(
             FunSpec.builder("test_previews")
@@ -201,7 +204,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
     }
 
     companion object {
-        private val TEST_PARAMETER_INJECTOR_PACKAGE_NAME =
+        private const val TEST_PARAMETER_INJECTOR_PACKAGE_NAME =
             "com.google.testing.junit.testparameterinjector"
         private val TEST_PARAMETER_INJECTOR_CLASSNAME = ClassName(
             TEST_PARAMETER_INJECTOR_PACKAGE_NAME,
@@ -219,7 +222,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
             TEST_PARAMETER_INJECTOR_PACKAGE_NAME,
             "TestParameter"
         )
-        private val PAPARAZZI_SHOWKASE_ARTIFACT_PACKAGE_NAME =
+        private const val PAPARAZZI_SHOWKASE_ARTIFACT_PACKAGE_NAME =
             "com.airbnb.android.showkase.screenshot.testing.paparazzi"
         private val PAPARAZZI_SHOWKASE_TEST_PREVIEW_CLASS_NAME = ClassName(
             PAPARAZZI_SHOWKASE_ARTIFACT_PACKAGE_NAME,

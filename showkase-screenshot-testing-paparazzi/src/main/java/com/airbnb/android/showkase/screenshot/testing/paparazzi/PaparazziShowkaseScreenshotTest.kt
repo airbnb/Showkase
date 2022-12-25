@@ -90,7 +90,9 @@ class ComponentPaparazziShowkaseTestPreview(
 ) : PaparazziShowkaseTestPreview {
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
-    override fun toString(): String = "${showkaseBrowserComponent.group}_${showkaseBrowserComponent.componentName}_${showkaseBrowserComponent.styleName}"
+    override fun toString(): String =
+        "${showkaseBrowserComponent.group}_${showkaseBrowserComponent.componentName}_" +
+                "${showkaseBrowserComponent.styleName}"
 }
 
 class ColorPaparazziShowkaseTestPreview(
@@ -106,7 +108,8 @@ class ColorPaparazziShowkaseTestPreview(
         )
     }
 
-    override fun toString(): String = "${showkaseBrowserColor.colorGroup}_${showkaseBrowserColor.colorName}"
+    override fun toString(): String =
+        "${showkaseBrowserColor.colorGroup}_${showkaseBrowserColor.colorName}"
 }
 
 class TypographyPaparazziShowkaseTestPreview(
@@ -125,7 +128,8 @@ class TypographyPaparazziShowkaseTestPreview(
         )
     }
 
-    override fun toString(): String = "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
+    override fun toString(): String =
+        "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
 }
 
 data class PaparazziShowkaseDeviceConfig(
