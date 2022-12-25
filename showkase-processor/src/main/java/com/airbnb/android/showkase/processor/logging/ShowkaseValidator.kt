@@ -324,8 +324,6 @@ internal class ShowkaseValidator {
                 val element = elements.first()
                 val showkaseScreenshotTestTypeMirror = environment
                     .requireType(SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
-                val paparazziShowkaseScreenshotTestTypeMirror = environment
-                    .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
 
                 // Validate that the class annotated with @ShowkaseScreenshotTest is an abstract/open
                 // class
@@ -335,23 +333,28 @@ internal class ShowkaseValidator {
                 // ShowkaseScreenshotTest interface
                 val isShowkaseScreenshotTest =
                     showkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
-                val isPaparazziShowkaseScreenshotTest =
-                    paparazziShowkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
-                if (!(isShowkaseScreenshotTest || isPaparazziShowkaseScreenshotTest)) {
+
+                if (isShowkaseScreenshotTest) {
+                   return ScreenshotTestType.SHOWKASE
+                } else if (
+                    environment.findType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
+                        ?.isAssignableFrom(element.type) == true
+                ) {
+                    val paparazziShowkaseScreenshotTestTypeMirror = environment
+                        .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
+                    validatePaparazziShowkaseScreenshotTest(environment, element,
+                        paparazziShowkaseScreenshotTestTypeMirror)
+
+                   return ScreenshotTestType.PAPARAZZI_SHOWKASE
+                } else {
                     throw ShowkaseProcessorException(
-                        "Only an implementation of ${showkaseScreenshotTestTypeMirror.typeName} or " +
-                                "${paparazziShowkaseScreenshotTestTypeMirror.typeName}can be annotated " +
+                        "Only an implementation of com.airbnb.android.showkase.screenshot.testing" +
+                                ".ShowkaseScreenshotTest or com.airbnb.android.showkase.screenshot" +
+                                ".testing.paparazzi.PaparazziShowkaseScreenshotTest can be annotated " +
                                 "with @$showkaseScreenshotAnnotationName",
                         element
                     )
                 }
-                if (isPaparazziShowkaseScreenshotTest) {
-                    validatePaparazziShowkaseScreenshotTest(environment, element,
-                        paparazziShowkaseScreenshotTestTypeMirror)
-                }
-
-                return if (isShowkaseScreenshotTest) ScreenshotTestType.SHOWKASE else
-                    ScreenshotTestType.PAPARAZZI_SHOWKASE
 
                 // TODO(vinaygaba): Validate that the passed root class is annotated with @ShowkaseRoot
                 // and implements [ShowkaseRootModule]
