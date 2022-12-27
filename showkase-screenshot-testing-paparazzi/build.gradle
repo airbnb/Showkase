@@ -29,6 +29,10 @@ configurations {
         // (org.hamcrest:hamcrest-core:1.3) and layoutlib-native-jdk11-2021.2.1-patch1-fa3aa65
         // (app.cash.paparazzi:layoutlib-native-jdk11:2021.2.1-patch1-fa3aa65)
         exclude module: 'hamcrest-core'
+        // Duplicate class androidx.annotation.ChecksSdkIntAtLeast found in modules annotation-1.3.0
+        // (androidx.annotation:annotation:1.3.0) and layoutlib-native-jdk11-2022.1.1-beta4-f5f9f71
+        // (app.cash.paparazzi:layoutlib-native-jdk11:2022.1.1-beta4-f5f9f71)
+        exclude module: 'annotation'
     }
 }
 
@@ -79,7 +83,7 @@ dependencies {
     api project(':showkase')
     api deps.compose.foundation
     api deps.compose.activityCompose
-    implementation deps.test.paparazzi
+    compileOnly deps.test.paparazzi
 
     // Testing
     api deps.test.testParameterInjector
