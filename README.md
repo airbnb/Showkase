@@ -166,7 +166,7 @@ to understand the behavior when you don't pass any properties.
 - Functions that don't have any parameters
 - If it does have a parameter, it has to be annotated with `@PreviewParameter` that is provided a `PreviewParameterProvider` implementation.
 - Stacked `@Preview` and `ShowkaseComposable` annotations are only supported with KSP at the moment. This is because of this [issue](https://youtrack.jetbrains.com/issue/KT-49682).
-- If you use `@Preview` to generate UI in the Showkase app, you have to make them public functions.  If you would like to have private previews, but skip them in during compilation, you can add `skipPrivatePreview`compiler flag:
+- If you use `@Preview` to generate UI in the Showkase app, you have to make them `internal` or `public` functions. If you would like to have private previews, but skip them in during compilation, you can add `skipPrivatePreview`compiler flag:
 
 If you use KSP:
 ```
@@ -387,20 +387,10 @@ val typography = metadata.typographyList
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
-  Since Jetpack Compose is still super early, we haven't started using Compose just yet. However,
-  given our history with declarative UI(we created <a href="https://github.com/airbnb/epoxy">Epoxy</a>), 
-  we are super excited about Compose and are hoping to be able to use it once the API's are more 
-  stable. 
-</details>
-
-<details>
-  <summary>Why did you create this library if you aren't using Compose in production?</summary>
-  One of the biggest barriers to adopting new technology is the lack of tooling that you are 
-  otherwise used to having. We currently have an internal tool that works exactly like Showkase 
-  but for classic Android. We created Showkase to ensure that we have the tooling available to be
-  able to move to Compose in the future. Moreover, we think that this tool would benefit 
-  everyone who's using Compose so we decided to open source it. Hopefully we can learn along with
-  the community and add features that would benefit everyone. 
+  Airbnb has been one of the earliest adopters of Jetpack Compose and has been using it in production since early 2021.
+  Compose is a really critical pillar of our overall Android strategy and we continue to heavily invest in building more
+  tooling on top of it. We <a href="https://www.youtube.com/watch?v=23sNq-N06xU">spoke about our experience</a> of using Jetpack Compose 
+  at Google I/O 2022.
 </details>
 
 <details>
