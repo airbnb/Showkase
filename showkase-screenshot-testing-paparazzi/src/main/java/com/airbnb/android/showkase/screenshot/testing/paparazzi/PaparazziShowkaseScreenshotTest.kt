@@ -23,23 +23,70 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
+import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.ui.padding4x
 import java.util.Locale
 
+/**
+ *
+ * Interface that needs to be implemented for auto-generating screenshot tests that leverage
+ * [Paparazzi]. This is generally used along with the [ShowkaseScreenshot] annotation. You will
+ * typically add the implementation of this interface in your root module that has access to all
+ * your UI elements that you'd like to test. In addition, you need to make sure that the
+ * implementing class is an abstract/open class. Finally, the companion object of your implementation
+ * class needs to implement the [PaparazziShowkaseScreenshotTest.CompanionObject] interface. This
+ * interface provides a mechanism to override the default behavior if you need to.
+ *
+ * <p>
+ * Here's an example of how you would typically use it with the defaults:
+ *
+ * @ShowkaseScreenshotTest
+ * abstract class MyScreenshotTest: PaparazziShowkaseScreenshotTest {
+ *   companion object: PaparazziShowkaseScreenshotTest.CompanionObject
+ * }
+ *
+ * </p>
+ *
+ * Note: Paparazzi requires your screenshot tests to be in a library module. Please ensure that the
+ * class that implements this interface is in a library module, other the Paparazzi integration
+ * won't work as expected.
+ *
+ */
 interface PaparazziShowkaseScreenshotTest {
 
+    /**
+     * Interface that *must* be implemented by the companion object of your [PaparazziShowkaseScreenshotTest]
+     * implementation.
+     */
     interface CompanionObject {
+
+        /**
+         * Returns the [Paparazzi] implementation that should be used when running the screenshot
+         * tests.
+         */
         fun providePaparazzi(): Paparazzi = Paparazzi(maxPercentDifference = 0.0)
 
+        /**
+         * The list of devices that we should run the screenshot tests on. It returns a list
+         * of [PaparazziShowkaseDeviceConfig], which is a wrapper for Paparazzi's [DeviceConfig].
+         */
         fun deviceConfigs(): List<PaparazziShowkaseDeviceConfig> = listOf(
-            PaparazziShowkaseDeviceConfig("Pixel", DeviceConfig.PIXEL)
+            PaparazziShowkaseDeviceConfig()
         )
 
+        /**
+         * The list of layout directions that we should run the screenshot on. By default, the
+         * screenshots are only taken in left-to-right layout direction.
+         */
         fun layoutDirections(): List<LayoutDirection> = listOf(LayoutDirection.Ltr)
 
+        /**
+         * The list of [PaparazziShowkaseUIMode]'s that we should run the screenshots on. Other than
+         * default, you can also toggle dark mode through this setting for your screenshots.
+         */
         fun uiModes(): List<PaparazziShowkaseUIMode> = listOf(PaparazziShowkaseUIMode.DEFAULT)
     }
 
@@ -132,13 +179,21 @@ class TypographyPaparazziShowkaseTestPreview(
         "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
 }
 
+/**
+ * Wrapper class for Paparazzi's [DeviceConfig]. This was needed so that we could have a more
+ * reasonable name for the test using the identifier that you pass to it. By default, the screenshots
+ * are taken on a Pixel 5 device (as per Paparazzi's definition).
+ */
 data class PaparazziShowkaseDeviceConfig(
-    val uniqueIdentifier: String,
-    val deviceConfig: DeviceConfig
+    val uniqueIdentifier: String = "Pixel5",
+    val deviceConfig: DeviceConfig = DeviceConfig.PIXEL_5
 ) {
     override fun toString() = uniqueIdentifier
 }
 
+/**
+ * Enum to represent the [Configuration.uiMode] that the screenshot execute under.
+ */
 enum class PaparazziShowkaseUIMode {
     DEFAULT,
     DARK

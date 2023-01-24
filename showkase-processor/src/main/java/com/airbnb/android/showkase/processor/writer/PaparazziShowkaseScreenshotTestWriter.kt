@@ -22,7 +22,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
         rootModulePackageName: String,
         testClassName: String
     ) {
-        val showkaseScreenshotTestClassName = "${testClassName}_PaparazziShowkaseCodegen"
+        val showkaseScreenshotTestClassName = "${testClassName}_PaparazziShowkaseTest"
         val fileBuilder = getFileBuilder(screenshotTestPackageName, showkaseScreenshotTestClassName)
         fileBuilder
             .addImport(rootModulePackageName, "getMetadata")

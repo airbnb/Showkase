@@ -373,11 +373,12 @@ internal class ShowkaseValidator {
         val companionObjectTypeElements = element.getEnclosedTypeElements().filter {
             it.isCompanionObject()
         }
+        val errorMessage = "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} " +
+                "interface should have a companion object that implements the " +
+                "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface."
         if (companionObjectTypeElements.isEmpty()) {
             throw ShowkaseProcessorException(
-                "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} interface " +
-                        "should have a companion object that implements the " +
-                        "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface.",
+                errorMessage,
                 element
             )
         }
@@ -385,9 +386,7 @@ internal class ShowkaseValidator {
         if (!paparazziShowkaseScreenshotTestCompanionType
                 .isAssignableFrom(companionObjectTypeElements[0].type)) {
             throw ShowkaseProcessorException(
-                "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} interface " +
-                        "should have a companion object that implements the " +
-                        "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface.",
+                errorMessage,
                 element
             )
         }

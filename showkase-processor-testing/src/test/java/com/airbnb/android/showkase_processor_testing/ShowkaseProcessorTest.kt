@@ -212,6 +212,21 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `closed class with PaparazziShowkaseScreenshotTest and ShowkaseScreensho annotation throws compilation error`() {
+        assertCompilationFails("Class annotated with ShowkaseScreenshot needs to be an abstract/open class")
+    }
+
+    @Test
+    fun `class implementing PaparazziShowkaseScreenshotTest but not companion object throws compilation error`() {
+        assertCompilationFails("Classes implementing the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest interface should have a companion object that implements the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest.CompanionObject interface")
+    }
+
+    @Test
+    fun `class implementing PaparazziShowkaseScreenshotTest and companion object implementing different interface throws compilation error`() {
+        assertCompilationFails("Classes implementing the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest interface should have a companion object that implements the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest.CompanionObject interface")
+    }
+
+    @Test
     fun `top level composable function with showkase annotation generates only metadata file`() {
         compileInputsAndVerifyOutputs()
     }
@@ -509,7 +524,17 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `top level composable and class with @ScreenshotTest generates Paparazzi screenshot test for composable`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `top level color and class with @ScreenshotTest generates screenshot test for composable`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `top level color and class with @ScreenshotTest generates paparazzi screenshot test for composable`() {
         compileInputsAndVerifyOutputs()
     }
 
@@ -525,6 +550,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `class with @ScreenshotTest generates screenshot test for all UI elements`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `class with @ScreenshotTest generates paparazzi screenshot test for all UI elements`() {
         compileInputsAndVerifyOutputs()
     }
 

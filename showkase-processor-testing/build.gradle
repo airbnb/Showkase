@@ -83,6 +83,8 @@ dependencies {
     testImplementation deps.test.junit
     testImplementation deps.kotlinCompileTesting
     testImplementation deps.kotlinCompileTestingKsp
+    testImplementation project(':showkase-screenshot-testing-paparazzi')
+    testImplementation deps.test.paparazzi
 }
 
 // Needed for Java17 otherwise these tests failed to run locally.
