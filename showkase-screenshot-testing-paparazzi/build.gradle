@@ -1,0 +1,92 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+apply from: "$rootDir/publishing.gradle"
+
+configurations {
+    all {
+        // Added to resolve this error
+        // /home/runner/work/Showkase/Showkase/showkase-screenshot-testing-paparazzi/build.gradle:
+        // Error: commons-logging defines classes that conflict with classes now provided by Android.
+        // Solutions include finding newer versions or alternative libraries that don't have the same
+        // problem (for example, for httpclient use HttpUrlConnection or okhttp instead), or repackaging
+        // the library using something like jarjar. [DuplicatePlatformClasses]
+        exclude module: 'httpclient'
+        exclude module: 'commons-logging'
+
+        // Added to resolve errors of the type
+        // Caused by: java.lang.RuntimeException: Duplicate class
+        // com.google.protobuf.AbstractMessageLite found in modules protobuf-java-3.4.0
+        // (com.google.protobuf:protobuf-java:3.4.0) and protobuf-lite-3.0.1
+        // (com.google.protobuf:protobuf-lite:3.0.1)
+        exclude module: 'protobuf-lite'
+        // Duplicate class javax.activation.ActivationDataFlavor found in modules
+        // javax.activation-1.2.0 (com.sun.activation:javax.activation:1.2.0) and
+        // javax.activation-api-1.2.0 (javax.activation:javax.activation-api:1.2.0)
+        exclude module: 'javax.activation'
+        // Duplicate class org.hamcrest.BaseDescription found in modules hamcrest-core-1.3
+        // (org.hamcrest:hamcrest-core:1.3) and layoutlib-native-jdk11-2021.2.1-patch1-fa3aa65
+        // (app.cash.paparazzi:layoutlib-native-jdk11:2021.2.1-patch1-fa3aa65)
+        exclude module: 'hamcrest-core'
+        // Duplicate class androidx.annotation.ChecksSdkIntAtLeast found in modules annotation-1.3.0
+        // (androidx.annotation:annotation:1.3.0) and layoutlib-native-jdk11-2022.1.1-beta4-f5f9f71
+        // (app.cash.paparazzi:layoutlib-native-jdk11:2022.1.1-beta4-f5f9f71)
+        exclude module: 'annotation'
+    }
+}
+
+android {
+    namespace 'com.airbnb.android.showkase.screenshot.testing.paparazzi'
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 32
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+        freeCompilerArgs += [
+                '-Xopt-in=kotlin.RequiresOptIn',
+        ]
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/DEPENDENCIES
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+}
+
+dependencies {
+    // Showkase
+    api project(':showkase')
+    api deps.compose.foundation
+    api deps.compose.activityCompose
+    compileOnly deps.test.paparazzi
+
+    // Testing
+    api deps.test.testParameterInjector
+    api deps.test.androidXTestRules
+    api deps.test.androidxTestRunner
+}

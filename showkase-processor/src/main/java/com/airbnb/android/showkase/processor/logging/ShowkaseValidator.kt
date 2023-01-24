@@ -15,6 +15,7 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
+import com.airbnb.android.showkase.processor.ScreenshotTestType
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.COMPOSABLE_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
@@ -306,8 +307,8 @@ internal class ShowkaseValidator {
     internal fun validateShowkaseTestElement(
         elements: Collection<XTypeElement>,
         environment: XProcessingEnv,
-    ) {
-        if (elements.isEmpty()) return
+    ): ScreenshotTestType? {
+        if (elements.isEmpty()) return null
 
         val showkaseScreenshotAnnotationName = ShowkaseScreenshot::class.java.simpleName
 
@@ -330,15 +331,64 @@ internal class ShowkaseValidator {
 
                 // Validate that the class annotated with @ShowkaseScreenshot extends the
                 // ShowkaseScreenshotTest interface
-                requireInterface(
-                    element = element,
-                    interfaceType = showkaseScreenshotTestTypeMirror,
-                    annotationName = showkaseScreenshotAnnotationName,
-                )
+                val isShowkaseScreenshotTest =
+                    showkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
+
+                return if (isShowkaseScreenshotTest) {
+                   ScreenshotTestType.SHOWKASE
+                } else if (
+                    environment.findType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
+                        ?.isAssignableFrom(element.type) == true
+                ) {
+                    val paparazziShowkaseScreenshotTestTypeMirror = environment
+                        .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
+                    validatePaparazziShowkaseScreenshotTest(environment, element,
+                        paparazziShowkaseScreenshotTestTypeMirror)
+
+                   ScreenshotTestType.PAPARAZZI_SHOWKASE
+                } else {
+                    throw ShowkaseProcessorException(
+                        "Only an implementation of com.airbnb.android.showkase.screenshot.testing" +
+                                ".ShowkaseScreenshotTest or com.airbnb.android.showkase.screenshot" +
+                                ".testing.paparazzi.PaparazziShowkaseScreenshotTest can be annotated " +
+                                "with @$showkaseScreenshotAnnotationName",
+                        element
+                    )
+                }
 
                 // TODO(vinaygaba): Validate that the passed root class is annotated with @ShowkaseRoot
                 // and implements [ShowkaseRootModule]
             }
+        }
+    }
+
+    private fun validatePaparazziShowkaseScreenshotTest(
+        environment: XProcessingEnv,
+        element: XTypeElement,
+        paparazziShowkaseScreenshotTestTypeMirror: XType
+    ) {
+        val paparazziShowkaseScreenshotTestCompanionType = environment
+            .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_COMPANION_CLASS_NAME)
+
+        val companionObjectTypeElements = element.getEnclosedTypeElements().filter {
+            it.isCompanionObject()
+        }
+        val errorMessage = "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} " +
+                "interface should have a companion object that implements the " +
+                "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface."
+        if (companionObjectTypeElements.isEmpty()) {
+            throw ShowkaseProcessorException(
+                errorMessage,
+                element
+            )
+        }
+
+        if (!paparazziShowkaseScreenshotTestCompanionType
+                .isAssignableFrom(companionObjectTypeElements[0].type)) {
+            throw ShowkaseProcessorException(
+                errorMessage,
+                element
+            )
         }
     }
 
@@ -377,5 +427,9 @@ internal class ShowkaseValidator {
     companion object {
         private const val SHOWKASE_SCREENSHOT_TEST_CLASS_NAME =
             "com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest"
+        private const val PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME =
+            "com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest"
+        private const val PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_COMPANION_CLASS_NAME =
+            "com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest.CompanionObject"
     }
 }

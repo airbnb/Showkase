@@ -13,7 +13,7 @@ buildscript {
             'detekt'                 : '1.7.4',
             'espresso'               : '3.2.0',
             'gradle'                 : '7.2.1',
-            'junit'                  : '4.13',
+            'junit'                  : '4.13.2',
             'junitImplementation'    : '1.1.2',
             'kotlin'                 : '1.7.10',
             'kotlinCompilerVersion'  : '1.7.0',
@@ -23,6 +23,7 @@ buildscript {
             'ksp'                    : "$KSP_VERSION",
             'ktx'                    : '1.1.0',
             'lifecycle'              : '2.2.0',
+            'paparazzi'              : '1.1.0',
             'picasso'                : '2.8',
             'appcompat'              : '1.4.0',
             'testRunner'             : '1.4.0',
@@ -77,7 +78,8 @@ buildscript {
                     'androidxTestRunner'   : "androidx.test:runner:${versions.testRunner}",
                     'strikt'               : "io.strikt:strikt-core:${versions.strikt}",
                     'shotAndroid'          : "com.karumi:shot-android:${versions.shot}",
-                    'testParameterInjector': "com.google.testparameterinjector:test-parameter-injector:${versions.testParameterInjector}"
+                    'testParameterInjector': "com.google.testparameterinjector:test-parameter-injector:${versions.testParameterInjector}",
+                    'paparazzi'            : "app.cash.paparazzi:paparazzi:${versions.paparazzi}"
             ],
             'material'               : [
                     'material'              : "com.google.android.material:material:${versions.material}",
