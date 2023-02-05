@@ -574,5 +574,10 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         // This functionality is only supported with KSP for now.
         compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
+
+    @Test
+    fun `composable function with custom preview annotation generates output`() {
+        compileInputsAndVerifyOutputs(options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+    }
 }
 

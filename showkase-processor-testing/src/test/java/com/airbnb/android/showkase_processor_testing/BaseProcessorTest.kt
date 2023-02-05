@@ -107,6 +107,7 @@ abstract class BaseProcessorTest {
         if (UPDATE_TEST_OUTPUTS) {
             generatedSources.forEach {
                 println("Generated: ${it.name}")
+                println("Generated: ${it.readText()}")
                 it.copyTo(File(outputDir, it.name))
             }
         } else {

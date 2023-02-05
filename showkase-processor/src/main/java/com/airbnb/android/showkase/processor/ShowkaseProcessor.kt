@@ -20,6 +20,7 @@ import com.airbnb.android.showkase.processor.models.ShowkaseMetadataType
 import com.airbnb.android.showkase.processor.models.getCodegenMetadataTypes
 import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
+import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromCustomAnnotation
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
@@ -60,7 +61,20 @@ class ShowkaseProcessor @JvmOverloads constructor(
     )
 
     override fun getSupportedOptions(): MutableSet<String> {
-        return mutableSetOf("skipPrivatePreviews")
+        val supportedOptions = mutableSetOf<String>()
+        supportedOptions.add("skipPrivatePreviews")
+        supportedOptions.addAll(supportedCustomAnnotationTypeOptions())
+        return supportedOptions
+    }
+
+    // Getting the custom annotations that are supported as an compiler argument
+    private fun supportedCustomAnnotationTypeOptions(): MutableSet<String> {
+        val set = mutableSetOf<String>()
+        environment
+            .options["multiPreviewTypes"]
+            ?.split(",")?.map { it.replace(" ", "") }
+            ?.toSet()?.let { set.addAll(it) }
+        return set
     }
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
@@ -112,7 +126,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
-                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) {
+                    // Writing preview data to a internal annotation to store values through processing
+                    // rounds
+                    ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
+                        element
+                    )
+                    return@mapNotNull processCustomAnnotation(roundEnvironment, element)
+                }
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
                     PREVIEW_SIMPLE_NAME,
@@ -126,6 +147,42 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
             }.flatten().mapNotNull { it }.toSet()
     }
+
+    private fun processCustomAnnotation(
+        roundEnvironment: XRoundEnv,
+        annotation: XTypeElement? = null
+    ): Set<ShowkaseMetadata.Component> {
+        val supportedTypes = mutableListOf<String>()
+        if (annotation != null) supportedTypes.add(annotation.qualifiedName)
+        supportedTypes.addAll(supportedCustomAnnotationTypeOptions())
+        val components = mutableSetOf<ShowkaseMetadata.Component>()
+
+        supportedTypes.map { supportedType ->
+            val annotatedElements = roundEnvironment.getElementsAnnotatedWith(supportedType)
+            annotatedElements.map { annotatedElement ->
+                if (showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
+                    processCustomAnnotation(roundEnvironment, annotatedElement)
+                }
+                showkaseValidator.validateComponentElementOrSkip(
+                    element = annotatedElement,
+                    annotationName = supportedType,
+                )
+                components.addAll(
+                    getShowkaseMetadataFromCustomAnnotation(
+                        element = annotatedElement,
+                        showkaseValidator = showkaseValidator,
+                        supportedType.getCustomAnnotationSimpleName(),
+                    ).toSet()
+                )
+            }
+        }
+        return components
+    }
+
+    private fun String.getCustomAnnotationSimpleName(): String {
+        return this.split(".").last()
+    }
+
 
     private fun writeMetadataFile(
         componentMetadata: Set<ShowkaseMetadata.Component>,
@@ -213,7 +270,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootElement = getShowkaseRootElement(roundEnvironment, environment)
 
         // Showkase test annotation
-        val (screenshotTestElement, screenshotTestType) = getShowkaseScreenshotTestElement(roundEnvironment)
+        val (screenshotTestElement, screenshotTestType) = getShowkaseScreenshotTestElement(
+            roundEnvironment
+        )
 
         var showkaseBrowserProperties = ShowkaseBrowserProperties()
 
@@ -234,8 +293,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         if (screenshotTestElement != null && screenshotTestType != null) {
             // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
-            writeScreenshotTestFiles(screenshotTestElement, screenshotTestType, rootElement,
-                showkaseBrowserProperties)
+            writeScreenshotTestFiles(
+                screenshotTestElement, screenshotTestType, rootElement,
+                showkaseBrowserProperties
+            )
         }
     }
 
