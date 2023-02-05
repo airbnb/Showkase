@@ -12,6 +12,7 @@ import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import com.airbnb.android.showkase.annotation.ShowkaseMultiPreviewCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseTypography
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_PARAMETER_SIMPLE_NAME
 import com.airbnb.android.showkase.processor.ShowkaseProcessor.Companion.PREVIEW_SIMPLE_NAME
@@ -348,6 +349,49 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
             componentIndex = index,
         )
     }
+}
+
+internal fun getShowkaseMetadata(
+    xElement: XMethodElement,
+    customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata,
+    elementIndex: Int,
+    index: Int,
+    showkaseValidator: ShowkaseValidator,
+): ShowkaseMetadata.Component {
+    val commonMetadata = xElement.extractCommonMetadata(showkaseValidator)
+    val previewParamMetadata = xElement.getPreviewParameterMetadata()
+    val isInsideObject =
+        commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_OBJECT
+    val heightDp = if (customPreviewMetadata.showkaseHeight == -1) {
+        null
+    } else {
+        customPreviewMetadata.showkaseHeight
+    }
+    val widthDp = if (customPreviewMetadata.showkaseWidth == -1) {
+        null
+    } else {
+        customPreviewMetadata.showkaseWidth
+    }
+    return ShowkaseMetadata.Component(
+        element = xElement,
+        elementName = xElement.name,
+        packageName = commonMetadata.packageName,
+        packageSimpleName = commonMetadata.moduleName,
+        showkaseName = "${xElement.name} - ${customPreviewMetadata.previewName} - $elementIndex",
+        insideObject = commonMetadata.showkaseFunctionType.insideObject(),
+        previewParameterName = previewParamMetadata?.first,
+        previewParameterProviderType = previewParamMetadata?.second,
+        showkaseGroup = getShowkaseGroup(
+            customPreviewMetadata.previewGroup,
+            commonMetadata.enclosingClass
+        ),
+        showkaseKDoc = commonMetadata.kDoc,
+        enclosingClassName = commonMetadata.enclosingClassName,
+        componentIndex = elementIndex + index,
+        insideWrapperClass = isInsideObject,
+        showkaseHeightDp = heightDp,
+        showkaseWidthDp = widthDp,
+    )
 }
 
 private fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName>? {
