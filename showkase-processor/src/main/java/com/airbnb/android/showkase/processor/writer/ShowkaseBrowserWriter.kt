@@ -35,7 +35,8 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             allShowkaseBrowserProperties.componentsWithPreviewParameters
         )
         val colorCodeBlock = initializeColorCodeBlock(allShowkaseBrowserProperties.colors)
-        val typographyCodeBlock = initializeTypographyCodeBlock(allShowkaseBrowserProperties.typography)
+        val typographyCodeBlock =
+            initializeTypographyCodeBlock(allShowkaseBrowserProperties.typography)
 
         val showkaseRootCodegenAnnotation = initializeShowkaseRootCodegenAnnotation(
             allShowkaseBrowserProperties.componentsWithoutPreviewParameters.size,
@@ -93,7 +94,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 addLineBreak()
                 withDoubleIndent {
                     withParameterPropertyNames.forEachIndexed { index, metadata ->
-                        add("addAll(%M)", MemberName(metadata.propertyPackage, metadata.propertyName))
+                        add(
+                            "addAll(%M)",
+                            MemberName(metadata.propertyPackage, metadata.propertyName)
+                        )
                         if (index != withParameterPropertyNames.lastIndex) {
                             addLineBreak()
                         }
@@ -160,7 +164,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         val moduleName = "Showkase_${element.toString().replace(".", "_")}"
         val generatedClassName =
             "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
-        FileSpec
+
         val previewAnnotations =
             element.getAllAnnotations().filter { it.name == ShowkaseProcessor.PREVIEW_SIMPLE_NAME }
         if (!element.isTypeElement()) return
@@ -188,7 +192,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
 
         fileBuilder.addType(
             TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
-        )
+        ).addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
         try {
             fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
         } catch (fileExists: FileAlreadyExistsException) {

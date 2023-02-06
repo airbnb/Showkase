@@ -1,3 +1,4 @@
+// This is an auto-generated file. Please do not edit/modify this file.
 package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseMultiPreviewCodegenMetadata
