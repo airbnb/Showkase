@@ -62,6 +62,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ShowkaseScreenshot::class.java.name,
         )
         supportedAnnotationTypes.addAll(supportedAnnotationTypes)
+        supportedAnnotationTypes.addAll(supportedCustomAnnotationTypes())
         return supportedAnnotationTypes
     }
 
@@ -73,7 +74,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     // Getting the custom annotations that are supported as an compiler argument
-    private fun supportedCustomAnnotationTypeOptions(): MutableSet<String> {
+    private fun supportedCustomAnnotationTypes(): MutableSet<String> {
         val set = mutableSetOf<String>()
         environment
             .options["multiPreviewTypes"]
@@ -160,7 +161,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         val supportedTypes = mutableListOf<String>()
         if (annotation != null) supportedTypes.add(annotation.qualifiedName)
-        supportedTypes.addAll(supportedCustomAnnotationTypeOptions())
+        supportedTypes.addAll(supportedCustomAnnotationTypes())
         val components = mutableSetOf<ShowkaseMetadata.Component>()
 
         supportedTypes.map { supportedType ->

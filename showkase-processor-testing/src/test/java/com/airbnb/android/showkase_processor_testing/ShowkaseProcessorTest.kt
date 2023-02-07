@@ -577,7 +577,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with custom preview annotation generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
     }
 }
 
