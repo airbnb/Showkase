@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 
 @ShowkaseComposable(name = "name", group = "group")
 @Composable
-fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
+public fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
     
 }
 
-class ParameterProvider : PreviewParameterProvider<String> {
+public class ParameterProvider : PreviewParameterProvider<String> {
     override val values: Sequence<String>
         get() = sequenceOf(
             "String1",

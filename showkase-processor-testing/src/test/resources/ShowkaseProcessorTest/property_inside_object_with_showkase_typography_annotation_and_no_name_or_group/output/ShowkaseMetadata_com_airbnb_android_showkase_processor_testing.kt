@@ -15,9 +15,10 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = true,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingWrapperClassTitle",
     enclosingClass = [WrapperClass::class],
-    showkaseMetadataType = "TYPOGRAPHY"
+    showkaseMetadataType = "TYPOGRAPHY",
   )
-  public fun WrapperClass_Title(): Unit {
+  public fun WrapperClassTitle(): Unit {
   }
 }

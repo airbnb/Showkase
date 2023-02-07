@@ -1,10 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'shot'
 }
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
+    kotlin {
+        sourceSets.configureEach {
+            kotlin.srcDirs += "build/generated/ksp/${it.name}/kotlin"
+        }
+    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
@@ -13,16 +19,15 @@ if (project.hasProperty('useKsp')) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.airbnb.android.showkasesample"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
     }
 
     buildTypes {
@@ -31,7 +36,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -44,7 +49,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.compose}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
 
     }
     // Added to avoid this error -
@@ -56,19 +61,23 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/gradle/incremental.annotation.processors'
     }
-
-//    Seeing two apps being installed simultaneously so commenting this until then
-//    TODO(vinaygaba): Figure out product flavor stuff
-//    flavorDimensions "browser"
-//    productFlavors {
-//        browser {
-//        }
-//    }
 }
+if (project.hasProperty("useKsp")) {
+    ksp {
+        arg("skipPrivatePreviews", "true")
+    }
+} else {
+    kapt {
+        arguments {
+            arg("skipPrivatePreviews", "true")
+        }
+    }
+}
+
 
 dependencies {
     // Showkase dependencies
-    // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors. 
+    // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors.
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
     implementation project(':sample-submodule')
@@ -79,7 +88,6 @@ dependencies {
         kapt project(':showkase-processor')
         kaptAndroidTest project(':showkase-processor')
     }
-    androidTestImplementation project(':showkase-screenshot-testing')
 
     // Support Libraries
     implementation deps.support.appCompat
@@ -105,7 +113,5 @@ dependencies {
     // Testing
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junitImplementation
-
-//    TODO(vinaygaba): Figure out product flavor stuff so that showkase can start as a separate app
-//    browserApi(project(':browser'))
+    androidTestImplementation project(':showkase-screenshot-testing-shot')
 }

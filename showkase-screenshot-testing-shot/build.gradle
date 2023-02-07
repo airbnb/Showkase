@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'shot'
+}
+apply from: "$rootDir/publishing.gradle"
+
+android {
+    compileSdkVersion 32
+    // Added to avoid this error -
+    // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+    // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude("META-INF/*.kotlin_module")
+    }
+    defaultConfig {
+        testApplicationId "com.airbnb.android.showkase.screenshot.testing.shot"
+        minSdkVersion 21
+        targetSdkVersion 32
+        testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    shot {
+        applicationId = "com.airbnb.android.showkase.screenshot.testing.shot"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    // Showkase
+    api project(':showkase')
+    api deps.compose.uiTest
+    api project(':showkase-screenshot-testing')
+    api deps.test.shotAndroid
+
+    // Testing
+    api deps.test.androidXTestCore
+    api deps.test.androidXTestRules
+    api deps.test.androidxTestRunner
+}

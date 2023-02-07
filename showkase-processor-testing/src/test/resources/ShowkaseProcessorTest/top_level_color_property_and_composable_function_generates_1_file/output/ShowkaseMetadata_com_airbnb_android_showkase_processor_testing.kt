@@ -14,10 +14,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingcomponentname",
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
-  public fun component_name(): Unit {
+  public fun componentname(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -29,8 +30,9 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    showkaseMetadataType = "COLOR"
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingcolorname",
+    showkaseMetadataType = "COLOR",
   )
-  public fun color_name(): Unit {
+  public fun colorname(): Unit {
   }
 }

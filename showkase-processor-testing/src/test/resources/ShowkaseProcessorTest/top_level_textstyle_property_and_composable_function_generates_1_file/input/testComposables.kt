@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 
 @ShowkaseComposable("name", "component")
 @Composable
-fun TestComposable() {
+public fun TestComposable() {
     
 }
 
 @ShowkaseTypography("name", "typography")
-val title = TextStyle(
+public val title: TextStyle = TextStyle(
     fontFamily = FontFamily.Cursive
 )

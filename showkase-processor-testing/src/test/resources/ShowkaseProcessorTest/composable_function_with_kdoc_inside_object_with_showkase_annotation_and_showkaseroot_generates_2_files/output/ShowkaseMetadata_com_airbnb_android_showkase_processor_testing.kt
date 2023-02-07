@@ -16,10 +16,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc =
         "This component shows some static text in cursive text style.\n\n Example usage:\n\n ```\n @Composable\n fun MyComposable() { CursiveTextComponentPreview() }\n ```",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroupname",
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
-  public fun group_name(): Unit {
+  public fun groupname(): Unit {
   }
 }

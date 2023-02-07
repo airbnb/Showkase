@@ -12,33 +12,41 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
-import java.util.*
+import java.util.Locale
 
 internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessingEnv) {
 
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
     ) {
-        if (showkaseMetadataSet.isEmpty()) return
         val moduleName = showkaseMetadataSet.first().packageName.replace(".", "_")
         val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
             generatedClassName
         )
-            .addComment("This is an auto-generated file. Please do not edit/modify this file.")
+            .addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
 
         val autogenClass = TypeSpec.classBuilder(generatedClassName)
 
         showkaseMetadataSet.forEach { showkaseMetadata ->
-            val name = "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+
+            val name = if (
+                showkaseMetadata is ShowkaseMetadata.Component
+                && showkaseMetadata.componentIndex != null
+                && showkaseMetadata.componentIndex > 0
+            ) {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
+            } else {
+                "${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+            }
             val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
                 && showkaseMetadata.showkaseStyleName != null
             ) {
                 "${name}_${showkaseMetadata.showkaseStyleName}"
             } else {
                 name
-            }.replace(" ", "_")
+            }.filter { it.isLetterOrDigit() }
 
             val annotation = createShowkaseCodegenMetadata(showkaseMetadata)
             showkaseMetadata.enclosingClassName?.let {
@@ -63,7 +71,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
-    private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata) =
+    private fun createShowkaseCodegenMetadata(showkaseMetadata: ShowkaseMetadata): AnnotationSpec.Builder =
         AnnotationSpec.builder(ShowkaseCodegenMetadata::class)
             .addMember("showkaseName = %S", showkaseMetadata.showkaseName)
             .addMember("showkaseGroup = %S", showkaseMetadata.showkaseGroup)
@@ -73,6 +81,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             .addMember("insideObject = ${showkaseMetadata.insideObject}")
             .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
             .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
+            .addMember("generatedPropertyName = %S", generatePropertyNameFromMetadata(showkaseMetadata))
+
 
     private fun addMetadataTypeSpecificProperties(
         showkaseMetadata: ShowkaseMetadata,

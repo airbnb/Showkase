@@ -81,9 +81,23 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `private composable with showkase annotation and skipPrivate option compiles ok`() {
+        val options = mutableMapOf<String, String>()
+        options["skipPrivatePreviews"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
+    }
+
+    @Test
     fun `private composable with preview annotation throws compilation error`() {
         assertCompilationFails("The methods annotated with Preview can't be private as Showkase won't be " +
                 "able to access them otherwise.")
+    }
+
+    @Test
+    fun `private composable with preview annotation and skipPrivate option compiles ok`() {
+        val options = mutableMapOf<String, String>()
+        options["skipPrivatePreviews"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
     }
 
     @Test
@@ -144,6 +158,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `composable previews with multiple parameter providers should indent properly`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `composable function with preview annotation inside class with parameters throws compilation error`() {
         assertCompilationFails("Only classes that don't accept any constructor parameters can " +
                 "hold a @Composable function that's annotated with the @ShowkaseComposable/@Preview " +
@@ -183,13 +202,28 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `open class with no interface but ShowkaseScreenshoTest annotation throws compilation error`() {
         assertCompilationFails(
-            "Only an implementation of com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest can be annotated with @ShowkaseScreenshot"
+            "Only an implementation of com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest or com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest can be annotated with @ShowkaseScreenshot"
         )
     }
 
     @Test
     fun `closed class with right interface and showkasescreenshottest annotation throws compilation error`() {
         assertCompilationFails("Class annotated with ShowkaseScreenshot needs to be an abstract/open class")
+    }
+
+    @Test
+    fun `closed class with PaparazziShowkaseScreenshotTest and ShowkaseScreensho annotation throws compilation error`() {
+        assertCompilationFails("Class annotated with ShowkaseScreenshot needs to be an abstract/open class")
+    }
+
+    @Test
+    fun `class implementing PaparazziShowkaseScreenshotTest but not companion object throws compilation error`() {
+        assertCompilationFails("Classes implementing the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest interface should have a companion object that implements the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest.CompanionObject interface")
+    }
+
+    @Test
+    fun `class implementing PaparazziShowkaseScreenshotTest and companion object implementing different interface throws compilation error`() {
+        assertCompilationFails("Classes implementing the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest interface should have a companion object that implements the com.airbnb.android.showkase.screenshot.testing.paparazzi.PaparazziShowkaseScreenshotTest.CompanionObject interface")
     }
 
     @Test
@@ -238,7 +272,17 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `top level composable function with showkase and showkaseroot with width and height`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `top level composable function with preview and showkaseroot generates 1 file`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `top level composable function with preview and showkaseroot with width and height`() {
         compileInputsAndVerifyOutputs()
     }
 
@@ -470,12 +514,27 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     }
 
     @Test
+    fun `object function with preview annotation and preview parameter and showkaseroot and_long parameter provider name`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `top level composable and class with @ScreenshotTest generates screenshot test for composable`() {
         compileInputsAndVerifyOutputs()
     }
 
     @Test
+    fun `top level composable and class with @ScreenshotTest generates Paparazzi screenshot test for composable`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
     fun `top level color and class with @ScreenshotTest generates screenshot test for composable`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `top level color and class with @ScreenshotTest generates paparazzi screenshot test for composable`() {
         compileInputsAndVerifyOutputs()
     }
 
@@ -492,6 +551,28 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `class with @ScreenshotTest generates screenshot test for all UI elements`() {
         compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `class with @ScreenshotTest generates paparazzi screenshot test for all UI elements`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `composable function with multiple preview functions compiles`() {
+        compileInputsAndVerifyOutputs()
+    }
+
+    @Test
+    fun `composable function with multiple preview annotations stacked generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
+    }
+
+    @Test
+    fun `composable function with multiple showkasecomposable annotations stacked generates output`() {
+        // This functionality is only supported with KSP for now.
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
 }
 

@@ -1,0 +1,163 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+    }
+}
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'app.cash.paparazzi' version "1.1.0"
+}
+
+if (project.hasProperty('useKsp')) {
+    apply plugin: 'com.google.devtools.ksp'
+} else {
+    apply plugin: 'kotlin-kapt'
+    kapt {
+        correctErrorTypes = true
+    }
+}
+
+android {
+    compileSdkVersion 32
+    // Added to avoid this error -
+    // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+    // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude("META-INF/*.kotlin_module")
+    }
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 32
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+// https://github.com/cashapp/paparazzi/issues/409
+tasks.withType(Test).configureEach { task ->
+    task.jvmArgs += [
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+    ]
+}
+
+afterEvaluate {
+    /**
+     * KSP does not currently register kotlin generated sources.
+     * https://github.com/google/ksp/issues/37
+     */
+    if (project.extensions.findByType(com.android.build.gradle.LibraryExtension.class) != null) {
+        project.android.libraryVariants.all { variant ->
+            def variantName = variant.name
+            def outputFolder = new File("build/generated/ksp/$variantName/kotlin")
+            variant.addJavaSourceFoldersToModel(outputFolder)
+            android.sourceSets.getAt(variantName).java {
+                srcDir(outputFolder)
+            }
+
+            // Register the generated unit test sources as well
+            // Note, there is a nuanced different between the name of the directory on disk and the source set name
+            // in AGP.
+            // eg "debugUnitTest"
+            def testDirectoryName = "${variantName}UnitTest"
+            // eg "testDebug"
+            def testSourceSetName = "test${variantName.capitalize()}"
+
+            // Not every module will have test sources, so finding it is optional.
+            android.sourceSets.findByName(testSourceSetName)?.kotlin {
+                def testOutputFolder = new File("build/generated/ksp/$testDirectoryName/kotlin")
+                srcDir(testOutputFolder)
+            }
+        }
+    } else if (project.extensions.findByType(com.android.build.gradle.AbstractAppExtension.class) != null) {
+        project.android.applicationVariants.all { variant ->
+            def variantName = variant.name
+            def outputFolder = new File("build/generated/ksp/$variantName/kotlin")
+            variant.addJavaSourceFoldersToModel(outputFolder)
+            android.sourceSets.getAt(variantName).java {
+                srcDir(outputFolder)
+            }
+
+            // Register the generated unit test sources as well
+            // Note, there is a nuanced different between the name of the directory on disk and the source set name
+            // in AGP.
+            // eg "debugUnitTest"
+            def testDirectoryName = "${variantName}UnitTest"
+            // eg "testDebug"
+            def testSourceSetName = "test${variantName.capitalize()}"
+
+            // Not every module will have test sources, so finding it is optional.
+            android.sourceSets.findByName(testSourceSetName)?.kotlin {
+                def testOutputFolder = new File("build/generated/ksp/$testDirectoryName/kotlin")
+                srcDir(testOutputFolder)
+            }
+        }
+    }
+}
+
+dependencies {
+    // Showkase
+    implementation project(':showkase')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+        kspAndroidTest project(':showkase-processor')
+        kspTest project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+        kaptAndroidTest project(':showkase-processor')
+        kaptTest project(':showkase-processor')
+    }
+    api project(':showkase-screenshot-testing')
+
+    // Compose
+    implementation deps.compose.activityCompose
+    implementation deps.compose.composeRuntime
+    implementation deps.compose.constraintLayout
+    implementation deps.compose.core
+    implementation deps.compose.foundation
+    implementation deps.compose.tooling
+    implementation deps.compose.layout
+    implementation deps.compose.material
+    implementation deps.compose.savedInstanceState
+    implementation deps.compose.uiLiveData
+
+    // Image loading
+    implementation deps.imageLoading.picasso
+
+    // Testing
+    testImplementation deps.test.junit
+    testImplementation deps.test.junitImplementation
+    implementation deps.test.testParameterInjector
+    testImplementation deps.compose.uiTest
+    testImplementation project(':showkase-screenshot-testing-paparazzi')
+}

@@ -1,13 +1,21 @@
 package com.airbnb.android.showkase.ui
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.OnBackPressedDispatcherOwner
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -16,23 +24,31 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,7 +62,9 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCategory
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
+import com.airbnb.android.showkase.ui.SemanticsUtils.lineCountVal
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 internal fun ShowkaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
@@ -57,7 +75,21 @@ internal fun ShowkaseBrowserApp(
     val lightModeConfiguration = Configuration(LocalConfiguration.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_NO
     }
-    CompositionLocalProvider(LocalConfiguration provides lightModeConfiguration) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val backPressedDispatcherOwner = remember {
+        object : OnBackPressedDispatcherOwner {
+            override fun getLifecycle() = lifecycleOwner.lifecycle
+
+            override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
+        }
+    }
+    CompositionLocalProvider(
+        LocalConfiguration provides lightModeConfiguration,
+        LocalInspectionMode provides true,
+        // This is added to make sure that the navigation of the ShowkaseBrowser does not break
+        // when one of the previews has a back press handler in the implementation of the component.
+        LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner
+    ) {
         val navController = rememberNavController()
         Scaffold(
             drawerContent = null,
@@ -66,7 +98,9 @@ internal fun ShowkaseBrowserApp(
             },
             content = {
                 Column(
-                    modifier = Modifier.fillMaxSize().background(color = SHOWKASE_COLOR_BACKGROUND),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = SHOWKASE_COLOR_BACKGROUND),
                 ) {
                     ShowkaseBodyContent(
                         navController,
@@ -89,10 +123,10 @@ internal fun ShowkaseAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     Row(
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .graphicsLayer(shadowElevation = 4f)
-            .padding(padding2x)
-            .height(64.dp),
+            .padding(padding2x),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -107,7 +141,15 @@ internal fun ShowkaseAppBar(
                 showkaseBrowserScreenMetadata.value =
                     showkaseBrowserScreenMetadata.value.copy(searchQuery = it)
             },
-            Modifier.fillMaxWidth(0.75f)
+            Modifier.fillMaxWidth(0.75f),
+            onCloseSearchFieldClick = {
+                showkaseBrowserScreenMetadata.value =
+                    showkaseBrowserScreenMetadata.value.copy(isSearchActive = false)
+            },
+            onClearSearchField = {
+                showkaseBrowserScreenMetadata.value =
+                    showkaseBrowserScreenMetadata.value.copy(searchQuery = "")
+            }
         )
         ShowkaseAppBarActions(
             showkaseBrowserScreenMetadata,
@@ -151,13 +193,48 @@ private fun ShowkaseAppBarTitle(
     currentRoute: String?,
     searchQuery: String?,
     searchQueryValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCloseSearchFieldClick: () -> Unit,
+    onClearSearchField: () -> Unit,
+) {
+
+    AnimatedVisibility(
+        visible = isSearchActive,
+        enter = expandHorizontally(),
+        exit = shrinkHorizontally()
+    ) {
+        ShowkaseSearchField(
+            searchQuery = searchQuery,
+            searchQueryValueChange = searchQueryValueChange,
+            onCloseSearchFieldClick = onCloseSearchFieldClick,
+            onClearSearchField = onClearSearchField,
+        )
+    }
+    AnimatedVisibility(
+        visible = !isSearchActive,
+        enter = slideInHorizontally() + expandIn()
+    ) {
+        AppBarTitle(
+            currentRoute = currentRoute,
+            modifier = modifier,
+            currentGroup = currentGroup,
+            currentComponentName = currentComponentName,
+            currentComponentStyleName = currentComponentStyleName
+        )
+    }
+}
+
+@Composable
+private fun AppBarTitle(
+    modifier: Modifier,
+    currentRoute: String?,
+    currentGroup: String?,
+    currentComponentName: String?,
+    currentComponentStyleName: String?
 ) {
     val context = LocalContext.current
+
     when {
-        isSearchActive -> {
-            ShowkaseSearchField(searchQuery, searchQueryValueChange)
-        }
         currentRoute == ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name -> {
             ToolbarTitle(context.getString(R.string.showkase_title), modifier)
         }
@@ -186,26 +263,42 @@ private fun ShowkaseAppBarTitle(
     }
 }
 
+
 @Composable
 fun ToolbarTitle(
     string: String,
     modifier: Modifier
 ) {
+    val lineCount = remember {
+        mutableStateOf(0)
+    }
+
     Text(
         text = string,
-        modifier = modifier,
+        modifier = modifier then Modifier
+            .padding(vertical = verticalToolbarPadding)
+            .semantics {
+                lineCountVal = lineCount.value
+            },
         style = TextStyle(
             fontSize = 20.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
-        )
+        ),
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis,
+        onTextLayout = {
+            lineCount.value = it.lineCount
+        }
     )
 }
 
 @Composable
 internal fun ShowkaseSearchField(
     searchQuery: String?,
-    searchQueryValueChange: (String) -> Unit
+    searchQueryValueChange: (String) -> Unit,
+    onCloseSearchFieldClick: () -> Unit,
+    onClearSearchField: () -> Unit,
 ) {
     TextField(
         value = searchQuery.orEmpty(),
@@ -220,11 +313,27 @@ internal fun ShowkaseSearchField(
             fontSize = 18.sp,
             fontWeight = FontWeight.W500
         ),
-        modifier = Modifier.testTag("SearchTextField").fillMaxWidth(),
+        modifier = Modifier
+            .testTag("SearchTextField")
+            .fillMaxWidth(),
         leadingIcon = {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
+            IconButton(
+                onClick = onCloseSearchFieldClick,
+                modifier = Modifier.testTag("close_search_bar_tag")
+            ) {
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Icon")
+            }
         },
-        colors = TextFieldDefaults.textFieldColors()
+        colors = TextFieldDefaults.textFieldColors(),
+        trailingIcon = {
+            IconButton(
+                onClick = onClearSearchField,
+                modifier = Modifier.testTag("clear_search_field"),
+                enabled = !searchQuery.isNullOrEmpty()
+            ) {
+                Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear Search Field")
+            }
+        }
     )
 }
 
@@ -253,7 +362,6 @@ private fun ShowkaseAppBarActions(
     }
 }
 
-@Suppress("LongMethod")
 @Composable
 internal fun ShowkaseBodyContent(
     navController: NavHostController,
@@ -262,78 +370,167 @@ internal fun ShowkaseBodyContent(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
+    val startDestination = startDestination(
+        groupedColorsMap,
+        groupedTypographyMap,
+        groupedComponentMap
+    )
     NavHost(
         navController = navController,
-        startDestination = ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name
-    ) {
-        composable(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name) {
-            ShowkaseCategoriesScreen(
-                showkaseBrowserScreenMetadata,
+        startDestination = startDestination,
+        builder = {
+            navGraph(
                 navController,
-                getCategoryMetadataMap(
-                    groupedComponentMap,
-                    groupedColorsMap,
-                    groupedTypographyMap
-                )
-            )
-        }
-        composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) {
-            ShowkaseComponentGroupsScreen(
-                groupedComponentMap,
                 showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
-        composable(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name) {
-            ShowkaseComponentsInAGroupScreen(
-                groupedComponentMap,
-                showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
-        composable(ShowkaseCurrentScreen.COMPONENT_STYLES.name) {
-            ShowkaseComponentStylesScreen(
-                groupedComponentMap,
-                showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
-        composable(ShowkaseCurrentScreen.COMPONENT_DETAIL.name) {
-            ShowkaseComponentDetailScreen(
-                groupedComponentMap,
-                showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
-        composable(ShowkaseCurrentScreen.COLOR_GROUPS.name) {
-            ShowkaseColorGroupsScreen(
                 groupedColorsMap,
-                showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
-        composable(ShowkaseCurrentScreen.COLORS_IN_A_GROUP.name) {
-            ShowkaseColorsInAGroupScreen(
-                groupedColorsMap,
-                showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
-        composable(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name) {
-            ShowkaseTypographyGroupsScreen(
                 groupedTypographyMap,
-                showkaseBrowserScreenMetadata,
-                navController
+                groupedComponentMap
             )
         }
-        composable(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name) {
-            ShowkaseTypographyInAGroupScreen(
-                groupedTypographyMap,
-                showkaseBrowserScreenMetadata,
-                navController
-            )
-        }
+    )
+}
+
+private fun startDestination(
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
+) = when {
+    groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
+        ShowkaseCurrentScreen.COMPONENT_GROUPS.name
+    groupedColorsMap.isOnlyCategory(groupedTypographyMap, groupedComponentMap) ->
+        ShowkaseCurrentScreen.COLOR_GROUPS.name
+    groupedTypographyMap.isOnlyCategory(groupedColorsMap, groupedComponentMap) ->
+        ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name
+    else ->
+        ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name
+}
+
+private fun NavGraphBuilder.navGraph(
+    navController: NavHostController,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
+) = when {
+    groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
+        componentsNavGraph(navController, groupedComponentMap, showkaseBrowserScreenMetadata)
+    groupedColorsMap.isOnlyCategory(groupedTypographyMap, groupedComponentMap) ->
+        colorsNavGraph(navController, groupedColorsMap, showkaseBrowserScreenMetadata)
+    groupedTypographyMap.isOnlyCategory(groupedColorsMap, groupedComponentMap) ->
+        typographyNavGraph(navController, groupedTypographyMap, showkaseBrowserScreenMetadata)
+    else ->
+        fullNavGraph(
+            navController,
+            groupedComponentMap,
+            groupedColorsMap,
+            groupedTypographyMap,
+            showkaseBrowserScreenMetadata
+        )
+}
+
+private fun Map<String, List<*>>.isOnlyCategory(
+    otherCategoryMap1: Map<String, List<*>>,
+    otherCategoryMap2: Map<String, List<*>>
+) = this.values.isNotEmpty() && otherCategoryMap1.isEmpty() && otherCategoryMap2.isEmpty()
+
+private fun NavGraphBuilder.componentsNavGraph(
+    navController: NavHostController,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) {
+        ShowkaseComponentGroupsScreen(
+            groupedComponentMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
     }
+    composable(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP.name) {
+        ShowkaseComponentsInAGroupScreen(
+            groupedComponentMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+    composable(ShowkaseCurrentScreen.COMPONENT_STYLES.name) {
+        ShowkaseComponentStylesScreen(
+            groupedComponentMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+    composable(ShowkaseCurrentScreen.COMPONENT_DETAIL.name) {
+        ShowkaseComponentDetailScreen(
+            groupedComponentMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+}
+
+private fun NavGraphBuilder.colorsNavGraph(
+    navController: NavHostController,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    composable(ShowkaseCurrentScreen.COLOR_GROUPS.name) {
+        ShowkaseColorGroupsScreen(
+            groupedColorsMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+    composable(ShowkaseCurrentScreen.COLORS_IN_A_GROUP.name) {
+        ShowkaseColorsInAGroupScreen(
+            groupedColorsMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+}
+
+private fun NavGraphBuilder.typographyNavGraph(
+    navController: NavHostController,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    composable(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name) {
+        ShowkaseTypographyGroupsScreen(
+            groupedTypographyMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+    composable(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name) {
+        ShowkaseTypographyInAGroupScreen(
+            groupedTypographyMap,
+            showkaseBrowserScreenMetadata,
+            navController
+        )
+    }
+}
+
+private fun NavGraphBuilder.fullNavGraph(
+    navController: NavHostController,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
+    groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
+    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+) {
+    composable(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES.name) {
+        ShowkaseCategoriesScreen(
+            showkaseBrowserScreenMetadata,
+            navController,
+            getCategoryMetadataMap(
+                groupedComponentMap,
+                groupedColorsMap,
+                groupedTypographyMap
+            )
+        )
+    }
+    componentsNavGraph(navController, groupedComponentMap, showkaseBrowserScreenMetadata)
+    colorsNavGraph(navController, groupedColorsMap, showkaseBrowserScreenMetadata)
+    typographyNavGraph(navController, groupedTypographyMap, showkaseBrowserScreenMetadata)
 }
 
 private fun getCategoryMetadataMap(
@@ -359,3 +556,5 @@ private fun Map<String, List<ShowkaseBrowserComponent>>.flatComponentCount() = f
  */
 internal fun NavHostController.navigate(destinationScreen: ShowkaseCurrentScreen) =
     navigate(destinationScreen.name)
+
+private val verticalToolbarPadding = 16.dp

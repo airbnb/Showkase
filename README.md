@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta12-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.0.4-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta17-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.2.1-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -75,23 +75,15 @@ Showkase supports both ksp and kapt. By default, it uses kapt as we only recentl
 #### If you are using kapt
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta12"
-kapt "com.airbnb.android:showkase-processor:1.0.0-beta12"
+implementation "com.airbnb.android:showkase:1.0.0-beta17"
+kapt "com.airbnb.android:showkase-processor:1.0.0-beta17"
 ```
 
 #### If you are using ksp
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta12"
-ksp "com.airbnb.android:showkase-processor:1.0.0-beta12"
+implementation "com.airbnb.android:showkase:1.0.0-beta17"
+ksp "com.airbnb.android:showkase-processor:1.0.0-beta17"
 ```
-
-In addition, you will also need to pass a flag to the gradle command that you use to build/run with showkase. 
-Here's an example of what this would look like:
-
-```
-./gradlew sample:clean sample:build -i -PuseKsp=true
-```
-
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
@@ -173,6 +165,25 @@ to understand the behavior when you don't pass any properties.
 **Note:** Make sure that you add this annotation to only those functions that meet the following criteria:
 - Functions that don't have any parameters
 - If it does have a parameter, it has to be annotated with `@PreviewParameter` that is provided a `PreviewParameterProvider` implementation.
+- Stacked `@Preview` and `ShowkaseComposable` annotations are only supported with KSP at the moment. This is because of this [issue](https://youtrack.jetbrains.com/issue/KT-49682).
+- If you use `@Preview` to generate UI in the Showkase app, you have to make them `internal` or `public` functions. If you would like to have private previews, but skip them in during compilation, you can add `skipPrivatePreview`compiler flag:
+
+If you use KSP:
+```
+ksp {
+ arg("skipPrivatePreviews", "true")
+}
+```
+
+If you use KAPT:
+```
+kapt {
+ arguments {
+  arg("skipPrivatePreviews", "true")
+ }
+}
+```
+
 
 This is identical to how `@Preview` works in Compose as well so Showkase just adheres to the same rules. 
 
@@ -233,7 +244,7 @@ fun MyComposablePreview() {
 }
 ```
 
-**Representing component styles in Showkase**
+###### Representing component styles in Showkase
 
 There are usecases where you might have a component that supports multiple styles. Consider the following example where you have a `CustomButton` composable and it supports 3 different sizes - Large/Medium/Small. You want to be able to document this in Showkase so that your team can visualize what these different styles look like in action. One option would be to treat them as 3 separate components. However this isn't ideal. `ShowkaseComposable` offers two properties that help you represent this information better - `styleName` & `defaultStyle`. Using these properties allow you to describe all the styles offered by a given `Composable` component in an organized manner as they are shown on the same screen in the Showkase browser. 
 
@@ -340,7 +351,7 @@ Here's an example of how you would use it:
 
 ```kotlin
 @ShowkaseRoot
-fun MyRootModule: ShowkaseRootModule
+class MyRootModule: ShowkaseRootModule
 ```
 
 Note: The root module is the main module of your app that has a dependency on all other modules 
@@ -376,20 +387,10 @@ val typography = metadata.typographyList
 ## Frequently Asked Questions
 <details>
   <summary>Is Airbnb using Jetpack Compose in their main app?</summary>
-  Since Jetpack Compose is still super early, we haven't started using Compose just yet. However,
-  given our history with declarative UI(we created <a href="https://github.com/airbnb/epoxy">Epoxy</a>), 
-  we are super excited about Compose and are hoping to be able to use it once the API's are more 
-  stable. 
-</details>
-
-<details>
-  <summary>Why did you create this library if you aren't using Compose in production?</summary>
-  One of the biggest barriers to adopting new technology is the lack of tooling that you are 
-  otherwise used to having. We currently have an internal tool that works exactly like Showkase 
-  but for classic Android. We created Showkase to ensure that we have the tooling available to be
-  able to move to Compose in the future. Moreover, we think that this tool would benefit 
-  everyone who's using Compose so we decided to open source it. Hopefully we can learn along with
-  the community and add features that would benefit everyone. 
+  Airbnb has been one of the earliest adopters of Jetpack Compose and has been using it in production since early 2021.
+  Compose is a really critical pillar of our overall Android strategy and we continue to heavily invest in building more
+  tooling on top of it. We <a href="https://www.youtube.com/watch?v=23sNq-N06xU">spoke about our experience</a> of using Jetpack Compose 
+  at Google I/O 2022.
 </details>
 
 <details>

@@ -3,16 +3,16 @@ import androidx.compose.runtime.Composable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 
-class GeneratedTestComposables {
+public class GeneratedTestComposables {
     @ShowkaseComposable("name", "group")
     @Composable
-    fun TestComposable() {
+    public fun TestComposable() {
         
     }
 }
 
 @ShowkaseRoot
-class RootModule1: ShowkaseRootModule
+public class RootModule1: ShowkaseRootModule
 
 @ShowkaseRoot
-class RootModule2: ShowkaseRootModule
+public class RootModule2: ShowkaseRootModule

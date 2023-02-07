@@ -16,12 +16,13 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = true,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroupname",
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [ParameterProvider::class],
-    previewParameterName = "text"
+    previewParameterName = "text",
   )
-  public fun group_name(): Unit {
+  public fun groupname(): Unit {
   }
 }

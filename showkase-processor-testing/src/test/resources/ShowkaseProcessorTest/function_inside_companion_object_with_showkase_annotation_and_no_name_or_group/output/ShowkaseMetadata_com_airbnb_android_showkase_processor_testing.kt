@@ -15,10 +15,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = true,
     insideWrapperClass = false,
     showkaseKDoc = "",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingWrapperClassTestComposable",
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
-    isDefaultStyle = false
+    isDefaultStyle = false,
   )
-  public fun WrapperClass_TestComposable(): Unit {
+  public fun WrapperClassTestComposable(): Unit {
   }
 }

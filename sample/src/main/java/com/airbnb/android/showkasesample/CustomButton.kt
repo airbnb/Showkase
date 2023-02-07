@@ -45,7 +45,7 @@ fun getPadding(
 fun PreviewCustomButtonDefault() {
     CustomButton(
         text = "Button",
-        onClick = {  }
+        onClick = { }
     )
 }
 
@@ -54,21 +54,20 @@ fun PreviewCustomButtonDefault() {
 fun PreviewCustomButtonMedium() {
     CustomButton(
         text = "Button",
-        onClick = {  },
+        onClick = { },
         size = ButtonSize.Medium
     )
 }
 
 @ShowkaseComposable(name = "CustomButton", group = "Buttons", styleName = "Small")
 @Composable
-fun PreviewCustomButtonSmall() {
+private fun PreviewCustomButtonSmall() {
     CustomButton(
         text = "Button",
-        onClick = {  },
+        onClick = { },
         size = ButtonSize.Small
     )
 }
-
 
 @Suppress("MatchingDeclarationName")
 enum class ButtonSize {

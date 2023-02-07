@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 
-class ParameterProvider : PreviewParameterProvider<String> {
+public class ParameterProvider : PreviewParameterProvider<String> {
     override val values: Sequence<String>
         get() = sequenceOf(
             "String1",
@@ -16,10 +16,10 @@ class ParameterProvider : PreviewParameterProvider<String> {
         get() = super.count
 }
 
-class WrapperClass {
+public class WrapperClass {
     @ShowkaseComposable("name", "group")
     @Composable
-    fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
+    public fun TestComposable(@PreviewParameter(provider = ParameterProvider::class) text: String) {
     
     }
 }

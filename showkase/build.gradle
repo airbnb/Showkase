@@ -1,25 +1,15 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    // Maven artifact publish
-    dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
-    }
-}
-
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-apply plugin: "com.vanniktech.maven.publish"
+apply from: "$rootDir/publishing.gradle"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -46,7 +36,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.compose}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
@@ -75,9 +65,4 @@ dependencies {
     implementation deps.compose.tooling
     implementation deps.compose.layout
     implementation deps.compose.material
-    androidTestImplementation deps.compose.uiTest
-
-    // Unit Testing
-    testImplementation deps.test.junit
-    androidTestImplementation deps.test.junitImplementation
 }

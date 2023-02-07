@@ -1,5 +1,7 @@
 package com.airbnb.android.showkase.processor
 
+import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
@@ -14,15 +16,19 @@ import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorExcepti
 import com.airbnb.android.showkase.processor.logging.ShowkaseExceptionLogger
 import com.airbnb.android.showkase.processor.logging.ShowkaseValidator
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.android.showkase.processor.models.ShowkaseMetadataType
+import com.airbnb.android.showkase.processor.models.getCodegenMetadataTypes
 import com.airbnb.android.showkase.processor.models.getShowkaseColorMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
-import com.airbnb.android.showkase.processor.models.toModel
+import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -36,7 +42,7 @@ class ShowkaseProcessorProvider : SymbolProcessorProvider {
     }
 }
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
+@SupportedSourceVersion(SourceVersion.RELEASE_11) // to support Java 8
 class ShowkaseProcessor @JvmOverloads constructor(
     kspEnvironment: SymbolProcessorEnvironment? = null
 ) : BaseProcessor(kspEnvironment) {
@@ -53,11 +59,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
         ShowkaseScreenshot::class.java.name,
     )
 
+    override fun getSupportedOptions(): MutableSet<String> {
+        return mutableSetOf("skipPrivatePreviews")
+    }
+
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
         val colorMetadata = processColorAnnotation(round)
         val typographyMetadata = processTypographyAnnotation(round, environment)
-
         processShowkaseMetadata(
             roundEnvironment = round,
             componentMetadata = componentMetadata,
@@ -81,37 +90,60 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processShowkaseAnnotation(
         roundEnvironment: XRoundEnv
     ): Set<ShowkaseMetadata.Component> {
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
             .mapNotNull { element ->
-                showkaseValidator.validateComponentElement(
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    ShowkaseComposable::class.java.simpleName
+                    ShowkaseComposable::class.java.simpleName,
+                    skipPrivatePreviews
                 )
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadata(
                     element = element,
                     showkaseValidator = showkaseValidator,
                 )
-            }.toSet()
+            }.flatten().mapNotNull { it }.toSet()
     }
 
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
-                showkaseValidator.validateComponentElement(
+                if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
+                val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    PREVIEW_SIMPLE_NAME
+                    PREVIEW_SIMPLE_NAME,
+                    skipPrivatePreviews
                 )
+                if (skipElement) return@mapNotNull null
                 getShowkaseMetadataFromPreview(
                     element = element,
                     showkaseValidator = showkaseValidator
                 )
-            }.toSet()
+
+            }.flatten().mapNotNull { it }.toSet()
     }
 
-    private fun writeMetadataFile(uniqueComposablesMetadata: Set<ShowkaseMetadata>) {
+    private fun writeMetadataFile(
+        componentMetadata: Set<ShowkaseMetadata.Component>,
+        colorMetadata: Set<ShowkaseMetadata>,
+        typographyMetadata: Set<ShowkaseMetadata>,
+    ): ShowkaseBrowserProperties {
+        val aggregateMetadataList = componentMetadata + colorMetadata + typographyMetadata
+        if (aggregateMetadataList.isEmpty()) return ShowkaseBrowserProperties()
+
         ShowkaseCodegenMetadataWriter(environment).apply {
-            generateShowkaseCodegenFunctions(uniqueComposablesMetadata)
+            generateShowkaseCodegenFunctions(aggregateMetadataList)
+        }
+        ShowkaseBrowserPropertyWriter(environment).apply {
+            return generateMetadataPropertyFiles(
+                componentMetadata = componentMetadata,
+                colorMetadata = colorMetadata,
+                typographyMetadata = typographyMetadata,
+            )
         }
     }
 
@@ -123,12 +155,21 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // only distict method's are passed onto the next round. We do this by deduping on 
         // the combination of packageName, the wrapper class when available(otherwise it 
         // will be null) & the methodName.
-        "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+        if (it.componentIndex != null) {
+            "${it.packageName}_${it.enclosingClassName}_${it.elementName}_${it.componentIndex}"
+        } else {
+
+            "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+        }
     }
         .distinctBy {
             // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app. 
-            "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+            // that they don't show up twice in the browser app.
+            if (it.componentIndex != null) {
+                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
+            } else {
+                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+            }
         }
         .sortedBy {
             "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
@@ -172,30 +213,29 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val rootElement = getShowkaseRootElement(roundEnvironment, environment)
 
         // Showkase test annotation
-        val screenshotTestElement = getShowkaseScreenshotTestElement(roundEnvironment)
+        val (screenshotTestElement, screenshotTestType) = getShowkaseScreenshotTestElement(roundEnvironment)
 
-        var showkaseProcessorMetadata = ShowkaseProcessorMetadata()
+        var showkaseBrowserProperties = ShowkaseBrowserProperties()
 
         // If root element is not present in this module, it means that we only need to write
         // the metadata file for this module so that the root module can use this info to
         // include the composables from this module into the final codegen file.
-        writeMetadataFile(componentMetadata + colorMetadata + typographyMetadata)
+        val currentShowkaseBrowserProperties =
+            writeMetadataFile(componentMetadata, colorMetadata, typographyMetadata)
 
         if (rootElement != null) {
             // This is the module that should aggregate all the other metadata files and
             // also use the showkaseMetadata set from the current round to write the final file.
-            showkaseProcessorMetadata =
-                writeShowkaseFiles(
-                    rootElement,
-                    componentMetadata,
-                    colorMetadata,
-                    typographyMetadata
-                )
+            showkaseBrowserProperties = writeShowkaseFiles(
+                rootElement,
+                currentShowkaseBrowserProperties
+            )
         }
 
-        if (screenshotTestElement != null) {
+        if (screenshotTestElement != null && screenshotTestType != null) {
             // Generate screenshot test file if ShowkaseScreenshotTest is present in the root module
-            writeScreenshotTestFiles(screenshotTestElement, rootElement, showkaseProcessorMetadata)
+            writeScreenshotTestFiles(screenshotTestElement, screenshotTestType, rootElement,
+                showkaseBrowserProperties)
         }
     }
 
@@ -208,50 +248,53 @@ class ShowkaseProcessor @JvmOverloads constructor(
         return showkaseRootElements.singleOrNull() as XTypeElement?
     }
 
-    private fun getShowkaseScreenshotTestElement(roundEnvironment: XRoundEnv): XTypeElement? {
+    private fun getShowkaseScreenshotTestElement(
+        roundEnvironment: XRoundEnv
+    ): Pair<XTypeElement?, ScreenshotTestType?> {
         val testElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshot::class)
             .filterIsInstance<XTypeElement>()
-        showkaseValidator.validateShowkaseTestElement(testElements, environment)
-        return testElements.singleOrNull()
+        val screenshotTestType = showkaseValidator.validateShowkaseTestElement(testElements, environment)
+        return testElements.singleOrNull() to screenshotTestType
     }
 
     private fun writeShowkaseFiles(
         rootElement: XTypeElement,
-        componentMetadata: Set<ShowkaseMetadata.Component>,
-        colorMetadata: Set<ShowkaseMetadata>,
-        typographyMetadata: Set<ShowkaseMetadata>,
-    ): ShowkaseProcessorMetadata {
+        currentShowkaseBrowserProperties: ShowkaseBrowserProperties,
+    ): ShowkaseBrowserProperties {
         val generatedShowkaseMetadataOnClasspath =
             getShowkaseCodegenMetadataOnClassPath(environment)
-        val classpathComponentMetadata =
-            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Component>()
-        val classpathColorMetadata =
-            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Color>()
-        val classpathTypographyMetadata =
-            generatedShowkaseMetadataOnClasspath.filterIsInstance<ShowkaseMetadata.Typography>()
+        val classpathComponentsWithoutParameter = generatedShowkaseMetadataOnClasspath.filter {
+            it.type == ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
+        }
+        val classpathComponentsWithParameter = generatedShowkaseMetadataOnClasspath.filter {
+            it.type == ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER
+        }
+        val classpathColors =
+            generatedShowkaseMetadataOnClasspath.filter {
+                it.type == ShowkaseGeneratedMetadataType.COLOR
+            }
+        val classpathTypography =
+            generatedShowkaseMetadataOnClasspath.filter {
+                it.type == ShowkaseGeneratedMetadataType.TYPOGRAPHY
+            }
 
-        val allComponents = componentMetadata + classpathComponentMetadata
-        val allColors = colorMetadata + classpathColorMetadata
-        val allTypography = typographyMetadata + classpathTypographyMetadata
-
-        writeShowkaseBrowserFiles(
-            rootElement,
-            allComponents,
-            allColors,
-            allTypography,
+        val classpathShowkaseBrowserProperties = ShowkaseBrowserProperties(
+            componentsWithoutPreviewParameters = classpathComponentsWithoutParameter,
+            componentsWithPreviewParameters = classpathComponentsWithParameter,
+            colors = classpathColors,
+            typography = classpathTypography
         )
+        val allShowkaseBrowserProperties = currentShowkaseBrowserProperties + classpathShowkaseBrowserProperties
+        writeShowkaseBrowserFiles(rootElement, allShowkaseBrowserProperties)
 
-        return ShowkaseProcessorMetadata(
-            components = allComponents,
-            colors = allColors,
-            typography = allTypography
-        )
+        return allShowkaseBrowserProperties
     }
 
     private fun writeScreenshotTestFiles(
         screenshotTestElement: XTypeElement,
+        screenshotTestType: ScreenshotTestType,
         rootElement: XTypeElement?,
-        showkaseProcessorMetadata: ShowkaseProcessorMetadata,
+        showkaseBrowserProperties: ShowkaseBrowserProperties,
     ) {
         val testClassName = screenshotTestElement.name
         val screenshotTestPackageName = screenshotTestElement.packageName
@@ -269,15 +312,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
             // If the specified root element is the being processed in the current processing round,
             // use it directly instead of looking for it in the class path. This is because it won't
             // be availabe in the classpath just yet.
-            val (_, showkaseMetadataWithoutParameterList) =
-                showkaseProcessorMetadata.components.filterIsInstance<ShowkaseMetadata.Component>()
-                    .partition {
-                        it.previewParameterProviderType != null
-                    }
             ShowkaseTestMetadata(
-                componentsSize = showkaseMetadataWithoutParameterList.size,
-                showkaseProcessorMetadata.colors.size,
-                showkaseProcessorMetadata.typography.size,
+                componentsSize = showkaseBrowserProperties.componentsWithoutPreviewParameters.size,
+                showkaseBrowserProperties.colors.size,
+                showkaseBrowserProperties.typography.size,
             )
         } else {
             getShowkaseRootCodegenOnClassPath(specifiedRootClassTypeElement)?.let { showkaseRootCodegenAnnotation ->
@@ -296,11 +334,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
 
         writeShowkaseScreenshotTestFile(
-            // We only handle composables without preview parameter for screenshots. This is because
-            // there's no way to get information about how many previews are dynamically generated using
-            // preview parameter as it happens on run time and our codegen doesn't get enough information
-            // to be able to predict how many extra composables the preview parameters extrapolate to.
-            // TODO(vinaygaba): Add screenshot testing support for composabable with preview parameters as well
+            screenshotTestType,
             showkaseTestMetadata.componentsSize,
             showkaseTestMetadata.colorsSize,
             showkaseTestMetadata.typographySize,
@@ -320,7 +354,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
             )
     }
 
-    private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv): Set<ShowkaseMetadata> {
+    private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv):
+            Set<ShowkaseGeneratedMetadata> {
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
@@ -331,10 +366,38 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     else -> element to codegenMetadataAnnotation
                 }
             }
-            .map { it.second.toModel(it.first) }
+            .map {
+                it.second.toShowkaseGeneratedMetadata(it.first)
+            }
             .toSet()
     }
 
+    private fun XAnnotationBox<ShowkaseCodegenMetadata>.toShowkaseGeneratedMetadata(element: XElement):
+            ShowkaseGeneratedMetadata {
+        val (_, previewParameterClassType) = getCodegenMetadataTypes()
+
+        // The box is needed to get all Class values, primitives can be accessed dirctly
+        val props = value
+        val type = ShowkaseMetadataType.valueOf(props.showkaseMetadataType)
+
+        return ShowkaseGeneratedMetadata(
+            element = element,
+            propertyName = props.generatedPropertyName,
+            propertyPackage = props.packageName,
+            type = when(type) {
+                ShowkaseMetadataType.COLOR -> ShowkaseGeneratedMetadataType.COLOR
+                ShowkaseMetadataType.TYPOGRAPHY -> ShowkaseGeneratedMetadataType.TYPOGRAPHY
+                ShowkaseMetadataType.COMPONENT -> if (previewParameterClassType != null) {
+                    ShowkaseGeneratedMetadataType.COMPONENTS_WITH_PARAMETER
+                } else {
+                    ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
+                }
+            },
+            group = props.showkaseGroup,
+            name = props.showkaseName,
+            isDefaultStyle = props.isDefaultStyle,
+        )
+    }
     private fun getShowkaseRootCodegenOnClassPath(
         specifiedRootClassTypeElement: XTypeElement
     ): ShowkaseRootCodegen? {
@@ -345,20 +408,17 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     private fun writeShowkaseBrowserFiles(
         rootElement: XTypeElement,
-        componentsMetadata: Set<ShowkaseMetadata.Component>,
-        colorsMetadata: Set<ShowkaseMetadata>,
-        typographyMetadata: Set<ShowkaseMetadata>,
+        allShowkaseBrowserProperties: ShowkaseBrowserProperties,
     ) {
-        if (componentsMetadata.isEmpty() && colorsMetadata.isEmpty() && typographyMetadata.isEmpty()) return
+        if (allShowkaseBrowserProperties.isEmpty()) return
         val rootModuleClassName = rootElement.name
         val rootModulePackageName = rootElement.packageName
-        showkaseValidator.validateShowkaseComponents(componentsMetadata)
+
+        showkaseValidator.validateShowkaseComponents(allShowkaseBrowserProperties)
 
         ShowkaseBrowserWriter(environment).apply {
             generateShowkaseBrowserFile(
-                componentsMetadata,
-                colorsMetadata,
-                typographyMetadata,
+                allShowkaseBrowserProperties,
                 rootModulePackageName,
                 rootModuleClassName
             )
@@ -375,6 +435,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     @Suppress("LongParameterList")
     private fun writeShowkaseScreenshotTestFile(
+        screenshotTestType: ScreenshotTestType,
         componentsSize: Int,
         colorsSize: Int,
         typographySize: Int,
@@ -382,40 +443,72 @@ class ShowkaseProcessor @JvmOverloads constructor(
         rootModulePackageName: String,
         testClassName: String,
     ) {
-        ShowkaseScreenshotTestWriter(environment).apply {
-            generateScreenshotTests(
-                componentsSize,
-                colorsSize,
-                typographySize,
-                screenshotTestPackageName,
-                rootModulePackageName,
-                testClassName
-            )
+        when(screenshotTestType) {
+            // We only handle composables without preview parameter for screenshots. This is because
+            // there's no way to get information about how many previews are dynamically generated using
+            // preview parameter as it happens on run time and our codegen doesn't get enough information
+            // to be able to predict how many extra composables the preview parameters extrapolate to.
+            // TODO(vinaygaba): Add screenshot testing support for composabable with preview
+            //  parameters as well
+            ScreenshotTestType.SHOWKASE -> {
+                ShowkaseScreenshotTestWriter(environment).apply {
+                    generateScreenshotTests(
+                        componentsSize,
+                        colorsSize,
+                        typographySize,
+                        screenshotTestPackageName,
+                        rootModulePackageName,
+                        testClassName
+                    )
+                }
+            }
+            ScreenshotTestType.PAPARAZZI_SHOWKASE -> {
+                PaparazziShowkaseScreenshotTestWriter(environment).apply {
+                    generateScreenshotTests(
+                        screenshotTestPackageName,
+                        rootModulePackageName,
+                        testClassName
+                    )
+                }
+            }
         }
     }
-
-    private data class ShowkaseProcessorMetadata(
-        val components: Set<ShowkaseMetadata> = setOf(),
-        val colors: Set<ShowkaseMetadata> = setOf(),
-        val typography: Set<ShowkaseMetadata> = setOf(),
-    )
 
     private data class ShowkaseTestMetadata(
         val componentsSize: Int,
         val colorsSize: Int,
         val typographySize: Int,
     )
-
     companion object {
-        const val COMPOSABLE_CLASS_NAME = "androidx.compose.runtime.Composable"
-        const val COMPOSABLE_SIMPLE_NAME = "Composable"
-        const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
-        const val PREVIEW_SIMPLE_NAME = "Preview"
-        const val PREVIEW_PARAMETER_CLASS_NAME =
-            "androidx.compose.ui.tooling.preview.PreviewParameter"
-        const val PREVIEW_PARAMETER_SIMPLE_NAME = "PreviewParameter"
-        const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
-        const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
+        internal const val COMPOSABLE_SIMPLE_NAME = "Composable"
+        internal const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
+        internal const val PREVIEW_SIMPLE_NAME = "Preview"
+        internal const val PREVIEW_PARAMETER_SIMPLE_NAME = "PreviewParameter"
+        internal const val TYPE_STYLE_CLASS_NAME = "androidx.compose.ui.text.TextStyle"
+        internal const val CODEGEN_PACKAGE_NAME = "com.airbnb.android.showkase"
     }
+}
+
+internal data class ShowkaseGeneratedMetadata(
+    val propertyName: String,
+    val propertyPackage: String,
+    val type: ShowkaseGeneratedMetadataType,
+    val element: XElement,
+    val group: String,
+    val name: String,
+    // This property is only used for components
+    val isDefaultStyle: Boolean = false
+)
+
+internal enum class ShowkaseGeneratedMetadataType {
+    COMPONENTS_WITH_PARAMETER,
+    COMPONENTS_WITHOUT_PARAMETER,
+    COLOR,
+    TYPOGRAPHY
+}
+
+internal enum class ScreenshotTestType {
+    SHOWKASE,
+    PAPARAZZI_SHOWKASE
 }
 

@@ -87,7 +87,7 @@ internal class ShowkaseExtensionFunctionsWriter(
         returns(SHOWKASE_ELEMENTS_METADATA_CLASS_NAME)
         addKdoc("Helper function that's give's you access to Showkase metadata. This contains " +
                 "data about the composables, colors and typography in your codebase that's " +
-                "rendered in showakse.")
+                "rendered in showkase.")
         addCode(
             CodeBlock.Builder()
                 .indent()

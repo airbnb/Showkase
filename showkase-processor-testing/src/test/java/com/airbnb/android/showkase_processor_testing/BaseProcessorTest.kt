@@ -5,6 +5,7 @@ import com.airbnb.android.showkase.processor.ShowkaseProcessorProvider
 import com.google.common.io.Resources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspArgs
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,7 @@ import java.io.File
  * Temporarily set this to true to have the test runner update test resource file expected outputs
  * instead of failing tests on mismatch. Use this to easily update expected outputs.
  */
-const val UPDATE_TEST_OUTPUTS = false
+const val UPDATE_TEST_OUTPUTS = true
 
 abstract class BaseProcessorTest {
     @Rule
@@ -32,6 +33,7 @@ abstract class BaseProcessorTest {
      */
     protected fun compileInputs(
         modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        options: MutableMap<String, String> = mutableMapOf(),
         onCompilation: (mode: Mode, compilation: KotlinCompilation, result: KotlinCompilation.Result) -> Unit
     ) {
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
@@ -41,13 +43,16 @@ abstract class BaseProcessorTest {
 
         modes.forEach { mode ->
             val compilation = KotlinCompilation().apply {
+                kotlincArguments = kotlincArguments + "-Xexplicit-api=strict"
                 sources = inputDir.listFiles()?.toList().orEmpty().map { SourceFile.fromPath(it) }
                 when (mode) {
                     Mode.KSP -> {
                         symbolProcessorProviders = listOf(ShowkaseProcessorProvider())
+                        kspArgs = options
                     }
                     Mode.KAPT -> {
                         annotationProcessors = listOf(ShowkaseProcessor())
+                        kaptArgs = options
                     }
                 }
                 inheritClassPath = true
@@ -70,8 +75,11 @@ abstract class BaseProcessorTest {
         }
     }
 
-    protected fun compileInputsAndVerifyOutputs() {
-        compileInputs { mode, compilation, result ->
+    protected fun compileInputsAndVerifyOutputs(
+        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        options: MutableMap<String, String> = mutableMapOf(),
+    ) {
+        compileInputs(modes = modes, options = options) { mode, compilation, result ->
             result.assertGeneratedSources(mode, compilation)
         }
     }
@@ -91,7 +99,7 @@ abstract class BaseProcessorTest {
         }
         outputDir.mkdirs()
 
-        val generatedSources = when (mode){
+        val generatedSources = when (mode) {
             Mode.KSP -> compilation.kspSourcesDir.walk().filter { it.isFile }.toList()
             Mode.KAPT -> sourcesGeneratedByAnnotationProcessor
         }

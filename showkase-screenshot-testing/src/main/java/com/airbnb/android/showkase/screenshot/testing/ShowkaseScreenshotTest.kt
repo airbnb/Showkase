@@ -52,6 +52,7 @@ import java.util.*
  * that the class you annotate with [ShowkaseScreenshot] is either abstract or open as Showkase
  * generates a class that extends this class in order to get access to theonScreenshot method.
  */
+@Suppress("Detekt.TooGenericExceptionCaught", "Detekt.TooGenericExceptionThrown")
 interface ShowkaseScreenshotTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule
@@ -87,67 +88,86 @@ interface ShowkaseScreenshotTest {
     fun takeComposableScreenshot(
         showkaseBrowserComponent: ShowkaseBrowserComponent
     ) {
-        // Disable animations for screenshots to make them deterministic
-        composeTestRule.mainClock.autoAdvance = false
-        composeTestRule.setContent { showkaseBrowserComponent.component() }
-        val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
-        onScreenshot(
-            id = showkaseBrowserComponent.componentKey,
-            name = showkaseBrowserComponent.componentName,
-            group = showkaseBrowserComponent.group,
-            styleName = showkaseBrowserComponent.styleName,
-            screenshotType = ShowkaseScreenshotType.Composable,
-            screenshotBitmap = bitmap,
-        )
+        try {
+            // Disable animations for screenshots to make them deterministic
+            composeTestRule.mainClock.autoAdvance = false
+            composeTestRule.setContent { showkaseBrowserComponent.component() }
+            val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
+            onScreenshot(
+                id = showkaseBrowserComponent.componentKey,
+                name = showkaseBrowserComponent.componentName,
+                group = showkaseBrowserComponent.group,
+                styleName = showkaseBrowserComponent.styleName,
+                screenshotType = ShowkaseScreenshotType.Composable,
+                screenshotBitmap = bitmap,
+            )
+        } catch (e: Throwable) {
+            throw RuntimeException(
+                "Failure while screenshotting component $showkaseBrowserComponent",
+                e
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun takeTypographyScreenshot(
         showkaseBrowserTypography: ShowkaseBrowserTypography
     ) {
-        // Disable animations for screenshots to make them deterministic
-        composeTestRule.mainClock.autoAdvance = false
-        composeTestRule.setContent {
-            BasicText(
-                text = showkaseBrowserTypography.typographyName.replaceFirstChar {
-                    it.titlecase(Locale.getDefault())
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(padding4x),
-                style = showkaseBrowserTypography.textStyle
+        try {
+            // Disable animations for screenshots to make them deterministic
+            composeTestRule.mainClock.autoAdvance = false
+            composeTestRule.setContent {
+                BasicText(
+                    text = showkaseBrowserTypography.typographyName.replaceFirstChar {
+                        it.titlecase(Locale.getDefault())
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(padding4x),
+                    style = showkaseBrowserTypography.textStyle
+                )
+            }
+            val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
+            onScreenshot(
+                id = showkaseBrowserTypography.hashCode().toString(),
+                name = showkaseBrowserTypography.typographyName,
+                group = showkaseBrowserTypography.typographyGroup,
+                screenshotType = ShowkaseScreenshotType.Typography,
+                screenshotBitmap = bitmap,
+            )
+        } catch (e: Throwable) {
+            throw RuntimeException(
+                "Failure while screenshotting typogrpahy $showkaseBrowserTypography",
+                e
             )
         }
-        val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
-        onScreenshot(
-            id = showkaseBrowserTypography.hashCode().toString(),
-            name = showkaseBrowserTypography.typographyName,
-            group = showkaseBrowserTypography.typographyGroup,
-            screenshotType = ShowkaseScreenshotType.Typography,
-            screenshotBitmap = bitmap,
-        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun takeColorScreenshot(
         showkaseBrowserColor: ShowkaseBrowserColor
     ) {
-        // Disable animations for screenshots to make them deterministic
-        composeTestRule.mainClock.autoAdvance = false
-        composeTestRule.setContent {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .height(250.dp)
-                    .background(showkaseBrowserColor.color)
+        try {
+            // Disable animations for screenshots to make them deterministic
+            composeTestRule.mainClock.autoAdvance = false
+            composeTestRule.setContent {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .background(showkaseBrowserColor.color)
+                )
+            }
+            val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
+            onScreenshot(
+                id = showkaseBrowserColor.hashCode().toString(),
+                name = showkaseBrowserColor.colorName,
+                group = showkaseBrowserColor.colorGroup,
+                screenshotType = ShowkaseScreenshotType.Color,
+                screenshotBitmap = bitmap,
             )
+        } catch (e: Throwable) {
+            throw RuntimeException("Failure while screenshotting color $showkaseBrowserColor", e)
         }
-        val bitmap = composeTestRule.onRoot().captureToImage().asAndroidBitmap()
-        onScreenshot(
-            id = showkaseBrowserColor.hashCode().toString(),
-            name = showkaseBrowserColor.colorName,
-            group = showkaseBrowserColor.colorGroup,
-            screenshotType = ShowkaseScreenshotType.Color,
-            screenshotBitmap = bitmap,
-        )
     }
 }
