@@ -96,7 +96,7 @@ interface PaparazziShowkaseScreenshotTest {
         direction: LayoutDirection,
         mode: PaparazziShowkaseUIMode
     ) {
-        paparazzi.snapshot{
+        paparazzi.snapshot(name = testPreview.toString()) {
             val lifecycleOwner = LocalLifecycleOwner.current
             val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
                 Configuration(LocalConfiguration.current).apply {
@@ -113,7 +113,7 @@ interface PaparazziShowkaseScreenshotTest {
                 LocalConfiguration provides configuration,
                 LocalLayoutDirection provides direction,
                 // Needed so that UI that uses it don't crash during screenshot tests
-                LocalOnBackPressedDispatcherOwner provides object: OnBackPressedDispatcherOwner {
+                LocalOnBackPressedDispatcherOwner provides object : OnBackPressedDispatcherOwner {
                     override fun getLifecycle() = lifecycleOwner.lifecycle
 
                     override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
@@ -132,14 +132,16 @@ interface PaparazziShowkaseTestPreview {
     fun Content()
 }
 
+internal const val DELIM = "**"
+
 class ComponentPaparazziShowkaseTestPreview(
-    private val showkaseBrowserComponent: ShowkaseBrowserComponent
+    private val showkaseBrowserComponent: ShowkaseBrowserComponent,
 ) : PaparazziShowkaseTestPreview {
+
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
     override fun toString(): String =
-        "${showkaseBrowserComponent.group}_${showkaseBrowserComponent.componentName}_" +
-                "${showkaseBrowserComponent.styleName}"
+        "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}${showkaseBrowserComponent.styleName}"
 }
 
 class ColorPaparazziShowkaseTestPreview(
@@ -156,7 +158,7 @@ class ColorPaparazziShowkaseTestPreview(
     }
 
     override fun toString(): String =
-        "${showkaseBrowserColor.colorGroup}_${showkaseBrowserColor.colorName}"
+        "${showkaseBrowserColor.colorGroup}${DELIM}${showkaseBrowserColor.colorName}"
 }
 
 class TypographyPaparazziShowkaseTestPreview(
@@ -176,7 +178,7 @@ class TypographyPaparazziShowkaseTestPreview(
     }
 
     override fun toString(): String =
-        "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
+        "${showkaseBrowserTypography.typographyGroup}${DELIM}${showkaseBrowserTypography.typographyName}"
 }
 
 /**
