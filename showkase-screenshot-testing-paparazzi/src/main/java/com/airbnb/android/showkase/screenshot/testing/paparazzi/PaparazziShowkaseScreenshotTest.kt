@@ -28,6 +28,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.ui.padding4x
+import com.android.ide.common.rendering.api.SessionParams
 import java.util.Locale
 
 /**
@@ -67,7 +68,11 @@ interface PaparazziShowkaseScreenshotTest {
          * Returns the [Paparazzi] implementation that should be used when running the screenshot
          * tests.
          */
-        fun providePaparazzi(): Paparazzi = Paparazzi(maxPercentDifference = 0.0)
+        fun providePaparazzi(): Paparazzi = Paparazzi(
+            maxPercentDifference = 0.0,
+            showSystemUi = false,
+            renderingMode = SessionParams.RenderingMode.SHRINK
+        )
 
         /**
          * The list of devices that we should run the screenshot tests on. It returns a list
