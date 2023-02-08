@@ -113,7 +113,7 @@ interface PaparazziShowkaseScreenshotTest {
                 LocalConfiguration provides configuration,
                 LocalLayoutDirection provides direction,
                 // Needed so that UI that uses it don't crash during screenshot tests
-                LocalOnBackPressedDispatcherOwner provides object : OnBackPressedDispatcherOwner {
+                LocalOnBackPressedDispatcherOwner provides object: OnBackPressedDispatcherOwner {
                     override fun getLifecycle() = lifecycleOwner.lifecycle
 
                     override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
@@ -132,7 +132,7 @@ interface PaparazziShowkaseTestPreview {
     fun Content()
 }
 
-internal const val DELIM = "**"
+private const val DELIM = "**"
 
 class ComponentPaparazziShowkaseTestPreview(
     private val showkaseBrowserComponent: ShowkaseBrowserComponent,
