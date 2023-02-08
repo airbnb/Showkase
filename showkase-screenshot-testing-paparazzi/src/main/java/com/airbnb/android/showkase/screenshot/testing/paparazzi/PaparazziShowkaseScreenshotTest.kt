@@ -146,7 +146,8 @@ class ComponentPaparazziShowkaseTestPreview(
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
     override fun toString(): String =
-        "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}${showkaseBrowserComponent.styleName}"
+        "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}" +
+                "${showkaseBrowserComponent.styleName}"
 }
 
 class ColorPaparazziShowkaseTestPreview(
