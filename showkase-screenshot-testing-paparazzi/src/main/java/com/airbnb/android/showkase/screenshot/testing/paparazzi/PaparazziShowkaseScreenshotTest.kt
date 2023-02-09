@@ -70,7 +70,7 @@ interface PaparazziShowkaseScreenshotTest {
          */
         fun providePaparazzi(): Paparazzi = Paparazzi(
             maxPercentDifference = 0.0,
-            showSystemUi = false,
+//            showSystemUi = false,
             renderingMode = SessionParams.RenderingMode.SHRINK
         )
 
