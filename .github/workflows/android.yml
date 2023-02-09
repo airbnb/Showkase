@@ -92,7 +92,7 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=false
+          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=false --debug
 
       - name: Run UI Tests w/ KSP
         uses: reactivecircus/android-emulator-runner@v2
@@ -101,7 +101,7 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
+          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true --debug
 
       - name: Run Screenshot Tests
         uses: reactivecircus/android-emulator-runner@v2
