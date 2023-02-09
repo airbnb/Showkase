@@ -23,7 +23,7 @@ buildscript {
             'ksp'                    : "$KSP_VERSION",
             'ktx'                    : '1.1.0',
             'lifecycle'              : '2.2.0',
-            'paparazzi'              : '1.1.0',
+            'paparazzi'              : '1.2.0',
             'picasso'                : '2.8',
             'appcompat'              : '1.4.0',
             'testRunner'             : '1.4.0',
