@@ -96,7 +96,7 @@ interface PaparazziShowkaseScreenshotTest {
         direction: LayoutDirection,
         mode: PaparazziShowkaseUIMode
     ) {
-        paparazzi.snapshot{
+        paparazzi.snapshot(name = testPreview.toString()) {
             val lifecycleOwner = LocalLifecycleOwner.current
             val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
                 Configuration(LocalConfiguration.current).apply {
@@ -132,13 +132,16 @@ interface PaparazziShowkaseTestPreview {
     fun Content()
 }
 
+private const val DELIM = "**"
+
 class ComponentPaparazziShowkaseTestPreview(
-    private val showkaseBrowserComponent: ShowkaseBrowserComponent
+    private val showkaseBrowserComponent: ShowkaseBrowserComponent,
 ) : PaparazziShowkaseTestPreview {
+
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
     override fun toString(): String =
-        "${showkaseBrowserComponent.group}_${showkaseBrowserComponent.componentName}_" +
+        "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}" +
                 "${showkaseBrowserComponent.styleName}"
 }
 
@@ -156,7 +159,7 @@ class ColorPaparazziShowkaseTestPreview(
     }
 
     override fun toString(): String =
-        "${showkaseBrowserColor.colorGroup}_${showkaseBrowserColor.colorName}"
+        "${showkaseBrowserColor.colorGroup}${DELIM}${showkaseBrowserColor.colorName}"
 }
 
 class TypographyPaparazziShowkaseTestPreview(
@@ -176,7 +179,7 @@ class TypographyPaparazziShowkaseTestPreview(
     }
 
     override fun toString(): String =
-        "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
+        "${showkaseBrowserTypography.typographyGroup}${DELIM}${showkaseBrowserTypography.typographyName}"
 }
 
 /**
