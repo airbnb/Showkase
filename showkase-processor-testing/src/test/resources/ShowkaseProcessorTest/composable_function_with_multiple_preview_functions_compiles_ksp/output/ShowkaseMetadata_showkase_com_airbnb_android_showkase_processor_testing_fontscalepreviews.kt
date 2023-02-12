@@ -4,11 +4,12 @@ package com.airbnb.android.showkase
 import com.airbnb.android.showkase.`annotation`.ShowkaseMultiPreviewCodegenMetadata
 import kotlin.Unit
 
-public class ShowkaseMetadata_showkase_themepreview {
+public class
+    ShowkaseMetadata_showkase_com_airbnb_android_showkase_processor_testing_fontscalepreviews {
   @ShowkaseMultiPreviewCodegenMetadata(
-    previewName = "dark theme",
-    previewGroup = "themes",
-    supportTypeQualifiedName = "com.airbnb.android.showkase_processor_testing.ThemePreview",
+    previewName = "small font",
+    previewGroup = "font scales",
+    supportTypeQualifiedName = "com.airbnb.android.showkase_processor_testing.FontScalePreviews",
     showkaseWidth = -1,
     showkaseHeight = -1,
     packageName = "com.airbnb.android.showkase_processor_testing",
@@ -17,9 +18,9 @@ public class ShowkaseMetadata_showkase_themepreview {
   }
 
   @ShowkaseMultiPreviewCodegenMetadata(
-    previewName = "light theme",
-    previewGroup = "themes",
-    supportTypeQualifiedName = "com.airbnb.android.showkase_processor_testing.ThemePreview",
+    previewName = "large font",
+    previewGroup = "font scales",
+    supportTypeQualifiedName = "com.airbnb.android.showkase_processor_testing.FontScalePreviews",
     showkaseWidth = -1,
     showkaseHeight = -1,
     packageName = "com.airbnb.android.showkase_processor_testing",

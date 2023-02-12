@@ -560,7 +560,15 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with multiple preview functions compiles`() {
-        compileInputsAndVerifyOutputs()
+        // Testing only KAPT here since some of these previews are stacked.
+        // This is yielding different output as repeatable annotations
+        // are not yet supported by KAPT.
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT))
+    }
+
+    @Test
+    fun `composable function with multiple preview functions compiles ksp`() {
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
 
     @Test
@@ -577,7 +585,26 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with custom preview annotation generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+    }
+
+    @Test
+    fun `composable function with repeatable custom preview annotation generates output`() {
+        // This is only supported by KSP for now
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+    }
+
+    @Test
+    fun `composable function with multiple repeatable custom preview annotation generates output`() {
+        // This is only supported by KSP for now
+        compileInputsAndVerifyOutputs(
+            modes = listOf(Mode.KSP),
+            options = mutableMapOf(
+                "multiPreviewTypes" to
+                        "com.airbnb.android.showkase_processor_testing.ThemePreview, " +
+                        "com.airbnb.android.showkase_processor_testing.FontPreview"
+            )
+        )
     }
 }
 

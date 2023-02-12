@@ -67,8 +67,7 @@ fun TestComposable8() {
     BasicText(text = "Test Composable9and10")
 }
 
-// Adding this to see on the UI tests that this compiles.
-// Will remove it when we actually supports MultiPreviewAnnotations.
+
 @Preview(
     name = "Custom Text Light",
     group = "Button",
@@ -81,10 +80,23 @@ fun TestComposable8() {
 )
 annotation class CustomButtonPreview
 
+@Preview(
+    name = "Custom Text Dark",
+    group = "Custom Text",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+annotation class CustomTextPreview
+
 @CustomButtonPreview
 @Composable
 fun PreviewCustomText() {
     BasicText(text = "MultiPreviewAnnotation!")
+}
+
+@CustomTextPreview
+@Composable
+fun PreviewCustomTextLight() {
+    BasicText(text = "CustomPreviewAnnotation!")
 }
 
 @ShowkaseRoot
