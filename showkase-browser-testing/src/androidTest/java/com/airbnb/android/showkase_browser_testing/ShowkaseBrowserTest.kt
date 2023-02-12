@@ -73,8 +73,6 @@ class ShowcaseBrowserTest {
             verifyRowsWithTextAreDisplayed(
                 "Group1 (2)",
                 "Group2 (1)",
-                "Group3 (2)",
-                "Submodule (1)"
             )
         }
     }
@@ -322,6 +320,12 @@ class ShowcaseBrowserTest {
             // Select components
             clickRowWithText("Components ($componentSize)")
 
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
             // Select Group 3
             clickRowWithText("Group3 (2)")
 
@@ -459,7 +463,17 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)")
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
+            // Confirm that we are in the right screen
+            verifyRowsWithTextAreDisplayed("Group3 (2)")
+
 
             // Go back to the landing screen
             goBack()
@@ -559,6 +573,12 @@ class ShowcaseBrowserTest {
 
             // Tap on the "Components" row
             clickRowWithText("Components ($componentSize)")
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
 
             // Select "Group4"
             clickRowWithText("Group4 (1)")
@@ -665,6 +685,12 @@ class ShowcaseBrowserTest {
 
                 waitForIdle()
 
+                onRoot().performTouchInput {
+                    swipeUp()
+                }
+
+                waitForIdle()
+
                 clickRowWithText("Group7 (4)")
 
                 waitForIdle()
@@ -714,6 +740,10 @@ class ShowcaseBrowserTest {
             )
             // Tap on the "Components" row
             clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            onNodeWithText("Custom Size Submodule (1)").performScrollTo()
 
             waitForIdle()
 
