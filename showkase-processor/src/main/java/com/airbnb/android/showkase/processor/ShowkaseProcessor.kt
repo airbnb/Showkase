@@ -65,15 +65,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
         supportedAnnotationTypes.addAll(supportedCustomAnnotationTypes())
         return supportedAnnotationTypes
     }
+    override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews", "multiPreviewTypes")
 
-    override fun getSupportedOptions(): MutableSet<String> {
-        val supportedOptions = mutableSetOf<String>()
-        supportedOptions.add("skipPrivatePreviews")
-        supportedOptions.add("multiPreviewTypes")
-        return supportedOptions
-    }
-
-    // Getting the custom annotations that are supported as an compiler argument
+    // Getting the custom annotations that are supported as an compiler argument.
+    // It is expected to get the compiler argument as follows:
+    // arg("multiPreviewTypes", "com.airbnb.android.submodule.showkasesample.FontPreview")
     private fun supportedCustomAnnotationTypes(): MutableSet<String> {
         val set = mutableSetOf<String>()
         environment
@@ -102,7 +98,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processComponentAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
-        val customPreviewFromClassPathMetadata = processCustomAnnotationFromClasspath(roundEnvironment)
+        val customPreviewFromClassPathMetadata = processCustomAnnotation(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata + customPreviewFromClassPathMetadata)
             .dedupeAndSort()
             .toSet()
@@ -167,20 +163,20 @@ class ShowkaseProcessor @JvmOverloads constructor(
         supportedTypes.map { supportedType ->
             val annotatedElements = roundEnvironment.getElementsAnnotatedWith(supportedType)
             annotatedElements.map { annotatedElement ->
-                if (showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
-                    processCustomAnnotation(roundEnvironment, annotatedElement)
-                }
-                showkaseValidator.validateComponentElementOrSkip(
-                    element = annotatedElement,
-                    annotationName = supportedType,
-                )
-                components.addAll(
-                    getShowkaseMetadataFromCustomAnnotation(
+                if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
+
+                    showkaseValidator.validateComponentElementOrSkip(
                         element = annotatedElement,
-                        showkaseValidator = showkaseValidator,
-                        supportedType.getCustomAnnotationSimpleName(),
-                    ).toSet()
-                )
+                        annotationName = supportedType,
+                    )
+                    components.addAll(
+                        getShowkaseMetadataFromCustomAnnotation(
+                            element = annotatedElement,
+                            showkaseValidator = showkaseValidator,
+                            supportedType.getCustomAnnotationSimpleName(),
+                        ).toSet()
+                    )
+                }
             }
         }
         return components
