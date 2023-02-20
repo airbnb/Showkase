@@ -62,22 +62,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ShowkaseScreenshot::class.java.name,
         )
         supportedAnnotationTypes.addAll(supportedAnnotationTypes)
-        supportedAnnotationTypes.addAll(supportedCustomAnnotationTypes())
         return supportedAnnotationTypes
     }
-    override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews", "multiPreviewTypes")
-
-    // Getting the custom annotations that are supported as an compiler argument.
-    // It is expected to get the compiler argument as follows:
-    // arg("multiPreviewTypes", "com.airbnb.android.submodule.showkasesample.FontPreview")
-    private fun supportedCustomAnnotationTypes(): MutableSet<String> {
-        val set = mutableSetOf<String>()
-        environment
-            .options["multiPreviewTypes"]
-            ?.split(",")?.map { it.replace(" ", "") }
-            ?.toSet()?.let { set.addAll(it) }
-        return set
-    }
+    override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews")
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
@@ -98,7 +85,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processComponentAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         val showkaseComposablesMetadata = processShowkaseAnnotation(roundEnvironment)
         val previewComposablesMetadata = processPreviewAnnotation(roundEnvironment)
-        val customPreviewFromClassPathMetadata = processCustomAnnotation(roundEnvironment)
+        val customPreviewFromClassPathMetadata = processCustomAnnotationFromClasspath(roundEnvironment)
         return (showkaseComposablesMetadata + previewComposablesMetadata + customPreviewFromClassPathMetadata)
             .dedupeAndSort()
             .toSet()
@@ -157,7 +144,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         val supportedTypes = mutableListOf<String>()
         if (annotation != null) supportedTypes.add(annotation.qualifiedName)
-        supportedTypes.addAll(supportedCustomAnnotationTypes())
         val components = mutableSetOf<ShowkaseMetadata.Component>()
 
         supportedTypes.map { supportedType ->
@@ -190,7 +176,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // In this function we are checking generated classpath for MultiPreview codegen annotations.
         // We also check the current module if there is any composables that are annotated with the qualified name
         // from the annotation from classpath. We use the fields from the classpath annotation to build
-        // common data for the ShowkasMetadata.
+        // common data for the ShowkaseMetadata.
 
         // Supported annotations from classpath
         val supportedCustomPreview = environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)

@@ -65,13 +65,11 @@ android {
 if (project.hasProperty("useKsp")) {
     ksp {
         arg("skipPrivatePreviews", "true")
-        arg("multiPreviewTypes", "com.airbnb.android.submodule.showkasesample.FontPreview")
     }
 } else {
     kapt {
         arguments {
             arg("skipPrivatePreviews", "true")
-            arg("multiPreviewTypes", "com.airbnb.android.submodule.showkasesample.FontPreview")
         }
     }
 }

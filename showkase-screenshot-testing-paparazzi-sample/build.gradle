@@ -13,16 +13,10 @@ plugins {
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
-    ksp {
-        arg("multiPreviewTypes", "com.airbnb.android.showkase.screenshot.testing.paparazzi.sample.HighFont")
-    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
-        arguments {
-            arg("multiPreviewTypes", "com.airbnb.android.showkase.screenshot.testing.paparazzi.sample.HighFont")
-        }
     }
 }
 

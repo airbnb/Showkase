@@ -585,18 +585,18 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with custom preview annotation generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP))
     }
 
     @Test
     fun `composable function with custom preview annotation with preview param generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP))
     }
 
     @Test
     fun `composable function with repeatable custom preview annotation generates output`() {
         // This is only supported by KSP for now
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP), options = mutableMapOf("multiPreviewTypes" to "com.airbnb.android.showkase_processor_testing.ThemePreview"))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KSP))
     }
 
     @Test
@@ -604,11 +604,6 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         // This is only supported by KSP for now
         compileInputsAndVerifyOutputs(
             modes = listOf(Mode.KSP),
-            options = mutableMapOf(
-                "multiPreviewTypes" to
-                        "com.airbnb.android.showkase_processor_testing.ThemePreview, " +
-                        "com.airbnb.android.showkase_processor_testing.FontPreview"
-            )
         )
     }
 }
