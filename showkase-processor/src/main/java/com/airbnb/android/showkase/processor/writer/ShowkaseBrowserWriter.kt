@@ -194,11 +194,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         fileBuilder.addType(
             TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
         ).addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
-        try {
-            fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
-        } catch (fileExists: FileAlreadyExistsException) {
-            // Then the annotation already exists in a file and we don't want to write to it.
-        }
+        fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
 
     companion object {

@@ -52,18 +52,15 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private val logger = ShowkaseExceptionLogger()
     private val showkaseValidator = ShowkaseValidator()
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        val supportedAnnotationTypes = mutableSetOf(
+    override fun getSupportedAnnotationTypes() = mutableSetOf(
             ShowkaseComposable::class.java.name,
             PREVIEW_CLASS_NAME,
             ShowkaseColor::class.java.name,
             ShowkaseTypography::class.java.name,
             ShowkaseRoot::class.java.name,
             ShowkaseScreenshot::class.java.name,
+            ShowkaseMultiPreviewCodegenMetadata::class.java.name,
         )
-        supportedAnnotationTypes.addAll(supportedAnnotationTypes)
-        return supportedAnnotationTypes
-    }
     override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews")
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
