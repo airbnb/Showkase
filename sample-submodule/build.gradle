@@ -61,6 +61,7 @@ dependencies {
     
     // Showkase
     implementation project(':showkase')
+    implementation project(':sample-submodule-2')
     if (project.hasProperty('useKsp')) {
         ksp project(':showkase-processor')
     } else {

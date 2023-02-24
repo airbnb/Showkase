@@ -1,16 +1,10 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
-    id 'shot'
 }
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
-    kotlin {
-        sourceSets.configureEach {
-            kotlin.srcDirs += "build/generated/ksp/${it.name}/kotlin"
-        }
-    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
@@ -22,12 +16,10 @@ android {
     compileSdkVersion 32
 
     defaultConfig {
-        applicationId "com.airbnb.android.showkasesample"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -36,10 +28,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '11'
@@ -59,41 +50,22 @@ android {
     packagingOptions {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/gradle/incremental.annotation.processors'
     }
 }
-if (project.hasProperty("useKsp")) {
-    ksp {
-        arg("skipPrivatePreviews", "true")
-    }
-} else {
-    kapt {
-        arguments {
-            arg("skipPrivatePreviews", "true")
-        }
-    }
-}
-
 
 dependencies {
-    // Showkase dependencies
-    // TODO(vinaygaba): Using debugImplementation was causing kapt related NonExistentClass errors.
-    //  Figure out a way to enable using debugImplementation
-    implementation project(':showkase')
-    implementation project(':sample-submodule')
-    implementation project(':sample-submodule-2')
-    if (project.hasProperty('useKsp')) {
-        ksp project(':showkase-processor')
-        kspAndroidTest project(':showkase-processor')
-    } else {
-        kapt project(':showkase-processor')
-        kaptAndroidTest project(':showkase-processor')
-    }
-
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
     implementation deps.support.lifecycleExtensions
+    
+    // Showkase
+    implementation project(':showkase')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+    }
 
     // Compose
     implementation deps.compose.activityCompose
@@ -107,12 +79,4 @@ dependencies {
     implementation deps.compose.savedInstanceState
     implementation deps.compose.uiLiveData
     androidTestImplementation deps.compose.uiTest
-
-    // Image loading
-    implementation deps.imageLoading.picasso
-
-    // Testing
-    testImplementation deps.test.junit
-    androidTestImplementation deps.test.junitImplementation
-    androidTestImplementation project(':showkase-screenshot-testing-shot')
 }

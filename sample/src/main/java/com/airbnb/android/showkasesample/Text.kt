@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding4x
+import com.airbnb.android.submodule.two.showkasesample.LocalePreview
 
 /**
  * This component shows some static text in cursive text style. 
@@ -39,7 +40,9 @@ fun CursiveTextComponent() {
     ShowkaseTheme {
         Card {
             Text(
-                text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+                text = string, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding4x),
                 style = TextStyle(
                     fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Cursive
@@ -59,7 +62,9 @@ fun SerifTextComponentPreview() {
     ShowkaseTheme {
         Card {
             Text(
-                text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+                text = string, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding4x),
                 style = TextStyle(
                     fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Serif
@@ -79,7 +84,9 @@ fun SansSerifTextComponentPreview() {
     ShowkaseTheme {
         Card {
             Text(
-                text = string, modifier = Modifier.fillMaxWidth().padding(padding4x),
+                text = string, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding4x),
                 style = TextStyle(
                     fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
@@ -99,7 +106,9 @@ fun H4TextRowComponentPreview() {
         Card {
             Text(
                 text = string,
-                modifier = Modifier.fillMaxWidth().padding(padding4x),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding4x),
                 style = Material.h4
             )
         }
@@ -128,7 +137,9 @@ fun H6TextRowComponent(text: String) {
         Card {
             Text(
                 text = text,
-                modifier = Modifier.fillMaxWidth().padding(padding4x),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding4x),
                 style = Material.h6
             )
         }
@@ -153,4 +164,10 @@ fun H6TextRowComponentPreviewWithSpecialCharInPreview(
     @PreviewParameter(provider = ParameterProvider::class) person: Person
 ) {
     H6TextRowComponent(person.name)
+}
+
+@LocalePreview
+@Composable
+fun EnglishText() {
+    Text(text = "Some english text")
 }
