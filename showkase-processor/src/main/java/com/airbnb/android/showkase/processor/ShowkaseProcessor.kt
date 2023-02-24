@@ -192,16 +192,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 roundEnvironment
                     .getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
                     .mapIndexed elementRoot@{ elementIndex, xElement ->
-
-                        if (showkaseValidator.checkElementIsAnnotationClass(xElement)) {
-                            // Here we write to metadata to aggregate custom annotation data.
-                            // In this case, it would be a custom annotation that is annotated
-                            // with something custom. Eg. CombinedPreview.
-                            ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
-                                xElement
-                            )
-                            return@elementRoot null
-                        }
                         showkaseValidator.validateComponentElementOrSkip(
                             xElement,
                             customPreviewMetadata.supportTypeQualifiedName,
