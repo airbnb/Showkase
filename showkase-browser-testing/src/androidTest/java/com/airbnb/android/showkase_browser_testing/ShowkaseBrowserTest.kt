@@ -41,9 +41,9 @@ class ShowcaseBrowserTest {
     // in Kotlin 1.6. It will be available in the old backend in Kotlin version 1.7.20.
     // See https://youtrack.jetbrains.com/issue/KT-49682 for more information about this.
     private val componentSize = if (BuildConfig.IS_RUNNING_KSP) {
-        17
+        20
     } else {
-        9
+        10
     }
 
     @Test
@@ -782,6 +782,38 @@ class ShowcaseBrowserTest {
                 onNodeWithText("CustomShape - CustomSize 100 * 100").assertIsDisplayed()
 
             }
+        }
+    }
+
+    @Test
+    fun customStackedSubmoduleTwoPreviewShowsUpInBrowser() {
+
+        composeTestRule.apply {
+
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
+            val composables = if (BuildConfig.IS_RUNNING_KSP) 3 else 1
+
+            clickRowWithText("LocalePreview ($composables)")
+
+            onNodeWithText("Some text In locale").assertIsDisplayed()
+
+            waitForIdle()
+
         }
     }
 }
