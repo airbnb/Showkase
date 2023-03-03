@@ -106,8 +106,6 @@ abstract class BaseProcessorTest {
 
         if (UPDATE_TEST_OUTPUTS) {
             generatedSources.forEach {
-                println("Generated: ${it.name}")
-                println("Generated: ${it.readText()}")
                 it.copyTo(File(outputDir, it.name))
             }
         } else {
@@ -115,7 +113,6 @@ abstract class BaseProcessorTest {
                 .isEqualTo(outputDir.listFiles()?.size ?: 0)
 
             generatedSources.forEach { actualFile ->
-                println("Generated: ${actualFile.name}")
                 val expectedFile = File(outputDir, actualFile.name)
                 assertThat(expectedFile).exists()
                 assertThat(actualFile).hasSameTextualContentAs(expectedFile)

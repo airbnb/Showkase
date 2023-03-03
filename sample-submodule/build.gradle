@@ -9,6 +9,13 @@ if (project.hasProperty('useKsp')) {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
+        arguments {
+            arg(
+                    "multiPreviewType",
+                    "com.airbnb.android.submodule.showkasesample.LocalePreview, com.airbnb.android.submodule.showkasesample.FontPreview"
+            )
+
+        }
     }
 }
 
@@ -61,7 +68,6 @@ dependencies {
     
     // Showkase
     implementation project(':showkase')
-    implementation project(':sample-submodule-2')
     if (project.hasProperty('useKsp')) {
         ksp project(':showkase-processor')
     } else {
