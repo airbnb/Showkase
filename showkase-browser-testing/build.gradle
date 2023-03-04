@@ -7,6 +7,9 @@ if (project.hasProperty('useKsp')) {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
+        arguments {
+            arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
+        }
     }
 }
 
