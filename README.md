@@ -293,6 +293,84 @@ Property Name | Description
 <b>styleName</b> | The name of the style that a given composable represents. This is useful for scenarios where a given component has multiple style variants and you want to organize them through Showkase for better discoverability.
 <b>defaultStyle</b> | A boolean value to denote whether the current composable is using its default style (or the only style if the composable doesn't have other style variants) 
 
+###### Customizing the @ShowkaseComposable annotation
+
+A custom annotation can be used in place of the `@ShowkaseComposable` annotation should extra data or field name customization be desired.
+To use a different annotation class use the following compiler flag with the fully qualified name of the desired annotation class:
+
+If you use KSP:
+```
+ksp {
+ arg("showkaseComposableAnnotation", "com.myapplication.annotations.CustomAnnotation")
+}
+```
+
+If you use KAPT:
+```
+kapt {
+ arguments {
+  arg("showkaseComposableAnnotation", "com.myapplication.annotations.CustomAnnotation")
+ }
+}
+```
+
+This annotation class **must** have at least the same field names and types as `@ShowkaseComposable`. It is possible to customize the
+`name`, `group` and `styleName` fields by passing additional compiler flags (KSP only): 
+
+```
+ksp {
+  arg("showkaseComposableAnnotation", "com.myapplication.annotations.CustomAnnotation")
+  arg("showkaseComposableFieldName", "customName")
+  arg("showkaseComposableFieldGroup", "customGroup")
+  arg("showkaseComposableFieldStyleName", "customStyleName")
+}
+```
+
+This can be useful if certain terms have been standardized in your codebase that differ from Showkase's default terms. Additionally, it's possible 
+to utilize multiple fields for each customized field by delimiting the values with `|`s. When there are multiple fields defined for a customization, 
+only the first non-empty one will be used, based on the order of the field names. For example, perhaps there are multiple ways a style name is set
+but depending on the parameter used it might have different meanings. In this example, `style` means the a canonical style in a design system and 
+`testName` signifies that the preview is only used for test purposes.
+
+```
+ksp {
+  arg("showkaseComposableAnnotation", "com.myapplication.annotations.CustomAnnotation")
+  arg("showkaseComposableFieldStyleName", "style|testName")
+}
+```
+
+```
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class CustomAnnotation(
+    val name: String = "",
+    val group: String = "",
+    val style: String = "",
+    val testName: String = "",
+    val widthDp: Int = -1,
+    val heightDp: Int = -1,
+    val skip: Boolean = false,
+    val defaultStyle: Boolean = false
+)
+```
+
+```
+@ShowkaseComposable(name = "CustomButton", group = "Buttons", style = "Large")
+@Composable
+fun Preview_CustomButton_Large() {
+    CustomButton(size = ButtonSize.Large)
+}
+
+@ShowkaseComposable(name = "CustomButton", group = "Buttons", testName = "Long text")
+@Composable
+fun Preview_CustomButton_WithLongText() {
+    CustomButton(text = LoremIpsum(50).values.joinToString)
+}
+```
+
+This makes it possible to categorize a given preview as representing what a style of a component looks like separately from previews meant for 
+testing edge cases.
+
 ##### 2. @ShowkaseColor
 Used to annotate `Color` properties that should be presented inside the Showkase browser. Here's 
 how you would use it with your `Color` fields:
