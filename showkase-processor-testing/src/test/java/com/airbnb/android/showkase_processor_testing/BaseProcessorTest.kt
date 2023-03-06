@@ -65,8 +65,12 @@ abstract class BaseProcessorTest {
         }
     }
 
-    protected fun assertCompilationFails(errorMessage: String) {
-        compileInputs { _, _, result ->
+    protected fun assertCompilationFails(
+        errorMessage: String,
+        modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        options: MutableMap<String, String> = mutableMapOf()
+    ) {
+        compileInputs(modes = modes, options = options) { _, _, result ->
             assertThat(result.exitCode)
                 .isEqualTo(KotlinCompilation.ExitCode.COMPILATION_ERROR)
 
