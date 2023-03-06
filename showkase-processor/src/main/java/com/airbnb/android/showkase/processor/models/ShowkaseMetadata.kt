@@ -176,12 +176,13 @@ private fun Int.parseAnnotationProperty() = when (this) {
 }
 
 /**
- * Retrieves the value of a field on an annotation, either by using the [environmentOptions] map to read a custom field on a custom annotation or
- * by falling back to a relevant field defined by [ShowkaseComposable].
+ * Retrieves the value of a field on an annotation, either by using the [environmentOptions] map to read a custom
+ * field on a custom annotation or by falling back to a relevant field defined by [ShowkaseComposable].
  *
  * @param environmentOptions The map of custom processor arguments and values set via kapt/ksp in the Gradle file.
  * @param customizedName The custom field name on the annotation to read.
- * @param fallbackField The field of the [ShowkaseComposable] annotation that should be used if the name has not been customized.
+ * @param fallbackField The field of the [ShowkaseComposable] annotation that should be used if the name has not
+ * been customized.
  */
 private fun XAnnotation.getValueWithOptions(
     environmentOptions: Map<String, String>,
@@ -193,7 +194,8 @@ private fun XAnnotation.getValueWithOptions(
         return getAsString(fallbackField.name)
     }.split("|")
     .firstNotNullOfOrNull { fieldName ->
-        // For each delimited value, check to see if a value exists. If so take the first one. If all are blank, return an empty string.
+        // For each delimited value, check to see if a value exists. If so take the first one. If all are blank,
+        // return an empty string.
         (getAnnotationValue(fieldName).value as? String?).takeIf { it?.isNotBlank() == true }
     } ?: ""
 

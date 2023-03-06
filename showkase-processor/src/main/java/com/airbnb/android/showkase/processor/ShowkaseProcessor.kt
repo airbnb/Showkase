@@ -99,7 +99,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
 
-        // If the annotation name has been overridden use that. Otherwise, fall back to the standard ShowkaseComposable annotation
+        // Use the custom annotation name if it has been overridden. Otherwise, fall back to the standard
+        // ShowkaseComposable annotation
         val annotation = environment.options[ShowkaseComposable.AnnotationOverride]?.let { overriddenName ->
             ClassName.get(overriddenName.substringBeforeLast("."), overriddenName.substringAfterLast("."))
         } ?: ClassName.get(ShowkaseComposable::class.java)
