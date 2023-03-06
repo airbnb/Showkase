@@ -132,7 +132,6 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 isDefaultStyle = props.isDefaultStyle
             )
         }
-
         ShowkaseMetadataType.COLOR -> {
             ShowkaseMetadata.Color(
                 packageSimpleName = props.packageSimpleName,
@@ -147,7 +146,6 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 element = element
             )
         }
-
         ShowkaseMetadataType.TYPOGRAPHY -> {
             ShowkaseMetadata.Typography(
                 packageSimpleName = props.packageSimpleName,
