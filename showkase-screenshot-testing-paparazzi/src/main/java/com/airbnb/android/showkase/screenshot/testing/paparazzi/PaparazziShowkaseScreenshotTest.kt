@@ -28,6 +28,7 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.ui.padding4x
+import com.android.ide.common.rendering.api.SessionParams
 import java.util.Locale
 
 /**
@@ -67,7 +68,11 @@ interface PaparazziShowkaseScreenshotTest {
          * Returns the [Paparazzi] implementation that should be used when running the screenshot
          * tests.
          */
-        fun providePaparazzi(): Paparazzi = Paparazzi(maxPercentDifference = 0.0)
+        fun providePaparazzi(): Paparazzi = Paparazzi(
+            maxPercentDifference = 0.0,
+            showSystemUi = false,
+            renderingMode = SessionParams.RenderingMode.SHRINK
+        )
 
         /**
          * The list of devices that we should run the screenshot tests on. It returns a list
@@ -96,7 +101,7 @@ interface PaparazziShowkaseScreenshotTest {
         direction: LayoutDirection,
         mode: PaparazziShowkaseUIMode
     ) {
-        paparazzi.snapshot{
+        paparazzi.snapshot(name = testPreview.toString()) {
             val lifecycleOwner = LocalLifecycleOwner.current
             val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
                 Configuration(LocalConfiguration.current).apply {
@@ -132,13 +137,16 @@ interface PaparazziShowkaseTestPreview {
     fun Content()
 }
 
+private const val DELIM = "**"
+
 class ComponentPaparazziShowkaseTestPreview(
-    private val showkaseBrowserComponent: ShowkaseBrowserComponent
+    private val showkaseBrowserComponent: ShowkaseBrowserComponent,
 ) : PaparazziShowkaseTestPreview {
+
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
     override fun toString(): String =
-        "${showkaseBrowserComponent.group}_${showkaseBrowserComponent.componentName}_" +
+        "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}" +
                 "${showkaseBrowserComponent.styleName}"
 }
 
@@ -156,7 +164,7 @@ class ColorPaparazziShowkaseTestPreview(
     }
 
     override fun toString(): String =
-        "${showkaseBrowserColor.colorGroup}_${showkaseBrowserColor.colorName}"
+        "${showkaseBrowserColor.colorGroup}${DELIM}${showkaseBrowserColor.colorName}"
 }
 
 class TypographyPaparazziShowkaseTestPreview(
@@ -176,7 +184,7 @@ class TypographyPaparazziShowkaseTestPreview(
     }
 
     override fun toString(): String =
-        "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
+        "${showkaseBrowserTypography.typographyGroup}${DELIM}${showkaseBrowserTypography.typographyName}"
 }
 
 /**
