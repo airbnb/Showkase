@@ -67,4 +67,37 @@ annotation class ShowkaseComposable(
     val heightDp: Int = -1,
     val skip: Boolean = false,
     val defaultStyle: Boolean = false
-)
+) {
+    companion object {
+        /** The key of the custom compiler plugin argument that customizes the name of the [ShowkaseComposable] annotation, allowing for a custom
+         * annotation class that has additional fields or custom field names. The value of this argument is expected to be the fully qualified
+         * class name of the annotation (e.g. `com.airbnb.android.showkase.annotation.ShowkaseComposable`). A custom annotation class *must* have the
+         * same fields as [ShowkaseComposable], with the exception of [name], [group], and [styleName] if those fields are customized as well.
+         */
+        const val AnnotationOverride = "showkaseComposableAnnotation"
+
+        /**
+         * The key of the custom compiler plugin argument that customized the name of the [ShowkaseComposable.name] field. This can be useful when the
+         * [name] of the preview has a different connotation in the scope of a codebase. This requires use of the [AnnotationOverride] to customize
+         * the annotation class. It's possible to pass multiple values to this custom field using a `|` delimiter. The first non-empty field will be
+         * used.
+         */
+        const val FieldOverrideName = "showkaseComposableFieldName"
+
+        /**
+         * The key of the custom compiler plugin argument that customized the name of the [ShowkaseComposable.group] field. This can be useful when
+         * the [group] of the preview has a different connotation in the scope of a codebase. This requires use of the [AnnotationOverride] to
+         * customize the annotation class. It's possible to pass multiple values to this custom field using a `|` delimiter. The first non-empty field
+         * will be used.
+         */
+        const val FieldOverrideGroup = "showkaseComposableFieldGroup"
+
+        /**
+         * The key of the custom compiler plugin argument that customized the name of the [ShowkaseComposable.styleName] field. This can be useful
+         * when the [styleName] of the preview has a different connotation in the scope of a codebase. This requires use of the [AnnotationOverride]
+         * to customize the annotation class. It's possible to pass multiple values to this custom field using a `|` delimiter. The first non-empty
+         * field will be used.
+         */
+        const val FieldOverrideStyleName = "showkaseComposableFieldStyleName"
+    }
+}

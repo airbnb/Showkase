@@ -27,6 +27,7 @@ import com.squareup.kotlinpoet.javapoet.toKTypeName
 import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Locale
+import kotlin.reflect.KProperty1
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {
@@ -96,7 +97,7 @@ internal enum class ShowkaseFunctionType {
 }
 
 internal fun ShowkaseFunctionType.insideObject() = this == ShowkaseFunctionType.INSIDE_OBJECT ||
-        this == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
+    this == ShowkaseFunctionType.INSIDE_COMPANION_OBJECT
 
 internal enum class ShowkaseMetadataType {
     COMPONENT,
@@ -131,6 +132,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 isDefaultStyle = props.isDefaultStyle
             )
         }
+
         ShowkaseMetadataType.COLOR -> {
             ShowkaseMetadata.Color(
                 packageSimpleName = props.packageSimpleName,
@@ -145,6 +147,7 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 element = element
             )
         }
+
         ShowkaseMetadataType.TYPOGRAPHY -> {
             ShowkaseMetadata.Typography(
                 packageSimpleName = props.packageSimpleName,
@@ -174,26 +177,65 @@ private fun Int.parseAnnotationProperty() = when (this) {
     else -> this
 }
 
+/**
+ * Retrieves the value of a field on an annotation, either by using the [environmentOptions] map to read a custom field on a custom annotation or
+ * by falling back to a relevant field defined by [ShowkaseComposable].
+ *
+ * @param environmentOptions The map of custom processor arguments and values set via kapt/ksp in the Gradle file.
+ * @param customizedName The custom field name on the annotation to read.
+ * @param fallbackField The field of the [ShowkaseComposable] annotation that should be used if the name has not been customized.
+ */
+private fun XAnnotation.getValueWithOptions(
+    environmentOptions: Map<String, String>,
+    customizedName: String,
+    fallbackField: KProperty1<ShowkaseComposable, String>
+): String = environmentOptions
+    .getOrElse(customizedName) {
+        // Field name has not been customized, use the fallback field and don't split.
+        return getAsString(fallbackField.name)
+    }.split("|")
+    .firstNotNullOfOrNull { fieldName ->
+        // For each delimited value, check to see if a value exists. If so take the first one. If all are blank, return an empty string.
+        (getAnnotationValue(fieldName).value as? String?).takeIf { it?.isNotBlank() == true }
+    } ?: ""
+
 internal fun getShowkaseMetadata(
     element: XMethodElement,
-    showkaseValidator: ShowkaseValidator
+    annotationName: com.squareup.javapoet.ClassName,
+    showkaseValidator: ShowkaseValidator,
+    environmentOptions: Map<String, String>
 ): List<ShowkaseMetadata.Component?> {
-    val showkaseAnnotations = element.getAnnotations(ShowkaseComposable::class)
-
+    val showkaseAnnotations = element.getAnnotations(annotationName)
     val commonMetadata = element.extractCommonMetadata(showkaseValidator)
     val previewParameterMetadata = element.getPreviewParameterMetadata()
 
     return showkaseAnnotations.mapNotNull { annotation ->
         // If this component was configured to be skipped, return early
-        if (annotation.value.skip) return@mapNotNull null
+        if (annotation.getAsBoolean(ShowkaseComposable::skip.name)) return@mapNotNull null
 
-        val showkaseName = getShowkaseName(annotation.value.name, element.name)
+        val nameValue = annotation.getValueWithOptions(
+            environmentOptions = environmentOptions,
+            customizedName = ShowkaseComposable.FieldOverrideName,
+            fallbackField = ShowkaseComposable::name
+        )
+        val groupValue = annotation.getValueWithOptions(
+            environmentOptions = environmentOptions,
+            customizedName = ShowkaseComposable.FieldOverrideGroup,
+            fallbackField = ShowkaseComposable::group
+        )
+        val styleNameValue = annotation.getValueWithOptions(
+            environmentOptions = environmentOptions,
+            customizedName = ShowkaseComposable.FieldOverrideStyleName,
+            fallbackField = ShowkaseComposable::styleName
+        )
+
+        val showkaseName = getShowkaseName(nameValue, element.name)
         val showkaseGroup = getShowkaseGroup(
-            annotation.value.group,
+            groupValue,
             commonMetadata.enclosingClass,
         )
-        val isDefaultStyle = annotation.value.defaultStyle
-        val showkaseStyleName = getShowkaseStyleName(annotation.value.styleName, isDefaultStyle)
+        val isDefaultStyle = annotation.getAsBoolean(ShowkaseComposable::defaultStyle.name)
+        val showkaseStyleName = getShowkaseStyleName(styleNameValue, isDefaultStyle)
 
         ShowkaseMetadata.Component(
             packageSimpleName = commonMetadata.moduleName,
@@ -203,8 +245,8 @@ internal fun getShowkaseMetadata(
             showkaseName = showkaseName,
             showkaseGroup = showkaseGroup,
             showkaseStyleName = showkaseStyleName,
-            showkaseWidthDp = annotation.value.widthDp.parseAnnotationProperty(),
-            showkaseHeightDp = annotation.value.heightDp.parseAnnotationProperty(),
+            showkaseWidthDp = annotation.getAsInt(ShowkaseComposable::widthDp.name).parseAnnotationProperty(),
+            showkaseHeightDp = annotation.getAsInt(ShowkaseComposable::heightDp.name).parseAnnotationProperty(),
             insideObject = commonMetadata.showkaseFunctionType.insideObject(),
             insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
             element = element,

@@ -33,6 +33,7 @@ import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
+import com.squareup.javapoet.ClassName
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 
@@ -60,7 +61,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
     )
 
     override fun getSupportedOptions(): MutableSet<String> {
-        return mutableSetOf("skipPrivatePreviews")
+        return mutableSetOf(
+            "skipPrivatePreviews",
+            ShowkaseComposable.AnnotationOverride,
+            ShowkaseComposable.FieldOverrideName,
+            ShowkaseComposable.FieldOverrideGroup,
+            ShowkaseComposable.FieldOverrideStyleName,
+        )
     }
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
@@ -91,17 +98,25 @@ class ShowkaseProcessor @JvmOverloads constructor(
         roundEnvironment: XRoundEnv
     ): Set<ShowkaseMetadata.Component> {
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
-        return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
+
+        // If the annotation name has been overridden use that. Otherwise, fall back to the standard ShowkaseComposable annotation
+        val annotation = environment.options[ShowkaseComposable.AnnotationOverride]?.let { overriddenName ->
+            ClassName.get(overriddenName.substringBeforeLast("."), overriddenName.substringAfterLast("."))
+        } ?: ClassName.get(ShowkaseComposable::class.java)
+
+        return roundEnvironment.getElementsAnnotatedWith(annotation.canonicalName())
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
-                    ShowkaseComposable::class.java.simpleName,
+                    annotation.simpleName(),
                     skipPrivatePreviews
                 )
                 if (skipElement) return@mapNotNull null
                 getShowkaseMetadata(
                     element = element,
+                    annotationName = annotation,
+                    environmentOptions = environment.options,
                     showkaseValidator = showkaseValidator,
                 )
             }.flatten().mapNotNull { it }.toSet()
