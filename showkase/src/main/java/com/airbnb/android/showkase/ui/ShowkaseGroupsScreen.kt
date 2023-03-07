@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserComponentInterface
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -80,7 +81,7 @@ internal fun <T> getFilteredSearchList(
 
 @Composable
 internal fun ShowkaseComponentGroupsScreen(
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {

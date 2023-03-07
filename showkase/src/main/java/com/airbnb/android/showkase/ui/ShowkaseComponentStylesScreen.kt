@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserComponentInterface
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clearActiveSearch
@@ -13,7 +14,7 @@ import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseComponentStylesScreen(
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
@@ -90,7 +91,7 @@ private fun back(
 }
 
 private fun getFilteredSearchList(
-    list: List<ShowkaseBrowserComponent>,
+    list: List<ShowkaseBrowserComponentInterface>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) =
     when (showkaseBrowserScreenMetadata.value.isSearchActive) {

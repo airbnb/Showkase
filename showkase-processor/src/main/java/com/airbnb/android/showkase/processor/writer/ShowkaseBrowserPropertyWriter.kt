@@ -7,7 +7,8 @@ import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadata
 import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadataType
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
-import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_BROWSER_COMPONENT_INTERFACE_NAME
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_BROWSER_COMPONENT_WITH_PARAM_CLASS_NAME
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -165,13 +166,17 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         showkaseMetadata: ShowkaseMetadata.Component
     ): PropertySpec {
         val type =
-            ClassName("", listOf(showkaseMetadata.previewParameterProviderType.toString() ?: ""))
+            ClassName("", listOf(showkaseMetadata.previewParameterType.toString()))
+//            ClassName("", listOf("String"))
 
         return PropertySpec.builder(
             propertyName,
             List::class
                 .asTypeName()
-                .parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2.parameterizedBy(type))
+                .parameterizedBy(
+                    SHOWKASE_BROWSER_COMPONENT_WITH_PARAM_CLASS_NAME
+                        .parameterizedBy(type)
+                )
         ).apply {
             initializer(
                 CodeBlock.Builder().apply {

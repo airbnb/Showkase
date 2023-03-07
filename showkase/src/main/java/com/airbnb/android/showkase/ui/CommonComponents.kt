@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserComponentInterface
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -57,7 +58,7 @@ internal fun ComponentCardTitle(componentName: String) {
 
 @Composable
 internal fun ComponentCard(
-    metadata: ShowkaseBrowserComponent,
+    metadata: ShowkaseBrowserComponentInterface,
     onClick: (() -> Unit)? = null
 ) {
     val composableModifier = Modifier.generateComposableModifier(metadata)

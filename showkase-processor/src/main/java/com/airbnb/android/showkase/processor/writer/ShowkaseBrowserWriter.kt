@@ -41,7 +41,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
             allShowkaseBrowserProperties,
             getShowkaseProviderInterfaceFunction(
                 methodName = COMPONENT_INTERFACE_METHOD_NAME,
-                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME),
+                returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_COMPONENT_INTERFACE_NAME),
                 codeBlock = componentCodeBlock
             ),
             getShowkaseProviderInterfaceFunction(
@@ -64,7 +64,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     ): CodeBlock {
         println("ddw withParameterPropertyNames: $withParameterPropertyNames")
         val componentListInitializerCodeBlock = if (withParameterPropertyNames.isNotEmpty()) {
-            SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.mutableListInitializerCodeBlock()
+            SHOWKASE_BROWSER_COMPONENT_INTERFACE_NAME.mutableListInitializerCodeBlock()
         } else {
             SHOWKASE_BROWSER_COMPONENT_CLASS_NAME.listInitializerCodeBlock()
         }
@@ -159,8 +159,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         internal val COMPOSE_CLASS_NAME = ClassName("androidx.compose.runtime", "Composable")
         internal val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponent")
-        internal val SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2 =
-            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponent2")
+        internal val SHOWKASE_BROWSER_COMPONENT_WITH_PARAM_CLASS_NAME =
+            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponentWithParam")
+        internal val SHOWKASE_BROWSER_COMPONENT_INTERFACE_NAME =
+            ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserComponentInterface")
         internal val SHOWKASE_BROWSER_COLOR_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseBrowserColor")
         internal val SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME =

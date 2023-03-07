@@ -5,7 +5,7 @@ package com.airbnb.android.showkase.models
  * of this library don't need to use this as it's for internal usage only.
  */
 interface ShowkaseProvider {
-    fun getShowkaseComponents(): List<ShowkaseBrowserComponent>
+    fun getShowkaseComponents(): List<ShowkaseBrowserComponentInterface>
 
     fun getShowkaseColors(): List<ShowkaseBrowserColor>
     

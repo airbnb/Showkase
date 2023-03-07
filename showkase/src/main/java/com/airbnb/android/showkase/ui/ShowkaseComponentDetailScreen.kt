@@ -49,13 +49,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserComponentInterface
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseComponentDetailScreen(
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
@@ -139,13 +140,13 @@ private fun getCollabsableTextAndIcon(
 }
 
 @Composable
-private fun BasicComponentCard(metadata: ShowkaseBrowserComponent) {
+private fun BasicComponentCard(metadata: ShowkaseBrowserComponentInterface) {
     ComponentCardTitle("${metadata.componentName} [Basic Example]")
     ComponentCard(metadata)
 }
 
 @Composable
-private fun FontScaledComponentCard(metadata: ShowkaseBrowserComponent) {
+private fun FontScaledComponentCard(metadata: ShowkaseBrowserComponentInterface) {
     val density = LocalDensity.current
     val customDensity = Density(fontScale = density.fontScale * 2, density = density.density)
 
@@ -156,7 +157,7 @@ private fun FontScaledComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 @Composable
-private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponent) {
+private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponentInterface) {
     val density = LocalDensity.current
     val customDensity = Density(density = density.density * 2f)
 
@@ -167,7 +168,7 @@ private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 @Composable
-private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
+private fun RTLComponentCard(metadata: ShowkaseBrowserComponentInterface) {
     ComponentCardTitle("${metadata.componentName} [RTL]")
     val updatedModifier = Modifier.generateComposableModifier(metadata)
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -180,7 +181,7 @@ private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 @Composable
-private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
+private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponentInterface) {
     val darkModeConfiguration = Configuration(LocalConfiguration.current).apply {
         uiMode = Configuration.UI_MODE_NIGHT_YES
     }
@@ -190,15 +191,15 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
 }
 
-internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent) = composed {
+internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponentInterface) = composed {
     val baseModifier = padding(padding4x).sizeIn(maxHeight = Dp(LocalConfiguration.current.screenHeightDp.toFloat()))
     when {
         metadata.heightDp != null && metadata.widthDp != null -> baseModifier.size(
-            width = metadata.widthDp.dp,
-            height = metadata.heightDp.dp
+            width = metadata.widthDp!!.dp,
+            height = metadata.heightDp!!.dp
         )
-        metadata.heightDp != null -> baseModifier.height(Dp(metadata.heightDp.toFloat()))
-        metadata.widthDp != null -> baseModifier.width(Dp(metadata.widthDp.toFloat()))
+        metadata.heightDp != null -> baseModifier.height(Dp(metadata.heightDp!!.toFloat()))
+        metadata.widthDp != null -> baseModifier.width(Dp(metadata.widthDp!!.toFloat()))
         else -> baseModifier.fillMaxWidth()
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserComponentInterface
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
@@ -15,7 +16,7 @@ import java.util.Locale
 
 @Composable
 internal fun ShowkaseComponentsInAGroupScreen(
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     navController: NavHostController
 ) {
@@ -24,7 +25,7 @@ internal fun ShowkaseComponentsInAGroupScreen(
             ?.groupBy { it.componentName } ?: return
     // Use the default style as the preview if its available or take the first style for the component
     val componentList = groupByComponentName.values.map {
-        it.firstOrNull { it.isDefaultStyle } ?: it.first()
+        it.firstOrNull { i -> i.isDefaultStyle } ?: it.first()
     }
     val filteredList =
         getFilteredSearchList(componentList, showkaseBrowserScreenMetadata)
@@ -71,7 +72,7 @@ private fun goBackFromComponentsInAGroupScreen(
 
 
 private fun getFilteredSearchList(
-    list: List<ShowkaseBrowserComponent>,
+    list: List<ShowkaseBrowserComponentInterface>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) =
     when (showkaseBrowserScreenMetadata.value.isSearchActive) {

@@ -120,8 +120,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     }
     if (isPreviewParameter) {
         add(
-            "%T<${showkaseMetadata.previewParameterProviderType}>(\n",
-            ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2
+            "%T<${showkaseMetadata.previewParameterType}>(\n",
+            ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_WITH_PARAM_CLASS_NAME
         )
     } else {
         add(

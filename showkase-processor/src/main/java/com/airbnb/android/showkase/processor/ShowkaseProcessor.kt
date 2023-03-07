@@ -75,7 +75,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     println("  ccw parameter.type: ${parameter.type}")
                     println("  ccw parameter::class : ${parameter::class}")
                     parameter.getAllAnnotations().forEach {
-                        it.
                         println("  ccw xannotation.type: ${it.type}")
                     }
                 }

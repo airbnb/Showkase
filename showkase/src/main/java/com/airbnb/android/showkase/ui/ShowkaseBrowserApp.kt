@@ -57,6 +57,7 @@ import androidx.navigation.compose.rememberNavController
 import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserComponentInterface
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCategory
@@ -67,7 +68,7 @@ import com.airbnb.android.showkase.ui.SemanticsUtils.lineCountVal
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 internal fun ShowkaseBrowserApp(
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
@@ -365,7 +366,7 @@ private fun ShowkaseAppBarActions(
 @Composable
 internal fun ShowkaseBodyContent(
     navController: NavHostController,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
@@ -393,7 +394,7 @@ internal fun ShowkaseBodyContent(
 private fun startDestination(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>
 ) = when {
     groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
         ShowkaseCurrentScreen.COMPONENT_GROUPS.name
@@ -410,7 +411,7 @@ private fun NavGraphBuilder.navGraph(
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>
 ) = when {
     groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
         componentsNavGraph(navController, groupedComponentMap, showkaseBrowserScreenMetadata)
@@ -435,7 +436,7 @@ private fun Map<String, List<*>>.isOnlyCategory(
 
 private fun NavGraphBuilder.componentsNavGraph(
     navController: NavHostController,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
 ) {
     composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) {
@@ -512,7 +513,7 @@ private fun NavGraphBuilder.typographyNavGraph(
 
 private fun NavGraphBuilder.fullNavGraph(
     navController: NavHostController,
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
@@ -534,7 +535,7 @@ private fun NavGraphBuilder.fullNavGraph(
 }
 
 private fun getCategoryMetadataMap(
-    groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
+    groupedComponentMap: Map<String, List<ShowkaseBrowserComponentInterface>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
 ) = mapOf(
@@ -545,7 +546,7 @@ private fun getCategoryMetadataMap(
 
 private fun Map<String, List<*>>.flatCount() = flatMap { it.value }.count()
 
-private fun Map<String, List<ShowkaseBrowserComponent>>.flatComponentCount() = flatMap { entry ->
+private fun Map<String, List<ShowkaseBrowserComponentInterface>>.flatComponentCount() = flatMap { entry ->
     // Only group name and component name is taken into account for the count to ensure that the
     // styles of the same component aren't added  in this calculation.
     entry.value.distinctBy { "${it.group}_${it.componentName}" }

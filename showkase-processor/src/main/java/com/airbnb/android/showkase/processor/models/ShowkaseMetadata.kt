@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor.models
 import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XAnnotationBox
 import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XExecutableParameterElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMemberContainer
 import androidx.room.compiler.processing.XMethodElement
@@ -55,6 +56,7 @@ internal sealed class ShowkaseMetadata {
         val componentIndex: Int? = null,
         val showkaseWidthDp: Int? = null,
         val showkaseHeightDp: Int? = null,
+        val previewParameterType: TypeName? = null,
         val previewParameterProviderType: TypeName? = null,
         val previewParameterName: String? = null,
         val showkaseStyleName: String? = null,
@@ -181,8 +183,10 @@ internal fun getShowkaseMetadata(
 ): List<ShowkaseMetadata.Component?> {
     val showkaseAnnotations = element.getAnnotations(ShowkaseComposable::class)
 
-    val commonMetadata = element.extractCommonMetadata(showkaseValidator)
-    val previewParameterMetadata = element.getPreviewParameterMetadata()
+    val commonMetadata: CommonMetadata = element.extractCommonMetadata(showkaseValidator)
+    val previewParameterMetadata: Triple<String, TypeName, TypeName>? =
+        element.getPreviewParameterMetadata()
+    println("xmm, previewParameterMetadata?.third = ${previewParameterMetadata?.third}")
 
     return showkaseAnnotations.mapNotNull { annotation ->
         // If this component was configured to be skipped, return early
@@ -195,7 +199,6 @@ internal fun getShowkaseMetadata(
         )
         val isDefaultStyle = annotation.value.defaultStyle
         val showkaseStyleName = getShowkaseStyleName(annotation.value.styleName, isDefaultStyle)
-
         ShowkaseMetadata.Component(
             packageSimpleName = commonMetadata.moduleName,
             packageName = commonMetadata.packageName,
@@ -210,6 +213,7 @@ internal fun getShowkaseMetadata(
             insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
             element = element,
             showkaseKDoc = commonMetadata.kDoc,
+            previewParameterType = previewParameterMetadata?.third,
             previewParameterName = previewParameterMetadata?.first,
             previewParameterProviderType = previewParameterMetadata?.second,
             isDefaultStyle = isDefaultStyle,
@@ -278,7 +282,7 @@ internal fun getShowkaseMetadataFromPreview(
         val height = annotation.getAsInt("heightDp")
 
         val previewParameterMetadata = element.getPreviewParameterMetadata()
-
+println("xmm, previewParameterMetadata?.third222: ${previewParameterMetadata?.third}")
         ShowkaseMetadata.Component(
             packageSimpleName = commonMetadata.moduleName,
             packageName = commonMetadata.packageName,
@@ -292,6 +296,7 @@ internal fun getShowkaseMetadataFromPreview(
             insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
             insideObject = commonMetadata.showkaseFunctionType.insideObject(),
             element = element,
+            previewParameterType = previewParameterMetadata?.third,
             previewParameterName = previewParameterMetadata?.first,
             previewParameterProviderType = previewParameterMetadata?.second,
             componentIndex = index,
@@ -299,20 +304,27 @@ internal fun getShowkaseMetadataFromPreview(
     }
 }
 
-private fun XMethodElement.getPreviewParameterMetadata(): Pair<String, TypeName>? {
-    val previewParameterPair = getPreviewParameterAnnotation()
-    return previewParameterPair?.let {
-        it.first to it.second.getAsType("provider")
-            .typeName
-            .toKTypeName()
+private fun XMethodElement.getPreviewParameterMetadata(): Triple<String, TypeName, TypeName>? {
+    val previewParameterTriple = getPreviewParameterAnnotation()
+    return previewParameterTriple?.let {
+//        println("xmm, 111 ${it.third}, ${it.third.typeName.toKTypeName()}")
+        Triple(
+            it.first,
+            it.second.getAsType("provider")
+                .typeName
+                .toKTypeName(),
+            it.third.typeName.toKTypeName()
+        )
     }
 }
 
-private fun XMethodElement.getPreviewParameterAnnotation(): Pair<String, XAnnotation>? {
-    return parameters.mapNotNull { parameter ->
-        val previewParamAnnotation = parameter.findAnnotationBySimpleName(PREVIEW_PARAMETER_SIMPLE_NAME)
+private fun XMethodElement.getPreviewParameterAnnotation(): Triple<String, XAnnotation, XType>? {
+    return parameters.mapNotNull { parameter: XExecutableParameterElement ->
+        println("xmm[getPreviewParameterAnnotation], parameter: ${parameter.type}")
+        val previewParamAnnotation: XAnnotation? =
+            parameter.findAnnotationBySimpleName(PREVIEW_PARAMETER_SIMPLE_NAME)
         previewParamAnnotation?.let {
-            parameter.name to previewParamAnnotation
+            Triple(parameter.name, previewParamAnnotation, parameter.type)
         }
     }.firstOrNull()
 }
