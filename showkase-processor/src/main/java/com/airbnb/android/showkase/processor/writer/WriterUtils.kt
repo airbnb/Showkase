@@ -118,10 +118,17 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     if (isPreviewParameter) {
         componentKey += "_\$index"
     }
-    add(
-        "%T(\n",
-        ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
-    )
+    if (isPreviewParameter) {
+        add(
+            "%T<${showkaseMetadata.previewParameterProviderType}>(\n",
+            ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2
+        )
+    } else {
+        add(
+            "%T(\n",
+            ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
+        )
+    }
     doubleIndent()
     add(
         "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
@@ -130,6 +137,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         showkaseMetadata.showkaseKDoc,
         componentKey,
     )
+//    add("\npreviewParameterKey = \"${showkaseMetadata.previewParameterName}\",")
     add("\nisDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
     showkaseMetadata.apply {
         showkaseWidthDp?.let { add("\nwidthDp = %L,", it) }
@@ -305,7 +313,7 @@ internal fun showkaseBrowserPropertyValue(
 internal fun generatePropertyNameFromMetadata(
     metadata: ShowkaseMetadata,
 ): String {
-    return when(metadata) {
+    return when (metadata) {
         is ShowkaseMetadata.Component -> {
             val name =
                 if (metadata.componentIndex != null && metadata.componentIndex > 0

@@ -7,6 +7,7 @@ import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadata
 import com.airbnb.android.showkase.processor.ShowkaseGeneratedMetadataType
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -48,12 +49,14 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
             }
 
         // Generate top level property file for components with preview parameter provider
-        val withParameterPropertyNames =
+        val withParameterPropertyNames: List<ShowkaseGeneratedMetadata> =
             showkaseMetadataWithParameterList.mapIndexed { index, showkaseMetadata ->
                 val propertyName = generatePropertyNameFromMetadata(showkaseMetadata)
+                println("ccw propertyName: $propertyName")
                 val fileBuilder = getFileBuilder(showkaseMetadata.packageName, propertyName)
-                val property = getPropertyForComponentWithParameter(propertyName, showkaseMetadata)
-
+                val property: PropertySpec =
+                    getPropertyForComponentWithParameter(propertyName, showkaseMetadata)
+                //JR: this line generates the file, question, how is it generated? I need to change that part
                 fileBuilder.addPropertyAndGenerateFile(property)
 
                 return@mapIndexed ShowkaseGeneratedMetadata(
@@ -161,11 +164,14 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
         propertyName: String,
         showkaseMetadata: ShowkaseMetadata.Component
     ): PropertySpec {
+        val type =
+            ClassName("", listOf(showkaseMetadata.previewParameterProviderType.toString() ?: ""))
+
         return PropertySpec.builder(
             propertyName,
             List::class
                 .asTypeName()
-                .parameterizedBy(ShowkaseBrowserWriter.SHOWKASE_BROWSER_COMPONENT_CLASS_NAME)
+                .parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME2.parameterizedBy(type))
         ).apply {
             initializer(
                 CodeBlock.Builder().apply {
@@ -234,7 +240,8 @@ internal data class ShowkaseBrowserProperties(
             colors.isEmpty() &&
             typography.isEmpty()
 
-    fun zip() = componentsWithPreviewParameters + componentsWithPreviewParameters + colors + typography
+    fun zip() =
+        componentsWithPreviewParameters + componentsWithPreviewParameters + colors + typography
 
     operator fun plus(other: ShowkaseBrowserProperties): ShowkaseBrowserProperties {
         return ShowkaseBrowserProperties(

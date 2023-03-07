@@ -44,7 +44,10 @@ abstract class BaseProcessorTest {
         modes.forEach { mode ->
             val compilation = KotlinCompilation().apply {
                 kotlincArguments = kotlincArguments + "-Xexplicit-api=strict"
-                sources = inputDir.listFiles()?.toList().orEmpty().map { SourceFile.fromPath(it) }
+                sources = inputDir.listFiles()?.toList().orEmpty().map {
+                    println("ddw: ${it.absolutePath}")
+                    SourceFile.fromPath(it)
+                }
                 when (mode) {
                     Mode.KSP -> {
                         symbolProcessorProviders = listOf(ShowkaseProcessorProvider())
@@ -79,7 +82,7 @@ abstract class BaseProcessorTest {
         modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
         options: MutableMap<String, String> = mutableMapOf(),
     ) {
-        compileInputs(modes = modes, options = options) { mode, compilation, result ->
+        compileInputs(modes = modes, options = options) { mode: Mode, compilation: KotlinCompilation, result: KotlinCompilation.Result ->
             result.assertGeneratedSources(mode, compilation)
         }
     }

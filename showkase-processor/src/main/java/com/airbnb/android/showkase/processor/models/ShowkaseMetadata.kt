@@ -105,7 +105,8 @@ internal enum class ShowkaseMetadataType {
 }
 
 internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement): ShowkaseMetadata {
-    val (enclosingClassType, previewParameterClassType) = getCodegenMetadataTypes()
+    val (enclosingClassType, previewParameterClassType: XType?) = getCodegenMetadataTypes()
+    println("ccw previewParameterClassType: ${previewParameterClassType.toString()}")
 
     // The box is needed to get all Class values, primitives can be accessed dirctly
     val props = value

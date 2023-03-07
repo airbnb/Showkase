@@ -62,7 +62,7 @@ import java.util.*
  * for your use case. For what it's worth, the showkase-screenshot-testing-paparazzi artifact
  * auto-generates an identical class for you so that you don't have to manually write this.
  */
-//@RunWith(TestParameterInjector::class)
+@RunWith(TestParameterInjector::class)
 class PaparazziSampleScreenshotTest {
 
     object PreviewProvider : TestParameter.TestParameterValuesProvider {
@@ -88,7 +88,7 @@ class PaparazziSampleScreenshotTest {
         maxPercentDifference = 0.0,
     )
 
-    // @Test
+     @Test
     fun preview_tests(
         @TestParameter(valuesProvider = PreviewProvider::class) componentTestPreview: TestPreview,
         @TestParameter baseDeviceConfig: BaseDeviceConfig,
