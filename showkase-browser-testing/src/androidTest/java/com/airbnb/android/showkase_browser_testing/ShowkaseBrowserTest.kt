@@ -41,9 +41,9 @@ class ShowcaseBrowserTest {
     // in Kotlin 1.6. It will be available in the old backend in Kotlin version 1.7.20.
     // See https://youtrack.jetbrains.com/issue/KT-49682 for more information about this.
     private val componentSize = if (BuildConfig.IS_RUNNING_KSP) {
-        11
+        20
     } else {
-        7
+        10
     }
 
     @Test
@@ -73,8 +73,6 @@ class ShowcaseBrowserTest {
             verifyRowsWithTextAreDisplayed(
                 "Group1 (2)",
                 "Group2 (1)",
-                "Group3 (2)",
-                "Submodule (1)"
             )
         }
     }
@@ -322,6 +320,12 @@ class ShowcaseBrowserTest {
             // Select components
             clickRowWithText("Components ($componentSize)")
 
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
             // Select Group 3
             clickRowWithText("Group3 (2)")
 
@@ -459,7 +463,17 @@ class ShowcaseBrowserTest {
             goBack()
 
             // Confirm that we are in the right screen
-            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)", "Group3 (2)")
+            verifyRowsWithTextAreDisplayed("Group1 (2)", "Group2 (1)")
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
+            // Confirm that we are in the right screen
+            verifyRowsWithTextAreDisplayed("Group3 (2)")
+
 
             // Go back to the landing screen
             goBack()
@@ -560,6 +574,12 @@ class ShowcaseBrowserTest {
             // Tap on the "Components" row
             clickRowWithText("Components ($componentSize)")
 
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
             // Select "Group4"
             clickRowWithText("Group4 (1)")
 
@@ -656,12 +676,18 @@ class ShowcaseBrowserTest {
             composeTestRule.apply {
 
                 verifyLandingScreen(
-                    components = 11,
+                    components = componentSize,
                     typography = 13,
                     colors = 4,
                 )
                 // Tap on the "Components" row
-                clickRowWithText("Components (11)")
+                clickRowWithText("Components ($componentSize)")
+
+                waitForIdle()
+
+                onRoot().performTouchInput {
+                    swipeUp()
+                }
 
                 waitForIdle()
 
@@ -676,6 +702,118 @@ class ShowcaseBrowserTest {
                 onNodeWithText("Composable10").assertIsDisplayed()
 
             }
+        }
+    }
+
+    @Test
+    fun customPreviewShowsUpInBrowser() {
+        composeTestRule.apply {
+
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            clickRowWithText("Custom Text (1)")
+
+            waitForIdle()
+
+            // Verify that they are all displayed and treated as different components
+            onNodeWithText("PreviewCustomTextLight - Custom Text Dark").assertIsDisplayed()
+
+        }
+    }
+
+    @Test
+    fun customSubmodulePreviewShowsUpInBrowser() {
+        composeTestRule.apply {
+
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            onNodeWithText("Custom Size Submodule (1)").performScrollTo()
+
+            waitForIdle()
+
+            clickRowWithText("Custom Size Submodule (1)")
+
+            waitForIdle()
+
+            // Verify that they are all displayed and treated as different components
+            onNodeWithText("CustomSubmoduleText - Custom Font Size 1.2f").assertIsDisplayed()
+
+        }
+    }
+
+    @Test
+    fun customStackedSubmodulePreviewShowsUpInBrowserForKsp() {
+        if (BuildConfig.IS_RUNNING_KSP) {
+
+            composeTestRule.apply {
+
+                verifyLandingScreen(
+                    components = componentSize,
+                    typography = 13,
+                    colors = 4,
+                )
+                // Tap on the "Components" row
+                clickRowWithText("Components ($componentSize)")
+
+                waitForIdle()
+
+                clickRowWithText("CustomSubmodulePreview (2)")
+
+                waitForIdle()
+
+                // Verify that they are all displayed and treated as different components
+                onNodeWithText("CustomShape - CustomSize 200 * 200").assertIsDisplayed()
+                onNodeWithText("CustomShape - CustomSize 100 * 100").assertIsDisplayed()
+
+            }
+        }
+    }
+
+    @Test
+    fun customStackedSubmoduleTwoPreviewShowsUpInBrowser() {
+
+        composeTestRule.apply {
+
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
+            val composables = if (BuildConfig.IS_RUNNING_KSP) 3 else 1
+
+            clickRowWithText("LocalePreview ($composables)")
+
+            onNodeWithText("Some text In locale").assertIsDisplayed()
+
+            waitForIdle()
+
         }
     }
 }

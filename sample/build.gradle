@@ -81,6 +81,7 @@ dependencies {
     //  Figure out a way to enable using debugImplementation
     implementation project(':showkase')
     implementation project(':sample-submodule')
+    implementation project(':sample-submodule-2')
     if (project.hasProperty('useKsp')) {
         ksp project(':showkase-processor')
         kspAndroidTest project(':showkase-processor')

@@ -1,0 +1,87 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+if (project.hasProperty('useKsp')) {
+    apply plugin: 'com.google.devtools.ksp'
+} else {
+    apply plugin: 'kotlin-kapt'
+    kapt {
+        correctErrorTypes = true
+        arguments {
+            arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.FontPreview")
+        }
+    }
+}
+
+android {
+    compileSdkVersion 32
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 32
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
+
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    // Support Libraries
+    implementation deps.support.appCompat
+    implementation deps.support.ktx
+    implementation deps.support.lifecycleExtensions
+    
+    // Showkase
+    implementation project(':showkase')
+    implementation project(':sample-submodule')
+
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+    }
+
+    // Compose
+    implementation deps.compose.activityCompose
+    implementation deps.compose.composeRuntime
+    implementation deps.compose.constraintLayout
+    implementation deps.compose.core
+    implementation deps.compose.foundation
+    implementation deps.compose.tooling
+    implementation deps.compose.layout
+    implementation deps.compose.material
+    implementation deps.compose.savedInstanceState
+    implementation deps.compose.uiLiveData
+    androidTestImplementation deps.compose.uiTest
+}

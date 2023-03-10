@@ -22,4 +22,21 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   )
   public fun componentgroupcomponent(): Unit {
   }
+
+  @ShowkaseCodegenMetadata(
+    showkaseName = "HelloWorldPreview - dark theme",
+    showkaseGroup = "themes",
+    packageName = "com.airbnb.android.showkase_processor_testing",
+    packageSimpleName = "showkase_processor_testing",
+    showkaseElementName = "HelloWorldPreview",
+    insideObject = false,
+    insideWrapperClass = false,
+    showkaseKDoc = "",
+    generatedPropertyName =
+        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewdarktheme",
+    showkaseMetadataType = "COMPONENT",
+    isDefaultStyle = false,
+  )
+  public fun themesHelloWorldPreviewdarktheme(): Unit {
+  }
 }

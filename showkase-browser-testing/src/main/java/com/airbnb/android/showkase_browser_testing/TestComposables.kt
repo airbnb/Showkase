@@ -9,6 +9,8 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.google.android.material.composethemeadapter.MdcTheme
+import com.vinaygaba.showkase_browser_testing_submodule.two.EnglishLocalePreview
+import com.vinaygaba.showkase_browser_testing_submodule.two.LocalePreview
 
 @ShowkaseComposable("Composable1", "Group1")
 @Composable
@@ -67,8 +69,7 @@ fun TestComposable8() {
     BasicText(text = "Test Composable9and10")
 }
 
-// Adding this to see on the UI tests that this compiles.
-// Will remove it when we actually supports MultiPreviewAnnotations.
+
 @Preview(
     name = "Custom Text Light",
     group = "Button",
@@ -81,10 +82,36 @@ fun TestComposable8() {
 )
 annotation class CustomButtonPreview
 
+@Preview(
+    name = "Custom Text Dark",
+    group = "Custom Text",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+annotation class CustomTextPreview
+
 @CustomButtonPreview
 @Composable
 fun PreviewCustomText() {
     BasicText(text = "MultiPreviewAnnotation!")
+}
+
+@CustomTextPreview
+@Composable
+fun PreviewCustomTextLight() {
+    BasicText(text = "CustomPreviewAnnotation!")
+}
+
+@LocalePreview
+@Composable
+fun PreviewText() {
+    BasicText(text = "Some text")
+}
+
+
+@EnglishLocalePreview
+@Composable
+fun PreviewEnglishText() {
+    BasicText(text = "Some text In locale")
 }
 
 @ShowkaseRoot

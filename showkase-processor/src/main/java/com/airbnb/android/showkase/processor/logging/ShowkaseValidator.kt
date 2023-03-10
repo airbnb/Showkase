@@ -83,6 +83,9 @@ internal class ShowkaseValidator {
 
     // This should check if it is an annotation that's annotated with @Preview or @ShowkaseComposable annotation
     internal fun checkElementIsAnnotationClass(element: XElement): Boolean {
+        contract {
+            returns(true) implies (element is XTypeElement)
+        }
         return element.isTypeElement() && element.isAnnotationClass()
     }
 

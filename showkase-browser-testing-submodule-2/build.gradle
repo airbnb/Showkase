@@ -1,0 +1,94 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+if (project.hasProperty('useKsp')) {
+    apply plugin: 'com.google.devtools.ksp'
+} else {
+    apply plugin: 'kotlin-kapt'
+    kapt {
+        correctErrorTypes = true
+    }
+}
+
+android {
+    compileSdkVersion 32
+    // Added to avoid this error -
+    // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+    // > More than one file was found with OS independent path 'META-INF/gradle/incremental.annotation.processors'
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude("META-INF/*.kotlin_module")
+    }
+    defaultConfig {
+        minSdkVersion 26
+        targetSdkVersion 32
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
+    }
+    // Added to avoid this error -
+    // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
+    // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+    // > 2 files found with path 'META-INF/AL2.0' from inputs:
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+    configurations {
+        all {
+            // work around this error:
+            // Duplicate class org.intellij.lang.annotations.Identifier found in modules annotations-12.0 (com.intellij:annotations:12.0) and annotations-13.0 (org.jetbrains:annotations:13.0)
+            exclude group: "com.intellij", module: "annotations"
+        }
+    }
+}
+
+dependencies {
+    // Support Libraries
+    implementation deps.support.appCompat
+
+    // Showkase
+    implementation project(':showkase')
+    if (project.hasProperty('useKsp')) {
+        ksp project(':showkase-processor')
+    } else {
+        kapt project(':showkase-processor')
+    }
+    implementation project(':showkase-processor')
+    implementation project(':showkase-screenshot-testing')
+
+    // Compose
+    implementation deps.compose.activityCompose
+    implementation deps.compose.composeRuntime
+    implementation deps.compose.core
+    implementation deps.compose.foundation
+    implementation deps.compose.tooling
+    androidTestImplementation deps.compose.uiTest
+
+    // Material
+    implementation deps.material.material
+    implementation deps.material.mdcComposeThemeAdapter
+
+    // Testing
+    androidTestImplementation deps.test.junitImplementation
+    androidTestImplementation deps.test.androidXTestCore
+    androidTestImplementation deps.test.androidXTestRules
+    androidTestImplementation deps.test.androidxTestRunner
+}

@@ -7,6 +7,9 @@ if (project.hasProperty('useKsp')) {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
+        arguments {
+            arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
+        }
     }
 }
 
@@ -72,6 +75,7 @@ dependencies {
     implementation deps.support.appCompat
     // Submodule for testing
     implementation project(':showkase-browser-testing-submodule')
+    implementation project(':showkase-browser-testing-submodule-2')
 
     // Showkase
     implementation project(':showkase')
