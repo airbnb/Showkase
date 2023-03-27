@@ -120,8 +120,11 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
     }
 
     private fun AnnotationSpec.Builder.addStringArrayMember(name: String, values: List<String>) {
+        val valueAsArray = values.joinToString(", ", prefix = "[", postfix = "]") { value ->
+            "\"$value\""
+        }
         values.takeIf { it.isNotEmpty() }?.let {
-            addMember("%L = [${it.joinToString(", ") { "%S" } }]", name, *it.toTypedArray())
+            addMember("%L = %L", name, valueAsArray)
         }
     }
 }

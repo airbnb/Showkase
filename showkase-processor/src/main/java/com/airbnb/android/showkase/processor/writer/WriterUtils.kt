@@ -137,8 +137,10 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         showkaseStyleName?.let { add("\nstyleName = %S,", it) }
     }
     showkaseMetadata.tags.takeIf { it.isNotEmpty() }?.let {
-        val listOfWithPlaceholders = "listOf(${it.joinToString(", ") { "%S" } })"
-        add("\ntags = $listOfWithPlaceholders,", *it.toTypedArray())
+        val tags = it.joinToString(", ", prefix = "listOf(", postfix = ")") { tag ->
+            "\"$tag\""
+        }
+        add("\ntags = $tags,")
     }
 
     add(

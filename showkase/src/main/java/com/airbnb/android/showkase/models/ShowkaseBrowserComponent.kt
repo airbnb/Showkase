@@ -14,4 +14,5 @@ data class ShowkaseBrowserComponent(
     val isDefaultStyle: Boolean = false,
     val widthDp: Int? = null,
     val heightDp: Int? = null,
+    val tags: List<String> = emptyList()
 )
