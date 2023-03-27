@@ -107,6 +107,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 showkaseMetadata.showkaseStyleName?.let {
                     addMember("showkaseStyleName = %S", showkaseMetadata.showkaseStyleName)
                 }
+                addStringArrayMember(ShowkaseCodegenMetadata::tags.name, showkaseMetadata.tags)
+                addStringArrayMember(ShowkaseCodegenMetadata::extraMetadata.name, showkaseMetadata.extraMetadata)
             }
         }
         is ShowkaseMetadata.Color -> {
@@ -114,6 +116,12 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         }
         is ShowkaseMetadata.Typography -> {
             annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.TYPOGRAPHY.name)
+        }
+    }
+
+    private fun AnnotationSpec.Builder.addStringArrayMember(name: String, values: List<String>) {
+        values.takeIf { it.isNotEmpty() }?.let {
+            addMember("%L = [${it.joinToString(", ") { "%S" } }]", name, *it.toTypedArray())
         }
     }
 }

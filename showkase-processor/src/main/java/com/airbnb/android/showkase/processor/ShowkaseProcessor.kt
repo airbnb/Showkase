@@ -517,6 +517,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
             group = props.showkaseGroup,
             name = props.showkaseName,
             isDefaultStyle = props.isDefaultStyle,
+            tags = props.tags.toList(),
+            extraMetadata = props.extraMetadata.toList()
         )
     }
     private fun getShowkaseRootCodegenOnClassPath(
@@ -618,7 +620,9 @@ internal data class ShowkaseGeneratedMetadata(
     val group: String,
     val name: String,
     // This property is only used for components
-    val isDefaultStyle: Boolean = false
+    val isDefaultStyle: Boolean = false,
+    val tags: List<String> = emptyList(),
+    val extraMetadata: List<String> = emptyList()
 )
 
 internal enum class ShowkaseGeneratedMetadataType {
