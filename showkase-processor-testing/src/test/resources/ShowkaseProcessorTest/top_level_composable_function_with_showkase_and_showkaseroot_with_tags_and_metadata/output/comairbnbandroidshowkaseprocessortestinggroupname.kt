@@ -12,5 +12,6 @@ public val comairbnbandroidshowkaseprocessortestinggroupname: ShowkaseBrowserCom
         componentKey = """com.airbnb.android.showkase_processor_testing_null_group_name_0_null""",
         isDefaultStyle = false,
         tags = listOf("tag A", "tag B"),
+        extraMetadata = listOf("meta A"),
         component = @Composable { TestComposable() }
     )

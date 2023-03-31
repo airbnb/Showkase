@@ -54,8 +54,10 @@ package com.airbnb.android.showkase.annotation
  * https://github.com/airbnb/Showkase#representing-component-styles-in-showkase
  * @param tags Various string values that will be propagated to the Showkase browser to allow additional
  * filtering or categorization.
- * @param extraMetadata Various string values that are **not** propagated through the Showkase browser
- * but are still available in the generated [ShowkaseCodegenMetadata] object.
+ * @param extraMetadata Various string values that are **not** used by the standard Showkase browser
+ * but are still available in the generated `ShowkaseBrowserComponent` object. This may be useful when
+ * extra data is needed for attributing components during other processes (e.g. static analysis,
+ * displaying attributions in a custom component browser).
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
