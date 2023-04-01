@@ -200,7 +200,6 @@ internal fun getShowkaseMetadata(
         )
         val isDefaultStyle = annotation.value.defaultStyle
         val showkaseStyleName = getShowkaseStyleName(annotation.value.styleName, isDefaultStyle)
-
         val tags = annotation.value.tags.toList()
         val extraMetadata = annotation.value.extraMetadata.toList()
 
