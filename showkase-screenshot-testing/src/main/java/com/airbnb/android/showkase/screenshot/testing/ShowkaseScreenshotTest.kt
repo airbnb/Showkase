@@ -55,7 +55,7 @@ import java.util.*
  * that the class you annotate with [ShowkaseScreenshot] is either abstract or open as Showkase
  * generates a class that extends this class in order to get access to theonScreenshot method.
  */
-@Suppress("Detekt.TooGenericExceptionCaught", "Detekt.TooGenericExceptionThrown")
+@Suppress("Detekt.TooGenericExceptionCaught", "Detekt.TooGenericExceptionThrown", "Detekt.LongParameterList")
 interface ShowkaseScreenshotTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule
