@@ -606,5 +606,10 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
             modes = listOf(Mode.KSP),
         )
     }
+
+    @Test
+    fun `top level composable function with showkase and showkaseroot with tags and metadata`() {
+        compileInputsAndVerifyOutputs()
+    }
 }
 

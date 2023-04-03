@@ -136,7 +136,8 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         showkaseHeightDp?.let { add("\nheightDp = %L,", it) }
         showkaseStyleName?.let { add("\nstyleName = %S,", it) }
     }
-
+    addStringList("tags", showkaseMetadata.tags)
+    addStringList("extraMetadata", showkaseMetadata.extraMetadata)
     add(
         composePreviewFunctionLambdaCodeBlock(
             showkaseMetadata.packageName,
@@ -149,6 +150,18 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
         )
     )
     doubleUnindent()
+}
+
+/**
+ * Adds a list of strings to the [name] parameter if the [values] list is not empty.
+ */
+private fun CodeBlock.Builder.addStringList(name: String, values: List<String>) {
+    values.takeIf { it.isNotEmpty() }?.let {
+        val valuesString = it.joinToString(", ", prefix = "listOf(", postfix = ")") { value ->
+            "\"$value\""
+        }
+        add("\n$name = $valuesString,")
+    }
 }
 
 @Suppress("LongParameterList")

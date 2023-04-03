@@ -12,6 +12,8 @@ public abstract class MyScreenshotTest: ShowkaseScreenshotTest {
         name: String,
         group: String,
         styleName: String?,
+        tags: List<String>,
+        extraMetadata: List<String>,
         screenshotType: ShowkaseScreenshotType,
         screenshotBitmap: Bitmap,
     ) {
