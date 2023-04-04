@@ -817,8 +817,11 @@ class ShowcaseBrowserTest {
         }
     }
 
+    // We have enabled private preview compiler flag so this test
+    // should test that we can have private methods annotated with custom annotations
+    // and that they will not show in the application.
     @Test
-    fun customAnnotatedPrivateComposablesShouldNotShot() {
+    fun customAnnotatedPrivateComposablesShouldCompileButNotShow() {
 
         composeTestRule.apply {
 
