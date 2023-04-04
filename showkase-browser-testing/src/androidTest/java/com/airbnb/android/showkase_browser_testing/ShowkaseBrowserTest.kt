@@ -816,4 +816,36 @@ class ShowcaseBrowserTest {
 
         }
     }
+
+    @Test
+    fun customAnnotatedPrivateComposablesShouldNotShot() {
+
+        composeTestRule.apply {
+
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
+            val composables = if (BuildConfig.IS_RUNNING_KSP) 3 else 1
+
+            clickRowWithText("LocalePreview ($composables)")
+
+            onNodeWithText("Private Text Composable").assertDoesNotExist()
+
+            waitForIdle()
+
+        }
+    }
 }

@@ -26,11 +26,11 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPrevi
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
-import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -137,7 +137,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
                         element
                     )
-                    return@mapNotNull processCustomAnnotation(roundEnvironment, element)
+                    return@mapNotNull processCustomAnnotation(
+                        skipPrivatePreviews = skipPrivatePreviews,
+                        roundEnvironment = roundEnvironment,
+                        annotation = element
+                    )
                 }
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
@@ -154,6 +158,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     private fun processCustomAnnotation(
+        skipPrivatePreviews: Boolean,
         roundEnvironment: XRoundEnv,
         annotation: XTypeElement? = null
     ): Set<ShowkaseMetadata.Component> {
@@ -166,17 +171,20 @@ class ShowkaseProcessor @JvmOverloads constructor(
             annotatedElements.map { annotatedElement ->
                 if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
 
-                    showkaseValidator.validateComponentElementOrSkip(
+                    val skipable = showkaseValidator.validateComponentElementOrSkip(
                         element = annotatedElement,
                         annotationName = supportedType,
+                        skipPrivatePreviews = skipPrivatePreviews
                     )
-                    components.addAll(
-                        getShowkaseMetadataFromCustomAnnotation(
-                            element = annotatedElement,
-                            showkaseValidator = showkaseValidator,
-                            supportedType.getCustomAnnotationSimpleName(),
-                        ).toSet()
-                    )
+                    if (!skipable) {
+                        components.addAll(
+                            getShowkaseMetadataFromCustomAnnotation(
+                                element = annotatedElement,
+                                showkaseValidator = showkaseValidator,
+                                supportedType.getCustomAnnotationSimpleName(),
+                            ).toSet()
+                        )
+                    }
                 }
             }
         }
@@ -193,6 +201,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // from the annotation from classpath. We use the fields from the classpath annotation to build
         // common data for the ShowkaseMetadata.
 
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         // Supported annotations from classpath
         val supportedCustomPreview = mutableSetOf<ShowkaseMultiPreviewCodegenMetadata>()
             environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
@@ -223,19 +232,22 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 roundEnvironment
                     .getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
                     .mapIndexed elementRoot@{ elementIndex, xElement ->
-                        showkaseValidator.validateComponentElementOrSkip(
+                        val skippable = showkaseValidator.validateComponentElementOrSkip(
                             xElement,
                             customPreviewMetadata.supportTypeQualifiedName,
+                            skipPrivatePreviews = skipPrivatePreviews
                         )
-                        components.add(
-                            getShowkaseMetadata(
-                                xElement = xElement,
-                                customPreviewMetadata = customPreviewMetadata,
-                                elementIndex = elementIndex,
-                                index = index,
-                                showkaseValidator = showkaseValidator
+                        if (!skippable) {
+                            components.add(
+                                getShowkaseMetadata(
+                                    xElement = xElement,
+                                    customPreviewMetadata = customPreviewMetadata,
+                                    elementIndex = elementIndex,
+                                    index = index,
+                                    showkaseValidator = showkaseValidator
+                                )
                             )
-                        )
+                        }
 
                     }
             }

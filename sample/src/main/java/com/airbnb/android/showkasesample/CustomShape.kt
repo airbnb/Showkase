@@ -33,3 +33,11 @@ fun CustomRoundedSquareWithText() {
         Text("This is a rounded square!")
     }
 }
+
+@FontPreview
+@Composable
+private fun PrivateCustomRoundedSquareWithText() {
+    Box(Modifier.size(100.dp).clip(RoundedCornerShape(8.dp))) {
+        Text("This is a private rounded square!")
+    }
+}
