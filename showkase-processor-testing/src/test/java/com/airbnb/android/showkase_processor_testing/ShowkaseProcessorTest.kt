@@ -611,5 +611,12 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `top level composable function with showkase and showkaseroot with tags and metadata`() {
         compileInputsAndVerifyOutputs()
     }
+
+    @Test
+    fun `composable function with private custom preview annotation compiles with flag`() {
+        val options = mutableMapOf<String, String>()
+        options["skipPrivatePreviews"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
+    }
 }
 

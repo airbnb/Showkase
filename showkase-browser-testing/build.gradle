@@ -3,12 +3,16 @@ apply plugin: 'kotlin-android'
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
+    ksp {
+        arg("skipPrivatePreviews", "true")
+    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
         arguments {
             arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
+            arg("skipPrivatePreviews", "true")
         }
     }
 }

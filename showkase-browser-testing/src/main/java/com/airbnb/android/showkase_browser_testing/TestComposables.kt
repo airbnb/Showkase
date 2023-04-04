@@ -114,5 +114,11 @@ fun PreviewEnglishText() {
     BasicText(text = "Some text In locale")
 }
 
+@EnglishLocalePreview
+@Composable
+private fun PrivateTextComposable() {
+    BasicText(text = "Private Text Composable")
+}
+
 @ShowkaseRoot
 class MyRootModule: ShowkaseRootModule
