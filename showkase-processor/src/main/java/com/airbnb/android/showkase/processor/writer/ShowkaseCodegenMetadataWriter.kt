@@ -36,9 +36,11 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 && showkaseMetadata.componentIndex != null
                 && showkaseMetadata.componentIndex > 0
             ) {
-                "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
+                "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}" +
+                    "_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
             } else {
-                "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}_${showkaseMetadata.showkaseName}"
+                "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}" +
+                    "_${showkaseMetadata.showkaseName}"
             }
             val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
                 && showkaseMetadata.showkaseStyleName != null
