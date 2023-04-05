@@ -50,7 +50,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
 ) : BaseProcessor(kspEnvironment) {
 
     private val logger = ShowkaseExceptionLogger()
-    private val showkaseValidator = ShowkaseValidator()
+    private val showkaseValidator by lazy { ShowkaseValidator(environment) }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String>  {
         val supportedAnnotations = mutableSetOf(
@@ -204,7 +204,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         // Supported annotations from classpath
         val supportedCustomPreview = mutableSetOf<ShowkaseMultiPreviewCodegenMetadata>()
-            environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+        environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }.mapNotNull {
                 return@mapNotNull when (
                     val annotation = it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)

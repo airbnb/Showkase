@@ -29,7 +29,10 @@ import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import kotlin.contracts.contract
 
-internal class ShowkaseValidator {
+internal class ShowkaseValidator(private val environment: XProcessingEnv) {
+
+    private val colorType by lazy { environment.requireType("androidx.compose.ui.graphics.Color") }
+
     @Suppress("ThrowsCount")
     internal fun validateComponentElementOrSkip(
         element: XElement,
@@ -46,6 +49,7 @@ internal class ShowkaseValidator {
                     element
                 )
             }
+
             skipPrivatePreviews && element.isPrivate() -> return true
             // Only check simple name to avoid costly type resolution
             element.findAnnotationBySimpleName(COMPOSABLE_SIMPLE_NAME) == null -> {
@@ -54,6 +58,7 @@ internal class ShowkaseValidator {
                     element
                 )
             }
+
             element.isPrivate() -> {
                 throw ShowkaseProcessorException(
                     "The methods annotated with " +
@@ -75,6 +80,7 @@ internal class ShowkaseValidator {
                     element
                 )
             }
+
             else -> {
                 return false
             }
@@ -122,9 +128,11 @@ internal class ShowkaseValidator {
             is KotlinClassMetadata.FileFacade -> metadata.toKmPackage().functions.validateKaptComposableParameter(
                 composableMethodElement
             )
+
             is KotlinClassMetadata.Class -> metadata.toKmClass().functions.validateKaptComposableParameter(
                 composableMethodElement
             )
+
             else -> false
         }
 
@@ -180,25 +188,34 @@ internal class ShowkaseValidator {
         contract {
             returns() implies (element is XFieldElement)
         }
-        when {
-            !element.isField() -> {
-                throw ShowkaseProcessorException(
-                    "Only \"Color\" fields can be annotated with $annotationName",
-                    element
-                )
+
+        if (!element.isField()) {
+            throw ShowkaseProcessorException(
+                "Only \"Color\" fields can be annotated with $annotationName",
+                element
+            )
+        }
+
+        when (environment.backend) {
+            XProcessingEnv.Backend.JAVAC -> {
+                // Kapt can't see that the original type is a value class, it just sees the raw
+                // type of the Color value class which is a Long
+                if (element.type.isLong()) return
             }
-            !element.type.isLong() -> {
-                throw ShowkaseProcessorException(
-                    "Only \"Color\" fields can be annotated with $annotationName",
-                    element
-                )
-            }
-            // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
-            //  for this element adds a private modifier since it's a field. Potentially use 
-            //  kotlinMetadata to enforce this check. 
-            else -> {
+
+            XProcessingEnv.Backend.KSP -> {
+                if (element.type.rawType == colorType.rawType) return
             }
         }
+
+        throw ShowkaseProcessorException(
+            "Only \"Color\" fields can be annotated with $annotationName",
+            element
+        )
+
+        // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
+        //  for this element adds a private modifier since it's a field. Potentially use
+        //  kotlinMetadata to enforce this check.
     }
 
     internal fun validateTypographyElement(
@@ -216,6 +233,7 @@ internal class ShowkaseValidator {
                     element
                 )
             }
+
             !element.type.isSameType(textStyleType) -> {
                 throw ShowkaseProcessorException(
                     "Only \"TextStyle\" fields can be annotated with $annotationName",
@@ -245,6 +263,7 @@ internal class ShowkaseValidator {
                     elementSet.first()
                 )
             }
+
             else -> {
                 // Safe to do this as we've ensured that there's only one element in this set
                 val element = elementSet.first()
@@ -322,6 +341,7 @@ internal class ShowkaseValidator {
                     elements.first()
                 )
             }
+
             else -> {
                 // Safe to do this as we've ensured that there's only one element in this set
                 val element = elements.first()
@@ -338,17 +358,19 @@ internal class ShowkaseValidator {
                     showkaseScreenshotTestTypeMirror.isAssignableFrom(element.type)
 
                 return if (isShowkaseScreenshotTest) {
-                   ScreenshotTestType.SHOWKASE
+                    ScreenshotTestType.SHOWKASE
                 } else if (
                     environment.findType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
                         ?.isAssignableFrom(element.type) == true
                 ) {
                     val paparazziShowkaseScreenshotTestTypeMirror = environment
                         .requireType(PAPARAZZI_SHOWKASE_SCREENSHOT_TEST_CLASS_NAME)
-                    validatePaparazziShowkaseScreenshotTest(environment, element,
-                        paparazziShowkaseScreenshotTestTypeMirror)
+                    validatePaparazziShowkaseScreenshotTest(
+                        environment, element,
+                        paparazziShowkaseScreenshotTestTypeMirror
+                    )
 
-                   ScreenshotTestType.PAPARAZZI_SHOWKASE
+                    ScreenshotTestType.PAPARAZZI_SHOWKASE
                 } else {
                     throw ShowkaseProcessorException(
                         "Only an implementation of com.airbnb.android.showkase.screenshot.testing" +
@@ -376,9 +398,10 @@ internal class ShowkaseValidator {
         val companionObjectTypeElements = element.getEnclosedTypeElements().filter {
             it.isCompanionObject()
         }
-        val errorMessage = "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} " +
-                "interface should have a companion object that implements the " +
-                "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface."
+        val errorMessage =
+            "Classes implementing the ${paparazziShowkaseScreenshotTestTypeMirror.typeName} " +
+                    "interface should have a companion object that implements the " +
+                    "${paparazziShowkaseScreenshotTestCompanionType.typeName} interface."
         if (companionObjectTypeElements.isEmpty()) {
             throw ShowkaseProcessorException(
                 errorMessage,
@@ -387,7 +410,8 @@ internal class ShowkaseValidator {
         }
 
         if (!paparazziShowkaseScreenshotTestCompanionType
-                .isAssignableFrom(companionObjectTypeElements[0].type)) {
+                .isAssignableFrom(companionObjectTypeElements[0].type)
+        ) {
             throw ShowkaseProcessorException(
                 errorMessage,
                 element
