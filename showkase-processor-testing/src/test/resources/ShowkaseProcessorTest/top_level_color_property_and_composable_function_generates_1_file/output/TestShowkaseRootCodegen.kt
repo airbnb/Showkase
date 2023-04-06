@@ -18,14 +18,14 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
     return listOf<ShowkaseBrowserComponent>(
-        comairbnbandroidshowkaseprocessortestingcomponentname,
+        comairbnbandroidshowkaseprocessortestingTestComposablecomponentname,
     )
   }
 
   public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
     return listOf<ShowkaseBrowserColor>(
-        comairbnbandroidshowkaseprocessortestingcolorname,
+        comairbnbandroidshowkaseprocessortestingredcolorname,
     )
   }
 

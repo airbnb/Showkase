@@ -22,7 +22,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
     return listOf<ShowkaseBrowserColor>(
-        groupname,
+        redgroupname,
     )
   }
 

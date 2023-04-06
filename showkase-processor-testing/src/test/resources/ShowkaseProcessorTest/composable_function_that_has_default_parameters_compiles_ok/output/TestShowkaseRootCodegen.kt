@@ -19,7 +19,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
 
     return mutableListOf<ShowkaseBrowserComponent>(
     ).apply {
-        addAll(comairbnbandroidshowkaseprocessortestinggroupname)
+        addAll(comairbnbandroidshowkaseprocessortestingTestComposableWithDefaultParametersgroupname)
     }
   }
 

@@ -18,9 +18,9 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
     return mutableListOf<ShowkaseBrowserComponent>(
-        comairbnbandroidshowkaseprocessortestingDefaultGroupTestComposable,
+        comairbnbandroidshowkaseprocessortestingTestComposableDefaultGroupTestComposable,
     ).apply {
-        addAll(comairbnbandroidshowkaseprocessortestingDefaultGroupTestComposable2)
+        addAll(comairbnbandroidshowkaseprocessortestingTestComposable2DefaultGroupTestComposable2)
     }
   }
 

@@ -15,12 +15,15 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingfontscalesComponentsmallfont",
+    generatedPropertyName =
+        "comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentsmallfont",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun fontscalesComponentsmallfont(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentsmallfont():
+      Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -32,12 +35,15 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingfontscalesComponentlargefont1",
+    generatedPropertyName =
+        "comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentlargefont1",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun fontscalesComponentlargefont1(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentlargefont1():
+      Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -50,10 +56,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewdarktheme",
+        "comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun themesHelloWorldPreviewdarktheme(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme():
+      Unit {
   }
 }

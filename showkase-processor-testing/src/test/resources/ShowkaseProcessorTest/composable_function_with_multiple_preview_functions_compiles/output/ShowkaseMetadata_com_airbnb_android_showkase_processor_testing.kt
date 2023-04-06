@@ -15,12 +15,14 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingcomponentgroupcomponent",
+    generatedPropertyName =
+        "comairbnbandroidshowkaseprocessortestingComposablesComponentcomponentgroupcomponent",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun componentgroupcomponent(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingComposablesComponentcomponentgroupcomponent():
+      Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -33,10 +35,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewdarktheme",
+        "comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun themesHelloWorldPreviewdarktheme(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme():
+      Unit {
   }
 }

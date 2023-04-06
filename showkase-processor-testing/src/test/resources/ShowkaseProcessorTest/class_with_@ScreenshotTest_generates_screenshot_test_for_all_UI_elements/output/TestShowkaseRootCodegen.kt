@@ -18,22 +18,22 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
     return listOf<ShowkaseBrowserComponent>(
-        comairbnbandroidshowkaseprocessortestinggroup1name1,
-        comairbnbandroidshowkaseprocessortestinggroup2name2,
+        comairbnbandroidshowkaseprocessortestingTestComposable1group1name1,
+        comairbnbandroidshowkaseprocessortestingTestComposable2group2name2,
     )
   }
 
   public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
     return listOf<ShowkaseBrowserColor>(
-        comairbnbandroidshowkaseprocessortestingcolorname,
+        comairbnbandroidshowkaseprocessortestingredcolorname,
     )
   }
 
   public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
     return listOf<ShowkaseBrowserTypography>(
-        comairbnbandroidshowkaseprocessortestingtypographyname,
+        comairbnbandroidshowkaseprocessortestingtitletypographyname,
     )
   }
 }

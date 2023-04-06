@@ -28,6 +28,7 @@ import com.squareup.kotlinpoet.javapoet.toKTypeName
 import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Locale
+import java.util.UUID
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {
@@ -44,7 +45,7 @@ internal sealed class ShowkaseMetadata {
 
     /** A fully qualified prefix for use when de-duplicating components. **/
     val fqPrefix: String
-        get() = "${packageName}_${enclosingClassName}_$elementName"
+        get() = enclosingClassName?.let {"${it}_$elementName" } ?: "${packageName}_$elementName"
 
     data class Component(
         override val element: XElement,
@@ -93,6 +94,10 @@ internal sealed class ShowkaseMetadata {
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
     ) : ShowkaseMetadata()
+
+    companion object {
+
+    }
 }
 
 internal enum class ShowkaseFunctionType {

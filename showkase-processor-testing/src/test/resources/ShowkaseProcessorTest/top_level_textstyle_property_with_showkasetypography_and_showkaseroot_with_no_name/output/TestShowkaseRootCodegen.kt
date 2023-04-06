@@ -30,7 +30,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
     return listOf<ShowkaseBrowserTypography>(
-        comairbnbandroidshowkaseprocessortestinggroupTitle,
+        comairbnbandroidshowkaseprocessortestingtitlegroupTitle,
     )
   }
 }

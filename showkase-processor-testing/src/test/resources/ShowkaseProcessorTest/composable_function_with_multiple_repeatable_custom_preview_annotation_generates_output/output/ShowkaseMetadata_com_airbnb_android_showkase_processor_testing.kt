@@ -15,11 +15,13 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewdarktheme",
+        "comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun themesHelloWorldPreviewdarktheme(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme():
+      Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -32,10 +34,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewlighttheme1",
+        "comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewlighttheme1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun themesHelloWorldPreviewlighttheme1(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewlighttheme1():
+      Unit {
   }
 }
