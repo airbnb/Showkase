@@ -14,12 +14,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingTestComposablegroupname",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroupname",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     tags = ["tag A", "tag B"],
     extraMetadata = ["meta A"],
   )
-  public fun comairbnbandroidshowkaseprocessortestingTestComposablegroupname(): Unit {
+  public fun groupname(): Unit {
   }
 }

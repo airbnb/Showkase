@@ -15,15 +15,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentsmallfont",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingfontscalesComponentsmallfont",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public
-      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentsmallfont():
-      Unit {
+  public fun fontscalesComponentsmallfont(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -35,15 +32,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentlargefont1",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingfontscalesComponentlargefont1",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public
-      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentlargefont1():
-      Unit {
+  public fun fontscalesComponentlargefont1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -56,12 +50,10 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideWrapperClass = false,
     showkaseKDoc = "",
     generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme",
+        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewdarktheme",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public
-      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme():
-      Unit {
+  public fun themesHelloWorldPreviewdarktheme(): Unit {
   }
 }

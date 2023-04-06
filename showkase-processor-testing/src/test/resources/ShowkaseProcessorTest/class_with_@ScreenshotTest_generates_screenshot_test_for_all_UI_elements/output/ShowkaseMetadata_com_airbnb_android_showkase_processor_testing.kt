@@ -14,11 +14,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingTestComposable1group1name1",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroup1name1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun comairbnbandroidshowkaseprocessortestingTestComposable1group1name1(): Unit {
+  public fun group1name1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -30,11 +30,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingTestComposable2group2name2",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroup2name2",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun comairbnbandroidshowkaseprocessortestingTestComposable2group2name2(): Unit {
+  public fun group2name2(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -46,10 +46,10 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingredcolorname",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingcolorname",
     showkaseMetadataType = "COLOR",
   )
-  public fun comairbnbandroidshowkaseprocessortestingredcolorname(): Unit {
+  public fun colorname(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -61,9 +61,9 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingtitletypographyname",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingtypographyname",
     showkaseMetadataType = "TYPOGRAPHY",
   )
-  public fun comairbnbandroidshowkaseprocessortestingtitletypographyname(): Unit {
+  public fun typographyname(): Unit {
   }
 }

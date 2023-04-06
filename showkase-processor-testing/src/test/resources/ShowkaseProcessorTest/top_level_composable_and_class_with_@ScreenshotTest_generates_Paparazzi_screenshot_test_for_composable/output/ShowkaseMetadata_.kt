@@ -14,11 +14,11 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "TestComposable1group1name1",
+    generatedPropertyName = "group1name1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun TestComposable1group1name1(): Unit {
+  public fun group1name1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -30,10 +30,10 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "TestComposable2group2name2",
+    generatedPropertyName = "group2name2",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun TestComposable2group2name2(): Unit {
+  public fun group2name2(): Unit {
   }
 }

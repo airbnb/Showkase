@@ -15,10 +15,10 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingComposablesredgroupname",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroupname",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COLOR",
   )
-  public fun comairbnbandroidshowkaseprocessortestingComposablesredgroupname(): Unit {
+  public fun groupname(): Unit {
   }
 }

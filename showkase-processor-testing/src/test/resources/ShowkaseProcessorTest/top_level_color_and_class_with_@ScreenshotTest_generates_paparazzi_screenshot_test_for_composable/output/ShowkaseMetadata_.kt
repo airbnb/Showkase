@@ -14,9 +14,9 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "redgroupname",
+    generatedPropertyName = "groupname",
     showkaseMetadataType = "COLOR",
   )
-  public fun redgroupname(): Unit {
+  public fun groupname(): Unit {
   }
 }

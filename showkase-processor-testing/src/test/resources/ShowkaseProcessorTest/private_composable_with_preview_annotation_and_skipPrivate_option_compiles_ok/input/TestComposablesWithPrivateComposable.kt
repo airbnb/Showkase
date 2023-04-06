@@ -1,4 +1,5 @@
-package com.airbnb.android.showkase_processor_testing
+package ShowkaseProcessorTest.private_composable_with_preview_annotation_and_skipPrivate_option_compiles_ok.input
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 

@@ -44,7 +44,7 @@ internal sealed class ShowkaseMetadata {
 
     /** A fully qualified prefix for use when de-duplicating components. **/
     val fqPrefix: String
-        get() = enclosingClassName?.let {"${it}_$elementName" } ?: "${packageName}_$elementName"
+        get() = "${packageName}_${enclosingClassName}_$elementName"
 
     data class Component(
         override val element: XElement,

@@ -16,8 +16,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing_my_v
     insideObject = true,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingmyverylongnameWrapperClassTestComposablegroupname",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingmyverylongnamegroupname",
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
@@ -25,8 +24,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing_my_v
         [MyVeryLongPackageNameViewStateSomethingSomethingFunnyStuffProvider::class],
     previewParameterName = "text",
   )
-  public
-      fun comairbnbandroidshowkaseprocessortestingmyverylongnameWrapperClassTestComposablegroupname():
-      Unit {
+  public fun groupname(): Unit {
   }
 }

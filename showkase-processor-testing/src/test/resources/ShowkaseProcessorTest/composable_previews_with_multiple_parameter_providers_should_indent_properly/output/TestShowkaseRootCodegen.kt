@@ -6,8 +6,8 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseProvider
-import com.airbnb.android.showkase_browser_testing.comairbnbandroidshowkasebrowsertestingTestComposable1Group1Composable1Usageofanintegerpreviewparameterprovider
-import com.airbnb.android.showkase_browser_testing.comairbnbandroidshowkasebrowsertestingTestComposable2Group1Composable2Usageofacharpreviewparameterprovider
+import com.airbnb.android.showkase_browser_testing.comairbnbandroidshowkasebrowsertestingGroup1Composable1Usageofanintegerpreviewparameterprovider
+import com.airbnb.android.showkase_browser_testing.comairbnbandroidshowkasebrowsertestingGroup1Composable2Usageofacharpreviewparameterprovider
 import kotlin.collections.List
 
 @ShowkaseRootCodegen(
@@ -21,8 +21,8 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
 
     return mutableListOf<ShowkaseBrowserComponent>(
     ).apply {
-        addAll(comairbnbandroidshowkasebrowsertestingTestComposable1Group1Composable1Usageofanintegerpreviewparameterprovider)
-        addAll(comairbnbandroidshowkasebrowsertestingTestComposable2Group1Composable2Usageofacharpreviewparameterprovider)
+        addAll(comairbnbandroidshowkasebrowsertestingGroup1Composable1Usageofanintegerpreviewparameterprovider)
+        addAll(comairbnbandroidshowkasebrowsertestingGroup1Composable2Usageofacharpreviewparameterprovider)
     }
   }
 

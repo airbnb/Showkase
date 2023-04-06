@@ -15,14 +15,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingTestComposableWithDefaultParametersgroupname",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroupname",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [NewParameterProvider::class],
     previewParameterName = "bankHeader",
   )
-  public fun comairbnbandroidshowkaseprocessortestingTestComposableWithDefaultParametersgroupname():
-      Unit {
+  public fun groupname(): Unit {
   }
 }

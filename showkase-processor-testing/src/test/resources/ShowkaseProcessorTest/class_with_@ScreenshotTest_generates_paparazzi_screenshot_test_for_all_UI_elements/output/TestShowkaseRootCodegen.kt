@@ -16,22 +16,22 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
     return listOf<ShowkaseBrowserComponent>(
-        TestComposable1group1name1,
-        TestComposable2group2name2,
+        group1name1,
+        group2name2,
     )
   }
 
   public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
     return listOf<ShowkaseBrowserColor>(
-        redcolorname,
+        colorname,
     )
   }
 
   public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
     return listOf<ShowkaseBrowserTypography>(
-        titletypographyname,
+        typographyname,
     )
   }
 }

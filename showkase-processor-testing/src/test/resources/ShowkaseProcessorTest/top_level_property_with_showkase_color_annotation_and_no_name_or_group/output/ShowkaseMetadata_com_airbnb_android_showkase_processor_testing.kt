@@ -14,9 +14,9 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingredDefaultGroupRed",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingDefaultGroupRed",
     showkaseMetadataType = "COLOR",
   )
-  public fun comairbnbandroidshowkaseprocessortestingredDefaultGroupRed(): Unit {
+  public fun DefaultGroupRed(): Unit {
   }
 }

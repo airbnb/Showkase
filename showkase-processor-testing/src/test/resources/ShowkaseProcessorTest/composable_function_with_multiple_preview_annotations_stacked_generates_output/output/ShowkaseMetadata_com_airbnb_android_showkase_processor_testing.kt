@@ -14,13 +14,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingComposablePreviewFontfontscalessmallfont",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingfontscalessmallfont",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun comairbnbandroidshowkaseprocessortestingComposablePreviewFontfontscalessmallfont():
-      Unit {
+  public fun fontscalessmallfont(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -32,12 +30,10 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingComposablePreviewFontfontscaleslargefont1",
+    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingfontscaleslargefont1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun comairbnbandroidshowkaseprocessortestingComposablePreviewFontfontscaleslargefont1():
-      Unit {
+  public fun fontscaleslargefont1(): Unit {
   }
 }
