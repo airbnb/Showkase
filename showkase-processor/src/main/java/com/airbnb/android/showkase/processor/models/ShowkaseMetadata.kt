@@ -28,7 +28,6 @@ import com.squareup.kotlinpoet.javapoet.toKTypeName
 import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Locale
-import java.util.UUID
 
 @Suppress("LongParameterList")
 internal sealed class ShowkaseMetadata {
@@ -94,10 +93,6 @@ internal sealed class ShowkaseMetadata {
         override val insideWrapperClass: Boolean = false,
         override val insideObject: Boolean = false,
     ) : ShowkaseMetadata()
-
-    companion object {
-
-    }
 }
 
 internal enum class ShowkaseFunctionType {
