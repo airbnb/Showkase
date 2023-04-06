@@ -323,10 +323,10 @@ internal fun generatePropertyNameFromMetadata(
             val name =
                 if (metadata.componentIndex != null && metadata.componentIndex > 0
                 ) {
-                    "${metadata.fqPrefix}_${metadata.showkaseGroup}_" +
+                    "${metadata.elementName}_${metadata.showkaseGroup}_" +
                             "${metadata.showkaseName}_${metadata.componentIndex}"
                 } else {
-                    "${metadata.fqPrefix}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+                    "${metadata.elementName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
                 }
             val propertyName = if (metadata.showkaseStyleName != null) {
                 "${name}_${metadata.showkaseStyleName}"
@@ -336,7 +336,7 @@ internal fun generatePropertyNameFromMetadata(
             propertyName
         }
         else -> {
-            "${metadata.fqPrefix}_${metadata.showkaseGroup}_${metadata.showkaseName}"
+            "${metadata.elementName}_${metadata.showkaseGroup}_${metadata.showkaseName}"
                 .filter { it.isLetterOrDigit() }
         }
     }
