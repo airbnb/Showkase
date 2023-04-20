@@ -95,6 +95,12 @@ interface PaparazziShowkaseScreenshotTest {
         fun uiModes(): List<PaparazziShowkaseUIMode> = listOf(PaparazziShowkaseUIMode.DEFAULT)
     }
 
+    /**
+     * Can be overridden to add logic to decide if a screenshot should be taken
+     * based on the device config and group.
+     */
+    fun shouldTakeScreenshot(deviceConfig: DeviceConfig, group: String) : Boolean = true
+
     fun takePaparazziSnapshot(
         paparazzi: Paparazzi,
         testPreview: PaparazziShowkaseTestPreview,
@@ -133,6 +139,8 @@ interface PaparazziShowkaseScreenshotTest {
 }
 
 interface PaparazziShowkaseTestPreview {
+    val group: String
+
     @Composable
     fun Content()
 }
@@ -142,9 +150,11 @@ private const val DELIM = "**"
 class ComponentPaparazziShowkaseTestPreview(
     private val showkaseBrowserComponent: ShowkaseBrowserComponent,
 ) : PaparazziShowkaseTestPreview {
+    override val group: String = showkaseBrowserComponent.group
 
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
+
     override fun toString(): String =
         "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}" +
                 "${showkaseBrowserComponent.styleName}"
@@ -153,6 +163,8 @@ class ComponentPaparazziShowkaseTestPreview(
 class ColorPaparazziShowkaseTestPreview(
     private val showkaseBrowserColor: ShowkaseBrowserColor
 ) : PaparazziShowkaseTestPreview {
+    override val group: String = showkaseBrowserColor.colorGroup
+
     @Composable
     override fun Content() {
         Box(
@@ -170,6 +182,8 @@ class ColorPaparazziShowkaseTestPreview(
 class TypographyPaparazziShowkaseTestPreview(
     private val showkaseBrowserTypography: ShowkaseBrowserTypography
 ) : PaparazziShowkaseTestPreview {
+    override val group: String = showkaseBrowserTypography.typographyGroup
+
     @Composable
     override fun Content() {
         BasicText(
