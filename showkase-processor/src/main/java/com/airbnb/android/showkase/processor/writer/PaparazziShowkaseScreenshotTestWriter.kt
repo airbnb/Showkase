@@ -198,24 +198,19 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                         )
                         .build()
                 )
-                .addStatement(
+                .addCode(
                     "%N.unsafeUpdateConfig(%N.deviceConfig.copy(softButtons = false))",
                     "paparazzi",
                     "config"
                 )
-                .beginControlFlow(
-                    "if (shouldTakeScreenshot(%N.deviceConfig, %N.group))",
-                    "config",
-                    "elementPreview"
-                )
-                .addStatement(
+                .addCode("\n")
+                .addCode(
                     "takePaparazziSnapshot(%N, %N, %N, %N)",
                     "paparazzi",
                     "elementPreview",
                     "direction",
                     "uiMode"
                 )
-                .endControlFlow()
                 .build()
         )
     }

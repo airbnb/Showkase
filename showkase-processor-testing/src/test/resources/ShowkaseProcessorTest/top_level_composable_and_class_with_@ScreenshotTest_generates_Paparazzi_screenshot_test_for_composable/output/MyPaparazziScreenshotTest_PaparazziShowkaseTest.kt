@@ -35,9 +35,7 @@ public class MyPaparazziScreenshotTest_PaparazziShowkaseTest : MyPaparazziScreen
         uiMode: PaparazziShowkaseUIMode,
   ): Unit {
     paparazzi.unsafeUpdateConfig(config.deviceConfig.copy(softButtons = false))
-    if (shouldTakeScreenshot(config.deviceConfig, elementPreview.group)) {
-      takePaparazziSnapshot(paparazzi, elementPreview, direction, uiMode)
-    }
+    takePaparazziSnapshot(paparazzi, elementPreview, direction, uiMode)
   }
 
   private object PaparazziShowkasePreviewProvider : TestParameter.TestParameterValuesProvider {

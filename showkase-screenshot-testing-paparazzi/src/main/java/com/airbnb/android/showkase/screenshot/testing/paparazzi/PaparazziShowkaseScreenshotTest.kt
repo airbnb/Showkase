@@ -95,12 +95,6 @@ interface PaparazziShowkaseScreenshotTest {
         fun uiModes(): List<PaparazziShowkaseUIMode> = listOf(PaparazziShowkaseUIMode.DEFAULT)
     }
 
-    /**
-     * Can be overridden to add logic to decide if a screenshot should be taken
-     * based on the device config and group.
-     */
-    fun shouldTakeScreenshot(deviceConfig: DeviceConfig, group: String) : Boolean = true
-
     fun takePaparazziSnapshot(
         paparazzi: Paparazzi,
         testPreview: PaparazziShowkaseTestPreview,
