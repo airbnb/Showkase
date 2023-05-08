@@ -14,11 +14,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "comairbnbandroidshowkaseprocessortestingthemesHelloWorldPreviewlighttheme",
+    generatedPropertyName = "HelloWorldPreviewthemesHelloWorldPreviewlighttheme",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun themesHelloWorldPreviewlighttheme(): Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewlighttheme():
+      Unit {
   }
 }

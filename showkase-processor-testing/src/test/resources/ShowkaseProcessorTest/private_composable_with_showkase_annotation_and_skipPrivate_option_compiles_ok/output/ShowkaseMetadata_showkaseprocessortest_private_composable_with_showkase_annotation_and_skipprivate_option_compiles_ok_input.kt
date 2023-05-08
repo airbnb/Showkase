@@ -18,13 +18,14 @@ public class
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "ShowkaseProcessorTestprivatecomposablewithshowkaseannotationandskipPrivateoptioncompilesokinputgroup1name1",
+    generatedPropertyName = "TestComposable1group1name1",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun group1name1(): Unit {
+  public
+      fun ShowkaseProcessorTestprivatecomposablewithshowkaseannotationandskipPrivateoptioncompilesokinputComposablesTestComposable1group1name1():
+      Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -37,12 +38,13 @@ public class
     insideObject = false,
     insideWrapperClass = true,
     showkaseKDoc = "",
-    generatedPropertyName =
-        "ShowkaseProcessorTestprivatecomposablewithshowkaseannotationandskipPrivateoptioncompilesokinputgroup3name3",
+    generatedPropertyName = "TestComposable3group3name3",
     enclosingClass = [Composables::class],
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun group3name3(): Unit {
+  public
+      fun ShowkaseProcessorTestprivatecomposablewithshowkaseannotationandskipPrivateoptioncompilesokinputComposablesTestComposable3group3name3():
+      Unit {
   }
 }
