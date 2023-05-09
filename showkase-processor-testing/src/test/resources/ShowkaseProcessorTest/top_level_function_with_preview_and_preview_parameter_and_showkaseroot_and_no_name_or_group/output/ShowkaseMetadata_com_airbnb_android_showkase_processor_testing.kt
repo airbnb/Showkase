@@ -15,11 +15,12 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingDefaultGroupTestComposable",
+    generatedPropertyName = "TestComposableDefaultGroupTestComposable",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun DefaultGroupTestComposable(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingTestComposableDefaultGroupTestComposable():
+      Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -31,12 +32,13 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingDefaultGroupTestComposable2",
+    generatedPropertyName = "TestComposable2DefaultGroupTestComposable2",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
     previewParameterClass = [ParameterProvider::class],
     previewParameterName = "text",
   )
-  public fun DefaultGroupTestComposable2(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingTestComposable2DefaultGroupTestComposable2():
+      Unit {
   }
 }

@@ -14,11 +14,11 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "group1name1",
+    generatedPropertyName = "TestComposable1group1name1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun group1name1(): Unit {
+  public fun TestComposable1group1name1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -30,11 +30,11 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "group2name2",
+    generatedPropertyName = "TestComposable2group2name2",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun group2name2(): Unit {
+  public fun TestComposable2group2name2(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -46,10 +46,10 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "colorname",
+    generatedPropertyName = "redcolorname",
     showkaseMetadataType = "COLOR",
   )
-  public fun colorname(): Unit {
+  public fun redcolorname(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -61,9 +61,9 @@ public class ShowkaseMetadata_ {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "typographyname",
+    generatedPropertyName = "titletypographyname",
     showkaseMetadataType = "TYPOGRAPHY",
   )
-  public fun typographyname(): Unit {
+  public fun titletypographyname(): Unit {
   }
 }

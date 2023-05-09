@@ -275,12 +275,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     private fun Collection<ShowkaseMetadata.Component>.dedupeAndSort() = this.distinctBy {
-        // It's possible that a composable annotation is annotated with both Preview & 
+        // It's possible that a composable annotation is annotated with both Preview &
         // ShowkaseComposable(especially if we add more functionality to Showkase and they diverge
         // in the customizations that they offer). In that scenario, its important to dedupe the
         // composables as they will be processed across both the rounds. We first ensure that
-        // only distict method's are passed onto the next round. We do this by deduping on 
-        // the combination of packageName, the wrapper class when available(otherwise it 
+        // only distict method's are passed onto the next round. We do this by deduping on
+        // the combination of packageName, the wrapper class when available(otherwise it
         // will be null) & the methodName.
         if (it.componentIndex != null) {
             "${it.packageName}_${it.enclosingClassName}_${it.elementName}_${it.componentIndex}"
@@ -290,16 +290,18 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
     }
         .distinctBy {
-            // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app.
+            // We also ensure that the component groupName and the component name are unique so
+            // that they don't show up twice in the browser app. This also de-duplicates based
+            // on the fully qualified function name to support categorization with additional
+            // fields (e.g. tags, extraMetadata, etc) on custom browsers.
             if (it.componentIndex != null) {
-                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
+                "${it.fqPrefix}_${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
             } else {
-                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+                "${it.fqPrefix}_${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
             }
         }
         .sortedBy {
-            "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+            it.fqPrefix
         }
 
     private fun processColorAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
