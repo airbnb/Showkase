@@ -9,7 +9,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -69,17 +68,6 @@ fun PreviewCustomButtonSmall() {
         size = ButtonSize.Small
     )
 }
-
-@ShowkaseComposable(name = "CustomButton", group = "Localised", styleName = "Small")
-@Composable
-fun PreviewCustomButtonLocalised() {
-    CustomButton(
-        text = stringResource(id = R.string.button),
-        onClick = {  },
-        size = ButtonSize.Small
-    )
-}
-
 
 @Suppress("MatchingDeclarationName")
 enum class ButtonSize {
