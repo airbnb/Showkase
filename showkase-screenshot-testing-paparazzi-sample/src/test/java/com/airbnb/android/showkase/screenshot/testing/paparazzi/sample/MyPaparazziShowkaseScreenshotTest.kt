@@ -18,7 +18,7 @@ abstract class MyPaparazziShowkaseScreenshotTest : PaparazziShowkaseScreenshotTe
         mode: PaparazziShowkaseUIMode
     ) {
         if (paparazzi.resources.configuration.locales.get(0).toString() == "en-gb" ||
-            testPreview.group == "Localised"
+            testPreview.showkaseBrowserElement.group == "Localised"
         ) {
             super.takePaparazziSnapshot(paparazzi, testPreview, direction, mode)
         }

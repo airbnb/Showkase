@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 // This was added here only because this module has compose dependencies.
 data class ShowkaseBrowserComponent(
     val componentKey: String, 
-    val group: String,
+    override val group: String,
     val componentName: String,
     val componentKDoc: String,
     val component: @Composable () -> Unit,
@@ -16,4 +16,7 @@ data class ShowkaseBrowserComponent(
     val heightDp: Int? = null,
     val tags: List<String> = emptyList(),
     val extraMetadata: List<String> = emptyList()
-)
+): ShowkaseBrowserElement {
+    override val name: String = componentName
+    override val kDoc: String = componentKDoc
+}

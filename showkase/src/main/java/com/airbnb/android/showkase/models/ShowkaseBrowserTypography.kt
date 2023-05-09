@@ -7,4 +7,8 @@ data class ShowkaseBrowserTypography(
     val typographyName: String,
     val typographyKDoc: String,
     val textStyle: TextStyle,
-)
+): ShowkaseBrowserElement {
+    override val group: String = typographyGroup
+    override val name: String = typographyName
+    override val kDoc: String = typographyKDoc
+}

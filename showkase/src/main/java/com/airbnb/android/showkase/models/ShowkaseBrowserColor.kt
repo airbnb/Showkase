@@ -7,4 +7,8 @@ data class ShowkaseBrowserColor(
     val colorName: String,
     val colorKDoc: String,
     val color: Color
-)
+): ShowkaseBrowserElement {
+    override val group: String = colorGroup
+    override val name: String = colorName
+    override val kDoc: String = colorKDoc
+}
