@@ -94,7 +94,9 @@ internal class ShowkaseExtensionFunctionsWriter(
                 .addStatement("try {")
                 .indent()
                 .addStatement(
-                    "val showkaseComponentProvider = Class.forName(\"${classKey}Codegen\").getDeclaredConstructor().newInstance() as %T",
+                    "val showkaseComponentProvider = Class.forName(\"${classKey}Codegen\")\n\t" +
+                            ".getDeclaredConstructor()\n\t" +
+                            ".newInstance() as %T",
                     SHOWKASE_PROVIDER_CLASS_NAME
                 )
                 .addStatement("return %L.metadata()", "showkaseComponentProvider")
