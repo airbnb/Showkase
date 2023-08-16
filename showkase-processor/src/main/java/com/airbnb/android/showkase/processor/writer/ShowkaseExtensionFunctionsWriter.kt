@@ -94,7 +94,9 @@ internal class ShowkaseExtensionFunctionsWriter(
                 .addStatement("try {")
                 .indent()
                 .addStatement(
-                    "val showkaseComponentProvider = Class.forName(\"${classKey}Codegen\").newInstance() as %T",
+                    "val showkaseComponentProvider = Class.forName(\"${classKey}Codegen\")\n\t" +
+                            ".getDeclaredConstructor()\n\t" +
+                            ".newInstance() as %T",
                     SHOWKASE_PROVIDER_CLASS_NAME
                 )
                 .addStatement("return %L.metadata()", "showkaseComponentProvider")
@@ -125,7 +127,7 @@ internal class ShowkaseExtensionFunctionsWriter(
             ClassName(CONTEXT_PACKAGE_NAME, "Intent")
         private val SHOWKASE_BROWSER_ACTIVITY_CLASS_NAME =
             ClassName("com.airbnb.android.showkase.ui", "ShowkaseBrowserActivity")
-        private val SHOWKASE_ELEMENTS_METADATA_CLASS_NAME = 
+        private val SHOWKASE_ELEMENTS_METADATA_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "ShowkaseElementsMetadata")
         internal val SHOWKASE_OBJECT_CLASS_NAME =
             ClassName(SHOWKASE_MODELS_PACKAGE_NAME, "Showkase")
