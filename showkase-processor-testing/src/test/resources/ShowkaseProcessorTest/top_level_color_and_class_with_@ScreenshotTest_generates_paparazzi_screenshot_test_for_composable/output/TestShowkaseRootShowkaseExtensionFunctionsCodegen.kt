@@ -21,8 +21,9 @@ public fun Showkase.getBrowserIntent(context: Context): Intent {
  */
 public fun Showkase.getMetadata(): ShowkaseElementsMetadata {
     try {
-      val showkaseComponentProvider = Class.forName(".TestShowkaseRootCodegen").newInstance() as
-          ShowkaseProvider
+      val showkaseComponentProvider = Class.forName(".TestShowkaseRootCodegen")
+          	.getDeclaredConstructor()
+          	.newInstance() as ShowkaseProvider
       return showkaseComponentProvider.metadata()
     } catch(exception: ClassNotFoundException) {
       error("The class wasn't generated correctly. Make sure that you have setup Showkase correctly by following the steps here - https://github.com/airbnb/Showkase#Installation.")
