@@ -58,7 +58,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
     ): ShowkaseElementsMetadata {
         return try {
             val showkaseComponentProvider =
-                Class.forName("$classKey$AUTOGEN_CLASS_NAME").newInstance()
+                Class.forName("$classKey$AUTOGEN_CLASS_NAME").getDeclaredConstructor().newInstance()
             
             val showkaseMetadata = (showkaseComponentProvider as ShowkaseProvider).metadata()
 
