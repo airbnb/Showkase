@@ -40,6 +40,10 @@ internal sealed class ShowkaseMetadata {
     abstract val insideWrapperClass: Boolean
     abstract val insideObject: Boolean
 
+    /** A fully qualified prefix for use when de-duplicating components. **/
+    val fqPrefix: String
+        get() = enclosingClassName?.let {"${it}_$elementName" } ?: "${packageName}_$elementName"
+
     data class Component(
         override val element: XElement,
         override val packageName: String,
@@ -347,7 +351,7 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
             showkaseName = showkaseName,
             showkaseGroup = showkaseGroup,
             showkaseWidthDp = if (width == -1) null else width,
-            showkaseHeightDp = if (height == -1) null else width,
+            showkaseHeightDp = if (height == -1) null else height,
             insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
             insideObject = commonMetadata.showkaseFunctionType.insideObject(),
             element = element,

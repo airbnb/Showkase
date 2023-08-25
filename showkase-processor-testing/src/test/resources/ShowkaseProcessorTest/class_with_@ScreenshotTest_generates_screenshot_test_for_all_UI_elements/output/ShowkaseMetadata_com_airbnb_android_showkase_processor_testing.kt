@@ -14,11 +14,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroup1name1",
+    generatedPropertyName = "TestComposable1group1name1",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun group1name1(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingTestComposable1group1name1(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -30,11 +30,11 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestinggroup2name2",
+    generatedPropertyName = "TestComposable2group2name2",
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun group2name2(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingTestComposable2group2name2(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -46,10 +46,10 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingcolorname",
+    generatedPropertyName = "redcolorname",
     showkaseMetadataType = "COLOR",
   )
-  public fun colorname(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingredcolorname(): Unit {
   }
 
   @ShowkaseCodegenMetadata(
@@ -61,9 +61,9 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     insideObject = false,
     insideWrapperClass = false,
     showkaseKDoc = "",
-    generatedPropertyName = "comairbnbandroidshowkaseprocessortestingtypographyname",
+    generatedPropertyName = "titletypographyname",
     showkaseMetadataType = "TYPOGRAPHY",
   )
-  public fun typographyname(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingtitletypographyname(): Unit {
   }
 }

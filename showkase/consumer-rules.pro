@@ -1,0 +1,1 @@
+-keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
