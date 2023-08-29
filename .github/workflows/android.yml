@@ -69,6 +69,7 @@ jobs:
 
   ui-testing:
     runs-on: macos-11
+    timeout-minutes: 60
     strategy:
       matrix:
         api-level: [ 26, 29 ]
