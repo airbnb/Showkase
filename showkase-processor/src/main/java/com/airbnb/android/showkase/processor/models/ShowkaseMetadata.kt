@@ -25,8 +25,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.javapoet.toKClassName
 import com.squareup.kotlinpoet.javapoet.toKTypeName
-import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
-import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Locale
 
 @Suppress("LongParameterList")
@@ -513,14 +511,8 @@ fun XElement.isTopLevel(enclosingElement: XMemberContainer): Boolean {
         // class type. This is null though if the type doesn't have metadata, such as in the case
         // of a top level function.
         val kotlinMetadata = xTypeElement.getFieldWithReflection<Any?>("kotlinMetadata")
-            ?: return true
 
-        val enclosingElementKind = kotlinMetadata
-            .getFieldWithReflection<KotlinClassMetadata.Class>("classMetadata")
-            .header
-            .kind
-
-        enclosingElementKind == FILE_FACADE_KIND
+        return kotlinMetadata == null
     } else {
         // Per enclosingElement kdoc:
         // When running with KSP, if this function is in source, the value will NOT be an XTypeElement.
