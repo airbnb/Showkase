@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  # 33.1.5
+  EMULATOR_BUILD_VERSION: 9997245
+
 jobs:
   build:
 
@@ -88,7 +92,7 @@ jobs:
       - name: Run UI Tests w/ KAPT
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 7425822
+          emulator-build: ${{ env.EMULATOR_BUILD_VERSION }}
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
@@ -97,7 +101,7 @@ jobs:
       - name: Run UI Tests w/ KSP
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 7425822
+          emulator-build: ${{ env.EMULATOR_BUILD_VERSION }}
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
@@ -106,7 +110,7 @@ jobs:
       - name: Run Screenshot Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 7425822
+          emulator-build: ${{ env.EMULATOR_BUILD_VERSION }}
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
