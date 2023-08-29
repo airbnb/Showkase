@@ -131,14 +131,13 @@ jobs:
           name: android-test-reports-${{ matrix.api-level }}
           path: '**/build/reports/androidTests'
 
-
 ### Uncomment the jobs below if you want to generate and record screenshots. Once you download the
 ### artifact, place them under sample/screenshots/debug/
 
 #      - name: Record screenshots
 #        uses: reactivecircus/android-emulator-runner@v2
 #        with:
-#          emulator-build: 7425822
+#          emulator-build: ${{ env.EMULATOR_BUILD_VERSION }}
 #          api-level: ${{ matrix.api-level }}
 #          target: ${{ matrix.target }}
 #          arch: x86_64
