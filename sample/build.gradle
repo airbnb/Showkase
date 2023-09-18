@@ -19,7 +19,7 @@ if (project.hasProperty('useKsp')) {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.airbnb.android.showkasesample"

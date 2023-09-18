@@ -38,7 +38,7 @@ configurations {
 
 android {
     namespace 'com.airbnb.android.showkase.screenshot.testing.paparazzi'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         minSdk 21
