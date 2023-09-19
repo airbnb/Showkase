@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
@@ -118,10 +119,11 @@ interface PaparazziShowkaseScreenshotTest {
                 LocalConfiguration provides configuration,
                 LocalLayoutDirection provides direction,
                 // Needed so that UI that uses it don't crash during screenshot tests
-                LocalOnBackPressedDispatcherOwner provides object: OnBackPressedDispatcherOwner {
-                    override fun getLifecycle() = lifecycleOwner.lifecycle
-
-                    override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
+                LocalOnBackPressedDispatcherOwner provides object : OnBackPressedDispatcherOwner {
+                    override val lifecycle: Lifecycle
+                        get() = lifecycleOwner.lifecycle
+                    override val onBackPressedDispatcher: OnBackPressedDispatcher
+                        get() = OnBackPressedDispatcher()
                 }
             ) {
                 Box {
