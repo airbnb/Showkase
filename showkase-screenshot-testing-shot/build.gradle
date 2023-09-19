@@ -18,7 +18,7 @@ android {
     defaultConfig {
         testApplicationId "com.airbnb.android.showkase.screenshot.testing.shot"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         testInstrumentationRunner "com.karumi.shot.ShotTestRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
