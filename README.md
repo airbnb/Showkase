@@ -142,6 +142,14 @@ class MyRootModule: ShowkaseRootModule
 startActivity(Showkase.getBrowserIntent(context))
 ```
 
+Most users of Showkase will use it in their debug builds. However, if you have a use case where you would
+like to use Showkase in a release build (or a build that has minification enabled), you will need to add
+the following line to your proguard rules
+
+```
+-keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
+```
+
 ## Documentation
 
 ##### 1. @ShowkaseComposable
