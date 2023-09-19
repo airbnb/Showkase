@@ -21,7 +21,7 @@ if (project.hasProperty('useKsp')) {
 }
 
 android {
-    compileSdkVersion 33
+    namespace "com.airbnb.android.showkase.screenshot.testing.paparazzi"
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
@@ -32,6 +32,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 21
+        compileSdk 33
         targetSdkVersion 33
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures

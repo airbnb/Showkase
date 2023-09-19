@@ -5,10 +5,11 @@ plugins {
 apply from: "$rootDir/publishing.gradle"
 
 android {
-    compileSdkVersion 33
+    namespace "com.airbnb.android.showkase"
 
     defaultConfig {
         minSdkVersion 21
+        compileSdk 33
         targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

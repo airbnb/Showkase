@@ -12,7 +12,7 @@ buildscript {
             'composeNavigation'      : '2.5.1',
             'detekt'                 : '1.7.4',
             'espresso'               : '3.2.0',
-            'gradle'                 : '7.4.0',
+            'gradle'                 : '8.0.0',
             'junit'                  : '4.13.2',
             'junitImplementation'    : '1.1.2',
             'kotlin'                 : '1.8.10',
@@ -35,7 +35,7 @@ buildscript {
             'strikt'                 : '0.33.0',
             'xprocessing'            : '2.6.0-alpha01',
             'corektx'                : '1.7.0',
-            'shot'                   : '5.13.0'
+            'shot'                   : '6.0.0'
     ]
     ext.deps = [
             'compose'                : [

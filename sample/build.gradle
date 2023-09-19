@@ -19,11 +19,12 @@ if (project.hasProperty('useKsp')) {
 }
 
 android {
-    compileSdkVersion 33
+    namespace "com.airbnb.android.showkasesample"
 
     defaultConfig {
         applicationId "com.airbnb.android.showkasesample"
         minSdkVersion 21
+        compileSdk 33
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"

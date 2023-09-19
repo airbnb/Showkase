@@ -16,10 +16,11 @@ if (project.hasProperty('useKsp')) {
 }
 
 android {
-    compileSdkVersion 33
+    namespace "com.airbnb.android.submodule.showkasesample"
 
     defaultConfig {
         minSdkVersion 21
+        compileSdk 33
         targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
