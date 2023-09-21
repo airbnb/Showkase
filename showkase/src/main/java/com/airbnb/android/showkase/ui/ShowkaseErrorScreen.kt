@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Snackbar
-import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun ShowkaseErrorScreen(errorText: String) {

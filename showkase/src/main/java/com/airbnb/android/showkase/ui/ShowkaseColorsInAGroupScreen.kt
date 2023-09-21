@@ -27,7 +27,6 @@ import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
-import java.util.Locale
 
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
