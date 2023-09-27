@@ -73,7 +73,7 @@ internal fun ShowkaseComponentDetailScreen(
                 ShowkaseComponentCardType.values().forEach { showkaseComponentCardType ->
                     when (showkaseComponentCardType) {
                         ShowkaseComponentCardType.BASIC -> {
-                            if (!metadata.componentKDoc.isBlank()) {
+                            if (metadata.componentKDoc.isNotBlank()) {
                                 DocumentationPanel(metadata.componentKDoc)
                             }
                             BasicComponentCard(metadata)

@@ -1,13 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.airbnb.android.showkase">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:supportsRtl="true">
         <activity
             android:name="com.airbnb.android.showkase.ui.ShowkaseBrowserActivity"
             android:configChanges="colorMode|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:label="ShowkaseBrowserActivity"
-            android:theme="@style/Theme.App.NoActionBar"
-            android:exported="true">
+            android:theme="@style/Theme.App.NoActionBar">
         </activity>
     </application>
 </manifest>

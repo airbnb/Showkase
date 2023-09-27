@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.airbnb.android.showkasesample">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- This is needed due to Picasso. More info here: https://github.com/square/picasso/issues/2354 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- requestLegacyExternalStorage was needed for the Shot library on API 29+. -->
     <application
