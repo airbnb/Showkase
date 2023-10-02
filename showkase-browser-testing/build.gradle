@@ -3,18 +3,22 @@ apply plugin: 'kotlin-android'
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
+    ksp {
+        arg("skipPrivatePreviews", "true")
+    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
         arguments {
             arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
+            arg("skipPrivatePreviews", "true")
         }
     }
 }
 
 android {
-    compileSdkVersion 32
+    namespace "com.airbnb.android.showkase_browser_testing"
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
@@ -26,7 +30,8 @@ android {
 
     defaultConfig {
         minSdkVersion 26
-        targetSdkVersion 32
+        compileSdk 33
+        targetSdkVersion 33
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
@@ -40,14 +45,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerVersion "${versions.kotlinCompilerVersion}"

@@ -25,8 +25,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.javapoet.toKClassName
 import com.squareup.kotlinpoet.javapoet.toKTypeName
-import kotlinx.metadata.jvm.KotlinClassHeader.Companion.FILE_FACADE_KIND
-import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Locale
 
 @Suppress("LongParameterList")
@@ -41,6 +39,10 @@ internal sealed class ShowkaseMetadata {
     abstract val enclosingClassName: ClassName?
     abstract val insideWrapperClass: Boolean
     abstract val insideObject: Boolean
+
+    /** A fully qualified prefix for use when de-duplicating components. **/
+    val fqPrefix: String
+        get() = enclosingClassName?.let {"${it}_$elementName" } ?: "${packageName}_$elementName"
 
     data class Component(
         override val element: XElement,
@@ -59,7 +61,9 @@ internal sealed class ShowkaseMetadata {
         val previewParameterProviderType: TypeName? = null,
         val previewParameterName: String? = null,
         val showkaseStyleName: String? = null,
-        val isDefaultStyle: Boolean = false
+        val isDefaultStyle: Boolean = false,
+        val tags: List<String> = emptyList(),
+        val extraMetadata: List<String> = emptyList()
     ) : ShowkaseMetadata()
 
     data class Color(
@@ -129,7 +133,10 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 element = element,
                 previewParameterProviderType = previewParameterClassType?.typeName?.toKTypeName(),
                 previewParameterName = props.previewParameterName,
-                isDefaultStyle = props.isDefaultStyle
+                isDefaultStyle = props.isDefaultStyle,
+                tags = props.tags.toList(),
+                extraMetadata = props.tags.toList()
+
             )
         }
         ShowkaseMetadataType.COLOR -> {
@@ -195,6 +202,8 @@ internal fun getShowkaseMetadata(
         )
         val isDefaultStyle = annotation.value.defaultStyle
         val showkaseStyleName = getShowkaseStyleName(annotation.value.styleName, isDefaultStyle)
+        val tags = annotation.value.tags.toList()
+        val extraMetadata = annotation.value.extraMetadata.toList()
 
         ShowkaseMetadata.Component(
             packageSimpleName = commonMetadata.moduleName,
@@ -214,6 +223,8 @@ internal fun getShowkaseMetadata(
             previewParameterProviderType = previewParameterMetadata?.second,
             isDefaultStyle = isDefaultStyle,
             componentIndex = showkaseAnnotations.indexOf(annotation),
+            tags = tags,
+            extraMetadata = extraMetadata
         )
     }
 }
@@ -340,7 +351,7 @@ internal fun getShowkaseMetadataFromCustomAnnotation(
             showkaseName = showkaseName,
             showkaseGroup = showkaseGroup,
             showkaseWidthDp = if (width == -1) null else width,
-            showkaseHeightDp = if (height == -1) null else width,
+            showkaseHeightDp = if (height == -1) null else height,
             insideWrapperClass = commonMetadata.showkaseFunctionType == ShowkaseFunctionType.INSIDE_CLASS,
             insideObject = commonMetadata.showkaseFunctionType.insideObject(),
             element = element,
@@ -500,14 +511,8 @@ fun XElement.isTopLevel(enclosingElement: XMemberContainer): Boolean {
         // class type. This is null though if the type doesn't have metadata, such as in the case
         // of a top level function.
         val kotlinMetadata = xTypeElement.getFieldWithReflection<Any?>("kotlinMetadata")
-            ?: return true
 
-        val enclosingElementKind = kotlinMetadata
-            .getFieldWithReflection<KotlinClassMetadata.Class>("classMetadata")
-            .header
-            .kind
-
-        enclosingElementKind == FILE_FACADE_KIND
+        return kotlinMetadata == null
     } else {
         // Per enclosingElement kdoc:
         // When running with KSP, if this function is in source, the value will NOT be an XTypeElement.

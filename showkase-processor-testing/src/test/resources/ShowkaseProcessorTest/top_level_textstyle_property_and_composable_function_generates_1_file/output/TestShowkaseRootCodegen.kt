@@ -18,7 +18,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
     return listOf<ShowkaseBrowserComponent>(
-        comairbnbandroidshowkaseprocessortestingcomponentname,
+        TestComposablecomponentname,
     )
   }
 
@@ -31,7 +31,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
   public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
     return listOf<ShowkaseBrowserTypography>(
-        comairbnbandroidshowkaseprocessortestingtypographyname,
+        titletypographyname,
     )
   }
 }

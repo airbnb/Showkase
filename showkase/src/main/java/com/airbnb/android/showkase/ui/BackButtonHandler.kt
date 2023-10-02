@@ -27,7 +27,7 @@ private class ComposableBackHandler(enabled: Boolean) : OnBackPressedCallback(en
 }
 
 @Composable
-internal fun handler(
+internal fun Handler(
     enabled: Boolean = true,
     onBackPressed: () -> Unit
 ) {
@@ -65,7 +65,7 @@ internal fun BackButtonHandler(
     CompositionLocalProvider(
         LocalBackPressedDispatcher provides context as ComponentActivity
     ) {
-        handler {
+        Handler {
             onBackPressed()
         }
     }

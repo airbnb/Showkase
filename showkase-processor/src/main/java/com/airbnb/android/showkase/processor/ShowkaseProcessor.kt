@@ -26,11 +26,11 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPrevi
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
+import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
 import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
-import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -44,13 +44,13 @@ class ShowkaseProcessorProvider : SymbolProcessorProvider {
     }
 }
 
-@SupportedSourceVersion(SourceVersion.RELEASE_11) // to support Java 8
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 class ShowkaseProcessor @JvmOverloads constructor(
     kspEnvironment: SymbolProcessorEnvironment? = null
 ) : BaseProcessor(kspEnvironment) {
 
     private val logger = ShowkaseExceptionLogger()
-    private val showkaseValidator = ShowkaseValidator()
+    private val showkaseValidator by lazy { ShowkaseValidator(environment) }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String>  {
         val supportedAnnotations = mutableSetOf(
@@ -137,7 +137,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     ShowkaseBrowserWriter(environment).writeCustomAnnotationElementToMetadata(
                         element
                     )
-                    return@mapNotNull processCustomAnnotation(roundEnvironment, element)
+                    return@mapNotNull processCustomAnnotation(
+                        skipPrivatePreviews = skipPrivatePreviews,
+                        roundEnvironment = roundEnvironment,
+                        annotation = element
+                    )
                 }
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
                     element,
@@ -154,6 +158,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     private fun processCustomAnnotation(
+        skipPrivatePreviews: Boolean,
         roundEnvironment: XRoundEnv,
         annotation: XTypeElement? = null
     ): Set<ShowkaseMetadata.Component> {
@@ -166,17 +171,20 @@ class ShowkaseProcessor @JvmOverloads constructor(
             annotatedElements.map { annotatedElement ->
                 if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
 
-                    showkaseValidator.validateComponentElementOrSkip(
+                    val skipable = showkaseValidator.validateComponentElementOrSkip(
                         element = annotatedElement,
                         annotationName = supportedType,
+                        skipPrivatePreviews = skipPrivatePreviews
                     )
-                    components.addAll(
-                        getShowkaseMetadataFromCustomAnnotation(
-                            element = annotatedElement,
-                            showkaseValidator = showkaseValidator,
-                            supportedType.getCustomAnnotationSimpleName(),
-                        ).toSet()
-                    )
+                    if (!skipable) {
+                        components.addAll(
+                            getShowkaseMetadataFromCustomAnnotation(
+                                element = annotatedElement,
+                                showkaseValidator = showkaseValidator,
+                                supportedType.getCustomAnnotationSimpleName(),
+                            ).toSet()
+                        )
+                    }
                 }
             }
         }
@@ -193,9 +201,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // from the annotation from classpath. We use the fields from the classpath annotation to build
         // common data for the ShowkaseMetadata.
 
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
         // Supported annotations from classpath
         val supportedCustomPreview = mutableSetOf<ShowkaseMultiPreviewCodegenMetadata>()
-            environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+        environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
             .flatMap { it.getEnclosedElements() }.mapNotNull {
                 return@mapNotNull when (
                     val annotation = it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)
@@ -223,19 +232,22 @@ class ShowkaseProcessor @JvmOverloads constructor(
                 roundEnvironment
                     .getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
                     .mapIndexed elementRoot@{ elementIndex, xElement ->
-                        showkaseValidator.validateComponentElementOrSkip(
+                        val skippable = showkaseValidator.validateComponentElementOrSkip(
                             xElement,
                             customPreviewMetadata.supportTypeQualifiedName,
+                            skipPrivatePreviews = skipPrivatePreviews
                         )
-                        components.add(
-                            getShowkaseMetadata(
-                                xElement = xElement,
-                                customPreviewMetadata = customPreviewMetadata,
-                                elementIndex = elementIndex,
-                                index = index,
-                                showkaseValidator = showkaseValidator
+                        if (!skippable) {
+                            components.add(
+                                getShowkaseMetadata(
+                                    xElement = xElement,
+                                    customPreviewMetadata = customPreviewMetadata,
+                                    elementIndex = elementIndex,
+                                    index = index,
+                                    showkaseValidator = showkaseValidator
+                                )
                             )
-                        )
+                        }
 
                     }
             }
@@ -263,12 +275,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
 
     private fun Collection<ShowkaseMetadata.Component>.dedupeAndSort() = this.distinctBy {
-        // It's possible that a composable annotation is annotated with both Preview & 
+        // It's possible that a composable annotation is annotated with both Preview &
         // ShowkaseComposable(especially if we add more functionality to Showkase and they diverge
         // in the customizations that they offer). In that scenario, its important to dedupe the
         // composables as they will be processed across both the rounds. We first ensure that
-        // only distict method's are passed onto the next round. We do this by deduping on 
-        // the combination of packageName, the wrapper class when available(otherwise it 
+        // only distict method's are passed onto the next round. We do this by deduping on
+        // the combination of packageName, the wrapper class when available(otherwise it
         // will be null) & the methodName.
         if (it.componentIndex != null) {
             "${it.packageName}_${it.enclosingClassName}_${it.elementName}_${it.componentIndex}"
@@ -278,16 +290,18 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
     }
         .distinctBy {
-            // We also ensure that the component groupName and the component name are unique so 
-            // that they don't show up twice in the browser app.
+            // We also ensure that the component groupName and the component name are unique so
+            // that they don't show up twice in the browser app. This also de-duplicates based
+            // on the fully qualified function name to support categorization with additional
+            // fields (e.g. tags, extraMetadata, etc) on custom browsers.
             if (it.componentIndex != null) {
-                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
+                "${it.fqPrefix}_${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}_${it.componentIndex}"
             } else {
-                "${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
+                "${it.fqPrefix}_${it.showkaseName}_${it.showkaseGroup}_${it.showkaseStyleName}"
             }
         }
         .sortedBy {
-            "${it.packageName}_${it.enclosingClassName}_${it.elementName}"
+            it.fqPrefix
         }
 
     private fun processColorAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
@@ -517,6 +531,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
             group = props.showkaseGroup,
             name = props.showkaseName,
             isDefaultStyle = props.isDefaultStyle,
+            tags = props.tags.toList(),
+            extraMetadata = props.extraMetadata.toList()
         )
     }
     private fun getShowkaseRootCodegenOnClassPath(
@@ -618,7 +634,9 @@ internal data class ShowkaseGeneratedMetadata(
     val group: String,
     val name: String,
     // This property is only used for components
-    val isDefaultStyle: Boolean = false
+    val isDefaultStyle: Boolean = false,
+    val tags: List<String> = emptyList(),
+    val extraMetadata: List<String> = emptyList()
 )
 
 internal enum class ShowkaseGeneratedMetadataType {

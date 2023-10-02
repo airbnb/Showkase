@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply from: "$rootDir/publishing.gradle"
 
 android {
-    compileSdkVersion 32
+    namespace "com.airbnb.android.showkase.screenshot.testing"
     // Added to avoid this error -
     // Execution failed for task ':showkase-processor-testing:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
@@ -14,7 +14,8 @@ android {
     }
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        compileSdk 33
+        targetSdkVersion 33
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
@@ -22,11 +23,11 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true

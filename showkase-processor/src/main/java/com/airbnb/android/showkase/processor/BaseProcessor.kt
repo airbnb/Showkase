@@ -4,6 +4,7 @@ import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XMessager
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
+import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -41,7 +42,7 @@ abstract class BaseProcessor(
 
     fun isKsp(): Boolean = kspEnvironment != null
 
-    override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.RELEASE_11
+    override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.RELEASE_17
 
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
@@ -73,10 +74,8 @@ abstract class BaseProcessor(
     final override fun process(resolver: Resolver): List<KSAnnotated> {
         val kspEnvironment = requireNotNull(kspEnvironment)
         environment = XProcessingEnv.create(
-            kspEnvironment.options,
+            kspEnvironment,
             resolver,
-            kspEnvironment.codeGenerator,
-            kspEnvironment.logger
         )
         internalProcess(environment, XRoundEnv.create(environment))
         return emptyList()
@@ -107,7 +106,11 @@ abstract class BaseProcessor(
         } catch (e: Throwable) {
             // Errors thrown from within KSP can get lost, making the root cause of an issue hidden.
             // This helps to surface all thrown errors.
-            messager.printMessage(Diagnostic.Kind.ERROR, e.stackTraceToString())
+            if (e is ShowkaseProcessorException && e.element != null) {
+                messager.printMessage(Diagnostic.Kind.ERROR, e.stackTraceToString(), e.element)
+            } else {
+                messager.printMessage(Diagnostic.Kind.ERROR, e.stackTraceToString())
+            }
         }
     }
 

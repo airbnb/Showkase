@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -78,9 +79,10 @@ internal fun ShowkaseBrowserApp(
     val lifecycleOwner = LocalLifecycleOwner.current
     val backPressedDispatcherOwner = remember {
         object : OnBackPressedDispatcherOwner {
-            override fun getLifecycle() = lifecycleOwner.lifecycle
-
-            override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
+            override val lifecycle: Lifecycle
+                get() = lifecycleOwner.lifecycle
+            override val onBackPressedDispatcher: OnBackPressedDispatcher
+                get() = OnBackPressedDispatcher()
         }
     }
     CompositionLocalProvider(

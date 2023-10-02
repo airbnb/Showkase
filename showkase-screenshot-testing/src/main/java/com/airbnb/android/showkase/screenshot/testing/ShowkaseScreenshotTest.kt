@@ -38,6 +38,9 @@ import java.util.*
  *       id: String,
  *       name: String,
  *       group: String,
+ *       styleName: String? = null,
+ *       tags: List<String> = emptyList(),
+ *       extraMetadata: List<String> = emptyList(),
  *       screenshotType: ShowkaseScreenshotType,
  *       screenshotBitmap: Bitmap
  *   ) {
@@ -52,7 +55,7 @@ import java.util.*
  * that the class you annotate with [ShowkaseScreenshot] is either abstract or open as Showkase
  * generates a class that extends this class in order to get access to theonScreenshot method.
  */
-@Suppress("Detekt.TooGenericExceptionCaught", "Detekt.TooGenericExceptionThrown")
+@Suppress("Detekt.TooGenericExceptionCaught", "Detekt.TooGenericExceptionThrown", "Detekt.LongParameterList")
 interface ShowkaseScreenshotTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule
@@ -71,6 +74,10 @@ interface ShowkaseScreenshotTest {
      * @param styleName The name of the style that this component represents. This is only available
      * when ShowkaseScreenshotType == Composable.
      * @param group group that this UI element belongs to
+     * @param tags The list of tags set on the component. This is only available when
+     * ShowkaseScreenshotType == Composable.
+     * @param extraMetadata The list of extra metadata set on the component. This is only available when
+     * ShowkaseScreenshotType == Composable.
      * @param screenshotType A screenshot can be one of the following types: Composable, Color or Typography
      * @param screenshotBitmap Bitmap of the given UI element
      */
@@ -80,6 +87,8 @@ interface ShowkaseScreenshotTest {
         name: String,
         group: String,
         styleName: String? = null,
+        tags: List<String> = emptyList(),
+        extraMetadata: List<String> = emptyList(),
         screenshotType: ShowkaseScreenshotType,
         screenshotBitmap: Bitmap,
     )
@@ -98,6 +107,8 @@ interface ShowkaseScreenshotTest {
                 name = showkaseBrowserComponent.componentName,
                 group = showkaseBrowserComponent.group,
                 styleName = showkaseBrowserComponent.styleName,
+                tags = showkaseBrowserComponent.tags,
+                extraMetadata = showkaseBrowserComponent.extraMetadata,
                 screenshotType = ShowkaseScreenshotType.Composable,
                 screenshotBitmap = bitmap,
             )

@@ -816,4 +816,39 @@ class ShowcaseBrowserTest {
 
         }
     }
+
+    // We have enabled private preview compiler flag so this test
+    // should test that we can have private methods annotated with custom annotations
+    // and that they will not show in the application.
+    @Test
+    fun customAnnotatedPrivateComposablesShouldCompileButNotShow() {
+
+        composeTestRule.apply {
+
+            verifyLandingScreen(
+                components = componentSize,
+                typography = 13,
+                colors = 4,
+            )
+            // Tap on the "Components" row
+            clickRowWithText("Components ($componentSize)")
+
+            waitForIdle()
+
+            onRoot().performTouchInput {
+                swipeUp()
+            }
+
+            waitForIdle()
+
+            val composables = if (BuildConfig.IS_RUNNING_KSP) 3 else 1
+
+            clickRowWithText("LocalePreview ($composables)")
+
+            onNodeWithText("Private Text Composable").assertDoesNotExist()
+
+            waitForIdle()
+
+        }
+    }
 }

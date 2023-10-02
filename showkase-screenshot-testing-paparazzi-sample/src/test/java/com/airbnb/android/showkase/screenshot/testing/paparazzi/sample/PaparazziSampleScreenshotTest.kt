@@ -108,10 +108,11 @@ class PaparazziSampleScreenshotTest {
                     fontScale = fontScale
                 ),
                 // Needed so that UI that uses it don't crash during screenshot tests
-                LocalOnBackPressedDispatcherOwner provides object: OnBackPressedDispatcherOwner {
-                    override fun getLifecycle() = lifecycleOwner.lifecycle
-
-                    override fun getOnBackPressedDispatcher() = OnBackPressedDispatcher()
+                LocalOnBackPressedDispatcherOwner provides object : OnBackPressedDispatcherOwner {
+                    override val lifecycle: Lifecycle
+                        get() = lifecycleOwner.lifecycle
+                    override val onBackPressedDispatcher: OnBackPressedDispatcher
+                        get() = OnBackPressedDispatcher()
                 }
             ) {
                 Box {

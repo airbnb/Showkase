@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.0--beta17-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.2.1-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.2-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.4.2-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -75,14 +75,14 @@ Showkase supports both ksp and kapt. By default, it uses kapt as we only recentl
 #### If you are using kapt
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta17"
-kapt "com.airbnb.android:showkase-processor:1.0.0-beta17"
+implementation "com.airbnb.android:showkase:1.0.2"
+kapt "com.airbnb.android:showkase-processor:1.0.2"
 ```
 
 #### If you are using ksp
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.0-beta17"
-ksp "com.airbnb.android:showkase-processor:1.0.0-beta17"
+implementation "com.airbnb.android:showkase:1.0.2"
+ksp "com.airbnb.android:showkase-processor:1.0.2"
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -140,6 +140,14 @@ class MyRootModule: ShowkaseRootModule
 
 ```kotlin
 startActivity(Showkase.getBrowserIntent(context))
+```
+
+Most users of Showkase will use it in their debug builds. However, if you have a use case where you would
+like to use Showkase in a release build (or a build that has minification enabled), you will need to add
+the following line to your proguard rules
+
+```
+-keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
 ```
 
 ## Documentation
@@ -522,7 +530,7 @@ a new issue so we can track it.
 ## License
 
 ```
-Copyright 2022 Airbnb, Inc.
+Copyright 2023 Airbnb, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

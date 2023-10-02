@@ -44,6 +44,8 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     group = showkaseMetadata.showkaseGroup,
                     name = showkaseMetadata.showkaseName,
                     isDefaultStyle = showkaseMetadata.isDefaultStyle,
+                    tags = showkaseMetadata.tags,
+                    extraMetadata = showkaseMetadata.extraMetadata,
                 )
             }
 
@@ -64,6 +66,8 @@ class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
                     group = showkaseMetadata.showkaseGroup,
                     name = showkaseMetadata.showkaseName,
                     isDefaultStyle = showkaseMetadata.isDefaultStyle,
+                    tags = showkaseMetadata.tags,
+                    extraMetadata = showkaseMetadata.extraMetadata,
                 )
             }
 

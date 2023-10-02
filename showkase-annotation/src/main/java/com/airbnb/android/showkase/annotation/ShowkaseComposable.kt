@@ -52,7 +52,12 @@ package com.airbnb.android.showkase.annotation
  * @param defaultStyle Used to represent a composable function is the default style variant of a given 
  * composable. More information on how Showkase allows you to represent component styles in this section -
  * https://github.com/airbnb/Showkase#representing-component-styles-in-showkase
- *
+ * @param tags Various string values that will be propagated to the Showkase browser to allow additional
+ * filtering or categorization.
+ * @param extraMetadata Various string values that are **not** used by the standard Showkase browser
+ * but are still available in the generated `ShowkaseBrowserComponent` object. This may be useful when
+ * extra data is needed for attributing components during other processes (e.g. static analysis,
+ * displaying attributions in a custom component browser).
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
@@ -66,5 +71,7 @@ annotation class ShowkaseComposable(
     val widthDp: Int = -1,
     val heightDp: Int = -1,
     val skip: Boolean = false,
-    val defaultStyle: Boolean = false
+    val defaultStyle: Boolean = false,
+    val tags: Array<String> = [],
+    val extraMetadata: Array<String> = [],
 )
