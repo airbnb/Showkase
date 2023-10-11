@@ -10,6 +10,7 @@ import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.android.ide.common.rendering.api.SessionParams
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import org.junit.Rule
@@ -51,9 +52,9 @@ class ComposePaparazziTest {
         maxPercentDifference = 0.0,
         showSystemUi =  false,
         deviceConfig = DeviceConfig.PIXEL_5.copy(
-            screenHeight = 1,
             softButtons = false,
-            locale = "en")
+            locale = "en"),
+        renderingMode = SessionParams.RenderingMode.SHRINK
     )
 
     @Test
