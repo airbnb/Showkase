@@ -22,7 +22,7 @@ class ShowkaseBrowserFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                ShowkaseBrowserContent(classKey = classKey)
+                ShowkaseBrowser(classKey = classKey)
             }
         }
     }

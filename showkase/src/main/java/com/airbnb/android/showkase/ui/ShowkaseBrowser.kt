@@ -9,8 +9,14 @@ import com.airbnb.android.showkase.models.ShowkaseProvider
 
 private const val AUTOGEN_CLASS_NAME = "Codegen"
 
+/**
+ * composable entry point for Showkase
+ *
+ * @param classKey The name of the class with [@ShowkaseRoot] annotation
+ *
+ */
 @Composable
-internal fun ShowkaseBrowserContent(
+fun ShowkaseBrowser(
     classKey: String,
 ) {
     val (
