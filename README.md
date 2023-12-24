@@ -72,17 +72,25 @@ Showkase browser.
 Showkase supports both ksp and kapt. By default, it uses kapt as we only recently added ksp support.
 
 
-#### If you are using kapt
+#### If you only want Showkase to be available in only debug builds (Recommended and practical for most use cases)
 
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.2"
-kapt "com.airbnb.android:showkase-processor:1.0.2"
+debugImplementation "com.airbnb.android:showkase:1.0.2"
+implementation "com.airbnb.android:showkase-annotation:1.0.2"
+kspDebug "com.airbnb.android:showkase-processor:1.0.2" or kaptDebug "com.airbnb.android:showkase-processor:1.0.2"
 ```
 
-#### If you are using ksp
+#### If you want Showkase to be available in your release builds
 ```kotlin
 implementation "com.airbnb.android:showkase:1.0.2"
-ksp "com.airbnb.android:showkase-processor:1.0.2"
+ksp "com.airbnb.android:showkase-processor:1.0.2" or kapt "com.airbnb.android:showkase-processor:1.0.2"
+
+```
+
+You will also need to ensure that the generated file isn't being stripped away and will need to add this to your proguard file - 
+
+```
+-keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -140,14 +148,6 @@ class MyRootModule: ShowkaseRootModule
 
 ```kotlin
 startActivity(Showkase.getBrowserIntent(context))
-```
-
-Most users of Showkase will use it in their debug builds. However, if you have a use case where you would
-like to use Showkase in a release build (or a build that has minification enabled), you will need to add
-the following line to your proguard rules
-
-```
--keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
 ```
 
 ## Documentation
