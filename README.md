@@ -72,7 +72,7 @@ Showkase browser.
 Showkase supports both ksp and kapt. By default, it uses kapt as we only recently added ksp support.
 
 
-#### If you only want Showkase to be available in only debug builds (Recommended and practical for most use cases)
+#### If you want Showkase to be available only in debug builds (Recommended and practical for most use cases)
 
 ```kotlin
 debugImplementation "com.airbnb.android:showkase:1.0.2"
@@ -80,7 +80,7 @@ implementation "com.airbnb.android:showkase-annotation:1.0.2"
 kspDebug "com.airbnb.android:showkase-processor:1.0.2" or kaptDebug "com.airbnb.android:showkase-processor:1.0.2"
 ```
 
-#### If you want Showkase to be available in your release builds
+#### If you want Showkase to be available in your release builds as well
 ```kotlin
 implementation "com.airbnb.android:showkase:1.0.2"
 ksp "com.airbnb.android:showkase-processor:1.0.2" or kapt "com.airbnb.android:showkase-processor:1.0.2"
