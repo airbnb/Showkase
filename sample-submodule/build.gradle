@@ -62,8 +62,9 @@ dependencies {
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
-    implementation deps.support.lifecycleExtensions
-    
+    implementation deps.support.lifecycleComposeVm
+    implementation deps.support.lifecycleComposeRn
+
     // Showkase
     implementation project(':showkase')
     if (project.hasProperty('useKsp')) {
