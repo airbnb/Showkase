@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "com.airbnb.android.showkasesample"
         minSdkVersion 21
-        compileSdk 33
+        compileSdk 34
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -94,7 +94,8 @@ dependencies {
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
-    implementation deps.support.lifecycleExtensions
+    implementation deps.support.lifecycleComposeVm
+    implementation deps.support.lifecycleComposeRn
 
     // Compose
     implementation deps.compose.activityCompose

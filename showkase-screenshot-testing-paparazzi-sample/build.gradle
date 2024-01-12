@@ -32,7 +32,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 21
-        compileSdk 33
+        compileSdk 34
         targetSdkVersion 33
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures

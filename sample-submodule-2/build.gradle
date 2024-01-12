@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        compileSdk 33
+        compileSdk 34
         targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -61,7 +61,8 @@ dependencies {
     // Support Libraries
     implementation deps.support.appCompat
     implementation deps.support.ktx
-    implementation deps.support.lifecycleExtensions
+    implementation deps.support.lifecycleComposeVm
+    implementation deps.support.lifecycleComposeRn
     
     // Showkase
     implementation project(':showkase')
