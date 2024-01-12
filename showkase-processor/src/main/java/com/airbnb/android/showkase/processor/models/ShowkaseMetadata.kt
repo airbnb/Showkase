@@ -63,7 +63,8 @@ internal sealed class ShowkaseMetadata {
         val showkaseStyleName: String? = null,
         val isDefaultStyle: Boolean = false,
         val tags: List<String> = emptyList(),
-        val extraMetadata: List<String> = emptyList()
+        val extraMetadata: List<String> = emptyList(),
+        val showkaseGenerateScreenshot: Boolean = false
     ) : ShowkaseMetadata()
 
     data class Color(
@@ -135,8 +136,8 @@ internal fun XAnnotationBox<ShowkaseCodegenMetadata>.toModel(element: XElement):
                 previewParameterName = props.previewParameterName,
                 isDefaultStyle = props.isDefaultStyle,
                 tags = props.tags.toList(),
-                extraMetadata = props.tags.toList()
-
+                extraMetadata = props.tags.toList(),
+                showkaseGenerateScreenshot = props.showkaseGenerateScreenshot
             )
         }
         ShowkaseMetadataType.COLOR -> {
@@ -192,8 +193,8 @@ internal fun getShowkaseMetadata(
     val previewParameterMetadata = element.getPreviewParameterMetadata()
 
     return showkaseAnnotations.mapNotNull { annotation ->
-        // If this component was configured to be skipped, return early
-        if (annotation.value.skip) return@mapNotNull null
+        // If this component was configured to be both skipped and for not recording the screenshot, return early
+        if (annotation.value.skip && !annotation.value.generateScreenshot) return@mapNotNull null
 
         val showkaseName = getShowkaseName(annotation.value.name, element.name)
         val showkaseGroup = getShowkaseGroup(
@@ -224,7 +225,8 @@ internal fun getShowkaseMetadata(
             isDefaultStyle = isDefaultStyle,
             componentIndex = showkaseAnnotations.indexOf(annotation),
             tags = tags,
-            extraMetadata = extraMetadata
+            extraMetadata = extraMetadata,
+            showkaseGenerateScreenshot = annotation.value.generateScreenshot
         )
     }
 }

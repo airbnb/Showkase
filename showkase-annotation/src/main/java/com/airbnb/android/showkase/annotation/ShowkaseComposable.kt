@@ -58,6 +58,8 @@ package com.airbnb.android.showkase.annotation
  * but are still available in the generated `ShowkaseBrowserComponent` object. This may be useful when
  * extra data is needed for attributing components during other processes (e.g. static analysis,
  * displaying attributions in a custom component browser).
+ * @param generateScreenshot Used for screenshot testing, this will allow Paparazzi to create the
+ * screenshot
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
@@ -74,4 +76,5 @@ annotation class ShowkaseComposable(
     val defaultStyle: Boolean = false,
     val tags: Array<String> = [],
     val extraMetadata: Array<String> = [],
+    val generateScreenshot: Boolean = false,
 )
