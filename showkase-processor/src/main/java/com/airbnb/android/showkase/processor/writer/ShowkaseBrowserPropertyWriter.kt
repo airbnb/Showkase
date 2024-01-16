@@ -238,7 +238,7 @@ internal data class ShowkaseBrowserProperties(
             colors.isEmpty() &&
             typography.isEmpty()
 
-    fun zip() = componentsWithPreviewParameters + componentsWithPreviewParameters + colors + typography
+    fun zip() = componentsWithPreviewParameters + componentsWithoutPreviewParameters + colors + typography
 
     operator fun plus(other: ShowkaseBrowserProperties): ShowkaseBrowserProperties {
         return ShowkaseBrowserProperties(
