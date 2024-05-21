@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.submodule.showkasesample.FontPreview
 
-@Preview(name = "Shapessss 200 by 200", group = "Shapes", widthDp = 100, heightDp = 100)
+@Preview(name = "Shape 100 by 100", group = "Shapes", widthDp = 100, heightDp = 100)
 @Preview(name = "Shape 150 by 150", group = "Shapes", widthDp = 150, heightDp = 150)
 annotation class CustomShape
 
