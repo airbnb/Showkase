@@ -4,7 +4,6 @@ package com.airbnb.android.showkase
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_processor_testing_my_very_long_name.MyVeryLongPackageNameViewStateSomethingSomethingFunnyStuffProvider
 import com.airbnb.android.showkase_processor_testing_my_very_long_name.WrapperClass
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing_my_very_long_name {
   @ShowkaseCodegenMetadata(
@@ -25,7 +24,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing_my_v
     previewParameterName = "text",
   )
   public
-      fun comairbnbandroidshowkaseprocessortestingmyverylongnameWrapperClassTestComposablegroupname():
-      Unit {
+      fun comairbnbandroidshowkaseprocessortestingmyverylongnameWrapperClassTestComposablegroupname() {
   }
 }

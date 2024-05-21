@@ -15,19 +15,19 @@ import kotlin.collections.List
   numTypography = 1,
 )
 public class TestShowkaseRootCodegen : ShowkaseProvider {
-  public override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
+  override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
 
     return listOf<ShowkaseBrowserComponent>(
     )
   }
 
-  public override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
+  override fun getShowkaseColors(): List<ShowkaseBrowserColor> {
 
     return listOf<ShowkaseBrowserColor>(
     )
   }
 
-  public override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
+  override fun getShowkaseTypography(): List<ShowkaseBrowserTypography> {
 
     return listOf<ShowkaseBrowserTypography>(
         titlegroupTitle,

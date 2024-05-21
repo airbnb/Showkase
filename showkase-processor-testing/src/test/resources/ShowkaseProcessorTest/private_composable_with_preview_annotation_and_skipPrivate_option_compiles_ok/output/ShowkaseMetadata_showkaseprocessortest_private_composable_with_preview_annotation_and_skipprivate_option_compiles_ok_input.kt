@@ -2,7 +2,6 @@
 package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
-import kotlin.Unit
 
 public class
     ShowkaseMetadata_showkaseprocessortest_private_composable_with_preview_annotation_and_skipprivate_option_compiles_ok_input
@@ -22,8 +21,7 @@ public class
     isDefaultStyle = false,
   )
   public
-      fun ShowkaseProcessorTestprivatecomposablewithpreviewannotationandskipPrivateoptioncompilesokinputTestComposable1group1name1():
-      Unit {
+      fun ShowkaseProcessorTestprivatecomposablewithpreviewannotationandskipPrivateoptioncompilesokinputTestComposable1group1name1() {
   }
 
   @ShowkaseCodegenMetadata(
@@ -41,7 +39,6 @@ public class
     isDefaultStyle = false,
   )
   public
-      fun ShowkaseProcessorTestprivatecomposablewithpreviewannotationandskipPrivateoptioncompilesokinputTestComposable3group3name3():
-      Unit {
+      fun ShowkaseProcessorTestprivatecomposablewithpreviewannotationandskipPrivateoptioncompilesokinputTestComposable3group3name3() {
   }
 }

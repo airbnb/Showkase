@@ -2,7 +2,6 @@
 package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
-import kotlin.Unit
 
 public class ShowkaseMetadata_ {
   @ShowkaseCodegenMetadata(
@@ -17,6 +16,6 @@ public class ShowkaseMetadata_ {
     generatedPropertyName = "redgroupname",
     showkaseMetadataType = "COLOR",
   )
-  public fun redgroupname(): Unit {
+  public fun redgroupname() {
   }
 }
