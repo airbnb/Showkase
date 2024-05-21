@@ -3,6 +3,7 @@ package com.airbnb.android.showkase.processor.writer
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.get
 import androidx.room.compiler.processing.isTypeElement
 import androidx.room.compiler.processing.writeTo
@@ -192,7 +193,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         }
 
         fileBuilder.addType(
-            TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
+            with(TypeSpec.classBuilder(generatedClassName).addFunctions(functions)) {
+                addOriginatingElement(element)
+                build()
+            }
         ).addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }
