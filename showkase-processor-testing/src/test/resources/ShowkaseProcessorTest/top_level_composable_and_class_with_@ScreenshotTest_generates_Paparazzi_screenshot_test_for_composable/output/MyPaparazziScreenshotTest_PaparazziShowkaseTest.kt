@@ -12,7 +12,6 @@ import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameter.TestParameterValuesProvider
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import getMetadata
-import kotlin.Unit
 import kotlin.collections.List
 import org.junit.Rule
 import org.junit.Test
@@ -33,13 +32,13 @@ public class MyPaparazziScreenshotTest_PaparazziShowkaseTest : MyPaparazziScreen
         direction: LayoutDirection,
     @TestParameter(valuesProvider = PaparazziShowkaseUIModeProvider::class)
         uiMode: PaparazziShowkaseUIMode,
-  ): Unit {
+  ) {
     paparazzi.unsafeUpdateConfig(config.deviceConfig.copy(softButtons = false))
     takePaparazziSnapshot(paparazzi, elementPreview, direction, uiMode)
   }
 
   private object PaparazziShowkasePreviewProvider : TestParameter.TestParameterValuesProvider {
-    public override fun provideValues(): List<PaparazziShowkaseTestPreview> {
+    override fun provideValues(): List<PaparazziShowkaseTestPreview> {
       val metadata = Showkase.getMetadata()
       val components = metadata.componentList.map(::ComponentPaparazziShowkaseTestPreview)
       val colors = metadata.colorList.map(::ColorPaparazziShowkaseTestPreview)
@@ -49,15 +48,15 @@ public class MyPaparazziScreenshotTest_PaparazziShowkaseTest : MyPaparazziScreen
   }
 
   private object PaparazziShowkaseDeviceConfigProvider : TestParameter.TestParameterValuesProvider {
-    public override fun provideValues(): List<PaparazziShowkaseDeviceConfig> = deviceConfigs()
+    override fun provideValues(): List<PaparazziShowkaseDeviceConfig> = deviceConfigs()
   }
 
   private object PaparazziShowkaseLayoutDirectionProvider :
       TestParameter.TestParameterValuesProvider {
-    public override fun provideValues(): List<LayoutDirection> = layoutDirections()
+    override fun provideValues(): List<LayoutDirection> = layoutDirections()
   }
 
   private object PaparazziShowkaseUIModeProvider : TestParameter.TestParameterValuesProvider {
-    public override fun provideValues(): List<PaparazziShowkaseUIMode> = uiModes()
+    override fun provideValues(): List<PaparazziShowkaseUIMode> = uiModes()
   }
 }

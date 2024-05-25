@@ -4,7 +4,6 @@ package com.airbnb.android.showkase
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_processor_testing.ParameterProvider
 import com.airbnb.android.showkase_processor_testing.WrapperClass
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
@@ -22,8 +21,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     isDefaultStyle = false,
   )
   public
-      fun comairbnbandroidshowkaseprocessortestingWrapperClassTestComposable1WrapperClassTestComposable1():
-      Unit {
+      fun comairbnbandroidshowkaseprocessortestingWrapperClassTestComposable1WrapperClassTestComposable1() {
   }
 
   @ShowkaseCodegenMetadata(
@@ -41,7 +39,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     previewParameterClass = [ParameterProvider::class],
     previewParameterName = "text",
   )
-  public fun comairbnbandroidshowkaseprocessortestingTestComposable2DefaultGroupTestComposable2():
-      Unit {
+  public fun comairbnbandroidshowkaseprocessortestingTestComposable2DefaultGroupTestComposable2() {
   }
 }

@@ -2,7 +2,6 @@
 package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
-import kotlin.Unit
 
 public class ShowkaseMetadata_ {
   @ShowkaseCodegenMetadata(
@@ -18,7 +17,7 @@ public class ShowkaseMetadata_ {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun TestComposable1group1name1(): Unit {
+  public fun TestComposable1group1name1() {
   }
 
   @ShowkaseCodegenMetadata(
@@ -34,6 +33,6 @@ public class ShowkaseMetadata_ {
     showkaseMetadataType = "COMPONENT",
     isDefaultStyle = false,
   )
-  public fun TestComposable2group2name2(): Unit {
+  public fun TestComposable2group2name2() {
   }
 }

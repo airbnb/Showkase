@@ -4,7 +4,6 @@ package com.airbnb.android.showkase
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_browser_testing.CharParameterProvider
 import com.airbnb.android.showkase_browser_testing.IntegerParameterProvider
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_browser_testing {
   @ShowkaseCodegenMetadata(
@@ -24,8 +23,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_browser_testing {
     previewParameterName = "n",
   )
   public
-      fun comairbnbandroidshowkasebrowsertestingTestComposable1Group1Composable1Usageofanintegerpreviewparameterprovider():
-      Unit {
+      fun comairbnbandroidshowkasebrowsertestingTestComposable1Group1Composable1Usageofanintegerpreviewparameterprovider() {
   }
 
   @ShowkaseCodegenMetadata(
@@ -44,7 +42,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_browser_testing {
     previewParameterName = "c",
   )
   public
-      fun comairbnbandroidshowkasebrowsertestingTestComposable2Group1Composable2Usageofacharpreviewparameterprovider():
-      Unit {
+      fun comairbnbandroidshowkasebrowsertestingTestComposable2Group1Composable2Usageofacharpreviewparameterprovider() {
   }
 }
