@@ -186,7 +186,10 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
     }
     ComponentCardTitle("${metadata.componentName} [Dark Mode]")
     CompositionLocalProvider(LocalConfiguration provides darkModeConfiguration) {
-        ComponentCard(metadata)
+        ComponentCard(
+            metadata = metadata,
+            darkMode = true
+        )
     }
 }
 

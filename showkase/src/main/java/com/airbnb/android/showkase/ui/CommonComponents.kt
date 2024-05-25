@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -57,27 +60,34 @@ internal fun ComponentCardTitle(componentName: String) {
 @Composable
 internal fun ComponentCard(
     metadata: ShowkaseBrowserComponent,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    darkMode: Boolean = false,
 ) {
     val composableModifier = Modifier.generateComposableModifier(metadata)
     val composableContainerModifier = Modifier.generateContainerModifier(onClick)
-    Card {
-        Box {
-            Column(modifier = composableModifier) {
-                metadata.component()
+    MaterialTheme(
+        colors = if (darkMode) darkColors() else lightColors()
+    ) {
+        Card(
+            shape = MaterialTheme.shapes.large
+        ) {
+            Box {
+                Column(modifier = composableModifier) {
+                    metadata.component()
+                }
+                // Need to add this as part of the stack so that we can intercept the touch of the
+                // component when we are on the "Group components" screen. If
+                // composableContainerModifier does not have any clickable modifiers, this column has no
+                // impact and the touches go through to the component(this happens in the "Component
+                // Detail" screen.
+                Column(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .then(composableContainerModifier)
+                ) {}
             }
-            // Need to add this as part of the stack so that we can intercept the touch of the 
-            // component when we are on the "Group components" screen. If 
-            // composableContainerModifier does not have any clickable modifiers, this column has no
-            // impact and the touches go through to the component(this happens in the "Component 
-            // Detail" screen.
-            Column(
-                modifier = Modifier
-                    .matchParentSize()
-                    .then(composableContainerModifier)
-            ) {}
-        }
 
+        }
     }
 }
 
