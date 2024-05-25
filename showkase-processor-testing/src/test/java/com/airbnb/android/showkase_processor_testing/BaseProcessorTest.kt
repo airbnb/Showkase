@@ -3,12 +3,15 @@ package com.airbnb.android.showkase_processor_testing
 import com.airbnb.android.showkase.processor.ShowkaseProcessor
 import com.airbnb.android.showkase.processor.ShowkaseProcessorProvider
 import com.google.common.io.Resources
+import com.tschuchort.compiletesting.CompilationResult
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.kspArgs
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Rule
 import java.io.File
 
@@ -31,10 +34,11 @@ abstract class BaseProcessorTest {
      * Collects the files in the "input" directory of this test's resources directory
      * and compiles them with Kotlin, returning the result.
      */
+    @OptIn(ExperimentalCompilerApi::class)
     protected fun compileInputs(
         modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
         options: MutableMap<String, String> = mutableMapOf(),
-        onCompilation: (mode: Mode, compilation: KotlinCompilation, result: KotlinCompilation.Result) -> Unit
+        onCompilation: (mode: Mode, compilation: KotlinCompilation, result: CompilationResult) -> Unit
     ) {
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
 
@@ -65,6 +69,7 @@ abstract class BaseProcessorTest {
         }
     }
 
+    @OptIn(ExperimentalCompilerApi::class)
     protected fun assertCompilationFails(errorMessage: String) {
         compileInputs { _, _, result ->
             assertThat(result.exitCode)
@@ -75,6 +80,7 @@ abstract class BaseProcessorTest {
         }
     }
 
+    @OptIn(ExperimentalCompilerApi::class)
     protected fun compileInputsAndVerifyOutputs(
         modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
         options: MutableMap<String, String> = mutableMapOf(),
@@ -88,7 +94,8 @@ abstract class BaseProcessorTest {
      * Collects the files in the "output" directory of this test's resources directory
      * and validates that they match the generated sources of this compilation result.
      */
-    protected fun KotlinCompilation.Result.assertGeneratedSources(mode: Mode, compilation: KotlinCompilation) {
+    @OptIn(ExperimentalCompilerApi::class)
+    protected fun CompilationResult.assertGeneratedSources(mode: Mode, compilation: KotlinCompilation) {
         assertThat(exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
 
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
@@ -101,7 +108,7 @@ abstract class BaseProcessorTest {
 
         val generatedSources = when (mode) {
             Mode.KSP -> compilation.kspSourcesDir.walk().filter { it.isFile }.toList()
-            Mode.KAPT -> sourcesGeneratedByAnnotationProcessor
+            Mode.KAPT -> (this as JvmCompilationResult).sourcesGeneratedByAnnotationProcessor
         }
 
         if (UPDATE_TEST_OUTPUTS) {
