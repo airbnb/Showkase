@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.2-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.5.13-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.3-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.5.13-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -75,15 +75,15 @@ Showkase supports both ksp and kapt. By default, it uses kapt as we only recentl
 #### If you want Showkase to be available only in debug builds (Recommended and practical for most use cases)
 
 ```kotlin
-debugImplementation "com.airbnb.android:showkase:1.0.2"
-implementation "com.airbnb.android:showkase-annotation:1.0.2"
-kspDebug "com.airbnb.android:showkase-processor:1.0.2" or kaptDebug "com.airbnb.android:showkase-processor:1.0.2"
+debugImplementation "com.airbnb.android:showkase:1.0.3"
+implementation "com.airbnb.android:showkase-annotation:1.0.3"
+kspDebug "com.airbnb.android:showkase-processor:1.0.3" or kaptDebug "com.airbnb.android:showkase-processor:1.0.3"
 ```
 
 #### If you want Showkase to be available in your release builds as well
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.2"
-ksp "com.airbnb.android:showkase-processor:1.0.2" or kapt "com.airbnb.android:showkase-processor:1.0.2"
+implementation "com.airbnb.android:showkase:1.0.3"
+ksp "com.airbnb.android:showkase-processor:1.0.3" or kapt "com.airbnb.android:showkase-processor:1.0.3"
 
 ```
 
