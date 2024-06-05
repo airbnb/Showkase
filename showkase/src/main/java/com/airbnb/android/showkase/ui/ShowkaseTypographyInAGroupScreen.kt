@@ -27,8 +27,9 @@ import java.util.Locale
 internal fun ShowkaseTypographyInAGroupScreen(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onRootScreen: Boolean,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val activity = LocalContext.current as AppCompatActivity
     val groupTypographyList =
@@ -58,12 +59,16 @@ internal fun ShowkaseTypographyInAGroupScreen(
             }
         )
     }
-    BackButtonHandler {
+    BackHandler {
         goBackFromTypographyInAGroupScreen(
             showkaseBrowserScreenMetadata,
             onUpdateShowkaseBrowserScreenMetadata,
-            groupedTypographyMap.size == 1, navController
-        ) { activity.finish() }
+            noGroups = groupedTypographyMap.size == 1,
+            onRootScreen = onRootScreen,
+            navigateTo = navigateTo,
+        ) {
+            activity.finish()
+        }
     }
 }
 
@@ -71,23 +76,24 @@ private fun goBackFromTypographyInAGroupScreen(
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     noGroups: Boolean,
-    navController: NavHostController,
-    onBackPressOnRoot: () -> Unit
+    onRootScreen: Boolean,
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
+    onBackPressOnRoot: () -> Unit,
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
         isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         noGroups -> {
             onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
-            if (navController.currentDestination?.id == navController.graph.startDestinationId) {
+            if (onRootScreen) {
                 onBackPressOnRoot()
             } else {
-                navController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+                navigateTo(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
             }
         }
         else -> {
             onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
-            navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
+            navigateTo(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
         }
     }
 }

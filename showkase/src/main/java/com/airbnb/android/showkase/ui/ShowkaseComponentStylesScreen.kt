@@ -16,7 +16,7 @@ internal fun ShowkaseComponentStylesScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val componentStylesList =
         groupedComponentMap[showkaseBrowserScreenMetadata.currentGroup]
@@ -54,17 +54,17 @@ internal fun ShowkaseComponentStylesScreen(
                                 isSearchActive = false
                             )
                         )
-                        navController.navigate(ShowkaseCurrentScreen.COMPONENT_DETAIL)
+                        navigateTo(ShowkaseCurrentScreen.COMPONENT_DETAIL)
                     }
                 )
             }
         )
     }
-    BackButtonHandler {
+    BackHandler {
         back(
             showkaseBrowserScreenMetadata,
             onUpdateShowkaseBrowserScreenMetadata,
-            navController
+            navigateTo
         )
     }
 }
@@ -81,7 +81,7 @@ private fun generatedStyleName(
 private fun back(
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
@@ -94,7 +94,7 @@ private fun back(
                     searchQuery = null
                 )
             )
-            navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
+            navigateTo(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
         }
     }
 

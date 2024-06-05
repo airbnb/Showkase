@@ -34,7 +34,7 @@ internal fun ShowkaseColorsInAGroupScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val groupColorsList =
         groupedColorsMap[showkaseBrowserScreenMetadata.currentGroup]
@@ -85,11 +85,11 @@ internal fun ShowkaseColorsInAGroupScreen(
             }
         )
     }
-    BackButtonHandler {
+    BackHandler {
         goBackFromColorsInAGroupScreen(
             showkaseBrowserScreenMetadata,
             onUpdateShowkaseBrowserScreenMetadata,
-            navController
+            navigateTo
         )
     }
 }
@@ -97,14 +97,14 @@ internal fun ShowkaseColorsInAGroupScreen(
 private fun goBackFromColorsInAGroupScreen(
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
         isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         else -> {
             onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
-            navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS)
+            navigateTo(ShowkaseCurrentScreen.COLOR_GROUPS)
         }
     }
 }

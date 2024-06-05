@@ -2,7 +2,10 @@ package com.airbnb.android.showkase.ui
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +40,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -46,7 +50,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.Lifecycle
 import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
@@ -57,7 +61,7 @@ internal fun ShowkaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val componentMetadataList =
         groupedComponentMap[showkaseBrowserScreenMetadata.currentGroup] ?: return
@@ -91,7 +95,7 @@ internal fun ShowkaseComponentDetailScreen(
             }
         )
     }
-    BackButtonHandler {
+    BackHandler {
         back(
             onBackPressed = {
                 onUpdateShowkaseBrowserScreenMetadata(
@@ -102,7 +106,7 @@ internal fun ShowkaseComponentDetailScreen(
                     )
                 )
             },
-            navController = navController
+            navigateTo = navigateTo
         )
     }
 
@@ -182,12 +186,15 @@ private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponent) {
 
 @Composable
 private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
-    ComponentCardTitle("${metadata.componentName} [RTL]")
-    val updatedModifier = Modifier.generateComposableModifier(metadata)
-    Card(modifier = Modifier.fillMaxWidth()) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            Column(modifier = updatedModifier) {
-                metadata.component()
+    val backPressedDispatcherOwner = rememberOnBackPressedDispatcherOwner()
+    CompositionLocalProvider(LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner) {
+        ComponentCardTitle("${metadata.componentName} [RTL]")
+        val updatedModifier = Modifier.generateComposableModifier(metadata)
+        Card(modifier = Modifier.fillMaxWidth()) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                Column(modifier = updatedModifier) {
+                    metadata.component()
+                }
             }
         }
     }
@@ -226,8 +233,21 @@ internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserCompon
 
 private fun back(
     onBackPressed: () -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     onBackPressed()
-    navController.navigate(ShowkaseCurrentScreen.COMPONENT_STYLES)
+    navigateTo(ShowkaseCurrentScreen.COMPONENT_STYLES)
+}
+
+@Composable
+internal fun rememberOnBackPressedDispatcherOwner(): OnBackPressedDispatcherOwner {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    return remember(lifecycleOwner) {
+        object : OnBackPressedDispatcherOwner {
+            override val lifecycle: Lifecycle
+                get() = lifecycleOwner.lifecycle
+            override val onBackPressedDispatcher: OnBackPressedDispatcher
+                get() = OnBackPressedDispatcher()
+        }
+    }
 }

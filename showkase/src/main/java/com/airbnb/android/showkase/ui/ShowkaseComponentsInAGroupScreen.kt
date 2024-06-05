@@ -16,7 +16,7 @@ internal fun ShowkaseComponentsInAGroupScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val groupByComponentName =
         groupedComponentMap[showkaseBrowserScreenMetadata.currentGroup]
@@ -46,28 +46,28 @@ internal fun ShowkaseComponentsInAGroupScreen(
                                 isSearchActive = false
                             )
                         )
-                        navController.navigate(ShowkaseCurrentScreen.COMPONENT_STYLES)
+                        navigateTo(ShowkaseCurrentScreen.COMPONENT_STYLES)
                     }
                 )
             }
         )
     }
-    BackButtonHandler {
-        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata, onUpdateShowkaseBrowserScreenMetadata, navController)
+    BackHandler {
+        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata, onUpdateShowkaseBrowserScreenMetadata, navigateTo)
     }
 }
 
 private fun goBackFromComponentsInAGroupScreen(
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
-    navController: NavHostController
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
         isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         else -> {
             showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.COMPONENT_GROUPS)
+            navigateTo(ShowkaseCurrentScreen.COMPONENT_GROUPS)
         }
     }
 }
