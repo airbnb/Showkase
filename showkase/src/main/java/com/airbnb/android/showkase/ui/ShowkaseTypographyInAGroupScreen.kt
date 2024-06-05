@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,15 +26,16 @@ import java.util.Locale
 @Composable
 internal fun ShowkaseTypographyInAGroupScreen(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navController: NavHostController
 ) {
     val activity = LocalContext.current as AppCompatActivity
     val groupTypographyList =
-        groupedTypographyMap[showkaseBrowserScreenMetadata.value.currentGroup]
+        groupedTypographyMap[showkaseBrowserScreenMetadata.currentGroup]
             ?.sortedBy { it.typographyName } ?: return
     val filteredList =
-        getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata.value)
+        getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata)
     LazyColumn(
         modifier = Modifier
             .background(Color.White)
@@ -59,22 +61,24 @@ internal fun ShowkaseTypographyInAGroupScreen(
     BackButtonHandler {
         goBackFromTypographyInAGroupScreen(
             showkaseBrowserScreenMetadata,
+            onUpdateShowkaseBrowserScreenMetadata,
             groupedTypographyMap.size == 1, navController
         ) { activity.finish() }
     }
 }
 
 private fun goBackFromTypographyInAGroupScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     noGroups: Boolean,
     navController: NavHostController,
     onBackPressOnRoot: () -> Unit
 ) {
-    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
+    val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
-        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
+        isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         noGroups -> {
-            showkaseBrowserScreenMetadata.clear()
+            onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
             if (navController.currentDestination?.id == navController.graph.startDestinationId) {
                 onBackPressOnRoot()
             } else {
@@ -82,7 +86,7 @@ private fun goBackFromTypographyInAGroupScreen(
             }
         }
         else -> {
-            showkaseBrowserScreenMetadata.clear()
+            onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
             navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS)
         }
     }

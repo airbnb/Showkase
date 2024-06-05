@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,14 +32,18 @@ import com.airbnb.android.showkase.models.clearActiveSearch
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navController: NavHostController
 ) {
     val groupColorsList =
-        groupedColorsMap[showkaseBrowserScreenMetadata.value.currentGroup]
+        groupedColorsMap[showkaseBrowserScreenMetadata.currentGroup]
             ?.sortedBy { it.colorName } ?: return
-    val filteredList =
-        getFilteredSearchList(groupColorsList, showkaseBrowserScreenMetadata)
+    val filteredList = getFilteredSearchList(
+        groupColorsList,
+        isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
+        searchQuery = showkaseBrowserScreenMetadata.searchQuery,
+    )
     LazyColumn(
         modifier = Modifier.testTag("ColorsInAGroupList")
     ) {
@@ -59,7 +64,9 @@ internal fun ShowkaseColorsInAGroupScreen(
                     ) {
                         Text(
                             text = groupColorMetadata.colorName,
-                            modifier = Modifier.padding(start = padding4x, end = padding4x).weight(1f),
+                            modifier = Modifier
+                                .padding(start = padding4x, end = padding4x)
+                                .weight(1f),
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.Serif,
@@ -79,19 +86,24 @@ internal fun ShowkaseColorsInAGroupScreen(
         )
     }
     BackButtonHandler {
-        goBackFromColorsInAGroupScreen(showkaseBrowserScreenMetadata, navController)
+        goBackFromColorsInAGroupScreen(
+            showkaseBrowserScreenMetadata,
+            onUpdateShowkaseBrowserScreenMetadata,
+            navController
+        )
     }
 }
 
 private fun goBackFromColorsInAGroupScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navController: NavHostController
 ) {
-    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
+    val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
-        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
+        isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         else -> {
-            showkaseBrowserScreenMetadata.clear()
+            onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
             navController.navigate(ShowkaseCurrentScreen.COLOR_GROUPS)
         }
     }
@@ -99,17 +111,18 @@ private fun goBackFromColorsInAGroupScreen(
 
 internal fun getFilteredSearchList(
     list: List<ShowkaseBrowserColor>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
-) =
-    when (showkaseBrowserScreenMetadata.value.isSearchActive) {
-        false -> list
-        !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
-            list.filter {
-                matchSearchQuery(
-                    showkaseBrowserScreenMetadata.value.searchQuery!!,
-                    it.colorName
-                )
-            }
+    isSearchActive: Boolean,
+    searchQuery: String?,
+) = when (isSearchActive) {
+    false -> list
+    !searchQuery.isNullOrBlank() -> {
+        list.filter {
+            matchSearchQuery(
+                searchQuery!!,
+                it.colorName
+            )
         }
-        else -> list
     }
+
+    else -> list
+}

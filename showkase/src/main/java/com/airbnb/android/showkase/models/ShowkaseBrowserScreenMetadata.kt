@@ -28,27 +28,19 @@ internal data class ShowkaseBrowserScreenMetadata(
     val searchQuery: String? = null,
 )
 
-internal fun MutableState<ShowkaseBrowserScreenMetadata>.clear() {
-    update {
-        copy(
-            isSearchActive = false,
-            searchQuery = null,
-            currentComponentKey = null,
-            currentComponentName = null,
-            currentComponentStyleName = null,
-            currentGroup = null
-        )
-    }
-}
+internal fun ShowkaseBrowserScreenMetadata.clear() = copy(
+    isSearchActive = false,
+    searchQuery = null,
+    currentComponentKey = null,
+    currentComponentName = null,
+    currentComponentStyleName = null,
+    currentGroup = null
+)
 
-internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
-    update {
-        copy(
-            isSearchActive = false,
-            searchQuery = null
-        )
-    }
-}
+internal fun ShowkaseBrowserScreenMetadata.clearActiveSearch() = copy(
+    isSearchActive = false,
+    searchQuery = null
+)
 
 internal fun <T> MutableState<T>.update(block: T.() -> T) {
     value = this.component1().run(block)

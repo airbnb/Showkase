@@ -2,6 +2,7 @@ package com.airbnb.android.showkase.ui
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,18 +51,18 @@ import com.airbnb.android.showkase.R
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
-import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseComponentDetailScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navController: NavHostController
 ) {
     val componentMetadataList =
-        groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup] ?: return
+        groupedComponentMap[showkaseBrowserScreenMetadata.currentGroup] ?: return
     val componentMetadata = componentMetadataList.find {
-        it.componentKey == showkaseBrowserScreenMetadata.value.currentComponentKey
+        it.componentKey == showkaseBrowserScreenMetadata.currentComponentKey
     } ?: return
     LazyColumn(
         modifier = Modifier.testTag("ShowkaseComponentDetailList")
@@ -78,10 +78,12 @@ internal fun ShowkaseComponentDetailScreen(
                             }
                             BasicComponentCard(metadata)
                         }
+
                         ShowkaseComponentCardType.FONT_SCALE -> FontScaledComponentCard(metadata)
                         ShowkaseComponentCardType.DISPLAY_SCALED -> DisplayScaledComponentCard(
                             metadata
                         )
+
                         ShowkaseComponentCardType.RTL -> RTLComponentCard(metadata)
                         ShowkaseComponentCardType.DARK_MODE -> DarkModeComponentCard(metadata)
                     }
@@ -90,7 +92,18 @@ internal fun ShowkaseComponentDetailScreen(
         )
     }
     BackButtonHandler {
-        back(showkaseBrowserScreenMetadata, navController)
+        back(
+            onBackPressed = {
+                onUpdateShowkaseBrowserScreenMetadata(
+                    showkaseBrowserScreenMetadata.copy(
+                        currentComponentStyleName = null,
+                        isSearchActive = false,
+                        searchQuery = null
+                    )
+                )
+            },
+            navController = navController
+        )
     }
 
 }
@@ -114,7 +127,8 @@ private fun DocumentationPanel(kDoc: String) {
         )
     }
     Row(
-        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding2x)
+        modifier = Modifier
+            .padding(start = padding4x, end = padding4x, top = padding2x)
             .fillMaxWidth()
             .clickable(onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -194,12 +208,16 @@ private fun DarkModeComponentCard(metadata: ShowkaseBrowserComponent) {
 }
 
 internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserComponent) = composed {
-    val baseModifier = padding(padding4x).sizeIn(maxHeight = Dp(LocalConfiguration.current.screenHeightDp.toFloat()))
+    val baseModifier =
+        this
+            .padding(padding4x)
+            .sizeIn(maxHeight = Dp(LocalConfiguration.current.screenHeightDp.toFloat()))
     when {
         metadata.heightDp != null && metadata.widthDp != null -> baseModifier.size(
             width = metadata.widthDp.dp,
             height = metadata.heightDp.dp
         )
+
         metadata.heightDp != null -> baseModifier.height(Dp(metadata.heightDp.toFloat()))
         metadata.widthDp != null -> baseModifier.width(Dp(metadata.widthDp.toFloat()))
         else -> baseModifier.fillMaxWidth()
@@ -207,15 +225,9 @@ internal fun Modifier.generateComposableModifier(metadata: ShowkaseBrowserCompon
 }
 
 private fun back(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
+    onBackPressed: () -> Unit,
     navController: NavHostController
 ) {
-    showkaseBrowserScreenMetadata.update {
-        copy(
-            currentComponentStyleName = null,
-            isSearchActive = false,
-            searchQuery = null
-        )
-    }
+    onBackPressed()
     navController.navigate(ShowkaseCurrentScreen.COMPONENT_STYLES)
 }
