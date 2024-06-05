@@ -29,6 +29,7 @@ import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
 
+@Suppress("LongMethod")
 @Composable
 internal fun ShowkaseColorsInAGroupScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
@@ -51,7 +52,9 @@ internal fun ShowkaseColorsInAGroupScreen(
             itemContent = { groupColorMetadata ->
                 Card(
                     modifier = Modifier.padding(
-                        start = padding4x, end = padding4x, top = padding2x,
+                        start = padding4x,
+                        end = padding4x,
+                        top = padding2x,
                         bottom = padding2x
                     )
                 ) {
@@ -101,7 +104,8 @@ private fun goBackFromColorsInAGroupScreen(
 ) {
     val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
-        isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
+        isSearchActive ->
+            onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         else -> {
             onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clear())
             navigateTo(ShowkaseCurrentScreen.COLOR_GROUPS)

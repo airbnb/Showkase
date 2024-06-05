@@ -186,6 +186,8 @@ private fun DisplayScaledComponentCard(metadata: ShowkaseBrowserComponent) {
 
 @Composable
 private fun RTLComponentCard(metadata: ShowkaseBrowserComponent) {
+    // This is added to make sure that the navigation of the ShowkaseBrowser does not break
+    // when one of the previews has a back press handler in the implementation of the component.
     val backPressedDispatcherOwner = rememberOnBackPressedDispatcherOwner()
     CompositionLocalProvider(LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner) {
         ComponentCardTitle("${metadata.componentName} [RTL]")

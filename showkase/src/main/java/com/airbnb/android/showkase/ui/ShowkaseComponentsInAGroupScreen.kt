@@ -53,7 +53,11 @@ internal fun ShowkaseComponentsInAGroupScreen(
         )
     }
     BackHandler {
-        goBackFromComponentsInAGroupScreen(showkaseBrowserScreenMetadata, onUpdateShowkaseBrowserScreenMetadata, navigateTo)
+        goBackFromComponentsInAGroupScreen(
+            showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+            onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
+            navigateTo = navigateTo
+        )
     }
 }
 

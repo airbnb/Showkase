@@ -2,9 +2,6 @@ package com.airbnb.android.showkase.ui
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandIn
@@ -38,7 +35,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -47,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -64,6 +59,7 @@ import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.insideGroup
 import com.airbnb.android.showkase.ui.SemanticsUtils.lineCountVal
 
+@Suppress("LongMethod")
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 internal fun ShowkaseBrowserApp(
@@ -79,9 +75,6 @@ internal fun ShowkaseBrowserApp(
     CompositionLocalProvider(
         LocalConfiguration provides lightModeConfiguration,
         LocalInspectionMode provides true,
-        // This is added to make sure that the navigation of the ShowkaseBrowser does not break
-        // when one of the previews has a back press handler in the implementation of the component.
-//        LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner
     ) {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
