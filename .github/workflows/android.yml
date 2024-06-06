@@ -111,7 +111,7 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
-      - name: Start emulator and run UI Tests w/ KSP
+      - name: Start emulator and run UI Tests w/ KAPT
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
@@ -130,7 +130,14 @@ jobs:
           script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
 
       - name: Run Screenshot Tests
-        run: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
+
 
       - name: Upload screenshot testing report
         uses: actions/upload-artifact@v3
