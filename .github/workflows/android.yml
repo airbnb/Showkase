@@ -146,11 +146,11 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -Precord
+          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }}-${{ matrix.target }} -Precord
 
       - name: Upload screenshots in an artifact
         uses: actions/upload-artifact@v4
         with:
           name: Api${{ matrix.api-level }}
-          path: sample/screenshots/debug/Api${{ matrix.api-level }}
+          path: sample/screenshots/debug/Api$${{ matrix.api-level }}-${{ matrix.target }}
           retention-days: 1
