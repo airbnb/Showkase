@@ -20,8 +20,6 @@ jobs:
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-gradle: true
 
       - name: Run Checks
         run: ./gradlew check --stacktrace
@@ -39,8 +37,6 @@ jobs:
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-gradle: true
 
       - name: Run Paparazzi Screenshot Tests
         run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
@@ -72,6 +68,8 @@ jobs:
             target: default
           - api-level: 29
             target: google_apis
+    env:
+      ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -89,8 +87,6 @@ jobs:
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-gradle: true
 
       - name: AVD cache
         uses: actions/cache@v4
