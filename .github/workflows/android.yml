@@ -151,6 +151,6 @@ jobs:
       - name: Upload screenshots in an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Api${{ matrix.api-level }}
-          path: sample/screenshots/debug/Api$${{ matrix.api-level }}-${{ matrix.target }}
+          name: Api${{ matrix.api-level }}-${{ matrix.target }}
+          path: sample/screenshots/debug/Api${{ matrix.api-level }}-${{ matrix.target }}
           retention-days: 1
