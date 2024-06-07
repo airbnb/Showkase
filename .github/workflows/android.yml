@@ -61,15 +61,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 26, 29 ]
+        api-level: [ 26, 30 ]
         target: [ default, google_apis ]
-        include:
-          - api-level: 26
-            target: default
-          - api-level: 29
-            target: google_apis
-    env:
-      ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 60
+        
     steps:
       - uses: actions/checkout@v4
 
