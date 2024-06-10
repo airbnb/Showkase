@@ -89,7 +89,7 @@ object ShowkaseModuleApiWriter {
                         CodeBlock.Builder()
                             .indent()
                             .addStatement(
-                                "return (%T as %T).metadata()",
+                                "return (%T() as %T).metadata()",
                                 ClassName(
                                     packageName,
                                     "${MODULE_LEVEL_SHOWKASE_PROVIDER_CLASS_PREFIX}_${normalizedPackageName}"

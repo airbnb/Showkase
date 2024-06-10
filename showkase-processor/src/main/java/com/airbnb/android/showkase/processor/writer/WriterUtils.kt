@@ -62,7 +62,7 @@ internal fun writeFile(
     fileBuilder
         .addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
         .addType(
-            with(TypeSpec.objectBuilder(showkaseComponentsListClassName)) {
+            with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
                 showkaseRootCodegenAnnotation?.let {
                     addAnnotation(it)
                 }
