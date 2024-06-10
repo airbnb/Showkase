@@ -14,7 +14,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.asTypeName
 
-class ShowkaseBrowserPropertyWriter(private val environment: XProcessingEnv) {
+class ShowkaseModuleBrowserPropertyWriter(private val environment: XProcessingEnv) {
     @Suppress("LongMethod")
     internal fun generateMetadataPropertyFiles(
         componentMetadata: Set<ShowkaseMetadata.Component>,

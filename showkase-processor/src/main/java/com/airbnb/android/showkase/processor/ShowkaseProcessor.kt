@@ -26,11 +26,12 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPrevi
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
 import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
-import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseModuleBrowserPropertyWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserWriter.Companion.CODEGEN_AUTOGEN_CLASS_NAME
-import com.airbnb.android.showkase.processor.writer.ShowkaseCodegenMetadataWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseModuleCodegenMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseExtensionFunctionsWriter
+import com.airbnb.android.showkase.processor.writer.ShowkaseModuleMetadataWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseScreenshotTestWriter
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -262,16 +263,17 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val aggregateMetadataList = componentMetadata + colorMetadata + typographyMetadata
         if (aggregateMetadataList.isEmpty()) return ShowkaseBrowserProperties()
 
-        ShowkaseCodegenMetadataWriter(environment).apply {
+        ShowkaseModuleCodegenMetadataWriter(environment).apply {
             generateShowkaseCodegenFunctions(aggregateMetadataList)
         }
-        ShowkaseBrowserPropertyWriter(environment).apply {
+        ShowkaseModuleBrowserPropertyWriter(environment).apply {
             return generateMetadataPropertyFiles(
                 componentMetadata = componentMetadata,
                 colorMetadata = colorMetadata,
                 typographyMetadata = typographyMetadata,
             )
         }
+
     }
 
     private fun Collection<ShowkaseMetadata.Component>.dedupeAndSort() = this.distinctBy {
@@ -353,6 +355,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // include the composables from this module into the final codegen file.
         val currentShowkaseBrowserProperties =
             writeMetadataFile(componentMetadata, colorMetadata, typographyMetadata)
+
+        ShowkaseModuleMetadataWriter.generateModuleLevelShowkaseProvider(
+            environment = environment,
+            moduleShowkaseBrowserProperties = currentShowkaseBrowserProperties
+        )
+
+        ShowkaseModuleMetadataWriter.generateModuleMetadataPublicApi(
+            environment = environment,
+            moduleShowkaseBrowserProperties = currentShowkaseBrowserProperties
+        )
 
         if (rootElement != null) {
             // This is the module that should aggregate all the other metadata files and
