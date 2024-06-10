@@ -75,12 +75,15 @@ object ShowkaseModuleApiWriter {
                     receiver(ShowkaseExtensionFunctionsWriter.SHOWKASE_OBJECT_CLASS_NAME)
                     returns(ShowkaseExtensionFunctionsWriter.SHOWKASE_ELEMENTS_METADATA_CLASS_NAME)
                     addKdoc(
-                        "Helper function that gives you access to Showkase elements that are declared in a given module. " +
-                                "This contains data about the composables, colors and typography that are meant to be rendered" +
-                                "inside the Showkase browser. This is different from the Showkase.${ShowkaseExtensionFunctionsWriter.METADATA_FUNCTION_NAME}() " +
-                                "function, which contains all the Showkase elements in a given ShowkaseRoot graph, whereas this function " +
-                                "only contains metadata about the module it's generated in. Each module where Showkase is setup " +
-                                "will have this function generated in it."
+                        "Helper function that gives you access to Showkase elements that are " +
+                                "declared in a given module. This contains data about the composables, " +
+                                "colors and typography that are meant to be rendered inside the Showkase " +
+                                "browser. This is different from the " +
+                                "Showkase.${ShowkaseExtensionFunctionsWriter.METADATA_FUNCTION_NAME}() " +
+                                "function, which contains all the Showkase elements in a given " +
+                                "ShowkaseRoot graph, whereas this function only contains metadata " +
+                                "about the module it's generated in. Each module where Showkase is " +
+                                "setup will have this function generated in it."
                     )
                     addCode(
                         CodeBlock.Builder()
