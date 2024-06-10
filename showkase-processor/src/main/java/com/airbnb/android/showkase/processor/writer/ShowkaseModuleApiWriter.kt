@@ -14,7 +14,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-object ShowkaseModuleMetadataWriter {
+object ShowkaseModuleApiWriter {
     @Suppress("LongMethod", "LongParameterList")
     internal fun generateModuleLevelShowkaseProvider(
         environment: XProcessingEnv,
