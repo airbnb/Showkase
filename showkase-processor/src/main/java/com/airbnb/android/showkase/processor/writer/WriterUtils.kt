@@ -18,6 +18,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
+import java.util.Locale
 
 val SPACE_REGEX = "\\s".toRegex()
 
@@ -56,12 +57,15 @@ internal fun writeFile(
     componentInterfaceFunction: FunSpec,
     colorInterfaceFunction: FunSpec,
     typographyInterfaceFunction: FunSpec,
-    showkaseRootCodegenAnnotation: AnnotationSpec
+    showkaseRootCodegenAnnotation: AnnotationSpec? = null
 ) {
     fileBuilder
+        .addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
         .addType(
             with(TypeSpec.classBuilder(showkaseComponentsListClassName)) {
-                addAnnotation(showkaseRootCodegenAnnotation)
+                showkaseRootCodegenAnnotation?.let {
+                    addAnnotation(it)
+                }
                 addSuperinterface(superInterfaceClassName)
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
@@ -341,6 +345,18 @@ internal fun generatePropertyNameFromMetadata(
         }
     }
 }
+
+internal fun ShowkaseBrowserProperties.getPackageName() = zip()
+    .first()
+    .propertyPackage
+
+internal fun Collection<ShowkaseMetadata>.getNormalizedPackageName() = this
+    .first()
+    .packageName
+    .normalizePackageName()
+
+internal fun String.normalizePackageName() = replace(".", "_")
+    .lowercase(Locale.getDefault())
 
 internal fun CodeBlock.Builder.withDoubleIndent(block: CodeBlock.Builder.() -> Unit) =
     doubleIndent().also(block).doubleUnindent()

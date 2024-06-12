@@ -14,13 +14,12 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
 import java.util.Locale
 
-internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessingEnv) {
+internal class ShowkaseModuleCodegenMetadataWriter(private val environment: XProcessingEnv) {
 
     internal fun generateShowkaseCodegenFunctions(
         showkaseMetadataSet: Set<ShowkaseMetadata>,
     ) {
-        val moduleName = showkaseMetadataSet.first().packageName.replace(".", "_")
-        val generatedClassName = "ShowkaseMetadata_${moduleName.lowercase(Locale.getDefault())}"
+        val generatedClassName = "ShowkaseMetadata_${showkaseMetadataSet.getNormalizedPackageName()}"
         val fileBuilder = FileSpec.builder(
             CODEGEN_PACKAGE_NAME,
             generatedClassName
