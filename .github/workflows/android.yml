@@ -131,8 +131,10 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
-            ./gradlew connectedCheck --no-daemon --stacktrace
+            adb devices -l
             bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"
+            ./gradlew connectedCheck --no-daemon --stacktrace
+           
 
       - name: Start emulator and run UI Tests w/ KSP
         uses: reactivecircus/android-emulator-runner@v2
@@ -142,8 +144,9 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
+            adb devices -l
+            bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"     
             ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
-            bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"      
 
       - name: Run Screenshot Tests
         uses: reactivecircus/android-emulator-runner@v2
