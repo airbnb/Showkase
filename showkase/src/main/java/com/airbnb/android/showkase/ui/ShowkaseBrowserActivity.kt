@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.airbnb.android.showkase.exceptions.ShowkaseException
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseProvider
@@ -30,8 +32,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 groupedTypographyList
             ) = getShowkaseProviderElements(classKey)
             
-            val showkaseBrowserScreenMetadata = 
-                remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
+            var showkaseBrowserScreenMetadata by remember {
+                mutableStateOf(ShowkaseBrowserScreenMetadata())
+            }
             when {
                 groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() || 
                         groupedTypographyList.isNotEmpty() -> {
@@ -39,7 +42,11 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                         groupedComponentsList.groupBy { it.group }, 
                         groupedColorsList.groupBy { it.colorGroup }, 
                         groupedTypographyList.groupBy { it.typographyGroup },
-                        showkaseBrowserScreenMetadata)
+                        showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+                        onUpdateShowkaseBrowserScreenMetadata = {
+                            showkaseBrowserScreenMetadata = it
+                        }
+                    )
                 }
                 else -> {
                     ShowkaseErrorScreen(
