@@ -124,13 +124,15 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     )
     doubleIndent()
     add(
-        "group = %S,\ncomponentName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
+        "group = %S,\ncomponentName = %S,\nfunctionName = %S,\ncomponentKDoc = %S,\ncomponentKey = %P,",
         showkaseMetadata.showkaseGroup,
         showkaseMetadata.showkaseName,
+        showkaseMetadata.elementName,
         showkaseMetadata.showkaseKDoc,
         componentKey,
     )
     add("\nisDefaultStyle = ${showkaseMetadata.isDefaultStyle},")
+    add("\ngenerateScreenshot = ${showkaseMetadata.showkaseGenerateScreenshot},")
     showkaseMetadata.apply {
         showkaseWidthDp?.let { add("\nwidthDp = %L,", it) }
         showkaseHeightDp?.let { add("\nheightDp = %L,", it) }

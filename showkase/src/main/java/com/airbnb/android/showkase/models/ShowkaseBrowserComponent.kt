@@ -15,5 +15,7 @@ data class ShowkaseBrowserComponent(
     val widthDp: Int? = null,
     val heightDp: Int? = null,
     val tags: List<String> = emptyList(),
-    val extraMetadata: List<String> = emptyList()
+    val extraMetadata: List<String> = emptyList(),
+    val functionName: String,
+    val generateScreenshot: Boolean,
 )

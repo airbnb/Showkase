@@ -30,13 +30,26 @@ fun BasicChip(
     }
 }
 
-@ShowkaseComposable(name = "Basic Chip", group = "Chips", defaultStyle = true)
+// This preview will be skipped from component browser
+// but will generate the screenshot
+@ShowkaseComposable(
+    name = "Basic Chip",
+    group = "Chips",
+    defaultStyle = true,
+    generateScreenshot = true,
+    skip = true
+)
 @Composable
 fun BasicChipPreview() {
     BasicChip(text = "Chip Component")
 }
 
-@ShowkaseComposable(name = "Basic Chip", group = "Chips", styleName = "Yellow Background")
+@ShowkaseComposable(
+    name = "Basic Chip",
+    group = "Chips",
+    styleName = "Yellow Background",
+    generateScreenshot = true
+)
 @Composable
 fun BasicChipYellowPreview() {
     BasicChip(
