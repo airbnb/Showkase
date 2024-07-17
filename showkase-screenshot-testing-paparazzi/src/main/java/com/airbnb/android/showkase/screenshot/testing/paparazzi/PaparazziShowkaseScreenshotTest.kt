@@ -27,6 +27,7 @@ import app.cash.paparazzi.Paparazzi
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
+import com.airbnb.android.showkase.models.ShowkaseBrowserElement
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.ui.padding4x
 import com.android.ide.common.rendering.api.SessionParams
@@ -135,6 +136,8 @@ interface PaparazziShowkaseScreenshotTest {
 }
 
 interface PaparazziShowkaseTestPreview {
+    val showkaseBrowserElement: ShowkaseBrowserElement
+
     @Composable
     fun Content()
 }
@@ -144,9 +147,11 @@ private const val DELIM = "**"
 class ComponentPaparazziShowkaseTestPreview(
     private val showkaseBrowserComponent: ShowkaseBrowserComponent,
 ) : PaparazziShowkaseTestPreview {
+    override val showkaseBrowserElement: ShowkaseBrowserElement = showkaseBrowserComponent
 
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
+
     override fun toString(): String =
         "${showkaseBrowserComponent.group}${DELIM}${showkaseBrowserComponent.componentName}${DELIM}" +
                 "${showkaseBrowserComponent.styleName}"
@@ -155,6 +160,8 @@ class ComponentPaparazziShowkaseTestPreview(
 class ColorPaparazziShowkaseTestPreview(
     private val showkaseBrowserColor: ShowkaseBrowserColor
 ) : PaparazziShowkaseTestPreview {
+    override val showkaseBrowserElement: ShowkaseBrowserElement = showkaseBrowserColor
+
     @Composable
     override fun Content() {
         Box(
@@ -172,6 +179,8 @@ class ColorPaparazziShowkaseTestPreview(
 class TypographyPaparazziShowkaseTestPreview(
     private val showkaseBrowserTypography: ShowkaseBrowserTypography
 ) : PaparazziShowkaseTestPreview {
+    override val showkaseBrowserElement: ShowkaseBrowserElement = showkaseBrowserTypography
+
     @Composable
     override fun Content() {
         BasicText(

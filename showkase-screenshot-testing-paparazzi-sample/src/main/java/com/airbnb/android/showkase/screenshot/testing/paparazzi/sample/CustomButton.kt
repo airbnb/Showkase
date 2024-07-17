@@ -69,7 +69,6 @@ fun PreviewCustomButtonSmall() {
     )
 }
 
-
 @Suppress("MatchingDeclarationName")
 enum class ButtonSize {
     Large,
