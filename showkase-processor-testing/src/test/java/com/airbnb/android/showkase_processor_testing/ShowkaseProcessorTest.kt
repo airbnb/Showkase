@@ -613,5 +613,12 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         options["skipPrivatePreviews"] = "true"
         compileInputsAndVerifyOutputs(options = options)
     }
+
+    @Test
+    fun `composable functions with preview annotation are skipped`() {
+        val options = mutableMapOf<String, String>()
+        options["skipComposePreviews"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
+    }
 }
 
