@@ -88,7 +88,6 @@ private fun goBackFromTypographyInAGroupScreen(
     }
 }
 
-
 private fun getFilteredSearchList(
     list: List<ShowkaseBrowserTypography>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata

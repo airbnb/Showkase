@@ -92,7 +92,6 @@ internal fun ShowkaseComponentDetailScreen(
     BackButtonHandler {
         back(showkaseBrowserScreenMetadata, navController)
     }
-
 }
 
 @Composable

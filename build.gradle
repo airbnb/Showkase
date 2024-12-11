@@ -10,9 +10,9 @@ buildscript {
             'composeActivity'        : '1.9.0',
             'composeConstraintLayout': '1.0.1',
             'composeNavigation'      : '2.5.1',
-            'detekt'                 : '1.7.4',
+            'detekt'                 : '1.23.6',
             'espresso'               : '3.2.0',
-            'gradle'                 : '8.1.1',
+            'gradle'                 : '8.3.1',
             'junit'                  : '4.13.2',
             'junitImplementation'    : '1.1.2',
             'kotlin'                 : '1.9.23',
@@ -100,14 +100,13 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.karumi:shot:${versions.shot}"
         classpath "com.vanniktech:gradle-maven-publish-plugin:${versions.mavenPublish}"
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.7.4"
+    id "io.gitlab.arturbosch.detekt" version "1.23.6"
     id "com.google.devtools.ksp" version "$KSP_VERSION"
     id "com.vanniktech.maven.publish" version "$MAVEN_PUBLISH_VERSION"
 }
@@ -118,5 +117,8 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
+    }
+    dependencies {
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:${versions.detekt}"
     }
 }
