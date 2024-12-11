@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming")
+@file:Suppress("PackageName")
 
 package com.vinaygaba.showkase_browser_testing_submodule
 

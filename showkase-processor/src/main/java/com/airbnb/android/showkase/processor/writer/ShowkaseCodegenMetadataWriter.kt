@@ -32,9 +32,9 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         showkaseMetadataSet.forEach { showkaseMetadata ->
 
             val name = if (
-                showkaseMetadata is ShowkaseMetadata.Component
-                && showkaseMetadata.componentIndex != null
-                && showkaseMetadata.componentIndex > 0
+                showkaseMetadata is ShowkaseMetadata.Component &&
+                showkaseMetadata.componentIndex != null &&
+                showkaseMetadata.componentIndex > 0
             ) {
                 "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}" +
                     "_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
@@ -42,8 +42,8 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}" +
                     "_${showkaseMetadata.showkaseName}"
             }
-            val methodName = if (showkaseMetadata is ShowkaseMetadata.Component
-                && showkaseMetadata.showkaseStyleName != null
+            val methodName = if (showkaseMetadata is ShowkaseMetadata.Component &&
+                showkaseMetadata.showkaseStyleName != null
             ) {
                 "${name}_${showkaseMetadata.showkaseStyleName}"
             } else {
@@ -63,8 +63,7 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
         }
 
         fileBuilder.addType(
-            with(autogenClass)
-            {
+            with(autogenClass) {
                 showkaseMetadataSet.forEach { addOriginatingElement(it.element) }
                 build()
             }
@@ -84,7 +83,6 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
             .addMember("insideWrapperClass = ${showkaseMetadata.insideWrapperClass}")
             .addMember("showkaseKDoc = %S", showkaseMetadata.showkaseKDoc)
             .addMember("generatedPropertyName = %S", generatePropertyNameFromMetadata(showkaseMetadata))
-
 
     private fun addMetadataTypeSpecificProperties(
         showkaseMetadata: ShowkaseMetadata,

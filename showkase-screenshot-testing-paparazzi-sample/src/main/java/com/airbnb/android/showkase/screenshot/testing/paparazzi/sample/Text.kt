@@ -18,8 +18,8 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding4x
 
 /**
- * This component shows some static text in cursive text style. 
- * 
+ * This component shows some static text in cursive text style.
+ *
  * Example usage:
  *
  * ```

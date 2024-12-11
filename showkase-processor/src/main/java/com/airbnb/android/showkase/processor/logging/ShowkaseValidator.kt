@@ -70,7 +70,7 @@ internal class ShowkaseValidator(private val environment: XProcessingEnv) {
                     element
                 )
             }
-            // Validate that only a single parameter is passed to these functions. In addition, 
+            // Validate that only a single parameter is passed to these functions. In addition,
             // the parameter should be annotated with @PreviewParameter.
             validateComposableParameter(element) -> {
                 throw ShowkaseProcessorException(
@@ -241,8 +241,8 @@ internal class ShowkaseValidator(private val environment: XProcessingEnv) {
                 )
             }
             // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
-            //  for this element adds a private modifier since it's a field. Potentially use 
-            //  kotlinMetadata to enforce this check. 
+            //  for this element adds a private modifier since it's a field. Potentially use
+            //  kotlinMetadata to enforce this check.
             else -> {
             }
         }

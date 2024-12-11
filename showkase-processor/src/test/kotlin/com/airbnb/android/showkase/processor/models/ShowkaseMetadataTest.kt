@@ -80,4 +80,3 @@ class ShowkaseMetadataTest {
 }
 
 annotation class MyAnnotation
-

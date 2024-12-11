@@ -5,7 +5,7 @@ import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotTest
 import com.airbnb.android.showkase.screenshot.testing.ShowkaseScreenshotType
 import com.karumi.shot.ScreenshotTest
 
-abstract class ShotShowkaseScreenshotTest: ShowkaseScreenshotTest, ScreenshotTest {
+abstract class ShotShowkaseScreenshotTest : ShowkaseScreenshotTest, ScreenshotTest {
 
     override fun onScreenshot(
         id: String,

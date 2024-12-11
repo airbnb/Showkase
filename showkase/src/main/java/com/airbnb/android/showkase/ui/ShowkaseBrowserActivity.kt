@@ -29,7 +29,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 groupedColorsList,
                 groupedTypographyList
             ) = getShowkaseProviderElements(classKey)
-            val showkaseBrowserScreenMetadata = 
+            val showkaseBrowserScreenMetadata =
                 remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
             when {
                 groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() ||
@@ -78,9 +78,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
          * Showkase browser activity. Please make sure to use this instead of starting the
          * activity directly as it sets the right value in the bundle in order for the activity
          * to start correctly.
-         * 
+         *
          * @param context Android context
-         * @param rootModuleCanonicalName The canonical name of the implementation of 
+         * @param rootModuleCanonicalName The canonical name of the implementation of
          * ShowkaseRootModule.
          */
         fun getIntent(context: Context, rootModuleCanonicalName: String) =

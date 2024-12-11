@@ -1,3 +1,4 @@
+@file:Suppress("MaxLineLength", "PackageName")
 package com.airbnb.android.showkase_processor_testing
 
 import org.junit.Test
@@ -436,7 +437,6 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         compileInputsAndVerifyOutputs()
     }
 
-
     @Test
     fun `function inside object with preview annotation and no name or group`() {
         compileInputsAndVerifyOutputs()
@@ -496,7 +496,6 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `top level function with preview and preview parameter and showkaseroot and no name or group`() {
         compileInputsAndVerifyOutputs()
     }
-
 
     @Test
     fun `wrapped function with showkase composable and preview parameter and showkaseroot `() {
@@ -580,12 +579,12 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with custom preview annotation generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT, Mode.KSP))
     }
 
     @Test
     fun `composable function with custom preview annotation with preview param generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT, Mode.KSP))
     }
 
     @Test
@@ -621,4 +620,3 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         compileInputsAndVerifyOutputs(options = options)
     }
 }
-
