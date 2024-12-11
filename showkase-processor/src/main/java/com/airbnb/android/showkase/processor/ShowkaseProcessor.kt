@@ -78,7 +78,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ?.toSet()?.let { set.addAll(it) }
         return set
     }
-    override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews", "skipFunctionsWithPreviewAnnotation", "multiPreviewType")
+    override fun getSupportedOptions() = mutableSetOf(
+        "skipPrivatePreviews",
+        "skipFunctionsWithPreviewAnnotation",
+        "multiPreviewType"
+    )
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
