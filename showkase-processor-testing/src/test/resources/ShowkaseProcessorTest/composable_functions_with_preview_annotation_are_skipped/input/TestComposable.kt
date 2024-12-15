@@ -21,3 +21,10 @@ public fun TestShowkaseComposable2() {
 public fun TestPreviewComposable3() {
 
 }
+
+@Preview(name = "name4", group = "group4")
+@ShowkaseComposable(name = "name4", group = "group4")
+@Composable
+public fun TestShowkaseComposable4() {
+
+}

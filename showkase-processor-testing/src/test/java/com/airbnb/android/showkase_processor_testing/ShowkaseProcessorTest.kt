@@ -616,7 +616,7 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `composable functions with preview annotation are skipped`() {
         val options = mutableMapOf<String, String>()
-        options["skipFunctionsWithPreviewAnnotation"] = "true"
+        options["requireShowkaseComposableAnnotation"] = "true"
         compileInputsAndVerifyOutputs(options = options)
     }
 }

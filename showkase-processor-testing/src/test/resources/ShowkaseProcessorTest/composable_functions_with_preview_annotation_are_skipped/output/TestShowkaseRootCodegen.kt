@@ -9,7 +9,7 @@ import com.airbnb.android.showkase.models.ShowkaseProvider
 import kotlin.collections.List
 
 @ShowkaseRootCodegen(
-  numComposablesWithoutPreviewParameter = 2,
+  numComposablesWithoutPreviewParameter = 3,
   numComposablesWithPreviewParameter = 0,
   numColors = 0,
   numTypography = 0,
@@ -20,6 +20,7 @@ public class TestShowkaseRootCodegen : ShowkaseProvider {
     return listOf<ShowkaseBrowserComponent>(
         TestShowkaseComposable1group1name1,
         TestShowkaseComposable2group2name2,
+        TestShowkaseComposable4group4name4,
     )
   }
 

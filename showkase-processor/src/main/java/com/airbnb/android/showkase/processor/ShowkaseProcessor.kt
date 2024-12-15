@@ -80,7 +80,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     }
     override fun getSupportedOptions() = mutableSetOf(
         "skipPrivatePreviews",
-        "skipFunctionsWithPreviewAnnotation",
+        "requireShowkaseComposableAnnotation",
         "multiPreviewType"
     )
 
@@ -132,9 +132,10 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
-        val skipFunctionsWithPreviewAnnotation = environment.options["skipFunctionsWithPreviewAnnotation"] == "true"
+        val requireShowkaseComposableAnnotation =
+            environment.options["requireShowkaseComposableAnnotation"] == "true"
 
-        if (skipFunctionsWithPreviewAnnotation) return emptySet()
+        if (requireShowkaseComposableAnnotation) return emptySet()
 
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->

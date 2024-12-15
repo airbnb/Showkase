@@ -41,4 +41,22 @@ public class
   public
       fun ShowkaseProcessorTestcomposablefunctionswithpreviewannotationareskippedinputTestShowkaseComposable2group2name2() {
   }
+
+  @ShowkaseCodegenMetadata(
+    showkaseName = "name4",
+    showkaseGroup = "group4",
+    packageName =
+        "ShowkaseProcessorTest.composable_functions_with_preview_annotation_are_skipped.input",
+    packageSimpleName = "input",
+    showkaseElementName = "TestShowkaseComposable4",
+    insideObject = false,
+    insideWrapperClass = false,
+    showkaseKDoc = "",
+    generatedPropertyName = "TestShowkaseComposable4group4name4",
+    showkaseMetadataType = "COMPONENT",
+    isDefaultStyle = false,
+  )
+  public
+      fun ShowkaseProcessorTestcomposablefunctionswithpreviewannotationareskippedinputTestShowkaseComposable4group4name4() {
+  }
 }
