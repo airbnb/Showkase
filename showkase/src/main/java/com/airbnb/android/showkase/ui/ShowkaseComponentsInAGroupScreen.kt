@@ -68,7 +68,6 @@ private fun goBackFromComponentsInAGroupScreen(
     }
 }
 
-
 private fun getFilteredSearchList(
     list: List<ShowkaseBrowserComponent>,
     showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>

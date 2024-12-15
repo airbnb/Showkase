@@ -52,7 +52,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private val logger = ShowkaseExceptionLogger()
     private val showkaseValidator by lazy { ShowkaseValidator(environment) }
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String>  {
+    override fun getSupportedAnnotationTypes(): MutableSet<String> {
         val supportedAnnotations = mutableSetOf(
             ShowkaseComposable::class.java.name,
             PREVIEW_CLASS_NAME,
@@ -78,7 +78,11 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ?.toSet()?.let { set.addAll(it) }
         return set
     }
-    override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews", "multiPreviewType")
+    override fun getSupportedOptions() = mutableSetOf(
+        "skipPrivatePreviews",
+        "requireShowkaseComposableAnnotation",
+        "multiPreviewType"
+    )
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
@@ -126,9 +130,13 @@ class ShowkaseProcessor @JvmOverloads constructor(
             }.flatten().mapNotNull { it }.toSet()
     }
 
-
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
+        val requireShowkaseComposableAnnotation =
+            environment.options["requireShowkaseComposableAnnotation"] == "true"
+
+        if (requireShowkaseComposableAnnotation) return emptySet()
+
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
@@ -153,7 +161,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element = element,
                     showkaseValidator = showkaseValidator
                 )
-
             }.flatten().mapNotNull { it }.toSet()
     }
 
@@ -248,7 +255,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                                 )
                             )
                         }
-
                     }
             }
         return components
@@ -519,7 +525,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             element = element,
             propertyName = props.generatedPropertyName,
             propertyPackage = props.packageName,
-            type = when(type) {
+            type = when (type) {
                 ShowkaseMetadataType.COLOR -> ShowkaseGeneratedMetadataType.COLOR
                 ShowkaseMetadataType.TYPOGRAPHY -> ShowkaseGeneratedMetadataType.TYPOGRAPHY
                 ShowkaseMetadataType.COMPONENT -> if (previewParameterClassType != null) {
@@ -580,7 +586,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         rootModulePackageName: String,
         testClassName: String,
     ) {
-        when(screenshotTestType) {
+        when (screenshotTestType) {
             // We only handle composables without preview parameter for screenshots. This is because
             // there's no way to get information about how many previews are dynamically generated using
             // preview parameter as it happens on run time and our codegen doesn't get enough information
@@ -650,4 +656,3 @@ internal enum class ScreenshotTestType {
     SHOWKASE,
     PAPARAZZI_SHOWKASE
 }
-

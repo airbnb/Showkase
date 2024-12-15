@@ -13,7 +13,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 
 /**
- * Related discussion - 
+ * Related discussion -
  * https://kotlinlang.slack.com/archives/CJLTWPH7S/p1591558155394500?thread_ts=1591558024.394400&cid=CJLTWPH7S
  */
 private val LocalBackPressedDispatcher = staticCompositionLocalOf<OnBackPressedDispatcherOwner?> { null }
@@ -48,13 +48,13 @@ internal fun Handler(
 // TODO(vinaygaba) - Replace with the version Compose just exposed in the activity-compose bindings
 @Composable
 internal fun BackButtonHandler(
-    onBackPressed: () -> Unit, 
+    onBackPressed: () -> Unit,
 ) {
     var context = LocalContext.current
     // Inspired from https://cs.android.com/androidx/platform/frameworks/support/+/
     // androidx-master-dev:navigation/navigation-compose/src/main/java/androidx/navigation/
     // compose/NavHost.kt;l=88
-    // This was necessary because using Jetpack Navigation does not allow typecasting a 
+    // This was necessary because using Jetpack Navigation does not allow typecasting a
     // NavBackStackEntry to LifecycleOwnerAmbient.
     while (context is ContextWrapper) {
         if (context is OnBackPressedDispatcherOwner) {

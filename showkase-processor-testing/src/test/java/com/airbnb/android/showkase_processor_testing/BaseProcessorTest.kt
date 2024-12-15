@@ -1,3 +1,4 @@
+@file:Suppress("PackageName")
 package com.airbnb.android.showkase_processor_testing
 
 import com.airbnb.android.showkase.processor.ShowkaseProcessor
@@ -82,7 +83,7 @@ abstract class BaseProcessorTest {
 
     @OptIn(ExperimentalCompilerApi::class)
     protected fun compileInputsAndVerifyOutputs(
-        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
         options: MutableMap<String, String> = mutableMapOf(),
     ) {
         compileInputs(modes = modes, options = options) { mode, compilation, result ->
@@ -142,6 +143,6 @@ abstract class BaseProcessorTest {
             .replace(" ", "_")
 
         val className = testNameRule.className.substringAfterLast(".")
-        return File(rootResourcesDir, "$className/${methodName}")
+        return File(rootResourcesDir, "$className/$methodName")
     }
 }

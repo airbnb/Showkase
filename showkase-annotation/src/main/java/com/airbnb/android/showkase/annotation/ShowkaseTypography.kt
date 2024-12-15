@@ -11,10 +11,10 @@ package com.airbnb.android.showkase.annotation
  *      letterSpacing = (-1.5).sp
  *  )
  *
- * @param name The name that should be used to describe your `TextStyle` fields. If you don't 
+ * @param name The name that should be used to describe your `TextStyle` fields. If you don't
  * pass any value, the name of the textStyle field is used as the name.
- * @param group The grouping key that will be used to group it with other `TextStyle` fields. 
- * This is useful for better organization and discoverability of your typography. If you don't 
+ * @param group The grouping key that will be used to group it with other `TextStyle` fields.
+ * This is useful for better organization and discoverability of your typography. If you don't
  * pass any value for the group, the name of the class that wraps this field is used as the group
  * name. If the field is a top level field, the textStyle is added to a "Default Group".
  */

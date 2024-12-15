@@ -32,10 +32,10 @@ fun SimpleTextCard(
         onClick = onClick
     ) {
         Text(
-            text = text, 
+            text = text,
             modifier = Modifier.padding(padding4x),
             style = TextStyle(
-                fontSize = 20.sp, 
+                fontSize = 20.sp,
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold
             )
@@ -47,7 +47,7 @@ fun SimpleTextCard(
 internal fun ComponentCardTitle(componentName: String) {
     Text(
         text = componentName,
-        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding8x, 
+        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding8x,
             bottom = padding1x),
         style = TextStyle(
             fontSize = 16.sp,
@@ -86,7 +86,6 @@ internal fun ComponentCard(
                         .then(composableContainerModifier)
                 ) {}
             }
-
         }
     }
 }
@@ -96,4 +95,3 @@ private fun Modifier.generateContainerModifier(onClick: (() -> Unit)?) =
         fillMaxWidth()
             .clickable(onClick = onClick)
     } ?: fillMaxWidth()
-

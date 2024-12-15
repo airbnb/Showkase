@@ -19,7 +19,7 @@ internal fun ShowkaseComponentStylesScreen(
 ) {
     val componentStylesList =
         groupedComponentMap[showkaseBrowserScreenMetadata.value.currentGroup]
-            ?.filter { it.componentName == showkaseBrowserScreenMetadata.value.currentComponentName  }
+            ?.filter { it.componentName == showkaseBrowserScreenMetadata.value.currentComponentName }
             ?.sortedWith { a, b ->
                 when {
                     a.isDefaultStyle -> -1
@@ -86,7 +86,6 @@ private fun back(
             navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
         }
     }
-
 }
 
 private fun getFilteredSearchList(

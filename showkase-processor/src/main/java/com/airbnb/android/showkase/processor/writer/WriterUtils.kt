@@ -175,7 +175,7 @@ internal fun composePreviewFunctionLambdaCodeBlock(
     previewParameterName: String? = null
 ): CodeBlock {
     return when {
-        // When enclosingClass is null, it denotes that the method was a top-level method 
+        // When enclosingClass is null, it denotes that the method was a top-level method
         // declaration.
         enclosingClass == null -> {
             val composableFunctionString = previewParameter?.let {
@@ -193,8 +193,8 @@ internal fun composePreviewFunctionLambdaCodeBlock(
         // It was declared inside a class.
         insideWrapperClass -> {
             val composableFunctionString = previewParameter?.let {
-                "${composeFunctionName}($previewParameterName = previewParam)"
-            } ?: "${composeFunctionName}()"
+                "$composeFunctionName($previewParameterName = previewParam)"
+            } ?: "$composeFunctionName()"
             CodeBlock.Builder()
                 .add(
                     "\ncomponent = @%T {\n    %T().${composableFunctionString}\n}",
@@ -205,8 +205,8 @@ internal fun composePreviewFunctionLambdaCodeBlock(
         // It was declared inside an object or a companion object.
         insideObject -> {
             val composableFunctionString = previewParameter?.let {
-                "${composeFunctionName}($previewParameterName = previewParam)"
-            } ?: "${composeFunctionName}()"
+                "$composeFunctionName($previewParameterName = previewParam)"
+            } ?: "$composeFunctionName()"
             CodeBlock.Builder()
                 .add(
                     "\ncomponent = @%T {\n    %T.${composableFunctionString}\n}",
@@ -217,7 +217,7 @@ internal fun composePreviewFunctionLambdaCodeBlock(
 
         else -> throw ShowkaseProcessorException(
             "Your @ShowkaseComposable/@Preview " +
-                    "function:${composeFunctionName} is declared in a way that is not supported by " +
+                    "function:$composeFunctionName is declared in a way that is not supported by " +
                     "Showkase"
         )
     }
@@ -299,18 +299,18 @@ internal fun showkaseBrowserPropertyValue(
     // It was declared inside a class.
     insideWrapperClass -> {
         CodeBlock.Builder()
-            .add("\n$fieldPropertyName = %T().${fieldName}", enclosingClass)
+            .add("\n$fieldPropertyName = %T().$fieldName", enclosingClass)
             .build()
     }
     // It was declared inside an object or a companion object.
     insideObject -> {
         CodeBlock.Builder()
-            .add("\n$fieldPropertyName = %T.${fieldName}", enclosingClass)
+            .add("\n$fieldPropertyName = %T.$fieldName", enclosingClass)
             .build()
     }
 
     else -> throw ShowkaseProcessorException(
-        "Your field:${fieldName} is declared in a way that " +
+        "Your field:$fieldName is declared in a way that " +
                 "is not supported by Showkase"
     )
 }
@@ -318,7 +318,7 @@ internal fun showkaseBrowserPropertyValue(
 internal fun generatePropertyNameFromMetadata(
     metadata: ShowkaseMetadata,
 ): String {
-    return when(metadata) {
+    return when (metadata) {
         is ShowkaseMetadata.Component -> {
             val name =
                 if (metadata.componentIndex != null && metadata.componentIndex > 0

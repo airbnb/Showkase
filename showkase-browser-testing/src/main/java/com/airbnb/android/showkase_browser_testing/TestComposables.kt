@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming")
+@file:Suppress("PackageName")
 package com.airbnb.android.showkase_browser_testing
 
 import android.content.res.Configuration
@@ -69,7 +69,6 @@ fun TestComposable8() {
     BasicText(text = "Test Composable9and10")
 }
 
-
 @Preview(
     name = "Custom Text Light",
     group = "Button",
@@ -107,7 +106,6 @@ fun PreviewText() {
     BasicText(text = "Some text")
 }
 
-
 @EnglishLocalePreview
 @Composable
 fun PreviewEnglishText() {
@@ -121,4 +119,4 @@ private fun PrivateTextComposable() {
 }
 
 @ShowkaseRoot
-class MyRootModule: ShowkaseRootModule
+class MyRootModule : ShowkaseRootModule

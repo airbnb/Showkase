@@ -1,4 +1,4 @@
-@file:Suppress("PackageNaming")
+@file:Suppress("PackageName")
 package com.airbnb.android.showkase_browser_testing
 
 import androidx.compose.ui.graphics.Color

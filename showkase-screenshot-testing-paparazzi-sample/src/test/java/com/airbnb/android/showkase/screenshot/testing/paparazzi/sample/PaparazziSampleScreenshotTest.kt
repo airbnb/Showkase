@@ -36,10 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.google.testing.junit.testparameterinjector.TestParameter
-import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.airbnb.android.showkase.models.Showkase
@@ -62,7 +59,7 @@ import java.util.*
  * for your use case. For what it's worth, the showkase-screenshot-testing-paparazzi artifact
  * auto-generates an identical class for you so that you don't have to manually write this.
  */
-//@RunWith(TestParameterInjector::class)
+// @RunWith(TestParameterInjector::class)
 class PaparazziSampleScreenshotTest {
 
     object PreviewProvider : TestParameter.TestParameterValuesProvider {
@@ -168,5 +165,6 @@ class TypographyTestPreview(
         )
     }
 
-    override fun toString(): String = "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
+    override fun toString(): String =
+        "${showkaseBrowserTypography.typographyGroup}_${showkaseBrowserTypography.typographyName}"
 }

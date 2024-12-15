@@ -29,15 +29,14 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                 groupedColorsList,
                 groupedTypographyList
             ) = getShowkaseProviderElements(classKey)
-            
-            val showkaseBrowserScreenMetadata = 
+            val showkaseBrowserScreenMetadata =
                 remember { mutableStateOf(ShowkaseBrowserScreenMetadata()) }
             when {
-                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() || 
+                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() ||
                         groupedTypographyList.isNotEmpty() -> {
                     ShowkaseBrowserApp(
-                        groupedComponentsList.groupBy { it.group }, 
-                        groupedColorsList.groupBy { it.colorGroup }, 
+                        groupedComponentsList.groupBy { it.group },
+                        groupedColorsList.groupBy { it.colorGroup },
                         groupedTypographyList.groupBy { it.typographyGroup },
                         showkaseBrowserScreenMetadata)
                 }
@@ -59,9 +58,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").getDeclaredConstructor().newInstance()
-            
             val showkaseMetadata = (showkaseComponentProvider as ShowkaseProvider).metadata()
-
             ShowkaseElementsMetadata(
                 componentList = showkaseMetadata.componentList,
                 colorList = showkaseMetadata.colorList,
@@ -81,9 +78,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
          * Showkase browser activity. Please make sure to use this instead of starting the
          * activity directly as it sets the right value in the bundle in order for the activity
          * to start correctly.
-         * 
+         *
          * @param context Android context
-         * @param rootModuleCanonicalName The canonical name of the implementation of 
+         * @param rootModuleCanonicalName The canonical name of the implementation of
          * ShowkaseRootModule.
          */
         fun getIntent(context: Context, rootModuleCanonicalName: String) =
