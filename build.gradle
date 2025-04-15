@@ -7,7 +7,6 @@ buildscript {
             'androidXTestRules'      : '1.4.0',
             'assertJ'                : '3.16.1',
             'compose'                : '1.6.7',
-            'composeCompiler'        : '1.5.13',
             'composeActivity'        : '1.9.0',
             'composeConstraintLayout': '1.0.1',
             'composeNavigation'      : '2.5.1',
@@ -39,7 +38,6 @@ buildscript {
     ext.deps = [
             'compose'                : [
                     'activityCompose'   : "androidx.activity:activity-compose:${versions.composeActivity}",
-                    'composeComplier'   : "androidx.compose:compose-compiler:${versions.composeCompiler}",
                     'composeNavigation' : "androidx.navigation:navigation-compose:${versions.composeNavigation}",
                     'composeRuntime'    : "androidx.compose.runtime:runtime:${versions.compose}",
                     'constraintLayout'  : "androidx.constraintlayout:constraintlayout-compose:${versions.composeConstraintLayout}",
@@ -108,6 +106,7 @@ plugins {
     id "io.gitlab.arturbosch.detekt" version "1.23.6"
     id "com.google.devtools.ksp" version "$KSP_VERSION"
     id "com.vanniktech.maven.publish" version "$MAVEN_PUBLISH_VERSION"
+    id "org.jetbrains.kotlin.plugin.compose" version "$KOTLIN"
 }
 
 allprojects {
