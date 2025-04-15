@@ -37,10 +37,10 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 showkaseMetadata.componentIndex > 0
             ) {
                 "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}" +
-                    "_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
+                        "_${showkaseMetadata.showkaseName}_${showkaseMetadata.componentIndex}"
             } else {
                 "${showkaseMetadata.fqPrefix}_${showkaseMetadata.showkaseGroup}" +
-                    "_${showkaseMetadata.showkaseName}"
+                        "_${showkaseMetadata.showkaseName}"
             }
             val methodName = if (showkaseMetadata is ShowkaseMetadata.Component &&
                 showkaseMetadata.showkaseStyleName != null
@@ -111,9 +111,11 @@ internal class ShowkaseCodegenMetadataWriter(private val environment: XProcessin
                 addStringArrayMember(ShowkaseCodegenMetadata::extraMetadata.name, showkaseMetadata.extraMetadata)
             }
         }
+
         is ShowkaseMetadata.Color -> {
             annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.COLOR.name)
         }
+
         is ShowkaseMetadata.Typography -> {
             annotation.addMember("showkaseMetadataType = %S", ShowkaseMetadataType.TYPOGRAPHY.name)
         }
