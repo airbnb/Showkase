@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.KSP_VERSION = '1.9.23-1.0.20'
+    ext.KSP_VERSION = '2.1.20-2.0.0'
+    ext.KOTLIN = '2.1.20'
     ext.versions = [
             'androidXTestCore'       : '1.4.0',
             'androidXTestRules'      : '1.4.0',
@@ -15,8 +16,6 @@ buildscript {
             'gradle'                 : '8.3.1',
             'junit'                  : '4.13.2',
             'junitImplementation'    : '1.1.2',
-            'kotlin'                 : '1.9.23',
-            'kotlinCompilerVersion'  : '1.9.23',
             'kotlinCompileTesting'   : '0.4.1',
             'kotlinPoet'             : '1.12.0',
             'kotlinXMetadata'        : '0.6.0',
@@ -97,7 +96,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN"
         classpath "com.karumi:shot:${versions.shot}"
         classpath "com.vanniktech:gradle-maven-publish-plugin:${versions.mavenPublish}"
         // NOTE: Do not place your application dependencies here; they belong
