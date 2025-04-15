@@ -17,7 +17,6 @@ buildscript {
             'junitImplementation'    : '1.1.2',
             'kotlinCompileTesting'   : '0.4.1',
             'kotlinPoet'             : '1.12.0',
-            'kotlinXMetadata'        : '0.6.0',
             'ksp'                    : "$KSP_VERSION",
             'ktx'                    : '1.1.0',
             'lifecycle'              : '2.2.0',
@@ -55,7 +54,7 @@ buildscript {
             'kotlinCompileTestingKsp': "dev.zacsweers.kctfork:ksp:${versions.kotlinCompileTesting}",
             'kotlinPoet'             : "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'kotlinJavaPoetInterop'  : "com.squareup:kotlinpoet-javapoet:${versions.kotlinPoet}",
-            'kotlinXMetadata'        : "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
+            'kotlinXMetadata'        : "org.jetbrains.kotlin:kotlin-metadata-jvm:$KOTLIN",
             'ksp'                    : "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}",
             'imageLoading'           : [
                     'picasso': "com.squareup.picasso:picasso:${versions.picasso}"
