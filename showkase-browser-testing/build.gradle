@@ -45,13 +45,6 @@ android {
             buildConfigField "boolean", "IS_RUNNING_KSP", "false"
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         compose true
         buildConfig = true
@@ -71,6 +64,10 @@ android {
             exclude group: "com.intellij", module: "annotations"
         }
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {

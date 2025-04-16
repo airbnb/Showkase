@@ -53,16 +53,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-        freeCompilerArgs += [
-                '-Xopt-in=kotlin.RequiresOptIn',
-        ]
-    }
+
     buildFeatures {
         compose true
     }
@@ -73,6 +64,10 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {

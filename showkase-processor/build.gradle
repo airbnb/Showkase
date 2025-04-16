@@ -4,15 +4,8 @@ plugins {
 }
 apply from: "$rootDir/publishing.gradle"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+kotlin {
+    jvmToolchain(17)
 }
 
 // Need to apply to all tasks like this so test tasks also get these compiler args
@@ -25,6 +18,10 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
                 "-Xopt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview",
         ]
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
