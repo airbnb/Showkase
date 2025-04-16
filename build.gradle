@@ -12,7 +12,7 @@ buildscript {
             'composeNavigation'      : '2.5.1',
             'detekt'                 : '1.23.6',
             'espresso'               : '3.2.0',
-            'gradle'                 : '8.3.1',
+            'gradle'                 : '8.9.1',
             'junit'                  : '4.13.2',
             'junitImplementation'    : '1.1.2',
             'kotlinCompileTesting'   : '0.7.0',
