@@ -5,6 +5,8 @@ import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.isMethod
+import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -139,6 +141,14 @@ class ShowkaseProcessor @JvmOverloads constructor(
         if (requireShowkaseComposableAnnotation) return emptySet()
 
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
+            .asSequence()
+            .sortedWith(compareBy { element ->
+                when {
+                    element.isTypeElement() -> 0
+                    element.isMethod() -> 1
+                    else -> 2
+                }
+            })
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
                     // Writing preview data to a internal annotation to store values through
@@ -162,7 +172,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element = element,
                     showkaseValidator = showkaseValidator
                 )
-            }.flatten().mapNotNull { it }.toSet()
+            }
+            .flatten().mapNotNull { it }.toSet()
     }
 
     private fun processCustomAnnotation(
