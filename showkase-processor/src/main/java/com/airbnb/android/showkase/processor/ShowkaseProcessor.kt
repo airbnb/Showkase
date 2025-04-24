@@ -5,8 +5,6 @@ import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
 import androidx.room.compiler.processing.XTypeElement
-import androidx.room.compiler.processing.isMethod
-import androidx.room.compiler.processing.isTypeElement
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -26,6 +24,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromCustomAnnotation
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
+import com.airbnb.android.showkase.processor.utils.ensureConsistentOrdering
 import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
@@ -118,6 +117,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     ): Set<ShowkaseMetadata.Component> {
         val skipPrivatePreviews = environment.options["skipPrivatePreviews"].toBoolean()
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
+            .ensureConsistentOrdering()
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
@@ -141,14 +141,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         if (requireShowkaseComposableAnnotation) return emptySet()
 
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
-            .asSequence()
-            .sortedWith(compareBy { element ->
-                when {
-                    element.isTypeElement() -> 0
-                    element.isMethod() -> 1
-                    else -> 2
-                }
-            })
+            .ensureConsistentOrdering()
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
                     // Writing preview data to a internal annotation to store values through
@@ -187,25 +180,25 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         supportedTypes.map { supportedType ->
             val annotatedElements = roundEnvironment.getElementsAnnotatedWith(supportedType)
-            annotatedElements.map { annotatedElement ->
-                if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
-
-                    val skipable = showkaseValidator.validateComponentElementOrSkip(
-                        element = annotatedElement,
-                        annotationName = supportedType,
-                        skipPrivatePreviews = skipPrivatePreviews
-                    )
-                    if (!skipable) {
-                        components.addAll(
-                            getShowkaseMetadataFromCustomAnnotation(
-                                element = annotatedElement,
-                                showkaseValidator = showkaseValidator,
-                                supportedType.getCustomAnnotationSimpleName(),
-                            ).toSet()
+            annotatedElements
+                .map { annotatedElement ->
+                    if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
+                        val skipable = showkaseValidator.validateComponentElementOrSkip(
+                            element = annotatedElement,
+                            annotationName = supportedType,
+                            skipPrivatePreviews = skipPrivatePreviews
                         )
+                        if (!skipable) {
+                            components.addAll(
+                                getShowkaseMetadataFromCustomAnnotation(
+                                    element = annotatedElement,
+                                    showkaseValidator = showkaseValidator,
+                                    supportedType.getCustomAnnotationSimpleName(),
+                                ).toSet()
+                            )
+                        }
                     }
                 }
-            }
         }
         return components
     }
@@ -224,6 +217,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // Supported annotations from classpath
         val supportedCustomPreview = mutableSetOf<ShowkaseMultiPreviewCodegenMetadata>()
         environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .ensureConsistentOrdering()
             .flatMap { it.getEnclosedElements() }.mapNotNull {
                 return@mapNotNull when (
                     val annotation = it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)
@@ -251,6 +245,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             .mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
                 roundEnvironment
                     .getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
+                    .ensureConsistentOrdering()
                     .mapIndexed elementRoot@{ elementIndex, xElement ->
                         val skippable = showkaseValidator.validateComponentElementOrSkip(
                             xElement,
@@ -324,13 +319,15 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
 
     private fun processColorAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
-        return roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class).map { element ->
-            showkaseValidator.validateColorElement(
-                element,
-                ShowkaseColor::class.java.simpleName
-            )
-            getShowkaseColorMetadata(element, showkaseValidator)
-        }.toSet()
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class)
+            .ensureConsistentOrdering()
+            .map { element ->
+                showkaseValidator.validateColorElement(
+                    element,
+                    ShowkaseColor::class.java.simpleName
+                )
+                getShowkaseColorMetadata(element, showkaseValidator)
+            }.toSet()
     }
 
     private fun processTypographyAnnotation(
@@ -341,14 +338,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
             environment.requireType(TYPE_STYLE_CLASS_NAME)
         }
 
-        return roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class).map { element ->
-            showkaseValidator.validateTypographyElement(
-                element,
-                ShowkaseTypography::class.java.simpleName,
-                textStyleType
-            )
-            getShowkaseTypographyMetadata(element, showkaseValidator)
-        }.toSet()
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class)
+            .ensureConsistentOrdering()
+            .map { element ->
+                showkaseValidator.validateTypographyElement(
+                    element,
+                    ShowkaseTypography::class.java.simpleName,
+                    textStyleType
+                )
+                getShowkaseTypographyMetadata(element, showkaseValidator)
+            }.toSet()
     }
 
     private fun processShowkaseMetadata(
@@ -396,6 +395,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         environment: XProcessingEnv
     ): XTypeElement? {
         val showkaseRootElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class)
+            .ensureConsistentOrdering().toSet()
         showkaseValidator.validateShowkaseRootElement(showkaseRootElements, environment)
         return showkaseRootElements.singleOrNull() as XTypeElement?
     }
@@ -404,7 +404,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
         roundEnvironment: XRoundEnv
     ): Pair<XTypeElement?, ScreenshotTestType?> {
         val testElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshot::class)
+            .ensureConsistentOrdering()
             .filterIsInstance<XTypeElement>()
+            .toSet()
         val screenshotTestType =
             showkaseValidator.validateShowkaseTestElement(testElements, environment)
         return testElements.singleOrNull() to screenshotTestType
@@ -511,6 +513,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv):
             Set<ShowkaseGeneratedMetadata> {
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .ensureConsistentOrdering()
             .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
                 val codegenMetadataAnnotation =
