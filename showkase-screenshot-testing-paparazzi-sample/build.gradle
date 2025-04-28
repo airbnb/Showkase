@@ -9,6 +9,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'app.cash.paparazzi' version "1.2.0"
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 if (project.hasProperty('useKsp')) {
@@ -39,19 +40,9 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
@@ -70,6 +61,10 @@ tasks.withType(Test).configureEach { task ->
             "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
             "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
     ]
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 afterEvaluate {

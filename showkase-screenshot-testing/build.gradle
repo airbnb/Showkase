@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/publishing.gradle"
 
 android {
@@ -22,19 +23,8 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
@@ -44,6 +34,10 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
