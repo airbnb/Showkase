@@ -63,6 +63,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
         addType(with(TypeSpec.objectBuilder("PaparazziShowkasePreviewProvider")) {
             addSuperinterface(TEST_PARAMETER_VALUES_PROVIDER_CLASSNAME)
             addModifiers(KModifier.PRIVATE)
+            addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("\"DEPRECATION\"").build())
             addFunction(
                 FunSpec.builder("provideValues")
                     .addModifiers(KModifier.OVERRIDE)
@@ -114,6 +115,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
             with(TypeSpec.objectBuilder(name)) {
                 addSuperinterface(TEST_PARAMETER_VALUES_PROVIDER_CLASSNAME)
                 addModifiers(KModifier.PRIVATE)
+                addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("\"DEPRECATION\"").build())
                 addFunction(
                     FunSpec.builder("provideValues")
                         .addModifiers(KModifier.OVERRIDE)
