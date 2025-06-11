@@ -27,7 +27,7 @@ buildscript {
             'picasso'                : '2.8',
             'appcompat'              : '1.4.0',
             'testRunner'             : '1.4.0',
-            'testParameterInjector'  : '1.18',
+            'testParameterInjector'  : '1.8',
             'googleTruth'            : '1.1.3',
             'material'               : '1.4.0',
             'mavenPublish'           : '0.22.0',
