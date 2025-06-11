@@ -12,6 +12,7 @@ import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameter.TestParameterValuesProvider
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import getMetadata
+import kotlin.Suppress
 import kotlin.collections.List
 import org.junit.Rule
 import org.junit.Test
@@ -37,6 +38,7 @@ public class MyScreenshotTest_PaparazziShowkaseTest : MyScreenshotTest() {
     takePaparazziSnapshot(paparazzi, elementPreview, direction, uiMode)
   }
 
+  @Suppress("DEPRECATION")
   private object PaparazziShowkasePreviewProvider : TestParameter.TestParameterValuesProvider {
     override fun provideValues(): List<PaparazziShowkaseTestPreview> {
       val metadata = Showkase.getMetadata()
@@ -47,15 +49,18 @@ public class MyScreenshotTest_PaparazziShowkaseTest : MyScreenshotTest() {
     }
   }
 
+  @Suppress("DEPRECATION")
   private object PaparazziShowkaseDeviceConfigProvider : TestParameter.TestParameterValuesProvider {
     override fun provideValues(): List<PaparazziShowkaseDeviceConfig> = deviceConfigs()
   }
 
+  @Suppress("DEPRECATION")
   private object PaparazziShowkaseLayoutDirectionProvider :
       TestParameter.TestParameterValuesProvider {
     override fun provideValues(): List<LayoutDirection> = layoutDirections()
   }
 
+  @Suppress("DEPRECATION")
   private object PaparazziShowkaseUIModeProvider : TestParameter.TestParameterValuesProvider {
     override fun provideValues(): List<PaparazziShowkaseUIMode> = uiModes()
   }
