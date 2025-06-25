@@ -87,12 +87,6 @@ ksp "com.airbnb.android:showkase-processor:1.0.4" or kapt "com.airbnb.android:sh
 
 ```
 
-You will also need to ensure that the generated file isn't being stripped away and will need to add this to your proguard file - 
-
-```
--keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
-```
-
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
 
@@ -391,6 +385,12 @@ val colors= metadata.colorList
 val typography = metadata.typographyList
 
 ```
+
+## R8 / ProGuard
+
+If you use Showkase as a dependency in an Android project which uses R8 as a default compiler
+you don't have to do anything. The specific rules are [already bundled](showkase/consumer-rules.pro)
+into the AAR which can be interpreted by R8 automatically.
 
 ## Frequently Asked Questions
 <details>
