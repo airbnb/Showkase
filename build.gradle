@@ -9,7 +9,7 @@ buildscript {
             'compose'                : '1.6.7',
             'composeActivity'        : '1.9.0',
             'composeConstraintLayout': '1.0.1',
-            'composeNavigation'      : '2.5.1',
+            'composeNavigation'      : '2.7.7',
             'detekt'                 : '1.23.6',
             'espresso'               : '3.2.0',
             'gradle'                 : '8.9.1',
@@ -19,10 +19,10 @@ buildscript {
             'kotlinPoet'             : '1.12.0',
             'ksp'                    : "$KSP_VERSION",
             'ktx'                    : '1.1.0',
-            'lifecycle'              : '2.2.0',
+            'lifecycle'              : '2.6.2',
             'paparazzi'              : '1.2.0',
             'picasso'                : '2.8',
-            'appcompat'              : '1.4.0',
+            'appcompat'              : '1.6.1',
             'testRunner'             : '1.4.0',
             'testParameterInjector'  : '1.8',
             'googleTruth'            : '1.1.3',
@@ -62,7 +62,8 @@ buildscript {
             'support'                : [
                     'appCompat'          : "androidx.appcompat:appcompat:${versions.appcompat}",
                     'ktx'                : "androidx.core:core-ktx:${versions.corektx}",
-                    'lifecycleExtensions': "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
+                    'lifecycleComposeViewModel' : "androidx.lifecycle:lifecycle-viewmodel-compose:${versions.lifecycle}",
+                    'lifecycleComposeRuntime' : "androidx.lifecycle:lifecycle-runtime-compose:${versions.lifecycle}",
             ],
             'test'                   : [
                     'androidXTestCore'     : "androidx.test:core:${versions.androidXTestCore}",

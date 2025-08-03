@@ -1,7 +1,5 @@
 package com.airbnb.android.showkase.models
 
-import androidx.compose.runtime.MutableState
-
 internal enum class ShowkaseCurrentScreen {
     COMPONENT_GROUPS,
     COMPONENTS_IN_A_GROUP,
@@ -28,28 +26,16 @@ internal data class ShowkaseBrowserScreenMetadata(
     val searchQuery: String? = null,
 )
 
-internal fun MutableState<ShowkaseBrowserScreenMetadata>.clear() {
-    update {
-        copy(
-            isSearchActive = false,
-            searchQuery = null,
-            currentComponentKey = null,
-            currentComponentName = null,
-            currentComponentStyleName = null,
-            currentGroup = null
-        )
-    }
-}
+internal fun ShowkaseBrowserScreenMetadata.clear() = copy(
+    isSearchActive = false,
+    searchQuery = null,
+    currentComponentKey = null,
+    currentComponentName = null,
+    currentComponentStyleName = null,
+    currentGroup = null
+)
 
-internal fun MutableState<ShowkaseBrowserScreenMetadata>.clearActiveSearch() {
-    update {
-        copy(
-            isSearchActive = false,
-            searchQuery = null
-        )
-    }
-}
-
-internal fun <T> MutableState<T>.update(block: T.() -> T) {
-    value = this.component1().run(block)
-}
+internal fun ShowkaseBrowserScreenMetadata.clearActiveSearch() = copy(
+    isSearchActive = false,
+    searchQuery = null
+)

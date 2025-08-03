@@ -1,5 +1,6 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.material.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -47,8 +49,10 @@ fun SimpleTextCard(
 internal fun ComponentCardTitle(componentName: String) {
     Text(
         text = componentName,
-        modifier = Modifier.padding(start = padding4x, end = padding4x, top = padding8x,
-            bottom = padding1x),
+        modifier = Modifier.padding(
+            start = padding4x, end = padding4x, top = padding8x,
+            bottom = padding1x
+        ),
         style = TextStyle(
             fontSize = 16.sp,
             fontFamily = FontFamily.Serif,
@@ -63,28 +67,33 @@ internal fun ComponentCard(
     onClick: (() -> Unit)? = null,
     darkMode: Boolean = false,
 ) {
-    val composableModifier = Modifier.generateComposableModifier(metadata)
-    val composableContainerModifier = Modifier.generateContainerModifier(onClick)
-    MaterialTheme(
-        colors = if (darkMode) darkColors() else lightColors()
-    ) {
-        Card(
-            shape = MaterialTheme.shapes.large
+    // This is added to make sure that the navigation of the ShowkaseBrowser does not break
+    // when one of the previews has a back press handler in the implementation of the component.
+    val backPressedDispatcherOwner = rememberOnBackPressedDispatcherOwner()
+    CompositionLocalProvider(LocalOnBackPressedDispatcherOwner provides backPressedDispatcherOwner) {
+        val composableModifier = Modifier.generateComposableModifier(metadata)
+        val composableContainerModifier = Modifier.generateContainerModifier(onClick)
+        MaterialTheme(
+            colors = if (darkMode) darkColors() else lightColors()
         ) {
-            Box {
-                Column(modifier = composableModifier) {
-                    metadata.component()
+            Card(
+                shape = MaterialTheme.shapes.large
+            ) {
+                Box {
+                    Column(modifier = composableModifier) {
+                        metadata.component()
+                    }
+                    // Need to add this as part of the stack so that we can intercept the touch of the
+                    // component when we are on the "Group components" screen. If
+                    // composableContainerModifier does not have any clickable modifiers, this column has no
+                    // impact and the touches go through to the component(this happens in the "Component
+                    // Detail" screen.
+                    Column(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .then(composableContainerModifier)
+                    ) {}
                 }
-                // Need to add this as part of the stack so that we can intercept the touch of the
-                // component when we are on the "Group components" screen. If
-                // composableContainerModifier does not have any clickable modifiers, this column has no
-                // impact and the touches go through to the component(this happens in the "Component
-                // Detail" screen.
-                Column(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .then(composableContainerModifier)
-                ) {}
             }
         }
     }
