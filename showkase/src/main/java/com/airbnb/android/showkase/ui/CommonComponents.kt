@@ -94,7 +94,6 @@ internal fun ComponentCard(
                             .then(composableContainerModifier)
                     ) {}
                 }
-
             }
         }
     }

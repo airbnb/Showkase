@@ -21,26 +21,27 @@ import com.airbnb.android.showkase.models.ShowkaseElementsMetadata
 class ShowkaseBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val classKey = intent.extras?.getString(SHOWKASE_ROOT_MODULE_KEY) ?: throw ShowkaseException(
-            "Missing key in bundle. Please start this activity by using the intent returned by " +
-                    "the ShowkaseBrowserActivity.getIntent() method."
-        )
+        val classKey =
+            intent.extras?.getString(SHOWKASE_ROOT_MODULE_KEY) ?: throw ShowkaseException(
+                "Missing key in bundle. Please start this activity by using the intent returned by " +
+                        "the ShowkaseBrowserActivity.getIntent() method."
+            )
         setContent {
             val (
                 groupedComponentsList,
                 groupedColorsList,
                 groupedTypographyList
             ) = getShowkaseProviderElements(classKey)
-            
+
             var showkaseBrowserScreenMetadata by remember {
                 mutableStateOf(ShowkaseBrowserScreenMetadata())
             }
             when {
-                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() || 
+                groupedComponentsList.isNotEmpty() || groupedColorsList.isNotEmpty() ||
                         groupedTypographyList.isNotEmpty() -> {
                     ShowkaseBrowserApp(
-                        groupedComponentsList.groupBy { it.group }, 
-                        groupedColorsList.groupBy { it.colorGroup }, 
+                        groupedComponentsList.groupBy { it.group },
+                        groupedColorsList.groupBy { it.colorGroup },
                         groupedTypographyList.groupBy { it.typographyGroup },
                         showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
                         onUpdateShowkaseBrowserScreenMetadata = {
@@ -48,6 +49,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
                         }
                     )
                 }
+
                 else -> {
                     ShowkaseErrorScreen(
                         errorText = "There were no elements that were annotated with either " +

@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -20,7 +19,7 @@ internal fun ShowkaseComponentStylesScreen(
 ) {
     val componentStylesList =
         groupedComponentMap[showkaseBrowserScreenMetadata.currentGroup]
-            ?.filter { it.componentName == showkaseBrowserScreenMetadata.currentComponentName  }
+            ?.filter { it.componentName == showkaseBrowserScreenMetadata.currentComponentName }
             ?.sortedWith { a, b ->
                 when {
                     a.isDefaultStyle -> -1
@@ -29,17 +28,18 @@ internal fun ShowkaseComponentStylesScreen(
                 }
             } ?: return
     val filteredList = remember(componentStylesList, showkaseBrowserScreenMetadata.searchQuery) {
-            getFilteredSearchList(
-                componentStylesList,
-                isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
-                searchQuery = showkaseBrowserScreenMetadata.searchQuery,
-            )
-        }
+        getFilteredSearchList(
+            componentStylesList,
+            isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
+            searchQuery = showkaseBrowserScreenMetadata.searchQuery,
+        )
+    }
     LazyColumn {
         items(
             items = filteredList,
             itemContent = { groupComponent ->
-                val styleName = generatedStyleName(groupComponent.styleName, componentStylesList.size)
+                val styleName =
+                    generatedStyleName(groupComponent.styleName, componentStylesList.size)
                 ComponentCardTitle(
                     "${groupComponent.componentName} $styleName"
                 )
@@ -115,6 +115,7 @@ private fun getFilteredSearchList(
                 )
             }
         }
+
         else -> list
     }
 
