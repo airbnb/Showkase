@@ -58,7 +58,6 @@ fun BasicChipBluePreview() {
     )
 }
 
-
 @ShowkaseComposable(name = "Basic Chip Grey Light", group = "Chips")
 @ShowkaseComposable(name = "Basic Chip Grey Dark", group = "Chips")
 @Composable

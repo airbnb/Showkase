@@ -3,8 +3,8 @@ package com.airbnb.android.showkase.annotation
 /**
  * Interface used to declare the root class for a module. This is needed to let Showkase
  * know more about the module that is going to be the root module for aggregating all the Showkase
- * supported UI elements across all the different modules(if you are using a multi-module 
- * project). If you are only using a single module in your project, add it to that module. You 
+ * supported UI elements across all the different modules(if you are using a multi-module
+ * project). If you are only using a single module in your project, add it to that module. You
  * are allowed to have only one @ShowkaseRoot per module.
  *
  * <p>

@@ -34,7 +34,6 @@ fun VerticalScrollPreview() {
     VerticalScrollSample()
 }
 
-
 // This preview was only meant for the Android Studio preview and we want to avoid displaying this
 // in the ShowkaseBrowser. In order to do this, I used the ShowkaseComposable annotation along with
 // the skip property set to true.

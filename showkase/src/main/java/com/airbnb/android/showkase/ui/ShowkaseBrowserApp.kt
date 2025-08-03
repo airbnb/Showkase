@@ -192,7 +192,7 @@ internal fun ShowkaseAppBar(
 //                currentRoute,
 //                showkaseBrowserScreenMetadata.value.searchQuery
 //            ) {
-//                showkaseBrowserScreenMetadata.value = 
+//                showkaseBrowserScreenMetadata.value =
 //                    showkaseBrowserScreenMetadata.value.copy(searchQuery = it)
 //            }
 //        },
@@ -288,7 +288,6 @@ private fun AppBarTitle(
         }
     }
 }
-
 
 @Composable
 fun ToolbarTitle(

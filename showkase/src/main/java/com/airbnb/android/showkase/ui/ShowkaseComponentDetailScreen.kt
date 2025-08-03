@@ -109,7 +109,6 @@ internal fun ShowkaseComponentDetailScreen(
             navigateTo = navigateTo
         )
     }
-
 }
 
 @Composable

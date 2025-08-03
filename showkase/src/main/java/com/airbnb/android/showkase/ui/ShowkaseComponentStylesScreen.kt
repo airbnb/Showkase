@@ -97,7 +97,6 @@ private fun back(
             navigateTo(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
         }
     }
-
 }
 
 private fun getFilteredSearchList(

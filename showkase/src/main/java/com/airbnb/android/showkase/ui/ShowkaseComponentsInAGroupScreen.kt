@@ -76,7 +76,6 @@ private fun goBackFromComponentsInAGroupScreen(
     }
 }
 
-
 private fun getFilteredSearchList(
     list: List<ShowkaseBrowserComponent>,
     isSearchActive: Boolean,

@@ -19,8 +19,8 @@ import com.airbnb.android.showkase.ui.padding4x
 import com.airbnb.android.submodule.showkasesample.LocalePreview
 
 /**
- * This component shows some static text in cursive text style. 
- * 
+ * This component shows some static text in cursive text style.
+ *
  * Example usage:
  *
  * ```

@@ -66,9 +66,7 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
         return try {
             val showkaseComponentProvider =
                 Class.forName("$classKey$AUTOGEN_CLASS_NAME").getDeclaredConstructor().newInstance()
-            
             val showkaseMetadata = (showkaseComponentProvider as ShowkaseProvider).metadata()
-
             ShowkaseElementsMetadata(
                 componentList = showkaseMetadata.componentList,
                 colorList = showkaseMetadata.colorList,
@@ -88,9 +86,9 @@ class ShowkaseBrowserActivity : AppCompatActivity() {
          * Showkase browser activity. Please make sure to use this instead of starting the
          * activity directly as it sets the right value in the bundle in order for the activity
          * to start correctly.
-         * 
+         *
          * @param context Android context
-         * @param rootModuleCanonicalName The canonical name of the implementation of 
+         * @param rootModuleCanonicalName The canonical name of the implementation of
          * ShowkaseRootModule.
          */
         fun getIntent(context: Context, rootModuleCanonicalName: String) =

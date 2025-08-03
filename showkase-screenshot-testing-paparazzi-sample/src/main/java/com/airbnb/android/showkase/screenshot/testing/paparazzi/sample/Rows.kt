@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.ui.padding1x
@@ -140,7 +139,7 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
                 )
             )
             Surface(
-                shape = RoundedCornerShape(padding1x/2),
+                shape = RoundedCornerShape(padding1x / 2),
                 color = MaterialTheme.colors.primary
             ) {
                 Text(

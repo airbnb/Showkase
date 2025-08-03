@@ -1,25 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.KSP_VERSION = '1.9.23-1.0.20'
+    ext.KSP_VERSION = '2.1.20-2.0.0'
+    ext.KOTLIN = '2.1.20'
     ext.versions = [
             'androidXTestCore'       : '1.4.0',
             'androidXTestRules'      : '1.4.0',
             'assertJ'                : '3.16.1',
             'compose'                : '1.6.7',
-            'composeCompiler'        : '1.5.13',
             'composeActivity'        : '1.9.0',
             'composeConstraintLayout': '1.0.1',
             'composeNavigation'      : '2.7.7',
-            'detekt'                 : '1.7.4',
+            'detekt'                 : '1.23.6',
             'espresso'               : '3.2.0',
-            'gradle'                 : '8.1.1',
+            'gradle'                 : '8.9.1',
             'junit'                  : '4.13.2',
             'junitImplementation'    : '1.1.2',
-            'kotlin'                 : '1.9.23',
-            'kotlinCompilerVersion'  : '1.9.23',
-            'kotlinCompileTesting'   : '0.4.1',
+            'kotlinCompileTesting'   : '0.7.0',
             'kotlinPoet'             : '1.12.0',
-            'kotlinXMetadata'        : '0.6.0',
             'ksp'                    : "$KSP_VERSION",
             'ktx'                    : '1.1.0',
             'lifecycle'              : '2.6.2',
@@ -33,14 +30,13 @@ buildscript {
             'mavenPublish'           : '0.22.0',
             'mdcComposeThemeAdapter' : '1.0.2',
             'strikt'                 : '0.33.0',
-            'xprocessing'            : '2.6.1',
+            'xprocessing'            : '2.7.0',
             'corektx'                : '1.7.0',
             'shot'                   : '6.0.0'
     ]
     ext.deps = [
             'compose'                : [
                     'activityCompose'   : "androidx.activity:activity-compose:${versions.composeActivity}",
-                    'composeComplier'   : "androidx.compose:compose-compiler:${versions.composeCompiler}",
                     'composeNavigation' : "androidx.navigation:navigation-compose:${versions.composeNavigation}",
                     'composeRuntime'    : "androidx.compose.runtime:runtime:${versions.compose}",
                     'constraintLayout'  : "androidx.constraintlayout:constraintlayout-compose:${versions.composeConstraintLayout}",
@@ -58,7 +54,7 @@ buildscript {
             'kotlinCompileTestingKsp': "dev.zacsweers.kctfork:ksp:${versions.kotlinCompileTesting}",
             'kotlinPoet'             : "com.squareup:kotlinpoet:${versions.kotlinPoet}",
             'kotlinJavaPoetInterop'  : "com.squareup:kotlinpoet-javapoet:${versions.kotlinPoet}",
-            'kotlinXMetadata'        : "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${versions.kotlinXMetadata}",
+            'kotlinXMetadata'        : "org.jetbrains.kotlin:kotlin-metadata-jvm:$KOTLIN",
             'ksp'                    : "com.google.devtools.ksp:symbol-processing-api:${versions.ksp}",
             'imageLoading'           : [
                     'picasso': "com.squareup.picasso:picasso:${versions.picasso}"
@@ -98,19 +94,19 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.gradle}"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN"
         classpath "com.karumi:shot:${versions.shot}"
         classpath "com.vanniktech:gradle-maven-publish-plugin:${versions.mavenPublish}"
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.7.4"
+    id "io.gitlab.arturbosch.detekt" version "1.23.6"
     id "com.google.devtools.ksp" version "$KSP_VERSION"
     id "com.vanniktech.maven.publish" version "$MAVEN_PUBLISH_VERSION"
+    id "org.jetbrains.kotlin.plugin.compose" version "$KOTLIN"
 }
 
 allprojects {
@@ -119,5 +115,8 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
+    }
+    dependencies {
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:${versions.detekt}"
     }
 }

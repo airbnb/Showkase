@@ -23,11 +23,11 @@ import com.airbnb.android.showkase.processor.models.isJavac
 import com.airbnb.android.showkase.processor.utils.findAnnotationBySimpleName
 import com.airbnb.android.showkase.processor.utils.kotlinMetadata
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
-import kotlinx.metadata.Flag
-import kotlinx.metadata.KmFunction
-import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import kotlin.contracts.contract
+import kotlin.metadata.KmFunction
+import kotlin.metadata.declaresDefaultValue
+import kotlin.metadata.jvm.KotlinClassMetadata
 
 internal class ShowkaseValidator(private val environment: XProcessingEnv) {
 
@@ -70,7 +70,7 @@ internal class ShowkaseValidator(private val environment: XProcessingEnv) {
                     element
                 )
             }
-            // Validate that only a single parameter is passed to these functions. In addition, 
+            // Validate that only a single parameter is passed to these functions. In addition,
             // the parameter should be annotated with @PreviewParameter.
             validateComposableParameter(element) -> {
                 throw ShowkaseProcessorException(
@@ -125,11 +125,11 @@ internal class ShowkaseValidator(private val environment: XProcessingEnv) {
 
     private fun Element.validateKaptComposableParameter(composableMethodElement: XMethodElement) =
         when (val metadata = kotlinMetadata()) {
-            is KotlinClassMetadata.FileFacade -> metadata.toKmPackage().functions.validateKaptComposableParameter(
+            is KotlinClassMetadata.FileFacade -> metadata.kmPackage.functions.validateKaptComposableParameter(
                 composableMethodElement
             )
 
-            is KotlinClassMetadata.Class -> metadata.toKmClass().functions.validateKaptComposableParameter(
+            is KotlinClassMetadata.Class -> metadata.kmClass.functions.validateKaptComposableParameter(
                 composableMethodElement
             )
 
@@ -161,7 +161,7 @@ internal class ShowkaseValidator(private val environment: XProcessingEnv) {
         // Enforce that all parameters have default values and at most one parameters is annotated
         // with @PreviewParameter
         return nonPreviewParameterParametersMetadata.all {
-            Flag.ValueParameter.DECLARES_DEFAULT_VALUE(it.flags)
+            it.declaresDefaultValue
         } && previewParameterParameters.size <= 1
     }
 
@@ -241,8 +241,8 @@ internal class ShowkaseValidator(private val environment: XProcessingEnv) {
                 )
             }
             // TODO(vinay.gaba) Also add the private modifier check. Unfortunately, the java code
-            //  for this element adds a private modifier since it's a field. Potentially use 
-            //  kotlinMetadata to enforce this check. 
+            //  for this element adds a private modifier since it's a field. Potentially use
+            //  kotlinMetadata to enforce this check.
             else -> {
             }
         }

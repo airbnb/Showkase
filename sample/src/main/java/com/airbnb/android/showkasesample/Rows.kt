@@ -143,7 +143,7 @@ fun BottomLabelRow(title: String, subtitle: String, label: String) {
                 )
             )
             Surface(
-                shape = RoundedCornerShape(padding1x/2),
+                shape = RoundedCornerShape(padding1x / 2),
                 color = MaterialTheme.colors.primary
             ) {
                 Text(
@@ -194,7 +194,6 @@ fun ProductCardRow(imageUrl: String, title: String, subtitle: String) {
                     color = MaterialTheme.colors.onSurface
                 )
             )
-
         }
     }
 }
@@ -211,7 +210,7 @@ fun BottomLabelRowPreview() {
 }
 
 /**
- * Use this card when you want to render a product with a hero image at the top. 
+ * Use this card when you want to render a product with a hero image at the top.
  *
  * Example usage:
  *
@@ -259,6 +258,5 @@ fun TitleSubtitleThumbnailRowWithBackHandlingPreview() {
     Column {
         TitleSubtitleThumbnailRow()
     }
-    BackHandler(onBack = {  })
+    BackHandler(onBack = {})
 }
-

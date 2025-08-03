@@ -105,4 +105,3 @@ private fun Modifier.generateContainerModifier(onClick: (() -> Unit)?) =
         fillMaxWidth()
             .clickable(onClick = onClick)
     } ?: fillMaxWidth()
-

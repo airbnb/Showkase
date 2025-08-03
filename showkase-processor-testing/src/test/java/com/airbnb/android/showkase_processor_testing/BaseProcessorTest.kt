@@ -1,3 +1,5 @@
+@file:Suppress("PackageName")
+
 package com.airbnb.android.showkase_processor_testing
 
 import com.airbnb.android.showkase.processor.ShowkaseProcessor
@@ -7,9 +9,8 @@ import com.tschuchort.compiletesting.CompilationResult
 import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.configureKsp
 import com.tschuchort.compiletesting.kspSourcesDir
-import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Rule
@@ -48,13 +49,19 @@ abstract class BaseProcessorTest {
         modes.forEach { mode ->
             val compilation = KotlinCompilation().apply {
                 kotlincArguments = kotlincArguments + "-Xexplicit-api=strict"
-                sources = inputDir.listFiles()?.toList().orEmpty().map { SourceFile.fromPath(it) }
+                sources = inputDir.listFiles()?.toList().orEmpty()
+                    .map { file -> SourceFile.new(file.name, file.readText()) }
                 when (mode) {
                     Mode.KSP -> {
-                        symbolProcessorProviders = listOf(ShowkaseProcessorProvider())
-                        kspArgs = options
+                        languageVersion = "2.1"
+                        configureKsp(useKsp2 = true) {
+                            symbolProcessorProviders.add(ShowkaseProcessorProvider())
+                            processorOptions.putAll(options)
+                        }
                     }
+
                     Mode.KAPT -> {
+                        languageVersion = "1.9"
                         annotationProcessors = listOf(ShowkaseProcessor())
                         kaptArgs = options
                     }
@@ -82,7 +89,7 @@ abstract class BaseProcessorTest {
 
     @OptIn(ExperimentalCompilerApi::class)
     protected fun compileInputsAndVerifyOutputs(
-        modes:List<Mode> = listOf(Mode.KSP, Mode.KAPT),
+        modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
         options: MutableMap<String, String> = mutableMapOf(),
     ) {
         compileInputs(modes = modes, options = options) { mode, compilation, result ->
@@ -142,6 +149,6 @@ abstract class BaseProcessorTest {
             .replace(" ", "_")
 
         val className = testNameRule.className.substringAfterLast(".")
-        return File(rootResourcesDir, "$className/${methodName}")
+        return File(rootResourcesDir, "$className/$methodName")
     }
 }
