@@ -1,3 +1,5 @@
+@file:Suppress("PackageName", "PackageNaming")
+
 package com.vinaygaba.showkase_browser_testing_submodule.two
 
 import androidx.compose.foundation.text.BasicText
