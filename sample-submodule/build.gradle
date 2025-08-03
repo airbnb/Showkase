@@ -57,7 +57,7 @@ dependencies {
     implementation deps.support.appCompat
     implementation deps.support.ktx
     implementation deps.support.lifecycleComposeViewModel
-implementation deps.support.lifecycleComposeRuntime
+    implementation deps.support.lifecycleComposeRuntime
     
     // Showkase
     implementation project(':showkase')
