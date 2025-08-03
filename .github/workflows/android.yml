@@ -145,7 +145,7 @@ jobs:
           disable-animations: true
           script: |
             adb devices -l
-            bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"     
+            bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"
             ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
 
       - name: Run Screenshot Tests
