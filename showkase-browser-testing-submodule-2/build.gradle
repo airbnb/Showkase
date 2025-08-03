@@ -4,10 +4,18 @@ apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
+    ksp {
+        arg("skipPrivatePreviews", "true")
+    }
 } else {
     apply plugin: 'kotlin-kapt'
     kapt {
         correctErrorTypes = true
+        arguments {
+            arg("multiPreviewType","com.vinaygaba.showkase_browser_testing_submodule.two.LocalePreview")
+            arg("multiPreviewType", "com.vinaygaba.showkase_browser_testing_submodule.two.EnglishLocalePreview")
+            arg("skipPrivatePreviews", "true")
+        }
     }
 }
 

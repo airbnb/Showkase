@@ -12,7 +12,6 @@ if (project.hasProperty('useKsp')) {
     kapt {
         correctErrorTypes = true
         arguments {
-            arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
             arg("skipPrivatePreviews", "true")
         }
     }
