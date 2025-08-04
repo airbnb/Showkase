@@ -14,12 +14,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -60,7 +63,6 @@ import com.airbnb.android.showkase.models.insideGroup
 import com.airbnb.android.showkase.ui.SemanticsUtils.lineCountVal
 
 @Suppress("LongMethod")
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 internal fun ShowkaseBrowserApp(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
@@ -79,56 +81,63 @@ internal fun ShowkaseBrowserApp(
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
+        Surface(
+            color = Color.White
+        ) {
+            Scaffold(
+                drawerContent = null,
+                topBar = {
+                    ShowkaseAppBar(
+                        currentRoute = currentRoute,
+                        showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+                        onSearchQueryChanged = {
+                            onUpdateShowkaseBrowserScreenMetadata(
+                                showkaseBrowserScreenMetadata.copy(searchQuery = it)
+                            )
+                        },
+                        onClearSearch = {
+                            onUpdateShowkaseBrowserScreenMetadata(
+                                showkaseBrowserScreenMetadata.copy(searchQuery = "")
+                            )
+                        },
+                        onActivateSearch = {
+                            onUpdateShowkaseBrowserScreenMetadata(
+                                showkaseBrowserScreenMetadata.copy(isSearchActive = true)
+                            )
+                        },
+                        onCloseSearch = {
+                            onUpdateShowkaseBrowserScreenMetadata(
+                                showkaseBrowserScreenMetadata.copy(isSearchActive = false)
+                            )
+                        },
 
-        Scaffold(
-            drawerContent = null,
-            topBar = {
-                ShowkaseAppBar(
-                    currentRoute = currentRoute,
-                    showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-                    onSearchQueryChanged = {
-                        onUpdateShowkaseBrowserScreenMetadata(
-                            showkaseBrowserScreenMetadata.copy(searchQuery = it)
                         )
-                    },
-                    onClearSearch = {
-                        onUpdateShowkaseBrowserScreenMetadata(
-                            showkaseBrowserScreenMetadata.copy(searchQuery = "")
+                },
+                content = { contentPadding ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = SHOWKASE_COLOR_BACKGROUND)
+                            .padding(contentPadding),
+                    ) {
+                        ShowkaseBodyContent(
+                            navController,
+                            groupedComponentMap,
+                            groupedColorsMap,
+                            groupedTypographyMap,
+                            showkaseBrowserScreenMetadata,
+                            onUpdateShowkaseBrowserScreenMetadata,
+                            navigateTo = {
+                                navController.navigate(it.name)
+                            }
                         )
-                    },
-                    onActivateSearch = {
-                        onUpdateShowkaseBrowserScreenMetadata(
-                            showkaseBrowserScreenMetadata.copy(isSearchActive = true)
-                        )
-                    },
-                    onCloseSearch = {
-                        onUpdateShowkaseBrowserScreenMetadata(
-                            showkaseBrowserScreenMetadata.copy(isSearchActive = false)
-                        )
-                    },
-
-                    )
-            },
-            content = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = SHOWKASE_COLOR_BACKGROUND),
-                ) {
-                    ShowkaseBodyContent(
-                        navController,
-                        groupedComponentMap,
-                        groupedColorsMap,
-                        groupedTypographyMap,
-                        showkaseBrowserScreenMetadata,
-                        onUpdateShowkaseBrowserScreenMetadata,
-                        navigateTo = {
-                            navController.navigate(it.name)
-                        }
-                    )
-                }
-            }
-        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .safeDrawingPadding()
+            )
+        }
     }
 }
 
@@ -141,41 +150,43 @@ internal fun ShowkaseAppBar(
     onActivateSearch: () -> Unit,
     onClearSearch: () -> Unit,
 ) {
-
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .graphicsLayer(shadowElevation = 4f)
-            .padding(padding2x),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        elevation = 4.dp
     ) {
-        ShowkaseAppBarTitle(
-            showkaseBrowserScreenMetadata.isSearchActive,
-            showkaseBrowserScreenMetadata.currentGroup,
-            showkaseBrowserScreenMetadata.currentComponentName,
-            showkaseBrowserScreenMetadata.currentComponentStyleName,
-            currentRoute,
-            showkaseBrowserScreenMetadata.searchQuery,
-            {
-                onSearchQueryChanged(it)
-            },
-            Modifier.fillMaxWidth(0.75f),
-            onCloseSearchFieldClick = {
-                onCloseSearch()
-            },
-            onClearSearchField = {
-                onClearSearch()
-            }
-        )
-        ShowkaseAppBarActions(
-            isActive = showkaseBrowserScreenMetadata.isSearchActive,
-            onActionClicked = {
-                onActivateSearch()
-            },
-            currentRoute = currentRoute,
-            modifier = Modifier.fillMaxWidth(0.25f)
-        )
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(padding2x),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ShowkaseAppBarTitle(
+                isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
+                currentGroup = showkaseBrowserScreenMetadata.currentGroup,
+                currentComponentName = showkaseBrowserScreenMetadata.currentComponentName,
+                currentComponentStyleName = showkaseBrowserScreenMetadata.currentComponentStyleName,
+                currentRoute = currentRoute,
+                searchQuery = showkaseBrowserScreenMetadata.searchQuery,
+                searchQueryValueChange = {
+                    onSearchQueryChanged(it)
+                },
+                modifier = Modifier.fillMaxWidth(0.75f),
+                onCloseSearchFieldClick = {
+                    onCloseSearch()
+                },
+                onClearSearchField = {
+                    onClearSearch()
+                }
+            )
+            ShowkaseAppBarActions(
+                isActive = showkaseBrowserScreenMetadata.isSearchActive,
+                onActionClicked = {
+                    onActivateSearch()
+                },
+                currentRoute = currentRoute,
+                modifier = Modifier.fillMaxWidth(0.25f)
+            )
+        }
     }
 
     /**
@@ -186,18 +197,33 @@ internal fun ShowkaseAppBar(
 //    TopAppBar(
 //        title = {
 //            ShowkaseAppBarTitle(
-//                showkaseBrowserScreenMetadata.value.isSearchActive,
-//                showkaseBrowserScreenMetadata.value.currentGroup,
-//                showkaseBrowserScreenMetadata.value.currentComponentName,
-//                currentRoute,
-//                showkaseBrowserScreenMetadata.value.searchQuery
-//            ) {
-//                showkaseBrowserScreenMetadata.value =
-//                    showkaseBrowserScreenMetadata.value.copy(searchQuery = it)
-//            }
+//                isSearchActive =  showkaseBrowserScreenMetadata.isSearchActive,
+//                currentGroup = showkaseBrowserScreenMetadata.currentGroup,
+//                currentComponentName = showkaseBrowserScreenMetadata.currentComponentName,
+//                currentComponentStyleName = showkaseBrowserScreenMetadata.currentComponentStyleName,
+//                currentRoute = currentRoute,
+//                searchQuery = showkaseBrowserScreenMetadata.searchQuery,
+//                searchQueryValueChange = {
+//                    onSearchQueryChanged(it)
+//                },
+//                modifier = Modifier,
+//                onCloseSearchFieldClick = {
+//                    onCloseSearch()
+//                },
+//                onClearSearchField = {
+//                    onClearSearch()
+//                }
+//            )
 //        },
 //        actions = {
-//            ShowkaseAppBarActions(showkaseBrowserScreenMetadata, currentRoute)
+//            ShowkaseAppBarActions(
+//                isActive = showkaseBrowserScreenMetadata.isSearchActive,
+//                onActionClicked = {
+//                    onActivateSearch()
+//                },
+//                currentRoute = currentRoute,
+//                modifier = Modifier
+//            )
 //        },
 //        backgroundColor = Color.White
 //    )
