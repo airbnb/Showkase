@@ -88,3 +88,5 @@ lint/tmp/
 # lint/reports/
 
 apikey.properties
+
+.claude

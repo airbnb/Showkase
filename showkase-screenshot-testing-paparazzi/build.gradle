@@ -1,8 +1,11 @@
+import com.vanniktech.maven.publish.AndroidMultiVariantLibrary
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.vanniktech.maven.publish'
 }
-apply from: "$rootDir/publishing.gradle"
 
 configurations {
     all {
@@ -52,22 +55,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-        freeCompilerArgs += [
-                '-Xopt-in=kotlin.RequiresOptIn',
-        ]
-    }
+
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
@@ -76,6 +66,10 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
@@ -89,4 +83,8 @@ dependencies {
     api deps.test.testParameterInjector
     api deps.test.androidXTestRules
     api deps.test.androidxTestRunner
+}
+
+mavenPublishing {
+    configure(new AndroidMultiVariantLibrary(true, true))
 }

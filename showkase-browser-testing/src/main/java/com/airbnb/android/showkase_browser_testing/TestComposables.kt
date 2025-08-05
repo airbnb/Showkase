@@ -9,8 +9,6 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import com.airbnb.android.showkase.annotation.ShowkaseRoot
 import com.airbnb.android.showkase.annotation.ShowkaseRootModule
 import com.google.android.material.composethemeadapter.MdcTheme
-import com.vinaygaba.showkase_browser_testing_submodule.two.EnglishLocalePreview
-import com.vinaygaba.showkase_browser_testing_submodule.two.LocalePreview
 
 @ShowkaseComposable("Composable1", "Group1")
 @Composable
@@ -98,24 +96,6 @@ fun PreviewCustomText() {
 @Composable
 fun PreviewCustomTextLight() {
     BasicText(text = "CustomPreviewAnnotation!")
-}
-
-@LocalePreview
-@Composable
-fun PreviewText() {
-    BasicText(text = "Some text")
-}
-
-@EnglishLocalePreview
-@Composable
-fun PreviewEnglishText() {
-    BasicText(text = "Some text In locale")
-}
-
-@EnglishLocalePreview
-@Composable
-private fun PrivateTextComposable() {
-    BasicText(text = "Private Text Composable")
 }
 
 @ShowkaseRoot

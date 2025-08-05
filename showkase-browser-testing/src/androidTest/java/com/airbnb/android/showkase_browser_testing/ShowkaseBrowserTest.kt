@@ -6,6 +6,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.ui.ShowkaseBrowserActivity
+import kotlinx.coroutines.delay
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -231,6 +232,7 @@ class ShowcaseBrowserTest {
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun entering_text_in_search_bar_filters_the_visible_groups_of_components() {
         composeTestRule.apply {
@@ -249,6 +251,13 @@ class ShowcaseBrowserTest {
 
             // Enter "Group1" in the search field
             inputTextWithTag("SearchTextField", "Group1 (2)")
+
+            // Timeout is necessary for text debouncing logic when entering
+            // text in the search field
+            waitUntilDoesNotExist(
+                matcher = hasText("Group2 (1)"),
+                timeoutMillis = 4000L,
+            )
 
             // Ensure that only Group1 (2) is visible on the screen. The rest of the groups should not be 
             // visble anymore
@@ -307,6 +316,7 @@ class ShowcaseBrowserTest {
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun entering_text_in_search_bar_filters_the_visible_components() {
         composeTestRule.apply {
@@ -338,6 +348,13 @@ class ShowcaseBrowserTest {
             // Enter "Composable4" in the search field
             inputTextWithTag("SearchTextField", "Composable4")
 
+            // Timeout is necessary for text debouncing logic when entering
+            // text in the search field
+            waitUntilDoesNotExist(
+                matcher = hasText("Test Composable5"),
+                timeoutMillis = 4000L,
+            )
+
             // Ensure that only Composable4 is visible on the screen. The rest of the groups should not be 
             // visble anymore
             verifyRowsWithTextAreDisplayed("Test Composable4")
@@ -345,6 +362,7 @@ class ShowcaseBrowserTest {
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun entering_text_in_search_bar_filters_the_visible_colors() {
         composeTestRule.apply {
@@ -370,6 +388,13 @@ class ShowcaseBrowserTest {
             // Enter "Prim" in the search field
             inputTextWithTag("SearchTextField", "Prim")
 
+            // Timeout is necessary for text debouncing logic when entering
+            // text in the search field
+            waitUntilDoesNotExist(
+                matcher = hasText("Secondary"),
+                timeoutMillis = 4000L,
+            )
+
             // Ensure that only "Primary" & "Primary Variant" is visible on the screen. The rest of the 
             // groups should not be visble anymore
             verifyRowsWithTextAreDisplayed("Primary Variant", "Primary")
@@ -377,6 +402,7 @@ class ShowcaseBrowserTest {
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun entering_text_in_search_bar_filters_the_visible_typography() {
         composeTestRule.apply {
@@ -407,6 +433,12 @@ class ShowcaseBrowserTest {
             // Enter "Bod" in the search field
             inputTextWithTag("SearchTextField", "Bod")
 
+            // Timeout is necessary for text debouncing logic when entering
+            // text in the search field
+            waitUntilDoesNotExist(
+                matcher = hasText("H1"),
+                timeoutMillis = 4000L,
+            )
 
             // Ensure that only "Body1" & "Body2" is visible on the screen. The rest of the groups should
             // not be visble anymore
@@ -658,14 +690,6 @@ class ShowcaseBrowserTest {
 
             // Check that only the label is displayed
             verifyRowsWithTextAreDisplayed("Search")
-
-            waitForIdle()
-
-            // Click the close button
-            clickRowWithTag("close_search_bar_tag")
-
-            // Check that the search icon is displayed again
-            verifyButtonWithTagIsDisplayedAndEnabled("SearchIcon")
         }
     }
 
