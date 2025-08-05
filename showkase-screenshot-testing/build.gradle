@@ -1,7 +1,9 @@
+import com.vanniktech.maven.publish.AndroidMultiVariantLibrary
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
-apply from: "$rootDir/publishing.gradle"
+apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     namespace "com.airbnb.android.showkase.screenshot.testing"
@@ -54,4 +56,8 @@ dependencies {
     api deps.test.androidXTestCore
     api deps.test.androidXTestRules
     api deps.test.androidxTestRunner
+}
+
+mavenPublishing {
+    configure(new AndroidMultiVariantLibrary(true, true))
 }

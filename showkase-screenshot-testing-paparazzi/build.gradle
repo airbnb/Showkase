@@ -1,9 +1,11 @@
+import com.vanniktech.maven.publish.AndroidMultiVariantLibrary
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.vanniktech.maven.publish'
 }
-apply from: "$rootDir/publishing.gradle"
 
 configurations {
     all {
@@ -81,4 +83,8 @@ dependencies {
     api deps.test.testParameterInjector
     api deps.test.androidXTestRules
     api deps.test.androidxTestRunner
+}
+
+mavenPublishing {
+    configure(new AndroidMultiVariantLibrary(true, true))
 }

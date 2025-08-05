@@ -1,9 +1,16 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'com.vanniktech.maven.publish'
 }
-apply from: "$rootDir/publishing.gradle"
 
 kotlin {
     jvmToolchain(17)
+}
+
+mavenPublishing {
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
 }
