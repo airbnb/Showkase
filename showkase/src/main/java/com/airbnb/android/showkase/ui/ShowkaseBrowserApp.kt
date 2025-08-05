@@ -29,7 +29,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -348,10 +351,22 @@ internal fun ShowkaseSearchField(
     onCloseSearchFieldClick: () -> Unit,
     onClearSearchField: () -> Unit,
 ) {
+    var localSearchQuery by remember { mutableStateOf(searchQuery.orEmpty()) }
+    LaunchedEffect(localSearchQuery) {
+        delay(300) // Debounce delay
+        searchQueryValueChange(localSearchQuery)
+    }
+
+    LaunchedEffect(searchQuery) {
+        if (searchQuery != localSearchQuery) {
+            localSearchQuery = searchQuery.orEmpty()
+        }
+    }
+
     TextField(
-        value = searchQuery.orEmpty(),
+        value = localSearchQuery,
         // Update value of textValue with the latest value of the text field
-        onValueChange = searchQueryValueChange,
+        onValueChange = { localSearchQuery = it },
         label = {
             Text(text = LocalContext.current.getString(R.string.search_label))
         },
@@ -375,9 +390,12 @@ internal fun ShowkaseSearchField(
         colors = TextFieldDefaults.textFieldColors(),
         trailingIcon = {
             IconButton(
-                onClick = onClearSearchField,
+                onClick = {
+                    localSearchQuery = ""
+                    onClearSearchField()
+                },
                 modifier = Modifier.testTag("clear_search_field"),
-                enabled = !searchQuery.isNullOrEmpty()
+                enabled = localSearchQuery.isNotEmpty()
             ) {
                 Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear Search Field")
             }

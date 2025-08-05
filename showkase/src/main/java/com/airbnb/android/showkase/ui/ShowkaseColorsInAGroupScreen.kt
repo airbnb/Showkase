@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -35,14 +36,21 @@ internal fun ShowkaseColorsInAGroupScreen(
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
-    val groupColorsList =
+    val groupColorsList = remember(groupedColorsMap, showkaseBrowserScreenMetadata.currentGroup) {
         groupedColorsMap[showkaseBrowserScreenMetadata.currentGroup]
-            ?.sortedBy { it.colorName } ?: return
-    val filteredList = getFilteredSearchList(
+            ?.sortedBy { it.colorName }
+    } ?: return
+    val filteredList = remember(
         groupColorsList,
-        isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
-        searchQuery = showkaseBrowserScreenMetadata.searchQuery,
-    )
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
+        getFilteredSearchList(
+            groupColorsList,
+            isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
+            searchQuery = showkaseBrowserScreenMetadata.searchQuery,
+        )
+    }
     LazyColumn(
         modifier = Modifier.testTag("ColorsInAGroupList")
     ) {

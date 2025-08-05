@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
@@ -21,14 +22,22 @@ internal fun ShowkaseComponentsInAGroupScreen(
         groupedComponentMap[showkaseBrowserScreenMetadata.currentGroup]
             ?.groupBy { it.componentName } ?: return
     // Use the default style as the preview if its available or take the first style for the component
-    val componentList = groupByComponentName.values.map {
-        it.firstOrNull { it.isDefaultStyle } ?: it.first()
+    val componentList = remember(groupByComponentName) {
+        groupByComponentName.values.map {
+            it.firstOrNull { it.isDefaultStyle } ?: it.first()
+        }
     }
-    val filteredList = getFilteredSearchList(
-        list = componentList,
-        isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
-        searchQuery = showkaseBrowserScreenMetadata.searchQuery
-    )
+    val filteredList = remember(
+        componentList,
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
+        getFilteredSearchList(
+            list = componentList,
+            isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
+            searchQuery = showkaseBrowserScreenMetadata.searchQuery
+        )
+    }
     LazyColumn {
         items(
             items = filteredList,
