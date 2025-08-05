@@ -22,7 +22,11 @@ internal fun ShowkaseGroupsScreen(
     navigateToShowkaseCategories: () -> Unit,
     onGroupClicked: () -> Unit,
 ) {
-    val filteredMap = remember(groupedTypographyMap, showkaseBrowserScreenMetadata.isSearchActive, showkaseBrowserScreenMetadata.searchQuery) {
+    val filteredMap = remember(
+        groupedTypographyMap,
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
         getFilteredSearchList(
             groupedTypographyMap.toSortedMap(),
             showkaseBrowserScreenMetadata.isSearchActive,

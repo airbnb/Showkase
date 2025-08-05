@@ -35,7 +35,11 @@ internal fun ShowkaseTypographyInAGroupScreen(
         groupedTypographyMap[showkaseBrowserScreenMetadata.currentGroup]
             ?.sortedBy { it.typographyName }
     } ?: return
-    val filteredList = remember(groupTypographyList, showkaseBrowserScreenMetadata.isSearchActive, showkaseBrowserScreenMetadata.searchQuery) {
+    val filteredList = remember(
+        groupTypographyList,
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
         getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata)
     }
     LazyColumn(

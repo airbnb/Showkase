@@ -27,7 +27,11 @@ internal fun ShowkaseComponentsInAGroupScreen(
             it.firstOrNull { it.isDefaultStyle } ?: it.first()
         }
     }
-    val filteredList = remember(componentList, showkaseBrowserScreenMetadata.isSearchActive, showkaseBrowserScreenMetadata.searchQuery) {
+    val filteredList = remember(
+        componentList,
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
         getFilteredSearchList(
             list = componentList,
             isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,

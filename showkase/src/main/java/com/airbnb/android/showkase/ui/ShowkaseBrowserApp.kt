@@ -329,18 +329,17 @@ internal fun ShowkaseSearchField(
     onClearSearchField: () -> Unit,
 ) {
     var localSearchQuery by remember { mutableStateOf(searchQuery.orEmpty()) }
-    
     LaunchedEffect(localSearchQuery) {
         delay(300) // Debounce delay
         searchQueryValueChange(localSearchQuery)
     }
-    
+
     LaunchedEffect(searchQuery) {
         if (searchQuery != localSearchQuery) {
             localSearchQuery = searchQuery.orEmpty()
         }
     }
-    
+
     TextField(
         value = localSearchQuery,
         // Update value of textValue with the latest value of the text field
@@ -368,9 +367,9 @@ internal fun ShowkaseSearchField(
         colors = TextFieldDefaults.textFieldColors(),
         trailingIcon = {
             IconButton(
-                onClick = { 
+                onClick = {
                     localSearchQuery = ""
-                    onClearSearchField() 
+                    onClearSearchField()
                 },
                 modifier = Modifier.testTag("clear_search_field"),
                 enabled = localSearchQuery.isNotEmpty()

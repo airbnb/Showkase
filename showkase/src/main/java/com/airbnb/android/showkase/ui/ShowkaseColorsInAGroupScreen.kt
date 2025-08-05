@@ -40,7 +40,11 @@ internal fun ShowkaseColorsInAGroupScreen(
         groupedColorsMap[showkaseBrowserScreenMetadata.currentGroup]
             ?.sortedBy { it.colorName }
     } ?: return
-    val filteredList = remember(groupColorsList, showkaseBrowserScreenMetadata.isSearchActive, showkaseBrowserScreenMetadata.searchQuery) {
+    val filteredList = remember(
+        groupColorsList,
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
         getFilteredSearchList(
             groupColorsList,
             isSearchActive = showkaseBrowserScreenMetadata.isSearchActive,
