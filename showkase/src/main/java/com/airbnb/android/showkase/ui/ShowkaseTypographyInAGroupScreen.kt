@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -30,11 +31,13 @@ internal fun ShowkaseTypographyInAGroupScreen(
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     val activity = LocalContext.current as AppCompatActivity
-    val groupTypographyList =
+    val groupTypographyList = remember(groupedTypographyMap, showkaseBrowserScreenMetadata.currentGroup) {
         groupedTypographyMap[showkaseBrowserScreenMetadata.currentGroup]
-            ?.sortedBy { it.typographyName } ?: return
-    val filteredList =
+            ?.sortedBy { it.typographyName }
+    } ?: return
+    val filteredList = remember(groupTypographyList, showkaseBrowserScreenMetadata.isSearchActive, showkaseBrowserScreenMetadata.searchQuery) {
         getFilteredSearchList(groupTypographyList, showkaseBrowserScreenMetadata)
+    }
     LazyColumn(
         modifier = Modifier
             .background(Color.White)

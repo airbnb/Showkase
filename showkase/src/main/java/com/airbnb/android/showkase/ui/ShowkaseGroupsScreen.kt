@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -21,11 +22,13 @@ internal fun ShowkaseGroupsScreen(
     navigateToShowkaseCategories: () -> Unit,
     onGroupClicked: () -> Unit,
 ) {
-    val filteredMap = getFilteredSearchList(
-        groupedTypographyMap.toSortedMap(),
-        showkaseBrowserScreenMetadata.isSearchActive,
-        showkaseBrowserScreenMetadata.searchQuery
-    )
+    val filteredMap = remember(groupedTypographyMap, showkaseBrowserScreenMetadata.isSearchActive, showkaseBrowserScreenMetadata.searchQuery) {
+        getFilteredSearchList(
+            groupedTypographyMap.toSortedMap(),
+            showkaseBrowserScreenMetadata.isSearchActive,
+            showkaseBrowserScreenMetadata.searchQuery
+        )
+    }
 
     LazyColumn {
         items(
