@@ -87,12 +87,6 @@ ksp "com.airbnb.android:showkase-processor:1.0.5" or kapt "com.airbnb.android:sh
 
 ```
 
-You will also need to ensure that the generated file isn't being stripped away and will need to add this to your proguard file - 
-
-```
--keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
-```
-
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
 Showkase browser. 
 
@@ -391,6 +385,86 @@ val colors= metadata.colorList
 val typography = metadata.typographyList
 
 ```
+
+##### 6. Custom/Multipreview Annotations
+You can use custom preview annotations for Showkase as well. Custom preview annotations are annotations that are annotated with preview it self.
+An example of this can be:
+
+```kt
+@Preview(name = "Custom Preview One First", group = "Custom Previews")
+@Preview(name = "Custom Preview One Second", group = "Custom Previews")
+annotation class CustomPreview1
+```
+
+```kt
+@Preview(name = "Custom Preview One First", group = "Custom Previews")
+annotation class CustomPreview2
+```
+
+this can be used to annotate a composable function like you would do any other preview function in Compose like this:
+
+```kt
+@CustomPreview1
+@Composable
+fun CustomAnnotationPreview() {
+}
+```
+
+This can also be combined like this:
+
+```kt
+@Preview(name = "Custom Preview One First", group = "Custom Previews")
+@Preview(name = "Custom Preview One Second", group = "Custom Previews")
+annotation class CustomPreviewOne
+
+
+@Preview(name = "Custom Preview Two First", group = "Custom Previews")
+annotation class CustomPreviewTwo
+
+@CustomPreviewOne
+@CustomPreviewTwo
+@Composable
+fun CustomAnnotationPreviewCombined() {
+}
+```
+
+###### KAPT vs KSP
+
+Because of [this issue](https://youtrack.jetbrains.com/issue/KT-49682/Support-JVM-IR-in-KAPT-stub-generation) KAPT does not quite support repeatable annotations from Kotlin. This means that  if you have an annotation class like:
+
+```kt
+@Preview(name = "Shape 100 by 100", group = "Shapes", widthDp = 100, heightDp = 100)
+@Preview(name = "Shape 150 by 150", group = "Shapes", widthDp = 150, heightDp = 150)
+annotation class CustomShape
+```
+
+This will be skipped by KAPT, but KSP will pick it up. However, if you have an annotation like:
+
+```kt
+@Preview(name = "Shape 100 by 100", group = "Shapes", widthDp = 100, heightDp = 100)
+annotation class CustomShape
+```
+It will be picked up by both KSP and KAPT.
+
+###### Important for KAPT users
+
+You will need to provide a compiler arg in you module for the custom preview annotations that you are using and expecting to be picked up by Showkase. This can be done with the following code:
+
+```kt
+kapt {
+    arguments {
+        arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
+    }
+}
+```
+
+It is important to remember to use the whole qualified name of the annotation, and not just the name.
+
+## R8 / ProGuard
+
+If you use Showkase as a dependency in an Android project which uses R8 as a default compiler
+you don't have to do anything. The specific rules are [already bundled](showkase/consumer-rules.pro)
+into the AAR which can be interpreted by R8 automatically.
 
 ## Frequently Asked Questions
 <details>
