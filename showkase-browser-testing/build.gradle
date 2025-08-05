@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
@@ -11,7 +12,6 @@ if (project.hasProperty('useKsp')) {
     kapt {
         correctErrorTypes = true
         arguments {
-            arg("multiPreviewType", "com.airbnb.android.submodule.showkasesample.LocalePreview")
             arg("skipPrivatePreviews", "true")
         }
     }
@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         minSdkVersion 26
-        compileSdk 33
+        compileSdk 36
         targetSdkVersion 33
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -44,20 +44,9 @@ android {
             buildConfigField "boolean", "IS_RUNNING_KSP", "false"
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         compose true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
@@ -74,6 +63,10 @@ android {
             exclude group: "com.intellij", module: "annotations"
         }
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {

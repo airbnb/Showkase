@@ -3,7 +3,6 @@ package com.airbnb.android.showkasesample
 import androidx.compose.ui.graphics.Color
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 
-
 class WrapperClass {
     @ShowkaseColor("Primary", "Light Colors")
     val primary = Color(0xFF6200EE)

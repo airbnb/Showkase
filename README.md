@@ -1,5 +1,5 @@
 # Showkase
-![Showkase Version](https://img.shields.io/badge/Showkase-1.0.2-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.4.2-brightgreen)
+![Showkase Version](https://img.shields.io/badge/Showkase-1.0.5-brightgreen) ![Compatible with Compose](https://img.shields.io/badge/Compatible%20with%20Compose-1.6.7-brightgreen)
 
 Showkase is an annotation-processor based Android library that helps you organize, discover, search 
 and visualize [Jetpack Compose](https://developer.android.com/jetpack/compose) UI elements. With 
@@ -75,22 +75,16 @@ Showkase supports both ksp and kapt. By default, it uses kapt as we only recentl
 #### If you want Showkase to be available only in debug builds (Recommended and practical for most use cases)
 
 ```kotlin
-debugImplementation "com.airbnb.android:showkase:1.0.2"
-implementation "com.airbnb.android:showkase-annotation:1.0.2"
-kspDebug "com.airbnb.android:showkase-processor:1.0.2" or kaptDebug "com.airbnb.android:showkase-processor:1.0.2"
+debugImplementation "com.airbnb.android:showkase:1.0.5"
+implementation "com.airbnb.android:showkase-annotation:1.0.5"
+kspDebug "com.airbnb.android:showkase-processor:1.0.5" or kaptDebug "com.airbnb.android:showkase-processor:1.0.5"
 ```
 
 #### If you want Showkase to be available in your release builds as well
 ```kotlin
-implementation "com.airbnb.android:showkase:1.0.2"
-ksp "com.airbnb.android:showkase-processor:1.0.2" or kapt "com.airbnb.android:showkase-processor:1.0.2"
+implementation "com.airbnb.android:showkase:1.0.5"
+ksp "com.airbnb.android:showkase-processor:1.0.5" or kapt "com.airbnb.android:showkase-processor:1.0.5"
 
-```
-
-You will also need to ensure that the generated file isn't being stripped away and will need to add this to your proguard file - 
-
-```
--keep public class * extends com.airbnb.android.showkase.models.ShowkaseProvider
 ```
 
 **Step 2**: Add the relevant annotations for every UI element that should be a part of the 
@@ -466,6 +460,12 @@ val colors= metadata.colorList
 val typography = metadata.typographyList
 
 ```
+
+## R8 / ProGuard
+
+If you use Showkase as a dependency in an Android project which uses R8 as a default compiler
+you don't have to do anything. The specific rules are [already bundled](showkase/consumer-rules.pro)
+into the AAR which can be interpreted by R8 automatically.
 
 ## Frequently Asked Questions
 <details>

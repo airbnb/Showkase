@@ -1,3 +1,4 @@
+@file:Suppress("PackageName")
 package com.airbnb.android.showkase_processor_testing
 
 import org.junit.rules.TestWatcher

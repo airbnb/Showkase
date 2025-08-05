@@ -1,18 +1,14 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 plugins {
     id 'java-library'
     id 'kotlin'
-}
-apply from: "$rootDir/publishing.gradle"
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    id 'com.vanniktech.maven.publish'
 }
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+kotlin {
+    jvmToolchain(17)
 }
 
 // Need to apply to all tasks like this so test tasks also get these compiler args
@@ -27,6 +23,10 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     implementation project(':showkase-annotation')
 
@@ -39,4 +39,8 @@ dependencies {
     testImplementation deps.test.strikt
     testImplementation deps.test.junit
     testImplementation deps.xprocessingTesting
+}
+
+mavenPublishing {
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
 }

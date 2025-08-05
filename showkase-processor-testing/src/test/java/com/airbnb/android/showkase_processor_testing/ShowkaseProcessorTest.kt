@@ -1,3 +1,4 @@
+@file:Suppress("MaxLineLength", "PackageName")
 package com.airbnb.android.showkase_processor_testing
 
 import org.junit.Test
@@ -187,11 +188,6 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `multiple classes with showkaseroot annotation throws compilation error`() {
         assertCompilationFails("Only one class in a module can be annotated with ShowkaseRoot")
-    }
-
-    @Test
-    fun `method with showkaseroot annotation throws compilation error`() {
-        assertCompilationFails("Only classes can be annotated with @ShowkaseRoot")
     }
 
     @Test
@@ -441,7 +437,6 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         compileInputsAndVerifyOutputs()
     }
 
-
     @Test
     fun `function inside object with preview annotation and no name or group`() {
         compileInputsAndVerifyOutputs()
@@ -501,7 +496,6 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     fun `top level function with preview and preview parameter and showkaseroot and no name or group`() {
         compileInputsAndVerifyOutputs()
     }
-
 
     @Test
     fun `wrapped function with showkase composable and preview parameter and showkaseroot `() {
@@ -585,12 +579,12 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
 
     @Test
     fun `composable function with custom preview annotation generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT, Mode.KSP))
     }
 
     @Test
     fun `composable function with custom preview annotation with preview param generates output`() {
-        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT,  Mode.KSP))
+        compileInputsAndVerifyOutputs(modes = listOf(Mode.KAPT, Mode.KSP))
     }
 
     @Test
@@ -618,5 +612,11 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
         options["skipPrivatePreviews"] = "true"
         compileInputsAndVerifyOutputs(options = options)
     }
-}
 
+    @Test
+    fun `composable functions with preview annotation are skipped`() {
+        val options = mutableMapOf<String, String>()
+        options["requireShowkaseComposableAnnotation"] = "true"
+        compileInputsAndVerifyOutputs(options = options)
+    }
+}

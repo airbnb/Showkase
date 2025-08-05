@@ -1,25 +1,26 @@
 package com.airbnb.android.showkase.ui
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseCategory
-import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
 import com.airbnb.android.showkase.models.clear
 import com.airbnb.android.showkase.models.clearActiveSearch
-import com.airbnb.android.showkase.models.update
 import java.util.Locale
 
 @Composable
 internal fun ShowkaseCategoriesScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController,
-    categoryMetadataMap: Map<ShowkaseCategory, Int>
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
+    categoryMetadataMap: Map<ShowkaseCategory, Int>,
+    onNavigateToComponentGroups: () -> Unit,
+    onNavigateToColorGroups: () -> Unit,
+    onNavigateToTypographyGroups: () -> Unit,
 ) {
     val activity = LocalContext.current as AppCompatActivity
     LazyColumn {
@@ -34,60 +35,62 @@ internal fun ShowkaseCategoriesScreen(
                 SimpleTextCard(
                     text = "$title ($categorySize)",
                     onClick = {
-                        showkaseBrowserScreenMetadata.update {
-                            copy(
+                        onUpdateShowkaseBrowserScreenMetadata(
+                            showkaseBrowserScreenMetadata.copy(
                                 currentGroup = null,
                                 isSearchActive = false,
                                 searchQuery = null
                             )
-                        }
+                        )
                         when (category) {
-                            ShowkaseCategory.COMPONENTS -> navController.navigate(
-                                ShowkaseCurrentScreen.COMPONENT_GROUPS
-                            )
-                            ShowkaseCategory.COLORS -> navController.navigate(
-                                ShowkaseCurrentScreen.COLOR_GROUPS
-                            )
-                            ShowkaseCategory.TYPOGRAPHY -> navController.navigate(
-                                ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS
-                            )
+                            ShowkaseCategory.COMPONENTS -> onNavigateToComponentGroups()
+                            ShowkaseCategory.COLORS -> onNavigateToColorGroups()
+                            ShowkaseCategory.TYPOGRAPHY -> onNavigateToTypographyGroups()
                         }
                     }
                 )
             }
         )
     }
-    BackButtonHandler {
-        goBackFromCategoriesScreen(activity, showkaseBrowserScreenMetadata)
+    BackHandler {
+        goBackFromCategoriesScreen(activity, showkaseBrowserScreenMetadata, onUpdateShowkaseBrowserScreenMetadata)
     }
 }
 
 private fun goBackFromCategoriesScreen(
     activity: AppCompatActivity,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit
 ) {
-    val isSearchActive = showkaseBrowserScreenMetadata.value.isSearchActive
+    val isSearchActive = showkaseBrowserScreenMetadata.isSearchActive
     when {
-        isSearchActive -> showkaseBrowserScreenMetadata.clearActiveSearch()
-        else -> activity.finish()
+        isSearchActive -> onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
+        else -> {
+            activity.finish()
+        }
     }
 }
 
 internal fun goBackToCategoriesScreen(
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController,
-    onBackPressOnRoot: () -> Unit
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
+    onRootScreen: Boolean,
+    onBackToCategories: () -> Unit,
+    onBackPressOnRoot: () -> Unit,
 ) {
     when {
-        showkaseBrowserScreenMetadata.value.isSearchActive -> {
-            showkaseBrowserScreenMetadata.clearActiveSearch()
+        showkaseBrowserScreenMetadata.isSearchActive -> {
+            Log.e("BackPressed", "isSearchActive")
+            onUpdateShowkaseBrowserScreenMetadata(showkaseBrowserScreenMetadata.clearActiveSearch())
         }
-        navController.currentDestination?.id == navController.graph.startDestinationId -> {
+        onRootScreen -> {
+            Log.e("BackPressed", "onRootScreen")
             onBackPressOnRoot()
         }
         else -> {
+            Log.e("BackPressed", "else")
             showkaseBrowserScreenMetadata.clear()
-            navController.navigate(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+            onBackToCategories()
         }
     }
 }

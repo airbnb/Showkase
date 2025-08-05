@@ -3,7 +3,6 @@ package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_processor_testing.Composables
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
@@ -19,6 +18,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [Composables::class],
     showkaseMetadataType = "TYPOGRAPHY",
   )
-  public fun comairbnbandroidshowkaseprocessortestingComposablestitlegroupname(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingComposablestitlegroupname() {
   }
 }

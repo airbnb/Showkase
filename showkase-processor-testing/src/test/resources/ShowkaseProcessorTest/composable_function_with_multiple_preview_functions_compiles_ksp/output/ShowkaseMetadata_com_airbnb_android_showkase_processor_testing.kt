@@ -3,7 +3,6 @@ package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_processor_testing.Composables
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
@@ -21,8 +20,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     isDefaultStyle = false,
   )
   public
-      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentsmallfont():
-      Unit {
+      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentsmallfont() {
   }
 
   @ShowkaseCodegenMetadata(
@@ -40,8 +38,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     isDefaultStyle = false,
   )
   public
-      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentlargefont1():
-      Unit {
+      fun comairbnbandroidshowkaseprocessortestingComposablesComponentfontscalesComponentlargefont1() {
   }
 
   @ShowkaseCodegenMetadata(
@@ -58,7 +55,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     isDefaultStyle = false,
   )
   public
-      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme():
-      Unit {
+      fun comairbnbandroidshowkaseprocessortestingHelloWorldPreviewthemesHelloWorldPreviewdarktheme() {
   }
 }

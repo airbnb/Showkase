@@ -41,7 +41,7 @@ import com.airbnb.android.showkase.ui.padding4x
 fun CreditCardComponent(cardName: String) {
     MaterialTheme {
         Column(
-            modifier = Modifier.fillMaxSize(), 
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -112,7 +112,6 @@ fun CreditCardComponentPreview(
     CreditCardComponent(text)
 }
 
-
 data class BankHeader(
     val name: String,
     val age: Int
@@ -127,7 +126,6 @@ class NewParameterProvider : PreviewParameterProvider<BankHeader> {
 
     override val count: Int
         get() = super.count
-
 }
 
 @Preview(group = "Payments")

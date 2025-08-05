@@ -45,7 +45,7 @@ fun getPadding(
 fun PreviewCustomButtonDefault() {
     CustomButton(
         text = "Button",
-        onClick = {  }
+        onClick = { }
     )
 }
 
@@ -54,7 +54,7 @@ fun PreviewCustomButtonDefault() {
 fun PreviewCustomButtonMedium() {
     CustomButton(
         text = "Button",
-        onClick = {  },
+        onClick = { },
         size = ButtonSize.Medium
     )
 }
@@ -64,11 +64,10 @@ fun PreviewCustomButtonMedium() {
 fun PreviewCustomButtonSmall() {
     CustomButton(
         text = "Button",
-        onClick = {  },
+        onClick = { },
         size = ButtonSize.Small
     )
 }
-
 
 @Suppress("MatchingDeclarationName")
 enum class ButtonSize {

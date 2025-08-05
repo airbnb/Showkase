@@ -1,6 +1,6 @@
 package com.airbnb.android.showkase.processor
 
-import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
@@ -24,6 +24,7 @@ import com.airbnb.android.showkase.processor.models.getShowkaseMetadata
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromCustomAnnotation
 import com.airbnb.android.showkase.processor.models.getShowkaseMetadataFromPreview
 import com.airbnb.android.showkase.processor.models.getShowkaseTypographyMetadata
+import com.airbnb.android.showkase.processor.utils.ensureConsistentOrdering
 import com.airbnb.android.showkase.processor.writer.PaparazziShowkaseScreenshotTestWriter
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserProperties
 import com.airbnb.android.showkase.processor.writer.ShowkaseBrowserPropertyWriter
@@ -52,7 +53,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private val logger = ShowkaseExceptionLogger()
     private val showkaseValidator by lazy { ShowkaseValidator(environment) }
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String>  {
+    override fun getSupportedAnnotationTypes(): MutableSet<String> {
         val supportedAnnotations = mutableSetOf(
             ShowkaseComposable::class.java.name,
             PREVIEW_CLASS_NAME,
@@ -78,7 +79,12 @@ class ShowkaseProcessor @JvmOverloads constructor(
             ?.toSet()?.let { set.addAll(it) }
         return set
     }
-    override fun getSupportedOptions() = mutableSetOf("skipPrivatePreviews", "multiPreviewType")
+
+    override fun getSupportedOptions() = mutableSetOf(
+        "skipPrivatePreviews",
+        "requireShowkaseComposableAnnotation",
+        "multiPreviewType"
+    )
 
     override fun process(environment: XProcessingEnv, round: XRoundEnv) {
         val componentMetadata = processComponentAnnotation(round)
@@ -109,8 +115,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun processShowkaseAnnotation(
         roundEnvironment: XRoundEnv
     ): Set<ShowkaseMetadata.Component> {
-        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"].toBoolean()
         return roundEnvironment.getElementsAnnotatedWith(ShowkaseComposable::class)
+            .ensureConsistentOrdering()
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) return@mapNotNull null
                 val skipElement = showkaseValidator.validateComponentElementOrSkip(
@@ -126,10 +133,15 @@ class ShowkaseProcessor @JvmOverloads constructor(
             }.flatten().mapNotNull { it }.toSet()
     }
 
-
     private fun processPreviewAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata.Component> {
-        val skipPrivatePreviews = environment.options["skipPrivatePreviews"] == "true"
+        val skipPrivatePreviews = environment.options["skipPrivatePreviews"].toBoolean()
+        val requireShowkaseComposableAnnotation =
+            environment.options["requireShowkaseComposableAnnotation"].toBoolean()
+
+        if (requireShowkaseComposableAnnotation) return emptySet()
+
         return roundEnvironment.getElementsAnnotatedWith(PREVIEW_CLASS_NAME)
+            .ensureConsistentOrdering()
             .mapNotNull { element ->
                 if (showkaseValidator.checkElementIsAnnotationClass(element)) {
                     // Writing preview data to a internal annotation to store values through
@@ -153,8 +165,8 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     element = element,
                     showkaseValidator = showkaseValidator
                 )
-
-            }.flatten().mapNotNull { it }.toSet()
+            }
+            .flatten().mapNotNull { it }.toSet()
     }
 
     private fun processCustomAnnotation(
@@ -168,25 +180,25 @@ class ShowkaseProcessor @JvmOverloads constructor(
 
         supportedTypes.map { supportedType ->
             val annotatedElements = roundEnvironment.getElementsAnnotatedWith(supportedType)
-            annotatedElements.map { annotatedElement ->
-                if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
-
-                    val skipable = showkaseValidator.validateComponentElementOrSkip(
-                        element = annotatedElement,
-                        annotationName = supportedType,
-                        skipPrivatePreviews = skipPrivatePreviews
-                    )
-                    if (!skipable) {
-                        components.addAll(
-                            getShowkaseMetadataFromCustomAnnotation(
-                                element = annotatedElement,
-                                showkaseValidator = showkaseValidator,
-                                supportedType.getCustomAnnotationSimpleName(),
-                            ).toSet()
+            annotatedElements
+                .map { annotatedElement ->
+                    if (!showkaseValidator.checkElementIsAnnotationClass(annotatedElement)) {
+                        val skipable = showkaseValidator.validateComponentElementOrSkip(
+                            element = annotatedElement,
+                            annotationName = supportedType,
+                            skipPrivatePreviews = skipPrivatePreviews
                         )
+                        if (!skipable) {
+                            components.addAll(
+                                getShowkaseMetadataFromCustomAnnotation(
+                                    element = annotatedElement,
+                                    showkaseValidator = showkaseValidator,
+                                    supportedType.getCustomAnnotationSimpleName(),
+                                ).toSet()
+                            )
+                        }
                     }
                 }
-            }
         }
         return components
     }
@@ -205,6 +217,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         // Supported annotations from classpath
         val supportedCustomPreview = mutableSetOf<ShowkaseMultiPreviewCodegenMetadata>()
         environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .ensureConsistentOrdering()
             .flatMap { it.getEnclosedElements() }.mapNotNull {
                 return@mapNotNull when (
                     val annotation = it.getAnnotation(ShowkaseMultiPreviewCodegenMetadata::class)
@@ -212,16 +225,17 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     null -> {
                         null
                     }
+
                     else -> {
                         val codeGenAnnotation = ShowkaseMultiPreviewCodegenMetadata(
-                            previewName = annotation.value.previewName,
-                            previewGroup = annotation.value.previewGroup,
-                            supportTypeQualifiedName = annotation.value.supportTypeQualifiedName,
-                            packageName = annotation.value.packageName,
-                            showkaseWidth = annotation.value.showkaseWidth,
-                            showkaseHeight = annotation.value.showkaseHeight,
+                            previewName = annotation.getAsString("previewName"),
+                            previewGroup = annotation.getAsString("previewGroup"),
+                            supportTypeQualifiedName = annotation.getAsString("supportTypeQualifiedName"),
+                            packageName = annotation.getAsString("packageName"),
+                            showkaseWidth = annotation.getAsInt("showkaseWidth"),
+                            showkaseHeight = annotation.getAsInt("showkaseHeight"),
                         )
-                        supportedAnnotationTypes.add(annotation.value.supportTypeQualifiedName)
+                        supportedAnnotationTypes.add(annotation.getAsString("supportTypeQualifiedName"))
                         supportedCustomPreview.add(codeGenAnnotation)
                     }
                 }
@@ -231,6 +245,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
             .mapIndexed { index: Int, customPreviewMetadata: ShowkaseMultiPreviewCodegenMetadata ->
                 roundEnvironment
                     .getElementsAnnotatedWith(customPreviewMetadata.supportTypeQualifiedName)
+                    .ensureConsistentOrdering()
                     .mapIndexed elementRoot@{ elementIndex, xElement ->
                         val skippable = showkaseValidator.validateComponentElementOrSkip(
                             xElement,
@@ -248,7 +263,6 @@ class ShowkaseProcessor @JvmOverloads constructor(
                                 )
                             )
                         }
-
                     }
             }
         return components
@@ -305,13 +319,15 @@ class ShowkaseProcessor @JvmOverloads constructor(
         }
 
     private fun processColorAnnotation(roundEnvironment: XRoundEnv): Set<ShowkaseMetadata> {
-        return roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class).map { element ->
-            showkaseValidator.validateColorElement(
-                element,
-                ShowkaseColor::class.java.simpleName
-            )
-            getShowkaseColorMetadata(element, showkaseValidator)
-        }.toSet()
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseColor::class)
+            .ensureConsistentOrdering()
+            .map { element ->
+                showkaseValidator.validateColorElement(
+                    element,
+                    ShowkaseColor::class.java.simpleName
+                )
+                getShowkaseColorMetadata(element, showkaseValidator)
+            }.toSet()
     }
 
     private fun processTypographyAnnotation(
@@ -322,14 +338,16 @@ class ShowkaseProcessor @JvmOverloads constructor(
             environment.requireType(TYPE_STYLE_CLASS_NAME)
         }
 
-        return roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class).map { element ->
-            showkaseValidator.validateTypographyElement(
-                element,
-                ShowkaseTypography::class.java.simpleName,
-                textStyleType
-            )
-            getShowkaseTypographyMetadata(element, showkaseValidator)
-        }.toSet()
+        return roundEnvironment.getElementsAnnotatedWith(ShowkaseTypography::class)
+            .ensureConsistentOrdering()
+            .map { element ->
+                showkaseValidator.validateTypographyElement(
+                    element,
+                    ShowkaseTypography::class.java.simpleName,
+                    textStyleType
+                )
+                getShowkaseTypographyMetadata(element, showkaseValidator)
+            }.toSet()
     }
 
     private fun processShowkaseMetadata(
@@ -377,6 +395,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         environment: XProcessingEnv
     ): XTypeElement? {
         val showkaseRootElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseRoot::class)
+            .ensureConsistentOrdering().toSet()
         showkaseValidator.validateShowkaseRootElement(showkaseRootElements, environment)
         return showkaseRootElements.singleOrNull() as XTypeElement?
     }
@@ -385,7 +404,9 @@ class ShowkaseProcessor @JvmOverloads constructor(
         roundEnvironment: XRoundEnv
     ): Pair<XTypeElement?, ScreenshotTestType?> {
         val testElements = roundEnvironment.getElementsAnnotatedWith(ShowkaseScreenshot::class)
+            .ensureConsistentOrdering()
             .filterIsInstance<XTypeElement>()
+            .toSet()
         val screenshotTestType =
             showkaseValidator.validateShowkaseTestElement(testElements, environment)
         return testElements.singleOrNull() to screenshotTestType
@@ -482,7 +503,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun getSpecifiedRootTypeElement(screenshotTestElement: XTypeElement): XTypeElement {
         return screenshotTestElement.requireAnnotation(ShowkaseScreenshot::class)
             .getAsType("rootShowkaseClass")
-            ?.typeElement
+            .typeElement
             ?: throw ShowkaseProcessorException(
                 "Unable to get rootShowkaseClass in ShowkaseScreenshot annotation",
                 screenshotTestElement
@@ -492,6 +513,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
     private fun getShowkaseCodegenMetadataOnClassPath(environment: XProcessingEnv):
             Set<ShowkaseGeneratedMetadata> {
         return environment.getTypeElementsFromPackage(CODEGEN_PACKAGE_NAME)
+            .ensureConsistentOrdering()
             .flatMap { it.getEnclosedElements() }
             .mapNotNull { element ->
                 val codegenMetadataAnnotation =
@@ -507,19 +529,17 @@ class ShowkaseProcessor @JvmOverloads constructor(
             .toSet()
     }
 
-    private fun XAnnotationBox<ShowkaseCodegenMetadata>.toShowkaseGeneratedMetadata(element: XElement):
-            ShowkaseGeneratedMetadata {
+    private fun XAnnotation.toShowkaseGeneratedMetadata(element: XElement): ShowkaseGeneratedMetadata {
         val (_, previewParameterClassType) = getCodegenMetadataTypes()
 
         // The box is needed to get all Class values, primitives can be accessed dirctly
-        val props = value
-        val type = ShowkaseMetadataType.valueOf(props.showkaseMetadataType)
+        val type = ShowkaseMetadataType.valueOf(getAsString("showkaseMetadataType"))
 
         return ShowkaseGeneratedMetadata(
             element = element,
-            propertyName = props.generatedPropertyName,
-            propertyPackage = props.packageName,
-            type = when(type) {
+            propertyName = getAsString("generatedPropertyName"),
+            propertyPackage = getAsString("packageName"),
+            type = when (type) {
                 ShowkaseMetadataType.COLOR -> ShowkaseGeneratedMetadataType.COLOR
                 ShowkaseMetadataType.TYPOGRAPHY -> ShowkaseGeneratedMetadataType.TYPOGRAPHY
                 ShowkaseMetadataType.COMPONENT -> if (previewParameterClassType != null) {
@@ -528,19 +548,28 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     ShowkaseGeneratedMetadataType.COMPONENTS_WITHOUT_PARAMETER
                 }
             },
-            group = props.showkaseGroup,
-            name = props.showkaseName,
-            isDefaultStyle = props.isDefaultStyle,
-            tags = props.tags.toList(),
-            extraMetadata = props.extraMetadata.toList()
+            group = getAsString("showkaseGroup"),
+            name = getAsString("showkaseName"),
+            isDefaultStyle = getAsBoolean("isDefaultStyle"),
+            tags = getAsStringList("tags"),
+            extraMetadata = getAsStringList("extraMetadata")
         )
     }
+
     private fun getShowkaseRootCodegenOnClassPath(
         specifiedRootClassTypeElement: XTypeElement
     ): ShowkaseRootCodegen? {
         return environment
             .findTypeElement("${specifiedRootClassTypeElement.qualifiedName}$CODEGEN_AUTOGEN_CLASS_NAME")
-            ?.getAnnotation(ShowkaseRootCodegen::class)?.value
+            ?.getAnnotation(ShowkaseRootCodegen::class)?.let { xAnnotation ->
+                ShowkaseRootCodegen(
+                    numComposablesWithoutPreviewParameter =
+                        xAnnotation.getAsInt("numComposablesWithoutPreviewParameter"),
+                    numComposablesWithPreviewParameter = xAnnotation.getAsInt("numComposablesWithPreviewParameter"),
+                    numColors = xAnnotation.getAsInt("numColors"),
+                    numTypography = xAnnotation.getAsInt("numTypography")
+                )
+            }
     }
 
     private fun writeShowkaseBrowserFiles(
@@ -580,7 +609,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         rootModulePackageName: String,
         testClassName: String,
     ) {
-        when(screenshotTestType) {
+        when (screenshotTestType) {
             // We only handle composables without preview parameter for screenshots. This is because
             // there's no way to get information about how many previews are dynamically generated using
             // preview parameter as it happens on run time and our codegen doesn't get enough information
@@ -599,6 +628,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
                     )
                 }
             }
+
             ScreenshotTestType.PAPARAZZI_SHOWKASE -> {
                 PaparazziShowkaseScreenshotTestWriter(environment).apply {
                     generateScreenshotTests(
@@ -616,6 +646,7 @@ class ShowkaseProcessor @JvmOverloads constructor(
         val colorsSize: Int,
         val typographySize: Int,
     )
+
     companion object {
         internal const val COMPOSABLE_SIMPLE_NAME = "Composable"
         internal const val PREVIEW_CLASS_NAME = "androidx.compose.ui.tooling.preview.Preview"
@@ -650,4 +681,3 @@ internal enum class ScreenshotTestType {
     SHOWKASE,
     PAPARAZZI_SHOWKASE
 }
-

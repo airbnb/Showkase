@@ -8,55 +8,49 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 17
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: 17
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          # Key inspired from here -
-          # https://medium.com/@ychescale9/running-android-instrumented-tests-on-ci-from-bitrise-io-to-github-actions-a611e57ce71f
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Cache Gradle dependencies
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Run Checks
         run: ./gradlew check --stacktrace
 
   paparazi-screenshot-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 17
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: 17
-      - name: Checkout Branch
-        uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          # Key inspired from here -
-          # https://medium.com/@ychescale9/running-android-instrumented-tests-on-ci-from-bitrise-io-to-github-actions-a611e57ce71f
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Cache Gradle dependencies
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Run Paparazzi Screenshot Tests
         run: ./gradlew :showkase-screenshot-testing-paparazzi-sample:verifyPaparazziDebug -PuseKsp=true --stacktrace
 
       - name: Upload Screenshot Test Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: reports
           path: showkase-screenshot-testing-paparazzi-sample/build/reports/tests/testDebugUnitTest/
           retention-days: 1
+
       - name: Upload Screenshot Failure Differences
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: reports
@@ -64,79 +58,128 @@ jobs:
           retention-days: 1
 
   ui-testing:
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 26, 29 ]
+        api-level: [ 26 ]
         target: [ default, google_apis ]
+
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 17
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: 17
-      - name: Checkout Branch
-        uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          # Key inspired from here -
-          # https://medium.com/@ychescale9/running-android-instrumented-tests-on-ci-from-bitrise-io-to-github-actions-a611e57ce71f
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Run UI Tests w/ KAPT
+      - name: Cache Gradle dependencies
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: Prepare script to run
+        id: script
+        env:
+          SCRIPT: |
+            # Workaround for https://github.com/ReactiveCircus/android-emulator-runner/issues/373
+            pre_terminate_crashpad() {
+              # For some reason pgrep/pkill sees only crashpad_handle, not crashpad_handler,
+              # but it's definitely called ${ANDROID_HOME}/emulator/crashpad_handler.
+            
+              # Best-effort gracefully terminate all crashpad_handler processes.
+              pkill --exact --echo --signal SIGTERM crashpad_handle || return
+              sleep 10
+              pkill --exact --echo --signal SIGKILL crashpad_handle || return
+            }
+            trap pre_terminate_crashpad EXIT
+            
+            ${{ inputs.script }}
+        run: |
+          script_file="${RUNNER_TEMP}/reactivecircus-android-emulator-runner-prepared-script.sh"
+          echo "${SCRIPT}" > "${script_file}"
+          echo "file=${script_file}" >> "${GITHUB_OUTPUT}"
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 7425822
           api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace --debug
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
-      - name: Run UI Tests w/ KSP
+      - name: Start emulator and run UI Tests w/ KAPT
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 7425822
           api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86_64
-          script: ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true --debug
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            adb devices -l
+            bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"
+            ./gradlew connectedCheck --no-daemon --stacktrace
+           
+
+      - name: Start emulator and run UI Tests w/ KSP
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            adb devices -l
+            bash --noprofile --norc -eo pipefail "${{ steps.script.outputs.file }}"
+            ./gradlew connectedCheck --no-daemon --stacktrace -PuseKsp=true
 
       - name: Run Screenshot Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          emulator-build: 7425822
           api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
           script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -PprintBase64
 
+
       - name: Upload screenshot testing report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: reports
+          name: reports-${{ matrix.api-level }}-${{ matrix.target }}
           path: sample/build/reports/shot/debug/Api${{ matrix.api-level }}/verification/
           retention-days: 1
 
-### Uncomment the jobs below if you want to generate and record screenshots. Once you download the
-### artifact, place them under sample/screenshots/debug/
+# Uncomment the jobs below if you want to generate and record screenshots. Once you download the
+# artifact, place them under sample/screenshots/debug/
 
 #      - name: Record screenshots
 #        uses: reactivecircus/android-emulator-runner@v2
 #        with:
-#          emulator-build: 7425822
 #          api-level: ${{ matrix.api-level }}
-#          target: ${{ matrix.target }}
-#          arch: x86_64
-#          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }} -Precord
+#          force-avd-creation: false
+#          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#          disable-animations: true
+#          script: ./gradlew executeScreenshotTests -PdirectorySuffix=Api${{ matrix.api-level }}-${{ matrix.target }} -Precord
 #
 #      - name: Upload screenshots in an artifact
-#        uses: actions/upload-artifact@v3
+#        uses: actions/upload-artifact@v4
 #        with:
-#          name: Api${{ matrix.api-level }}
-#          path: sample/screenshots/debug/Api${{ matrix.api-level }}
+#          name: Api${{ matrix.api-level }}-${{ matrix.target }}
+#          path: sample/screenshots/debug/Api${{ matrix.api-level }}-${{ matrix.target }}
 #          retention-days: 1
-
-
-

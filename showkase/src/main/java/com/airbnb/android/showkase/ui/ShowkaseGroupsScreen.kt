@@ -1,30 +1,38 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.airbnb.android.showkase.models.ShowkaseBrowserScreenMetadata
 import com.airbnb.android.showkase.models.ShowkaseBrowserTypography
 import com.airbnb.android.showkase.models.ShowkaseCurrentScreen
-import com.airbnb.android.showkase.models.update
 
 @Composable
 internal fun ShowkaseGroupsScreen(
     groupedTypographyMap: Map<String, List<*>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController,
-    onClick: () -> Unit
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onRootScreen: Boolean,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
+    navigateToShowkaseCategories: () -> Unit,
+    onGroupClicked: () -> Unit,
 ) {
-    val filteredMap = getFilteredSearchList(
-        groupedTypographyMap.toSortedMap(),
-        showkaseBrowserScreenMetadata
-    )
+    val filteredMap = remember(
+        groupedTypographyMap,
+        showkaseBrowserScreenMetadata.isSearchActive,
+        showkaseBrowserScreenMetadata.searchQuery
+    ) {
+        getFilteredSearchList(
+            groupedTypographyMap.toSortedMap(),
+            showkaseBrowserScreenMetadata.isSearchActive,
+            showkaseBrowserScreenMetadata.searchQuery
+        )
+    }
 
     LazyColumn {
         items(
@@ -34,22 +42,31 @@ internal fun ShowkaseGroupsScreen(
                 SimpleTextCard(
                     text = "$group ($size)",
                     onClick = {
-                        showkaseBrowserScreenMetadata.update {
-                            copy(
+                        onUpdateShowkaseBrowserScreenMetadata(
+                            showkaseBrowserScreenMetadata.copy(
                                 currentGroup = group,
                                 isSearchActive = false,
                                 searchQuery = null
                             )
-                        }
-                        onClick()
+                        )
+                        onGroupClicked()
                     }
                 )
             }
         )
     }
     val activity = LocalContext.current as AppCompatActivity
-    BackButtonHandler {
-        goBackToCategoriesScreen(showkaseBrowserScreenMetadata, navController) { activity.finish() }
+    BackHandler {
+        goBackToCategoriesScreen(
+            showkaseBrowserScreenMetadata,
+            onUpdateShowkaseBrowserScreenMetadata,
+            onRootScreen = onRootScreen,
+            onBackToCategories = {
+                navigateToShowkaseCategories()
+            }
+        ) {
+            activity.finish()
+        }
     }
 }
 
@@ -63,14 +80,15 @@ internal fun getNumOfUIElements(list: List<*>): Int {
 
 internal fun <T> getFilteredSearchList(
     map: Map<String, List<T>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>
+    isSearchActive: Boolean,
+    searchQuery: String?,
 ) =
-    when (showkaseBrowserScreenMetadata.value.isSearchActive) {
+    when (isSearchActive) {
         false -> map
-        !showkaseBrowserScreenMetadata.value.searchQuery.isNullOrBlank() -> {
+        !searchQuery.isNullOrBlank() -> {
             map.filter {
                 matchSearchQuery(
-                    showkaseBrowserScreenMetadata.value.searchQuery!!,
+                    searchQuery!!,
                     it.key
                 )
             }
@@ -81,57 +99,78 @@ internal fun <T> getFilteredSearchList(
 @Composable
 internal fun ShowkaseComponentGroupsScreen(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onRootScreen: Boolean,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     ShowkaseGroupsScreen(
-        groupedComponentMap,
-        showkaseBrowserScreenMetadata,
-        navController
+        groupedTypographyMap = groupedComponentMap,
+        showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+        onRootScreen = onRootScreen,
+        onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
+        navigateToShowkaseCategories = {
+            navigateTo(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+        }
     ) {
-        navController.navigate(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
+        navigateTo(ShowkaseCurrentScreen.COMPONENTS_IN_A_GROUP)
     }
 }
 
 @Composable
 internal fun ShowkaseColorGroupsScreen(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onRootScreen: Boolean,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     ShowkaseGroupsScreen(
-        groupedColorsMap,
-        showkaseBrowserScreenMetadata,
-        navController
+        groupedTypographyMap = groupedColorsMap,
+        showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
+        onRootScreen = onRootScreen,
+        onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
+        navigateToShowkaseCategories = {
+            navigateTo(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+        }
     ) {
-        navController.navigate(ShowkaseCurrentScreen.COLORS_IN_A_GROUP)
+        navigateTo(ShowkaseCurrentScreen.COLORS_IN_A_GROUP)
     }
 }
 
 @Composable
 internal fun ShowkaseTypographyGroupsScreen(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    showkaseBrowserScreenMetadata: MutableState<ShowkaseBrowserScreenMetadata>,
-    navController: NavHostController
+    showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
+    onRootScreen: Boolean,
+    onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
+    navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
     if (groupedTypographyMap.size == 1) {
-        showkaseBrowserScreenMetadata.update {
-            copy(
+        onUpdateShowkaseBrowserScreenMetadata(
+            showkaseBrowserScreenMetadata.copy(
                 currentGroup = groupedTypographyMap.entries.first().key,
             )
-        }
+        )
+
         ShowkaseTypographyInAGroupScreen(
             groupedTypographyMap = groupedTypographyMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-            navController = navController
+            onRootScreen = onRootScreen,
+            onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
+            navigateTo = navigateTo
         )
     } else {
         ShowkaseGroupsScreen(
             groupedTypographyMap,
             showkaseBrowserScreenMetadata,
-            navController
+            onRootScreen = onRootScreen,
+            onUpdateShowkaseBrowserScreenMetadata,
+            navigateToShowkaseCategories = {
+                navigateTo(ShowkaseCurrentScreen.SHOWKASE_CATEGORIES)
+            }
         ) {
-            navController.navigate(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
+            navigateTo(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP)
         }
     }
 }

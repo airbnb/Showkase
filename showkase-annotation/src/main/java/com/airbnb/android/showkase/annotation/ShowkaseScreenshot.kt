@@ -2,7 +2,6 @@ package com.airbnb.android.showkase.annotation
 
 import kotlin.reflect.KClass
 
-
 /**
  * Used to annotate the [ShowkaseScreenshotTest] implementation class. This is needed to let
  * Showkase know that it needs to generate screenshot tests for your UI elements that are integrated

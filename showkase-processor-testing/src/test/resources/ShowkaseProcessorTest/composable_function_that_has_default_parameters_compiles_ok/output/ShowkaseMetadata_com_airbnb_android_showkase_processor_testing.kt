@@ -3,7 +3,6 @@ package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_processor_testing.NewParameterProvider
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
@@ -21,7 +20,7 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     previewParameterClass = [NewParameterProvider::class],
     previewParameterName = "bankHeader",
   )
-  public fun comairbnbandroidshowkaseprocessortestingTestComposableWithDefaultParametersgroupname():
-      Unit {
+  public
+      fun comairbnbandroidshowkaseprocessortestingTestComposableWithDefaultParametersgroupname() {
   }
 }

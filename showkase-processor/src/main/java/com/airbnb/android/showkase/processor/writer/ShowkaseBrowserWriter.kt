@@ -3,7 +3,7 @@ package com.airbnb.android.showkase.processor.writer
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
-import androidx.room.compiler.processing.get
+import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.isTypeElement
 import androidx.room.compiler.processing.writeTo
 import com.airbnb.android.showkase.annotation.ShowkaseMultiPreviewCodegenMetadata
@@ -181,8 +181,8 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 .addAnnotation(
                     AnnotationSpec
                         .builder(ShowkaseMultiPreviewCodegenMetadata::class)
-                        .addMember("previewName = %S", xAnnotation.get("name"))
-                        .addMember("previewGroup = %S", xAnnotation.get("group"))
+                        .addMember("previewName = %S", xAnnotation.getAsString("name"))
+                        .addMember("previewGroup = %S", xAnnotation.getAsString("group"))
                         .addMember("supportTypeQualifiedName = %S", element.qualifiedName)
                         .addMember("showkaseWidth = %L", xAnnotation.getAsInt("widthDp"))
                         .addMember("showkaseHeight = %L", xAnnotation.getAsInt("heightDp"))
@@ -192,7 +192,10 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
         }
 
         fileBuilder.addType(
-            TypeSpec.classBuilder(generatedClassName).addFunctions(functions).build()
+            with(TypeSpec.classBuilder(generatedClassName).addFunctions(functions)) {
+                addOriginatingElement(element)
+                build()
+            }
         ).addFileComment("This is an auto-generated file. Please do not edit/modify this file.")
         fileBuilder.build().writeTo(environment.filer, mode = XFiler.Mode.Aggregating)
     }

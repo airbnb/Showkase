@@ -3,7 +3,6 @@ package com.airbnb.android.showkase
 
 import com.airbnb.android.showkase.`annotation`.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase_processor_testing.WrapperClass
-import kotlin.Unit
 
 public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
   @ShowkaseCodegenMetadata(
@@ -19,6 +18,6 @@ public class ShowkaseMetadata_com_airbnb_android_showkase_processor_testing {
     enclosingClass = [WrapperClass::class],
     showkaseMetadataType = "COLOR",
   )
-  public fun comairbnbandroidshowkaseprocessortestingWrapperClasscolorWrapperClassname(): Unit {
+  public fun comairbnbandroidshowkaseprocessortestingWrapperClasscolorWrapperClassname() {
   }
 }
