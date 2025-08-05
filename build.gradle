@@ -27,7 +27,7 @@ buildscript {
             'testParameterInjector'  : '1.8',
             'googleTruth'            : '1.1.3',
             'material'               : '1.4.0',
-            'mavenPublish'           : '0.22.0',
+            'mavenPublish'           : '0.34.0',
             'mdcComposeThemeAdapter' : '1.0.2',
             'strikt'                 : '0.33.0',
             'xprocessing'            : '2.7.0',
