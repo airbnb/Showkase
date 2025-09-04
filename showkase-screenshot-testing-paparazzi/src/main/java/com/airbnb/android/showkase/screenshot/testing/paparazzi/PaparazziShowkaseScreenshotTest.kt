@@ -102,7 +102,11 @@ interface PaparazziShowkaseScreenshotTest {
         direction: LayoutDirection,
         mode: PaparazziShowkaseUIMode
     ) {
-        paparazzi.snapshot(name = testPreview.toString()) {
+        paparazzi.snapshot(
+            // No need to pass name here as the Paparazzi instance already uses the
+            // containing test class name, test function, and function arguments to generate
+            // a unique screenshot file name.
+        ) {
             val lifecycleOwner = LocalLifecycleOwner.current
             val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
                 Configuration(LocalConfiguration.current).apply {
