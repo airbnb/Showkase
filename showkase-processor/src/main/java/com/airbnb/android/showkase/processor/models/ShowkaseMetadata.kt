@@ -12,6 +12,10 @@ import androidx.room.compiler.processing.compat.XConverters.toJavac
 import com.airbnb.android.showkase.annotation.ScreenshotCaptureConfig
 import com.airbnb.android.showkase.annotation.ScreenshotCaptureType
 import com.airbnb.android.showkase.annotation.ScreenshotConfig
+import com.airbnb.android.showkase.annotation.ScreenshotConfig.MultipleImagesAtOffsets
+import com.airbnb.android.showkase.annotation.ScreenshotConfig.SingleAnimatedImage
+import com.airbnb.android.showkase.annotation.ScreenshotConfig.SingleStaticImage
+import com.airbnb.android.showkase.annotation.ScreenshotConfig.Skip
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -67,7 +71,7 @@ internal sealed class ShowkaseMetadata {
         val isDefaultStyle: Boolean = false,
         val tags: List<String> = emptyList(),
         val extraMetadata: List<String> = emptyList(),
-        val screenshotConfig: ScreenshotConfig = ScreenshotConfig.SingleStaticImage,
+        val screenshotConfig: ScreenshotConfig = SingleStaticImage,
     ) : ShowkaseMetadata()
 
     data class Color(
@@ -244,15 +248,17 @@ private fun screenshotConfigFrom(annotation: XAnnotationBox<ShowkaseComposable>)
     val animationOffsetsMillis = screenshotCaptureConfig.value.offsetsMillis.toList()
 
     val screenshotConfig = when (screenshotCaptureType) {
-        ScreenshotCaptureType.SingleStaticImage -> ScreenshotConfig.SingleStaticImage
-        ScreenshotCaptureType.MultipleImagesAtOffsets -> ScreenshotConfig.MultipleImagesAtOffsets(
+        ScreenshotCaptureType.SingleStaticImage -> SingleStaticImage
+        ScreenshotCaptureType.MultipleImagesAtOffsets -> MultipleImagesAtOffsets(
             offsetMillis = animationOffsetsMillis,
         )
 
-        ScreenshotCaptureType.SingleAnimatedImage -> ScreenshotConfig.SingleAnimatedImage(
+        ScreenshotCaptureType.SingleAnimatedImage -> SingleAnimatedImage(
             durationMillis = gifDurationMillis,
             framerate = gifFramerate,
         )
+
+        ScreenshotCaptureType.Skip -> Skip
     }
     return screenshotConfig
 }

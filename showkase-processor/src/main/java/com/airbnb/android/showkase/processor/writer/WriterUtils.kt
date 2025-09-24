@@ -185,6 +185,7 @@ fun screenshotConfigCodeBlock(config: ScreenshotConfig): CodeBlock = when (confi
             config.offsetMillis.joinToString(", "),
         )
     }
+    ScreenshotConfig.Skip -> CodeBlock.of("%T", ScreenshotConfig.Skip::class)
 }
 
 @Suppress("LongParameterList")

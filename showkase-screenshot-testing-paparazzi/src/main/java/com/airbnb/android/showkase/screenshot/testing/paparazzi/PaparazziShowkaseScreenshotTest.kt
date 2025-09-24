@@ -128,6 +128,7 @@ interface PaparazziShowkaseScreenshotTest {
                  end = captureType.durationMillis.toLong(),
                  fps = captureType.framerate
              )
+             ScreenshotConfig.Skip -> return
          }
     }
 
