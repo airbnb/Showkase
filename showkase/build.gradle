@@ -65,9 +65,9 @@ dependencies {
     implementation deps.compose.material
 }
 
-mavenPublishing {
-    configure(new AndroidMultiVariantLibrary(true, true))
-}
+//mavenPublishing {
+//    configure(new AndroidMultiVariantLibrary(true, true))
+//}
 
 publishing {
     repositories {

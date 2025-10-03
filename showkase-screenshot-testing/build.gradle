@@ -61,9 +61,9 @@ dependencies {
     api deps.test.androidxTestRunner
 }
 
-mavenPublishing {
-    configure(new AndroidMultiVariantLibrary(true, true))
-}
+//mavenPublishing {
+//    configure(new AndroidMultiVariantLibrary(true, true))
+//}
 
 publishing {
     repositories {

@@ -41,9 +41,9 @@ dependencies {
     testImplementation deps.xprocessingTesting
 }
 
-mavenPublishing {
-    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
-}
+//mavenPublishing {
+//    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+//}
 
 publishing {
     repositories {
