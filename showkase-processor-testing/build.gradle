@@ -1,5 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+}
 
 android {
     namespace "com.airbnb.android.showkase_processor_testing"
@@ -36,10 +39,6 @@ android {
     }
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     configurations {
         all {

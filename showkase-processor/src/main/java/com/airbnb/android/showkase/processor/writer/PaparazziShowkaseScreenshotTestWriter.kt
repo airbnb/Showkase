@@ -22,7 +22,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
         rootModulePackageName: String,
         testClassName: String
     ) {
-        val showkaseScreenshotTestClassName = "${testClassName}_PaparazziShowkaseTest"
+        val showkaseScreenshotTestClassName = "${testClassName}Impl"
         val fileBuilder = getFileBuilder(screenshotTestPackageName, showkaseScreenshotTestClassName)
         fileBuilder
             .addImport(rootModulePackageName, "getMetadata")
@@ -207,7 +207,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                 )
                 .addCode("\n")
                 .addCode(
-                    "takePaparazziSnapshot(%N, %N, %N, %N)",
+                    "takePaparazziSnapshot(%N, %N, %N, %N, elementPreview.captureType)",
                     "paparazzi",
                     "elementPreview",
                     "direction",

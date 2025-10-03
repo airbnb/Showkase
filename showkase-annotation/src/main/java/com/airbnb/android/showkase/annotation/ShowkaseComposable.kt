@@ -58,6 +58,7 @@ package com.airbnb.android.showkase.annotation
  * but are still available in the generated `ShowkaseBrowserComponent` object. This may be useful when
  * extra data is needed for attributing components during other processes (e.g. static analysis,
  * displaying attributions in a custom component browser).
+ * @param screenshotCaptureConfig Configures how screenshot tests should capture the Composable content.
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
@@ -74,4 +75,68 @@ annotation class ShowkaseComposable(
     val defaultStyle: Boolean = false,
     val tags: Array<String> = [],
     val extraMetadata: Array<String> = [],
+    val screenshotCaptureConfig: ScreenshotCaptureConfig = ScreenshotCaptureConfig(
+        // Need to specify default values here or else KAPT throws an error
+        type = ScreenshotCaptureType.SingleStaticImage,
+        durationMillis = 1000,
+        framerate = 10,
+        offsetsMillis = [0, 200, 400, 600, 800, 1000],
+    ),
 )
+
+/**
+ * Wrapper annotation class for grouping values related to screenshot capture configuration.
+ * This will be converted to a [ScreenshotConfig] instance for downstream processing.
+ */
+@Retention(AnnotationRetention.SOURCE)
+annotation class ScreenshotCaptureConfig(
+    /**
+     * Used by Paparazzi snapshot testing to determine if the component has any animation, and how to capture
+     * the screenshot.
+     */
+    val type: ScreenshotCaptureType = ScreenshotCaptureType.SingleStaticImage,
+    /**
+     * Used by Paparazzi screenshot testing when [type] is set to
+     * [ScreenshotCaptureType.SingleAnimatedImage]. Determines the duration the animation
+     * will be played in milliseconds.
+     */
+    val durationMillis: Int = 1000,
+    /**
+     * Used by Paparazzi screenshot testing when [type] is set to
+     * [ScreenshotCaptureType.SingleAnimatedImage]. Determines how many frames
+     * will be captured per second. 10 fps is chosen as a default to balance fidelity, file size, test
+     * execution time, and flakiness.
+     */
+    val framerate: Int = 10,
+    /**
+     * Used by Paparazzi screenshot testing when [type] is set to
+     * [ScreenshotCaptureType.MultipleImagesAtOffsets]. One separate screenshot will be taken
+     * at each of the time offsets provided here.
+     */
+    val offsetsMillis: IntArray = [0, 200, 400, 600, 800, 1000],
+)
+
+/**
+ * Indicates how screenshots should be captured for the given Composable during testing.
+ * Maps to the [ScreenshotConfig] type, which we cannot use as a value in an annotation.
+ */
+enum class ScreenshotCaptureType {
+    /**
+     * A single screenshot will be captured of the initial composition.
+     */
+    SingleStaticImage,
+
+    /**
+     * An animated PNG will be captured of the Composable, using the values provided for
+     * [ShowkaseComposable.captureDurationMillis] and [ShowkaseComposable.captureFramerate].
+     */
+    SingleAnimatedImage,
+
+    /**
+     * Multiple static screenshots will be taken of the Composable, with the animation advanced to the
+     * time offsets provided in [ShowkaseComposable.captureOffsetsMillis].
+     *
+     * NOTE: This isn't working currently in Paparazzi, see https://github.com/cashapp/paparazzi/pull/1645.
+     */
+    MultipleImagesAtOffsets
+}

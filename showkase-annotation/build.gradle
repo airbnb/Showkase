@@ -17,3 +17,18 @@ compileKotlin {
 
 dependencies {
 }
+
+publishing {
+    repositories {
+        maven {
+            // The "name" value creates a task like `publishAllPublicationsTo[Name]Repository
+            // In this case, publishAllPublicationsToAirbnbArtifactoryRepository
+            name = 'airbnbArtifactory'
+            url = version.toString().endsWith("SNAPSHOT") ? "https://artifactory.d.musta.ch/artifactory/maven-airbnb-snapshots" : "https://artifactory.d.musta.ch/artifactory/maven-airbnb-releases"
+            credentials {
+                username = findProperty("ARTIFACTORY_USERNAME")
+                password = findProperty("ARTIFACTORY_PASSWORD")
+            }
+        }
+    }
+}

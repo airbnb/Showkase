@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
+import com.airbnb.android.showkase.annotation.ScreenshotConfig
 import com.airbnb.android.showkase.annotation.ShowkaseScreenshot
 import com.airbnb.android.showkase.models.ShowkaseBrowserColor
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
@@ -100,35 +102,62 @@ interface PaparazziShowkaseScreenshotTest {
         paparazzi: Paparazzi,
         testPreview: PaparazziShowkaseTestPreview,
         direction: LayoutDirection,
-        mode: PaparazziShowkaseUIMode
+        mode: PaparazziShowkaseUIMode,
+        captureType: ScreenshotConfig = ScreenshotConfig.SingleStaticImage,
     ) {
-        paparazzi.snapshot(name = testPreview.toString()) {
-            val lifecycleOwner = LocalLifecycleOwner.current
-            val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
-                Configuration(LocalConfiguration.current).apply {
-                    uiMode = Configuration.UI_MODE_NIGHT_YES
-                }
-            } else {
-                LocalConfiguration.current
+        val hostView = ComposeView(paparazzi.context)
+        hostView.setContent {
+            PaparazziWrapper(mode, direction, testPreview)
+        }
+         when (captureType) {
+             ScreenshotConfig.SingleStaticImage -> paparazzi.snapshot(hostView)
+             is ScreenshotConfig.MultipleImagesAtOffsets -> captureType.offsetMillis.forEach { offsetMs ->
+                 paparazzi.snapshot(
+                     hostView,
+                     name = "${offsetMs}ms",
+                     offsetMillis = offsetMs.toLong()
+                 )
+             }
+
+             is ScreenshotConfig.SingleAnimatedImage -> paparazzi.gif(
+                 view = hostView,
+                 end = captureType.durationMillis.toLong(),
+                 fps = captureType.framerate
+             )
+         }
+    }
+
+    @Composable
+    fun PaparazziWrapper(
+        mode: PaparazziShowkaseUIMode,
+        direction: LayoutDirection,
+        testPreview: PaparazziShowkaseTestPreview
+    ) {
+        val lifecycleOwner = LocalLifecycleOwner.current
+        val configuration = if (mode == PaparazziShowkaseUIMode.DARK) {
+            Configuration(LocalConfiguration.current).apply {
+                uiMode = Configuration.UI_MODE_NIGHT_YES
             }
-            CompositionLocalProvider(
-                LocalInspectionMode provides true,
-                LocalDensity provides Density(
-                    density = LocalDensity.current.density,
-                ),
-                LocalConfiguration provides configuration,
-                LocalLayoutDirection provides direction,
-                // Needed so that UI that uses it don't crash during screenshot tests
-                LocalOnBackPressedDispatcherOwner provides object : OnBackPressedDispatcherOwner {
-                    override val lifecycle: Lifecycle
-                        get() = lifecycleOwner.lifecycle
-                    override val onBackPressedDispatcher: OnBackPressedDispatcher
-                        get() = OnBackPressedDispatcher()
-                }
-            ) {
-                Box {
-                    testPreview.Content()
-                }
+        } else {
+            LocalConfiguration.current
+        }
+        CompositionLocalProvider(
+            LocalInspectionMode provides true,
+            LocalDensity provides Density(
+                density = LocalDensity.current.density,
+            ),
+            LocalConfiguration provides configuration,
+            LocalLayoutDirection provides direction,
+            // Needed so that UI that uses it don't crash during screenshot tests
+            LocalOnBackPressedDispatcherOwner provides object : OnBackPressedDispatcherOwner {
+                override val lifecycle: Lifecycle
+                    get() = lifecycleOwner.lifecycle
+                override val onBackPressedDispatcher: OnBackPressedDispatcher
+                    get() = OnBackPressedDispatcher()
+            }
+        ) {
+            Box {
+                testPreview.Content()
             }
         }
     }
@@ -137,9 +166,12 @@ interface PaparazziShowkaseScreenshotTest {
 interface PaparazziShowkaseTestPreview {
     @Composable
     fun Content()
+
+    val captureType: ScreenshotConfig
+        get() = ScreenshotConfig.SingleStaticImage
 }
 
-private const val DELIM = "**"
+private const val DELIM = "__" // Can't use * which is an invalid character for Paparazzi
 
 class ComponentPaparazziShowkaseTestPreview(
     private val showkaseBrowserComponent: ShowkaseBrowserComponent,
@@ -147,6 +179,9 @@ class ComponentPaparazziShowkaseTestPreview(
 
     @Composable
     override fun Content() = showkaseBrowserComponent.component()
+
+    override val captureType = showkaseBrowserComponent.screenshotConfig
+
     override fun toString(): String =
         "${showkaseBrowserComponent.group}$DELIM${showkaseBrowserComponent.componentName}$DELIM" +
                 "${showkaseBrowserComponent.styleName}"

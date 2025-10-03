@@ -9,6 +9,9 @@ import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.compat.XConverters.toJavac
+import com.airbnb.android.showkase.annotation.ScreenshotCaptureConfig
+import com.airbnb.android.showkase.annotation.ScreenshotCaptureType
+import com.airbnb.android.showkase.annotation.ScreenshotConfig
 import com.airbnb.android.showkase.annotation.ShowkaseCodegenMetadata
 import com.airbnb.android.showkase.annotation.ShowkaseColor
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
@@ -63,7 +66,8 @@ internal sealed class ShowkaseMetadata {
         val showkaseStyleName: String? = null,
         val isDefaultStyle: Boolean = false,
         val tags: List<String> = emptyList(),
-        val extraMetadata: List<String> = emptyList()
+        val extraMetadata: List<String> = emptyList(),
+        val screenshotConfig: ScreenshotConfig = ScreenshotConfig.SingleStaticImage,
     ) : ShowkaseMetadata()
 
     data class Color(
@@ -204,6 +208,7 @@ internal fun getShowkaseMetadata(
         val showkaseStyleName = getShowkaseStyleName(annotation.value.styleName, isDefaultStyle)
         val tags = annotation.value.tags.toList()
         val extraMetadata = annotation.value.extraMetadata.toList()
+        val screenshotConfig = screenshotConfigFrom(annotation)
 
         ShowkaseMetadata.Component(
             packageSimpleName = commonMetadata.moduleName,
@@ -224,9 +229,32 @@ internal fun getShowkaseMetadata(
             isDefaultStyle = isDefaultStyle,
             componentIndex = showkaseAnnotations.indexOf(annotation),
             tags = tags,
-            extraMetadata = extraMetadata
+            extraMetadata = extraMetadata,
+            screenshotConfig = screenshotConfig,
         )
     }
+}
+
+private fun screenshotConfigFrom(annotation: XAnnotationBox<ShowkaseComposable>): ScreenshotConfig {
+    val screenshotCaptureConfig =
+        annotation.getAsAnnotationBox<ScreenshotCaptureConfig>("screenshotCaptureConfig")
+    val screenshotCaptureType = screenshotCaptureConfig.value.type
+    val gifDurationMillis = screenshotCaptureConfig.value.durationMillis
+    val gifFramerate = screenshotCaptureConfig.value.framerate
+    val animationOffsetsMillis = screenshotCaptureConfig.value.offsetsMillis.toList()
+
+    val screenshotConfig = when (screenshotCaptureType) {
+        ScreenshotCaptureType.SingleStaticImage -> ScreenshotConfig.SingleStaticImage
+        ScreenshotCaptureType.MultipleImagesAtOffsets -> ScreenshotConfig.MultipleImagesAtOffsets(
+            offsetMillis = animationOffsetsMillis,
+        )
+
+        ScreenshotCaptureType.SingleAnimatedImage -> ScreenshotConfig.SingleAnimatedImage(
+            durationMillis = gifDurationMillis,
+            framerate = gifFramerate,
+        )
+    }
+    return screenshotConfig
 }
 
 internal fun XMethodElement.extractCommonMetadata(showkaseValidator: ShowkaseValidator): CommonMetadata {
@@ -383,6 +411,7 @@ internal fun getShowkaseMetadata(
     } else {
         customPreviewMetadata.showkaseWidth
     }
+
     return ShowkaseMetadata.Component(
         element = xElement,
         elementName = xElement.name,

@@ -4,6 +4,7 @@ import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.addOriginatingElement
 import androidx.room.compiler.processing.writeTo
+import com.airbnb.android.showkase.annotation.ScreenshotConfig
 import com.airbnb.android.showkase.processor.exceptions.ShowkaseProcessorException
 import com.airbnb.android.showkase.processor.models.ShowkaseMetadata
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -138,6 +139,7 @@ internal fun CodeBlock.Builder.addShowkaseBrowserComponent(
     }
     addStringList("tags", showkaseMetadata.tags)
     addStringList("extraMetadata", showkaseMetadata.extraMetadata)
+    add("\nscreenshotConfig = %L,", screenshotConfigCodeBlock(showkaseMetadata.screenshotConfig))
     add(
         composePreviewFunctionLambdaCodeBlock(
             showkaseMetadata.packageName,
@@ -161,6 +163,27 @@ private fun CodeBlock.Builder.addStringList(name: String, values: List<String>) 
             "\"$value\""
         }
         add("\n$name = $valuesString,")
+    }
+}
+
+fun screenshotConfigCodeBlock(config: ScreenshotConfig): CodeBlock = when (config) {
+    ScreenshotConfig.SingleStaticImage -> {
+        CodeBlock.of("%T", ScreenshotConfig.SingleStaticImage::class)
+    }
+    is ScreenshotConfig.SingleAnimatedImage -> {
+        CodeBlock.of(
+            "%T(durationMillis = %L, framerate = %L)",
+            ScreenshotConfig.SingleAnimatedImage::class,
+            config.durationMillis,
+            config.framerate,
+        )
+    }
+    is ScreenshotConfig.MultipleImagesAtOffsets -> {
+        CodeBlock.of(
+            "%T(offsetMillis = listOf(%L))",
+            ScreenshotConfig.MultipleImagesAtOffsets::class,
+            config.offsetMillis.joinToString(", "),
+        )
     }
 }
 

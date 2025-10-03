@@ -1,5 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+}
 
 if (project.hasProperty('useKsp')) {
     apply plugin: 'com.google.devtools.ksp'
@@ -54,10 +57,6 @@ android {
     buildFeatures {
         compose true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
     }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.

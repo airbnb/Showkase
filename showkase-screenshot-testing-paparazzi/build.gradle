@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 apply from: "$rootDir/publishing.gradle"
 
@@ -65,10 +66,6 @@ android {
     buildFeatures {
         compose true
     }
-    composeOptions {
-        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
-        kotlinCompilerExtensionVersion "${versions.composeCompiler}"
-    }
     // Added to avoid this error -
     // Execution failed for task ':app:mergeDebugAndroidTestJavaResource'.
     // > A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
@@ -89,4 +86,23 @@ dependencies {
     api deps.test.testParameterInjector
     api deps.test.androidXTestRules
     api deps.test.androidxTestRunner
+}
+
+mavenPublishing {
+    configure(new AndroidMultiVariantLibrary(true, true))
+}
+
+publishing {
+    repositories {
+        maven {
+            // The "name" value creates a task like `publishAllPublicationsTo[Name]Repository
+            // In this case, publishAllPublicationsToAirbnbArtifactoryRepository
+            name = 'airbnbArtifactory'
+            url = version.toString().endsWith("SNAPSHOT") ? "https://artifactory.d.musta.ch/artifactory/maven-airbnb-snapshots" : "https://artifactory.d.musta.ch/artifactory/maven-airbnb-releases"
+            credentials {
+                username = findProperty("ARTIFACTORY_USERNAME")
+                password = findProperty("ARTIFACTORY_PASSWORD")
+            }
+        }
+    }
 }

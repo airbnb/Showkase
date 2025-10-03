@@ -1,6 +1,7 @@
 package com.airbnb.android.showkase.models
 
 import androidx.compose.runtime.Composable
+import com.airbnb.android.showkase.annotation.ScreenshotConfig
 
 // TODO(vinaygaba): Move it to a different module that has Android/Compose dependencies hoooked up.
 // This was added here only because this module has compose dependencies.
@@ -15,5 +16,6 @@ data class ShowkaseBrowserComponent(
     val widthDp: Int? = null,
     val heightDp: Int? = null,
     val tags: List<String> = emptyList(),
-    val extraMetadata: List<String> = emptyList()
-)
+    val extraMetadata: List<String> = emptyList(),
+    val screenshotConfig: ScreenshotConfig = ScreenshotConfig.SingleStaticImage,
+    )
