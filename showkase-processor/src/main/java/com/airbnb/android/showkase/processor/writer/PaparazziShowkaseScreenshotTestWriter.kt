@@ -207,7 +207,7 @@ class PaparazziShowkaseScreenshotTestWriter(private val environment: XProcessing
                 )
                 .addCode("\n")
                 .addCode(
-                    "takePaparazziSnapshot(%N, %N, %N, %N, elementPreview.captureType)",
+                    "takePaparazziSnapshot(%N, %N, %N, %N)",
                     "paparazzi",
                     "elementPreview",
                     "direction",

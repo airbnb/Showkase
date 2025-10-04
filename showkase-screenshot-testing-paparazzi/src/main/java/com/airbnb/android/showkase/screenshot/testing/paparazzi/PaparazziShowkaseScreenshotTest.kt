@@ -103,8 +103,8 @@ interface PaparazziShowkaseScreenshotTest {
         testPreview: PaparazziShowkaseTestPreview,
         direction: LayoutDirection,
         mode: PaparazziShowkaseUIMode,
-        captureType: ScreenshotConfig = ScreenshotConfig.SingleStaticImage,
     ) {
+        val captureType = testPreview.captureType
         val hostView = ComposeView(paparazzi.context)
         hostView.setContent {
             PaparazziWrapper(mode, direction, testPreview)
