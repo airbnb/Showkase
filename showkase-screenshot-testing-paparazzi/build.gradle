@@ -1,4 +1,4 @@
-import com.vanniktech.maven.publish.AndroidMultiVariantLibrary
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 
 plugins {
     id 'com.android.library'
@@ -86,5 +86,5 @@ dependencies {
 }
 
 mavenPublishing {
-    configure(new AndroidMultiVariantLibrary(true, true))
+    configure(new AndroidSingleVariantLibrary("release", true, true))
 }
