@@ -10,6 +10,7 @@ buildscript {
             'composeActivity'        : '1.9.0',
             'composeConstraintLayout': '1.0.1',
             'composeNavigation'      : '2.7.7',
+            'materialIconsCore'      : '1.7.3',
             'detekt'                 : '1.23.6',
             'espresso'               : '3.2.0',
             'gradle'                 : '8.9.1',
@@ -46,6 +47,7 @@ buildscript {
                     'toolingPreview'    : "androidx.compose.ui:ui-tooling-preview:${versions.compose}",
                     'layout'            : "androidx.compose.foundation:foundation-layout:${versions.compose}",
                     'material'          : "androidx.compose.material:material:${versions.compose}",
+                    'materialIconsCore' : "org.jetbrains.compose.material:material-icons-core:${versions.materialIconsCore}",
                     'savedInstanceState': "androidx.compose.runtime:runtime-saveable:${versions.compose}",
                     'uiTest'            : "androidx.compose.ui:ui-test-junit4:${versions.compose}",
                     'uiLiveData'        : "androidx.compose.runtime:runtime-livedata:${versions.compose}"
