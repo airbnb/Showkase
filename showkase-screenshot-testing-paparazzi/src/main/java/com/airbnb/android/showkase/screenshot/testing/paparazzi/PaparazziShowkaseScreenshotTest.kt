@@ -103,27 +103,32 @@ interface PaparazziShowkaseScreenshotTest {
         testPreview: PaparazziShowkaseTestPreview,
         direction: LayoutDirection,
         mode: PaparazziShowkaseUIMode,
-        captureType: ScreenshotConfig = ScreenshotConfig.SingleStaticImage,
     ) {
+        val captureType = testPreview.captureType
         val hostView = ComposeView(paparazzi.context)
         hostView.setContent {
             PaparazziWrapper(mode, direction, testPreview)
         }
          when (captureType) {
-             ScreenshotConfig.SingleStaticImage -> paparazzi.snapshot(hostView)
+             ScreenshotConfig.SingleStaticImage -> paparazzi.snapshot(
+                 hostView,
+                 name = testPreview.toString()
+             )
              is ScreenshotConfig.MultipleImagesAtOffsets -> captureType.offsetMillis.forEach { offsetMs ->
                  paparazzi.snapshot(
                      hostView,
-                     name = "${offsetMs}ms",
+                     name = "${testPreview.toString()} {offsetMs}ms",
                      offsetMillis = offsetMs.toLong()
                  )
              }
 
              is ScreenshotConfig.SingleAnimatedImage -> paparazzi.gif(
                  view = hostView,
+                 name = testPreview.toString(),
                  end = captureType.durationMillis.toLong(),
                  fps = captureType.framerate
              )
+             ScreenshotConfig.Skip -> return
          }
     }
 

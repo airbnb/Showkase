@@ -25,4 +25,6 @@ sealed interface ScreenshotConfig {
     data class MultipleImagesAtOffsets(
         val offsetMillis: List<Int>,
     ) : ScreenshotConfig
+
+    object Skip : ScreenshotConfig
 }

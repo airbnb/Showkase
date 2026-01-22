@@ -138,5 +138,10 @@ enum class ScreenshotCaptureType {
      *
      * NOTE: This isn't working currently in Paparazzi, see https://github.com/cashapp/paparazzi/pull/1645.
      */
-    MultipleImagesAtOffsets
+    MultipleImagesAtOffsets,
+
+    /**
+     * Don't take screenshots of this Composable.
+     */
+    Skip,
 }

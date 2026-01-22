@@ -194,6 +194,8 @@ private fun screenshotConfigFrom(annotation: XAnnotation): ScreenshotConfig {
             durationMillis = gifDurationMillis,
             framerate = gifFramerate,
         )
+
+        ScreenshotCaptureType.Skip -> ScreenshotConfig.Skip
     }
     return screenshotConfig
 }
