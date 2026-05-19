@@ -456,7 +456,6 @@ internal fun ShowkaseBodyContent(
                 groupedColorsMap,
                 groupedTypographyMap,
                 groupedComponentMap,
-                onRootScreen = navController.currentDestination?.id == navController.graph.startDestinationId,
                 navigateTo = navigateTo
             )
         }
@@ -487,14 +486,12 @@ private fun NavGraphBuilder.navGraph(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
-    onRootScreen: Boolean,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) = when {
     groupedComponentMap.isOnlyCategory(groupedColorsMap, groupedTypographyMap) ->
         componentsNavGraph(
             groupedComponentMap = groupedComponentMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
             navigateTo = navigateTo,
         )
@@ -503,7 +500,6 @@ private fun NavGraphBuilder.navGraph(
         colorsNavGraph(
             groupedColorsMap = groupedColorsMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
             navigateTo = navigateTo,
         )
@@ -512,7 +508,6 @@ private fun NavGraphBuilder.navGraph(
         typographyNavGraph(
             groupedTypographyMap = groupedTypographyMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
             navigateTo = navigateTo,
         )
@@ -522,7 +517,6 @@ private fun NavGraphBuilder.navGraph(
             groupedComponentMap = groupedComponentMap,
             groupedColorsMap = groupedColorsMap,
             groupedTypographyMap = groupedTypographyMap,
-            onRootScreen = onRootScreen,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
             navigateTo = navigateTo,
@@ -537,16 +531,16 @@ private fun Map<String, List<*>>.isOnlyCategory(
 private fun NavGraphBuilder.componentsNavGraph(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
-    onRootScreen: Boolean,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
-    composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) {
+    composable(ShowkaseCurrentScreen.COMPONENT_GROUPS.name) { backStackEntry ->
         ShowkaseComponentGroupsScreen(
             groupedComponentMap = groupedComponentMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
+            onRootScreen = backStackEntry.destination.route ==
+                backStackEntry.destination.parent?.startDestinationRoute,
             navigateTo = navigateTo,
         )
     }
@@ -580,15 +574,15 @@ private fun NavGraphBuilder.componentsNavGraph(
 private fun NavGraphBuilder.colorsNavGraph(
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
-    onRootScreen: Boolean,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
-    composable(ShowkaseCurrentScreen.COLOR_GROUPS.name) {
+    composable(ShowkaseCurrentScreen.COLOR_GROUPS.name) { backStackEntry ->
         ShowkaseColorGroupsScreen(
             groupedColorsMap = groupedColorsMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
+            onRootScreen = backStackEntry.destination.route ==
+                backStackEntry.destination.parent?.startDestinationRoute,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
             navigateTo = navigateTo
         )
@@ -606,25 +600,26 @@ private fun NavGraphBuilder.colorsNavGraph(
 private fun NavGraphBuilder.typographyNavGraph(
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
-    onRootScreen: Boolean,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
-    composable(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name) {
+    composable(ShowkaseCurrentScreen.TYPOGRAPHY_GROUPS.name) { backStackEntry ->
         ShowkaseTypographyGroupsScreen(
             groupedTypographyMap = groupedTypographyMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
+            onRootScreen = backStackEntry.destination.route ==
+                backStackEntry.destination.parent?.startDestinationRoute,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
             navigateTo = navigateTo
         )
     }
-    composable(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name) {
+    composable(ShowkaseCurrentScreen.TYPOGRAPHY_IN_A_GROUP.name) { backStackEntry ->
         ShowkaseTypographyInAGroupScreen(
             groupedTypographyMap = groupedTypographyMap,
             showkaseBrowserScreenMetadata = showkaseBrowserScreenMetadata,
             onUpdateShowkaseBrowserScreenMetadata = onUpdateShowkaseBrowserScreenMetadata,
-            onRootScreen = onRootScreen,
+            onRootScreen = backStackEntry.destination.route ==
+                backStackEntry.destination.parent?.startDestinationRoute,
             navigateTo = navigateTo,
         )
     }
@@ -634,7 +629,6 @@ private fun NavGraphBuilder.fullNavGraph(
     groupedComponentMap: Map<String, List<ShowkaseBrowserComponent>>,
     groupedColorsMap: Map<String, List<ShowkaseBrowserColor>>,
     groupedTypographyMap: Map<String, List<ShowkaseBrowserTypography>>,
-    onRootScreen: Boolean,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
@@ -662,21 +656,18 @@ private fun NavGraphBuilder.fullNavGraph(
     componentsNavGraph(
         groupedComponentMap,
         showkaseBrowserScreenMetadata,
-        onRootScreen = onRootScreen,
         onUpdateShowkaseBrowserScreenMetadata,
         navigateTo
     )
     colorsNavGraph(
         groupedColorsMap,
         showkaseBrowserScreenMetadata,
-        onRootScreen = onRootScreen,
         onUpdateShowkaseBrowserScreenMetadata,
         navigateTo
     )
     typographyNavGraph(
         groupedTypographyMap,
         showkaseBrowserScreenMetadata,
-        onRootScreen = onRootScreen,
         onUpdateShowkaseBrowserScreenMetadata,
         navigateTo
     )
