@@ -54,11 +54,10 @@ kotlin {
 
 dependencies {
     // Support Libraries
-    implementation deps.support.appCompat
     implementation deps.support.ktx
     implementation deps.support.lifecycleComposeViewModel
     implementation deps.support.lifecycleComposeRuntime
-    
+
     // Showkase
     implementation project(':showkase')
     if (project.hasProperty('useKsp')) {

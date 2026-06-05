@@ -50,9 +50,6 @@ dependencies {
     // https://github.com/airbnb/epoxy/blob/master/epoxy-processortest/build.gradle
     testImplementation files('libs/rt.jar')
 
-    // Support Libraries
-    implementation deps.support.appCompat
-
     // Showkase
     implementation project(':showkase')
     implementation project(':showkase-processor')

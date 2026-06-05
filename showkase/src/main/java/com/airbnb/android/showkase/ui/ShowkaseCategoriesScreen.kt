@@ -1,8 +1,8 @@
 package com.airbnb.android.showkase.ui
 
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -22,7 +22,7 @@ internal fun ShowkaseCategoriesScreen(
     onNavigateToColorGroups: () -> Unit,
     onNavigateToTypographyGroups: () -> Unit,
 ) {
-    val activity = LocalContext.current as AppCompatActivity
+    val activity = LocalContext.current as ComponentActivity
     LazyColumn {
         items(
             items = categoryMetadataMap.entries.toList(),
@@ -58,7 +58,7 @@ internal fun ShowkaseCategoriesScreen(
 }
 
 private fun goBackFromCategoriesScreen(
-    activity: AppCompatActivity,
+    activity: ComponentActivity,
     showkaseBrowserScreenMetadata: ShowkaseBrowserScreenMetadata,
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit
 ) {

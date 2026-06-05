@@ -52,7 +52,6 @@ dependencies {
     api project(':showkase-annotation')
 
     // Support Libraries
-    implementation deps.support.appCompat
     implementation deps.support.ktx
 
     // Compose

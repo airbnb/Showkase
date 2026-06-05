@@ -1,7 +1,7 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,7 +30,7 @@ internal fun ShowkaseTypographyInAGroupScreen(
     onUpdateShowkaseBrowserScreenMetadata: (ShowkaseBrowserScreenMetadata) -> Unit,
     navigateTo: (ShowkaseCurrentScreen) -> Unit,
 ) {
-    val activity = LocalContext.current as AppCompatActivity
+    val activity = LocalContext.current as ComponentActivity
     val groupTypographyList = remember(groupedTypographyMap, showkaseBrowserScreenMetadata.currentGroup) {
         groupedTypographyMap[showkaseBrowserScreenMetadata.currentGroup]
             ?.sortedBy { it.typographyName }
