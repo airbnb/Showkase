@@ -1,7 +1,7 @@
 package com.airbnb.android.showkase.ui
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -55,7 +55,7 @@ internal fun ShowkaseGroupsScreen(
             }
         )
     }
-    val activity = LocalContext.current as AppCompatActivity
+    val activity = LocalContext.current as ComponentActivity
     BackHandler {
         goBackToCategoriesScreen(
             showkaseBrowserScreenMetadata,

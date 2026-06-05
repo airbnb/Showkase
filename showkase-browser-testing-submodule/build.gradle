@@ -56,9 +56,6 @@ kotlin {
 }
 
 dependencies {
-    // Support Libraries
-    implementation deps.support.appCompat
-
     // Showkase
     implementation project(':showkase')
     if (project.hasProperty('useKsp')) {

@@ -1,19 +1,19 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.App" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="Theme.App" parent="android:Theme.DeviceDefault.DayNight">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/purple500</item>
-        <item name="colorPrimaryDark">@color/purple700</item>
-        <item name="colorAccent">@color/teal200</item>
+        <item name="android:colorPrimary">@color/purple500</item>
+        <item name="android:colorPrimaryDark">@color/purple700</item>
+        <item name="android:colorAccent">@color/teal200</item>
     </style>
 
     <style name="Theme.App.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.App.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.App.AppBarOverlay" parent="android:ThemeOverlay.Material.Dark.ActionBar" />
 
-    <style name="Theme.App.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.App.PopupOverlay" parent="android:ThemeOverlay.Material.Light" />
 
 </resources>
