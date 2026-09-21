@@ -1,6 +1,12 @@
 @file:Suppress("MaxLineLength", "PackageName")
 package com.airbnb.android.showkase_processor_testing
 
+import com.tschuchort.compiletesting.JvmCompilationResult
+import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspSourcesDir
+import org.assertj.core.api.Assertions.assertThat
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
 
 class ShowkaseProcessorTest : BaseProcessorTest() {
@@ -265,6 +271,64 @@ class ShowkaseProcessorTest : BaseProcessorTest() {
     @Test
     fun `top level composable function with showkase and showkaseroot generates 1 file`() {
         compileInputsAndVerifyOutputs()
+    }
+
+    @OptIn(ExperimentalCompilerApi::class)
+    @Test
+    fun `root with more components than the chunk size splits getShowkaseComponents into helpers`() {
+        // One more than ShowkaseBrowserWriter.COMPONENT_LIST_CHUNK_SIZE, so the generated root has
+        // to be split into two helpers. Without chunking, a large enough list makes kotlinc fail
+        // with "Method too large".
+        val componentCount = 501
+        val composables = (0 until componentCount).joinToString("\n") { index ->
+            """
+            @ShowkaseComposable(name = "name$index", group = "group")
+            @Composable
+            public fun TestComposable$index() {
+            }
+            """.trimIndent()
+        }
+        val generatedInput = SourceFile.kotlin(
+            "GeneratedComposables.kt",
+            """
+            package com.airbnb.android.showkase_processor_testing
+
+            import com.airbnb.android.showkase.annotation.ShowkaseComposable
+            import androidx.compose.runtime.Composable
+
+            $composables
+            """.trimIndent()
+        )
+
+        compileInputs(extraSources = listOf(generatedInput)) { mode, compilation, result ->
+            assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+
+            val rootCodegen = when (mode) {
+                Mode.KSP -> compilation.kspSourcesDir.walk()
+                Mode.KAPT -> (result as JvmCompilationResult).sourcesGeneratedByAnnotationProcessor.asSequence()
+            }.first { it.name == "TestShowkaseRootCodegen.kt" }.readText()
+
+            assertThat(rootCodegen).contains("numComposablesWithoutPreviewParameter = $componentCount,")
+            assertThat(rootCodegen).contains("numComposablesWithPreviewParameter = 1,")
+            assertThat(rootCodegen).contains("private fun getShowkaseComponents0(): List<ShowkaseBrowserComponent>")
+            assertThat(rootCodegen).contains("private fun getShowkaseComponents1(): List<ShowkaseBrowserComponent>")
+            assertThat(rootCodegen).doesNotContain("getShowkaseComponents2")
+            assertThat(rootCodegen).contains(
+                """
+                |  override fun getShowkaseComponents(): List<ShowkaseBrowserComponent> {
+                |
+                |    return mutableListOf<ShowkaseBrowserComponent>().apply {
+                |        addAll(getShowkaseComponents0())
+                |        addAll(getShowkaseComponents1())
+                |        addAll(TestComposablegroupname)
+                |    }
+                |  }
+                """.trimMargin()
+            )
+            // Every component is registered exactly once across the helpers.
+            assertThat(rootCodegen.lines().count { it.trim().matches(Regex("TestComposable\\d+groupname\\d+,")) })
+                .isEqualTo(componentCount)
+        }
     }
 
     @Test

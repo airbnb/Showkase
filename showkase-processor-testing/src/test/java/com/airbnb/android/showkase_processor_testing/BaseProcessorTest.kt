@@ -39,6 +39,7 @@ abstract class BaseProcessorTest {
     protected fun compileInputs(
         modes: List<Mode> = listOf(Mode.KSP, Mode.KAPT),
         options: MutableMap<String, String> = mutableMapOf(),
+        extraSources: List<SourceFile> = emptyList(),
         onCompilation: (mode: Mode, compilation: KotlinCompilation, result: CompilationResult) -> Unit
     ) {
         val testResourcesDir = getTestResourcesDirectory(getRootResourcesDir())
@@ -50,7 +51,7 @@ abstract class BaseProcessorTest {
             val compilation = KotlinCompilation().apply {
                 kotlincArguments = kotlincArguments + "-Xexplicit-api=strict"
                 sources = inputDir.listFiles()?.toList().orEmpty()
-                    .map { file -> SourceFile.new(file.name, file.readText()) }
+                    .map { file -> SourceFile.new(file.name, file.readText()) } + extraSources
                 when (mode) {
                     Mode.KSP -> {
                         languageVersion = "2.1"

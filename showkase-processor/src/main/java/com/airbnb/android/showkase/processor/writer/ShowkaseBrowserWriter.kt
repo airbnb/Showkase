@@ -15,6 +15,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LIST
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -30,7 +31,7 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     ) {
         val showkaseComponentsListClassName = "${rootModuleClassName}$CODEGEN_AUTOGEN_CLASS_NAME"
         val fileBuilder = getFileBuilder(rootModulePackageName, showkaseComponentsListClassName)
-        val componentCodeBlock = initializeComponentCodeBlock(
+        val (componentCodeBlock, componentChunkFunctions) = initializeComponentCodeBlock(
             allShowkaseBrowserProperties.componentsWithoutPreviewParameters,
             allShowkaseBrowserProperties.componentsWithPreviewParameters
         )
@@ -66,11 +67,94 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
                 returnType = LIST.parameterizedBy(SHOWKASE_BROWSER_TYPOGRAPHY_CLASS_NAME),
                 codeBlock = typographyCodeBlock
             ),
-            showkaseRootCodegenAnnotation
+            showkaseRootCodegenAnnotation,
+            additionalFunctions = componentChunkFunctions,
         )
     }
 
+    /**
+     * Builds the body of `getShowkaseComponents()`.
+     *
+     * When the component count exceeds [COMPONENT_LIST_CHUNK_SIZE],
+     * the list is split across private helper functions of at most
+     * [COMPONENT_LIST_CHUNK_SIZE] entries each and `getShowkaseComponents()` concatenates them.
+     * Smaller lists keep the original single-call shape.
+     *
+     * Returns the code block for `getShowkaseComponents()` and the helper functions to add to
+     * the generated class.
+     */
     private fun initializeComponentCodeBlock(
+        withoutParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
+        withParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
+    ): Pair<CodeBlock, List<FunSpec>> {
+        if (withoutParameterPropertyNames.size > COMPONENT_LIST_CHUNK_SIZE) {
+            return initializeChunkedComponentCodeBlock(
+                withoutParameterPropertyNames,
+                withParameterPropertyNames
+            )
+        }
+        return initializeSingleComponentCodeBlock(
+            withoutParameterPropertyNames,
+            withParameterPropertyNames
+        ) to emptyList()
+    }
+
+    private fun initializeChunkedComponentCodeBlock(
+        withoutParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
+        withParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
+    ): Pair<CodeBlock, List<FunSpec>> {
+        val componentListType = LIST.parameterizedBy(SHOWKASE_BROWSER_COMPONENT_CLASS_NAME)
+        val chunkFunctions = withoutParameterPropertyNames
+            .chunked(COMPONENT_LIST_CHUNK_SIZE)
+            .mapIndexed { chunkIndex, chunk ->
+                val chunkCodeBlock = SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
+                    .listInitializerCodeBlock()
+                    .apply {
+                        addLineBreak()
+                        chunk.forEach { metadata ->
+                            add("%M,", MemberName(metadata.propertyPackage, metadata.propertyName))
+                            addLineBreak()
+                        }
+                        doubleUnindent()
+                        add(")")
+                    }
+                    .build()
+                FunSpec.builder("$COMPONENT_INTERFACE_METHOD_NAME$chunkIndex")
+                    .addModifiers(KModifier.PRIVATE)
+                    .returns(componentListType)
+                    .addCode(chunkCodeBlock)
+                    .build()
+            }
+
+        val codeBlock = SHOWKASE_BROWSER_COMPONENT_CLASS_NAME
+            .mutableListInitializerCodeBlock()
+            .apply {
+                doubleUnindent()
+                add(").apply {")
+                addLineBreak()
+                withDoubleIndent {
+                    chunkFunctions.forEach { chunkFunction ->
+                        add("addAll(%N())", chunkFunction)
+                        addLineBreak()
+                    }
+                    withParameterPropertyNames.forEachIndexed { index, metadata ->
+                        add(
+                            "addAll(%M)",
+                            MemberName(metadata.propertyPackage, metadata.propertyName)
+                        )
+                        if (index != withParameterPropertyNames.lastIndex) {
+                            addLineBreak()
+                        }
+                    }
+                }
+                closeCurlyBraces()
+            }
+            .build()
+
+        return codeBlock to chunkFunctions
+    }
+
+    private fun initializeSingleComponentCodeBlock(
         withoutParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
         withParameterPropertyNames: List<ShowkaseGeneratedMetadata>,
     ): CodeBlock {
@@ -203,6 +287,13 @@ internal class ShowkaseBrowserWriter(private val environment: XProcessingEnv) {
     companion object {
         internal const val CODEGEN_AUTOGEN_CLASS_NAME = "Codegen"
         private const val COMPONENT_INTERFACE_METHOD_NAME = "getShowkaseComponents"
+
+        /**
+         * Max number of components listed in a single generated function. Each entry costs
+         * roughly 8 bytes of bytecode, so this keeps every function far below the JVM's 64KB
+         * method limit.
+         */
+        internal const val COMPONENT_LIST_CHUNK_SIZE = 500
         private const val COLOR_INTERFACE_METHOD_NAME = "getShowkaseColors"
         private const val TYPOGRAPHY_INTERFACE_METHOD_NAME = "getShowkaseTypography"
         internal const val SHOWKASE_MODELS_PACKAGE_NAME = "com.airbnb.android.showkase.models"

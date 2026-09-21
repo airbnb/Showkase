@@ -57,7 +57,8 @@ internal fun writeFile(
     componentInterfaceFunction: FunSpec,
     colorInterfaceFunction: FunSpec,
     typographyInterfaceFunction: FunSpec,
-    showkaseRootCodegenAnnotation: AnnotationSpec
+    showkaseRootCodegenAnnotation: AnnotationSpec,
+    additionalFunctions: List<FunSpec> = emptyList(),
 ) {
     fileBuilder
         .addType(
@@ -67,6 +68,7 @@ internal fun writeFile(
                 addFunction(componentInterfaceFunction)
                 addFunction(colorInterfaceFunction)
                 addFunction(typographyInterfaceFunction)
+                addFunctions(additionalFunctions)
                 allShowkaseBrowserProperties.zip().forEach { addOriginatingElement(it.element) }
                 build()
             }
